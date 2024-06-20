@@ -1,0 +1,141 @@
+@charset "UTF-8";
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+
+html {
+    font-size: 100%;
+}
+
+body {
+    font-family: '華康溜溜體', '華康默字體', sans-serif;
+    line-height: 1.7;
+    color: #432;
+}
+
+a {
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+}
+
+.logo {
+    width: 100px;
+    /* margin-top: 20px; */
+    position: sticky;
+    top: 0;
+}
+
+.main-nav {
+    display: flex;
+    font-size: 1.25em;
+    margin-top: 34px;
+    list-style: none;
+    position: sticky;
+    top: 0;
+}
+
+.main-nav li {
+    margin-left: 36px;
+    color: black;
+    /* background-color: #c0c0c0; */
+    /* text-shadow: 3px 3px 5px lightgray; */
+
+}
+
+.main-nav li:hover {
+    color: #d37c70;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background-color: #F5F5F5;
+    opacity: .8;
+
+}
+
+.page-header img {
+    display: block
+}
+
+.wrapper {
+    /* max-width: 1100px; */
+    margin: 0 auto;
+    padding: 0 20px;
+    /* background-color: lightblue; */
+}
+
+.home-content {
+    text-align: center;
+    margin-top: 10%;
+}
+
+.home-content p {
+    font-size: 1.125rem;
+    margin: 10px 0 42px;
+    font-weight: bold;
+}
+
+/* 標題 */
+.page-title {
+    font-size: 5rem;
+    font-family: '華康溜溜體', serif;
+    text-transform: uppercase;
+    font-weight: normal;
+}
+
+/* 按鈕 */
+.button {
+    font-size: 1.375rem;
+    background-color: #f6dec8;
+    border-radius: 5px;
+    padding: 18px 32px;
+}
+
+.button:hover {
+    background-color: #8babc6;
+}
+
+/* 背景 */
+.big-backImg {
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+
+}
+
+#home {
+    background-image: url(../image/backgroundImg2.jpg);
+    min-height: 100vh;
+    justify-content: center;
+
+    /* max-width: 1100px; */
+    /* background-blend-mode: darken; */
+}
+
+/* .img {
+    background-image: url(../image/full-shot-mother-kid-playing-together_23-2149319687.jpg);
+    min-height: 100vh;
+    justify-content: center;
+    background-size: cover;
+} */
+
+/* 頁尾 */
+.footer {
+    background-color: #432;
+    text-align: center;
+    padding: 10px 0;
+}
+
+footer p {
+    color: azure;
+    font-size: 16px;
+}

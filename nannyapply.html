@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <title>保母資格申請</title>
+    <link rel="icon" type="image/png" href="image/logo2.png">
+    <link href="CSS/findnanny.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <!-- timepicker -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
+</head>
+
+<body>
+    <!-- header -->
+    <div id="findnanny" class="big-backImg">
+        <header class="page-header wrapper">
+            <h1>
+                <a href="index.html"><img class="logo" src="image/logo2.png" alt="Logo"></a>
+            </h1>
+            <nav>
+                <ul class="main-nav">
+                    <li><a href="news.html">公告消息</a></li>
+                    <li>關於我們</li>
+                    <li><a href="findnanny.html">找保母</a></a></li>
+                    <li>找委託</li>
+                    <li>電子聯絡簿</li>
+                    <li>登入</li>
+                </ul>
+            </nav>
+        </header>
+        <h2 class="page-title">找保母</h2>
+    </div>
+
+    <!-- .container>.row>.col-2+.col-10>h1 -->
+    <div class="container">
+        <div class="row">
+            <div class="col-2">側欄</div>
+            <div class="col-10 mb-4">
+                <h1 class="text-center mb-3">保母資格申請</h1>
+                <div class="row mb-4">
+                    <div class="col-12 col-md-4">
+                        <h5>保母證：</h5>
+                        <img src="image/certificate.png" alt="">
+                        <input class="form-control form-control-sm" id="formFileSm" type="file">
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <h5>身份證：</h5>
+                        <img src="image/certificate.png" alt="">
+                        <input class="form-control form-control-sm" id="formFileSm" type="file">
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <h5>良民證：</h5>
+                        <img src="image/certificate.png" alt="">
+                        <input class="form-control form-control-sm" id="formFileSm" type="file">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <ul class="">
+                        <li>請注意證件資訊是否清晰、照片無反光</li>
+                        <li>提供之證件僅供申請資格使用，不做另外用途</li>
+                        <li>請確認提供之證件皆為本人身份，不得使用他人身份替代</li>
+                    </ul>
+                </div>
+                <div class="mb-4">
+                    <h4>以上資料確認無誤，皆為本人身份資格</h4>
+                    <div class="form-check-inline">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"
+                            checked>
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            是
+                        </label>
+                    </div>
+                    <div class="form-check-inline">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                        <label class="form-check-label" for="flexRadioDefault2">
+                            否
+                        </label>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-secondary">確認申請</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer>
+        <div class="footer">
+            <p>電話：0945789456 | 地址：高雄市前鎮區中華五路200號</p>
+            <p><small>&copy; 2024 BabyCiao</small></p>
+        </div>
+    </footer>
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+        crossorigin="anonymous"></script>
+    <!-- jquery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- bootstrap-datepicker -->
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/locales/bootstrap-datepicker.zh-TW.min.js"></script>
+    <script>
+        $('.datepicker').datepicker({
+            format: "yyyy/mm/dd",
+            language: "zh-TW",
+            autoclose: true,
+            todayHighlight: true
+        });
+    </script>
+</body>
+
+</html>
