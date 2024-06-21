@@ -15,11 +15,11 @@ public partial class NannyResume
 
     public string? Introduction { get; set; }
 
-    public string TypeOfDaycare { get; set; } = null!;
+    public int TypeOfDaycare { get; set; }
 
-    public string ServiceItems { get; set; } = null!;
+    public int ServiceItems { get; set; }
 
-    public int QuasiPublicChildcare { get; set; }
+    public bool QuasiPublicChildcare { get; set; }
 
     public int ChildcareAvailableUnder2 { get; set; }
 

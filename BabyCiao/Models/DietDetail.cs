@@ -11,7 +11,7 @@ public partial class DietDetail
 
     public DateTime RecodeTime { get; set; }
 
-    public DateTime Type { get; set; }
+    public int Type { get; set; }
 
     public int Amount { get; set; }
 
@@ -19,7 +19,7 @@ public partial class DietDetail
 
     public string ModifiedTime { get; set; } = null!;
 
-    public int AccountUserAccount { get; set; }
+    public string AccountUserAccount { get; set; } = null!;
 
     public virtual ContactBook IdContactBookNavigation { get; set; } = null!;
 }

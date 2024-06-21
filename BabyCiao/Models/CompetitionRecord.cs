@@ -5,7 +5,7 @@ namespace BabyCiao.Models;
 
 public partial class CompetitionRecord
 {
-    public int VoterAccount { get; set; }
+    public string VoterAccount { get; set; } = null!;
 
     public int IdCompetitionDetail { get; set; }
 

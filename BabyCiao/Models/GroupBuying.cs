@@ -13,6 +13,8 @@ public partial class GroupBuying
 
     public string ProductDescription { get; set; } = null!;
 
+    public int Statement { get; set; }
+
     public DateTime ModifiedTime { get; set; }
 
     public bool Display { get; set; }

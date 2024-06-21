@@ -21,9 +21,9 @@ public partial class BabyResume
 
     public DateOnly BabyBirthday { get; set; }
 
-    public string TypeOfDaycare { get; set; } = null!;
+    public int TypeOfDaycare { get; set; }
 
-    public string TimeSlot { get; set; } = null!;
+    public int TimeSlot { get; set; }
 
     public string? Memo { get; set; }
 

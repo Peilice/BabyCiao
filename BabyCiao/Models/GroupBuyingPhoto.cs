@@ -5,13 +5,13 @@ namespace BabyCiao.Models;
 
 public partial class GroupBuyingPhoto
 {
-    public string Id { get; set; } = null!;
+    public int Id { get; set; }
 
     public int IdGroupBuying { get; set; }
 
     public string PhotoName { get; set; } = null!;
 
-    public string ModifiedTime { get; set; } = null!;
+    public DateTime ModifiedTime { get; set; }
 
     public virtual GroupBuying IdGroupBuyingNavigation { get; set; } = null!;
 }

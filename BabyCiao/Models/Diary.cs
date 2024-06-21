@@ -9,7 +9,7 @@ public partial class Diary
 
     public int IdContactBook { get; set; }
 
-    public int AccountUserAccount { get; set; }
+    public string AccountUserAccount { get; set; } = null!;
 
     public string Photo { get; set; } = null!;
 

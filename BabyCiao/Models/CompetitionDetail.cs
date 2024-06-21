@@ -9,7 +9,7 @@ public partial class CompetitionDetail
 
     public int IdOnlineCompetition { get; set; }
 
-    public int AccountUserAccount { get; set; }
+    public string AccountUserAccount { get; set; } = null!;
 
     public string CompetitionPhoto { get; set; } = null!;
 

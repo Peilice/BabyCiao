@@ -21,7 +21,7 @@ public partial class NannyRequirment
 
     public DateOnly ValidPeriodsOfCertificates { get; set; }
 
-    public string Statement { get; set; } = null!;
+    public int Statement { get; set; }
 
     public virtual UserAccount NannyAccountUserAccountNavigation { get; set; } = null!;
 }

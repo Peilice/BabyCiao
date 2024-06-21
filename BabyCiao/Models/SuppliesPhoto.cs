@@ -5,7 +5,7 @@ namespace BabyCiao.Models;
 
 public partial class SuppliesPhoto
 {
-    public string Id { get; set; } = null!;
+    public int Id { get; set; }
 
     public int IdSecondHandSupplies { get; set; }
 
