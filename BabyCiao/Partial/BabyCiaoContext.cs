@@ -8,7 +8,7 @@ namespace BabyCiao.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                IConfigurationRoot Configuration=new ConfigurationBuilder().SetBasePath(AppDomain.CurrentDomain.BaseDirectory).AddJsonFile("appsetting.json").Build();
+                IConfigurationRoot Configuration=new ConfigurationBuilder().SetBasePath(AppDomain.CurrentDomain.BaseDirectory).AddJsonFile("appsettings.json").Build();
                 optionsBuilder.UseSqlServer(Configuration.GetConnectionString("Babyciao"));
             }
         }
