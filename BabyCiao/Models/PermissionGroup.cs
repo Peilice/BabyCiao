@@ -13,7 +13,7 @@ public partial class PermissionGroup
 
     public DateTime ModifiedDate { get; set; }
 
-    public virtual UserAccount ModifiedPersonUserAccountNavigation { get; set; } = null!;
+    public virtual ICollection<FunctionSetting> FunctionSettings { get; set; } = new List<FunctionSetting>();
 
-    public virtual ICollection<SystemFunction> FunctionCodeSystemFunctions { get; set; } = new List<SystemFunction>();
+    public virtual UserAccount ModifiedPersonUserAccountNavigation { get; set; } = null!;
 }
