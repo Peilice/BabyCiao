@@ -24,4 +24,6 @@ public partial class OnlineCompetition
     public virtual UserAccount AccountUserAccountNavigation { get; set; } = null!;
 
     public virtual ICollection<CompetitionDetail> CompetitionDetails { get; set; } = new List<CompetitionDetail>();
+
+    public virtual ICollection<CompetitionPhoto> CompetitionPhotos { get; set; } = new List<CompetitionPhoto>();
 }

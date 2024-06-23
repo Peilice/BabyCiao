@@ -9,5 +9,5 @@ public partial class SystemFunction
 
     public string FunctionName { get; set; } = null!;
 
-    public virtual ICollection<PermissionGroup> GroupCodePermissionGroups { get; set; } = new List<PermissionGroup>();
+    public virtual ICollection<FunctionSetting> FunctionSettings { get; set; } = new List<FunctionSetting>();
 }

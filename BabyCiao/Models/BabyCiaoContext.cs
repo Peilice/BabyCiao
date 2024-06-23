@@ -23,6 +23,8 @@ public partial class BabyCiaoContext : DbContext
 
     public virtual DbSet<CompetitionDetail> CompetitionDetails { get; set; }
 
+    public virtual DbSet<CompetitionPhoto> CompetitionPhotos { get; set; }
+
     public virtual DbSet<CompetitionRecord> CompetitionRecords { get; set; }
 
     public virtual DbSet<ContactBook> ContactBooks { get; set; }
@@ -40,6 +42,8 @@ public partial class BabyCiaoContext : DbContext
     public virtual DbSet<ExchangeOrder> ExchangeOrders { get; set; }
 
     public virtual DbSet<ExchangeOrderDetail> ExchangeOrderDetails { get; set; }
+
+    public virtual DbSet<FunctionSetting> FunctionSettings { get; set; }
 
     public virtual DbSet<GroupBuying> GroupBuyings { get; set; }
 
@@ -79,9 +83,9 @@ public partial class BabyCiaoContext : DbContext
 
     public virtual DbSet<Vip> Vips { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=BabyCiao;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=BabyCiao;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -177,6 +181,25 @@ public partial class BabyCiaoContext : DbContext
                 .HasForeignKey(d => d.IdOnlineCompetition)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Competiti__ID_On__0C85DE4D");
+        });
+
+        modelBuilder.Entity<CompetitionPhoto>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Competit__3214EC2793CABDAE");
+
+            entity.ToTable("CompetitionPhoto");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.IdOnlineCompetition).HasColumnName("ID_OnlineCompetition");
+            entity.Property(e => e.ModifiedTime)
+                .HasMaxLength(50)
+                .HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.PhotoName).HasMaxLength(50);
+
+            entity.HasOne(d => d.IdOnlineCompetitionNavigation).WithMany(p => p.CompetitionPhotos)
+                .HasForeignKey(d => d.IdOnlineCompetition)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Competiti__ID_On__531856C7");
         });
 
         modelBuilder.Entity<CompetitionRecord>(entity =>
@@ -418,6 +441,29 @@ public partial class BabyCiaoContext : DbContext
                 .HasConstraintName("FK__ExchangeO__ID_Se__208CD6FA");
         });
 
+        modelBuilder.Entity<FunctionSetting>(entity =>
+        {
+            entity.HasKey(e => new { e.GroupCodePermissionGroup, e.FunctionCodeSystemFunction }).HasName("PK__Function__1A698783B2A73984");
+
+            entity.ToTable("FunctionSetting");
+
+            entity.Property(e => e.GroupCodePermissionGroup).HasColumnName("GroupCode_PermissionGroup");
+            entity.Property(e => e.FunctionCodeSystemFunction)
+                .HasMaxLength(50)
+                .HasColumnName("FunctionCode_SystemFunction");
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.FunctionCodeSystemFunctionNavigation).WithMany(p => p.FunctionSettings)
+                .HasForeignKey(d => d.FunctionCodeSystemFunction)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__FunctionS__Funct__503BEA1C");
+
+            entity.HasOne(d => d.GroupCodePermissionGroupNavigation).WithMany(p => p.FunctionSettings)
+                .HasForeignKey(d => d.GroupCodePermissionGroup)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__FunctionS__Group__4F47C5E3");
+        });
+
         modelBuilder.Entity<GroupBuying>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__GroupBuy__3214EC27B10A0C19");
@@ -649,27 +695,6 @@ public partial class BabyCiaoContext : DbContext
                 .HasForeignKey(d => d.ModifiedPersonUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Permissio__Modif__7F2BE32F");
-
-            entity.HasMany(d => d.FunctionCodeSystemFunctions).WithMany(p => p.GroupCodePermissionGroups)
-                .UsingEntity<Dictionary<string, object>>(
-                    "FunctionSetting",
-                    r => r.HasOne<SystemFunction>().WithMany()
-                        .HasForeignKey("FunctionCodeSystemFunction")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__FunctionS__Funct__04E4BC85"),
-                    l => l.HasOne<PermissionGroup>().WithMany()
-                        .HasForeignKey("GroupCodePermissionGroup")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__FunctionS__Group__03F0984C"),
-                    j =>
-                    {
-                        j.HasKey("GroupCodePermissionGroup", "FunctionCodeSystemFunction").HasName("PK__Function__1A698783891E218C");
-                        j.ToTable("FunctionSetting");
-                        j.IndexerProperty<int>("GroupCodePermissionGroup").HasColumnName("GroupCode_PermissionGroup");
-                        j.IndexerProperty<string>("FunctionCodeSystemFunction")
-                            .HasMaxLength(50)
-                            .HasColumnName("FunctionCode_SystemFunction");
-                    });
         });
 
         modelBuilder.Entity<Platform>(entity =>
