@@ -1,0 +1,70 @@
+﻿@model IEnumerable<BabyCiao.Models.Platform>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>論壇管理</h1>
+
+<p>
+    <a asp-action="Create">管理員公告</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                更新時間
+                @* @Html.DisplayNameFor(model => model.ModifiedTime) *@
+            </th>
+            <th>
+                標題
+                @* @Html.DisplayNameFor(model => model.Title) *@
+            </th>
+@*             <th>
+                內文
+                @Html.DisplayNameFor(model => model.Content)
+            </th> *@
+            <th>
+                類別
+                @* @Html.DisplayNameFor(model => model.Type) *@
+            </th>
+            <th>顯示控制
+            @* @Html.DisplayNameFor(model => model.Display) *@
+            </th>
+            @* <th>
+            @Html.DisplayNameFor(model => model.AccountUserAccountNavigation)
+            </th> *@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ModifiedTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                @* <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td> *@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Display)
+                </td>
+            @* <td>
+            @Html.DisplayFor(modelItem => item.AccountUserAccountNavigation.Account)
+            </td> *@
+                <td>
+                    <p><a asp-action="Edit" asp-route-id="@item.Id">編輯</a></p>
+                    <p><a asp-action="Details" asp-route-id="@item.Id">詳細資訊</a></p>
+                    <p><a asp-action="Delete" asp-route-id="@item.Id">刪除</a></p>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

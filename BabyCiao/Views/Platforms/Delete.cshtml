@@ -1,0 +1,57 @@
+﻿@model BabyCiao.Models.Platform
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>論壇管理</h1>
+
+<h3>確認刪除此文章?</h3>
+<div>
+    @* <h4>Platform</h4> *@
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">最後更新時間
+            @* @Html.DisplayNameFor(model => model.ModifiedTime) *@
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ModifiedTime)
+        </dd>
+        <dt class = "col-sm-2">標題
+            @* @Html.DisplayNameFor(model => model.Title) *@
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">內文
+            @* @Html.DisplayNameFor(model => model.Content) *@
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Content)
+        </dd>
+        <dt class = "col-sm-2">分類
+            @* @Html.DisplayNameFor(model => model.Type) *@
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+        <dt class = "col-sm-2">顯示控制
+            @* @Html.DisplayNameFor(model => model.Display) *@
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Display)
+        </dd>
+        <dt class = "col-sm-2">發佈者帳號
+            @* @Html.DisplayNameFor(model => model.AccountUserAccountNavigation) *@
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AccountUserAccountNavigation.Account)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="刪除" class="btn btn-danger" /> |
+        <a asp-action="Index">回到論壇管理列表</a>
+    </form>
+</div>

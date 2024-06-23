@@ -1,0 +1,63 @@
+﻿@model BabyCiao.Models.OnlineCompetition
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>投票活動管理</h1>
+
+<h3>確認是否刪除活動?</h3>
+<div>
+    @* <h4>OnlineCompetition</h4> *@
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">活動名稱
+            @* @Html.DisplayNameFor(model => model.CompetitionName) *@
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CompetitionName)
+        </dd>
+        <dt class = "col-sm-2">活動開始時間
+            @* @Html.DisplayNameFor(model => model.StartTime) *@
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.StartTime)
+        </dd>
+        <dt class = "col-sm-2">活動結束時間
+            @* @Html.DisplayNameFor(model => model.EndTime) *@
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EndTime)
+        </dd>
+        <dt class = "col-sm-2">活動介紹
+            @* @Html.DisplayNameFor(model => model.Content) *@
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Content)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ModifiedTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ModifiedTime)
+        </dd>
+        <dt class = "col-sm-2">活動狀態
+            @* @Html.DisplayNameFor(model => model.Statement) *@
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Statement)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.AccountUserAccountNavigation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AccountUserAccountNavigation.Account)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">回到活動列表</a>
+    </form>
+</div>
