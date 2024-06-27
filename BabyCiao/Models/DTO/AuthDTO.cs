@@ -23,7 +23,7 @@
     }
     public class FunctionSettingDTO {
 
-		public string FunctionCode { get; set; } = null!;//來自SystemFunction
+		public int FunctionCode { get; set; }//來自SystemFunction
 
 		public string FunctionName { get; set; } = null!;//來自SystemFunction
 
