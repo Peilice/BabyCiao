@@ -58,7 +58,25 @@ namespace BabyCiao.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,AccountUserAccount,ModifiedTime,Title,Content,Type,Display")] Platform platform)
         {
-            if (ModelState.IsValid)
+
+            //if (ModelState.IsValid)
+            //{
+            //    _context.Add(platform);
+            //    await _context.SaveChangesAsync();
+            //    return RedirectToAction(nameof(Index));
+            //}
+
+            if (ModelState.IsValid != true)
+            {
+                if (platform.AccountUserAccountNavigation == null)
+                {
+                    ViewData["AccountUserAccount"] = platform.AccountUserAccountNavigation;
+                    _context.Add(platform);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            else
             {
                 _context.Add(platform);
                 await _context.SaveChangesAsync();

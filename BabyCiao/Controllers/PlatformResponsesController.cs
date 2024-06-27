@@ -9,25 +9,23 @@ using BabyCiao.Models;
 
 namespace BabyCiao.Controllers
 {
-    public class OnlineCompetitionsController : Controller
+    public class PlatformResponsesController : Controller
     {
         private readonly BabyCiaoContext _context;
 
-        public OnlineCompetitionsController(BabyCiaoContext context)
+        public PlatformResponsesController(BabyCiaoContext context)
         {
             _context = context;
         }
 
-        // GET: OnlineCompetitions
+        // GET: PlatformResponses
         public async Task<IActionResult> Index()
         {
-            //var babyCiaoContext = _context.OnlineCompetitions.Include(o => o.AccountUserAccountNavigation);
-            //return View(await babyCiaoContext.ToListAsync());
-            var babyCiaoContext = _context.OnlineCompetitions;
+            var babyCiaoContext = _context.PlatformResponses.Include(p => p.IdPlatformNavigation);
             return View(await babyCiaoContext.ToListAsync());
         }
 
-        // GET: OnlineCompetitions/Details/5
+        // GET: PlatformResponses/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,44 +33,43 @@ namespace BabyCiao.Controllers
                 return NotFound();
             }
 
-            var onlineCompetition = await _context.OnlineCompetitions
-                .Include(o => o.AccountUserAccountNavigation)
+            var platformResponse = await _context.PlatformResponses
+                .Include(p => p.IdPlatformNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (onlineCompetition == null)
+            if (platformResponse == null)
             {
                 return NotFound();
             }
 
-            return View(onlineCompetition);
+            return View(platformResponse);
         }
 
-        // GET: OnlineCompetitions/Create
+        // GET: PlatformResponses/Create
         public IActionResult Create()
         {
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account");
+            ViewData["IdPlatform"] = new SelectList(_context.Platforms, "Id", "Id");
             return View();
         }
 
-        // POST: OnlineCompetitions/Create
+        // POST: PlatformResponses/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CompetitionName,AccountUserAccount,StartTime,EndTime,Content,ModifiedTime,Statement")] OnlineCompetition onlineCompetition)
-           
+        public async Task<IActionResult> Create([Bind("Id,IdPlatform,AccountUserAccount,Content,ModifiedTime,Display")] PlatformResponse platformResponse)
         {
+
             if (ModelState.IsValid)
             {
-
-                _context.Add(onlineCompetition);
+                _context.Add(platformResponse);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", onlineCompetition.AccountUserAccount);
-            return View(onlineCompetition);
+            ViewData["IdPlatform"] = new SelectList(_context.Platforms, "Id", "Id", platformResponse.IdPlatform);
+            return View(platformResponse);
         }
 
-        // GET: OnlineCompetitions/Edit/5
+        // GET: PlatformResponses/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,23 +77,23 @@ namespace BabyCiao.Controllers
                 return NotFound();
             }
 
-            var onlineCompetition = await _context.OnlineCompetitions.FindAsync(id);
-            if (onlineCompetition == null)
+            var platformResponse = await _context.PlatformResponses.FindAsync(id);
+            if (platformResponse == null)
             {
                 return NotFound();
             }
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", onlineCompetition.AccountUserAccount);
-            return View(onlineCompetition);
+            ViewData["IdPlatform"] = new SelectList(_context.Platforms, "Id", "Id", platformResponse.IdPlatform);
+            return View(platformResponse);
         }
 
-        // POST: OnlineCompetitions/Edit/5
+        // POST: PlatformResponses/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CompetitionName,AccountUserAccount,StartTime,EndTime,Content,ModifiedTime,Statement")] OnlineCompetition onlineCompetition)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,IdPlatform,AccountUserAccount,Content,ModifiedTime,Display")] PlatformResponse platformResponse)
         {
-            if (id != onlineCompetition.Id)
+            if (id != platformResponse.Id)
             {
                 return NotFound();
             }
@@ -105,12 +102,12 @@ namespace BabyCiao.Controllers
             {
                 try
                 {
-                    _context.Update(onlineCompetition);
+                    _context.Update(platformResponse);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OnlineCompetitionExists(onlineCompetition.Id))
+                    if (!PlatformResponseExists(platformResponse.Id))
                     {
                         return NotFound();
                     }
@@ -121,11 +118,11 @@ namespace BabyCiao.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", onlineCompetition.AccountUserAccount);
-            return View(onlineCompetition);
+            ViewData["IdPlatform"] = new SelectList(_context.Platforms, "Id", "Id", platformResponse.IdPlatform);
+            return View(platformResponse);
         }
 
-        // GET: OnlineCompetitions/Delete/5
+        // GET: PlatformResponses/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,35 +130,35 @@ namespace BabyCiao.Controllers
                 return NotFound();
             }
 
-            var onlineCompetition = await _context.OnlineCompetitions
-                .Include(o => o.AccountUserAccountNavigation)
+            var platformResponse = await _context.PlatformResponses
+                .Include(p => p.IdPlatformNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (onlineCompetition == null)
+            if (platformResponse == null)
             {
                 return NotFound();
             }
 
-            return View(onlineCompetition);
+            return View(platformResponse);
         }
 
-        // POST: OnlineCompetitions/Delete/5
+        // POST: PlatformResponses/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var onlineCompetition = await _context.OnlineCompetitions.FindAsync(id);
-            if (onlineCompetition != null)
+            var platformResponse = await _context.PlatformResponses.FindAsync(id);
+            if (platformResponse != null)
             {
-                _context.OnlineCompetitions.Remove(onlineCompetition);
+                _context.PlatformResponses.Remove(platformResponse);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OnlineCompetitionExists(int id)
+        private bool PlatformResponseExists(int id)
         {
-            return _context.OnlineCompetitions.Any(e => e.Id == id);
+            return _context.PlatformResponses.Any(e => e.Id == id);
         }
     }
 }

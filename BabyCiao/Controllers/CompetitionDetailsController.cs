@@ -9,25 +9,23 @@ using BabyCiao.Models;
 
 namespace BabyCiao.Controllers
 {
-    public class OnlineCompetitionsController : Controller
+    public class CompetitionDetailsController : Controller
     {
         private readonly BabyCiaoContext _context;
 
-        public OnlineCompetitionsController(BabyCiaoContext context)
+        public CompetitionDetailsController(BabyCiaoContext context)
         {
             _context = context;
         }
 
-        // GET: OnlineCompetitions
+        // GET: CompetitionDetails
         public async Task<IActionResult> Index()
         {
-            //var babyCiaoContext = _context.OnlineCompetitions.Include(o => o.AccountUserAccountNavigation);
-            //return View(await babyCiaoContext.ToListAsync());
-            var babyCiaoContext = _context.OnlineCompetitions;
+            var babyCiaoContext = _context.CompetitionDetails.Include(c => c.IdOnlineCompetitionNavigation);
             return View(await babyCiaoContext.ToListAsync());
         }
 
-        // GET: OnlineCompetitions/Details/5
+        // GET: CompetitionDetails/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,44 +33,42 @@ namespace BabyCiao.Controllers
                 return NotFound();
             }
 
-            var onlineCompetition = await _context.OnlineCompetitions
-                .Include(o => o.AccountUserAccountNavigation)
+            var competitionDetail = await _context.CompetitionDetails
+                .Include(c => c.IdOnlineCompetitionNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (onlineCompetition == null)
+            if (competitionDetail == null)
             {
                 return NotFound();
             }
 
-            return View(onlineCompetition);
+            return View(competitionDetail);
         }
 
-        // GET: OnlineCompetitions/Create
+        // GET: CompetitionDetails/Create
         public IActionResult Create()
         {
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account");
+            ViewData["IdOnlineCompetition"] = new SelectList(_context.OnlineCompetitions, "Id", "Id");
             return View();
         }
 
-        // POST: OnlineCompetitions/Create
+        // POST: CompetitionDetails/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CompetitionName,AccountUserAccount,StartTime,EndTime,Content,ModifiedTime,Statement")] OnlineCompetition onlineCompetition)
-           
+        public async Task<IActionResult> Create([Bind("Id,IdOnlineCompetition,AccountUserAccount,CompetitionPhoto,Content,ModifiedTime")] CompetitionDetail competitionDetail)
         {
             if (ModelState.IsValid)
             {
-
-                _context.Add(onlineCompetition);
+                _context.Add(competitionDetail);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", onlineCompetition.AccountUserAccount);
-            return View(onlineCompetition);
+            ViewData["IdOnlineCompetition"] = new SelectList(_context.OnlineCompetitions, "Id", "Id", competitionDetail.IdOnlineCompetition);
+            return View(competitionDetail);
         }
 
-        // GET: OnlineCompetitions/Edit/5
+        // GET: CompetitionDetails/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,23 +76,23 @@ namespace BabyCiao.Controllers
                 return NotFound();
             }
 
-            var onlineCompetition = await _context.OnlineCompetitions.FindAsync(id);
-            if (onlineCompetition == null)
+            var competitionDetail = await _context.CompetitionDetails.FindAsync(id);
+            if (competitionDetail == null)
             {
                 return NotFound();
             }
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", onlineCompetition.AccountUserAccount);
-            return View(onlineCompetition);
+            ViewData["IdOnlineCompetition"] = new SelectList(_context.OnlineCompetitions, "Id", "Id", competitionDetail.IdOnlineCompetition);
+            return View(competitionDetail);
         }
 
-        // POST: OnlineCompetitions/Edit/5
+        // POST: CompetitionDetails/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CompetitionName,AccountUserAccount,StartTime,EndTime,Content,ModifiedTime,Statement")] OnlineCompetition onlineCompetition)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,IdOnlineCompetition,AccountUserAccount,CompetitionPhoto,Content,ModifiedTime")] CompetitionDetail competitionDetail)
         {
-            if (id != onlineCompetition.Id)
+            if (id != competitionDetail.Id)
             {
                 return NotFound();
             }
@@ -105,12 +101,12 @@ namespace BabyCiao.Controllers
             {
                 try
                 {
-                    _context.Update(onlineCompetition);
+                    _context.Update(competitionDetail);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OnlineCompetitionExists(onlineCompetition.Id))
+                    if (!CompetitionDetailExists(competitionDetail.Id))
                     {
                         return NotFound();
                     }
@@ -121,11 +117,11 @@ namespace BabyCiao.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", onlineCompetition.AccountUserAccount);
-            return View(onlineCompetition);
+            ViewData["IdOnlineCompetition"] = new SelectList(_context.OnlineCompetitions, "Id", "Id", competitionDetail.IdOnlineCompetition);
+            return View(competitionDetail);
         }
 
-        // GET: OnlineCompetitions/Delete/5
+        // GET: CompetitionDetails/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,35 +129,35 @@ namespace BabyCiao.Controllers
                 return NotFound();
             }
 
-            var onlineCompetition = await _context.OnlineCompetitions
-                .Include(o => o.AccountUserAccountNavigation)
+            var competitionDetail = await _context.CompetitionDetails
+                .Include(c => c.IdOnlineCompetitionNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (onlineCompetition == null)
+            if (competitionDetail == null)
             {
                 return NotFound();
             }
 
-            return View(onlineCompetition);
+            return View(competitionDetail);
         }
 
-        // POST: OnlineCompetitions/Delete/5
+        // POST: CompetitionDetails/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var onlineCompetition = await _context.OnlineCompetitions.FindAsync(id);
-            if (onlineCompetition != null)
+            var competitionDetail = await _context.CompetitionDetails.FindAsync(id);
+            if (competitionDetail != null)
             {
-                _context.OnlineCompetitions.Remove(onlineCompetition);
+                _context.CompetitionDetails.Remove(competitionDetail);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OnlineCompetitionExists(int id)
+        private bool CompetitionDetailExists(int id)
         {
-            return _context.OnlineCompetitions.Any(e => e.Id == id);
+            return _context.CompetitionDetails.Any(e => e.Id == id);
         }
     }
 }

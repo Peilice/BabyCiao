@@ -9,25 +9,23 @@ using BabyCiao.Models;
 
 namespace BabyCiao.Controllers
 {
-    public class OnlineCompetitionsController : Controller
+    public class OnlineCompetitions1Controller : Controller
     {
         private readonly BabyCiaoContext _context;
 
-        public OnlineCompetitionsController(BabyCiaoContext context)
+        public OnlineCompetitions1Controller(BabyCiaoContext context)
         {
             _context = context;
         }
 
-        // GET: OnlineCompetitions
+        // GET: OnlineCompetitions1
         public async Task<IActionResult> Index()
         {
-            //var babyCiaoContext = _context.OnlineCompetitions.Include(o => o.AccountUserAccountNavigation);
-            //return View(await babyCiaoContext.ToListAsync());
-            var babyCiaoContext = _context.OnlineCompetitions;
+            var babyCiaoContext = _context.OnlineCompetitions.Include(o => o.AccountUserAccountNavigation);
             return View(await babyCiaoContext.ToListAsync());
         }
 
-        // GET: OnlineCompetitions/Details/5
+        // GET: OnlineCompetitions1/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,33 +44,48 @@ namespace BabyCiao.Controllers
             return View(onlineCompetition);
         }
 
-        // GET: OnlineCompetitions/Create
+        // GET: OnlineCompetitions1/Create
         public IActionResult Create()
         {
             ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account");
             return View();
         }
 
-        // POST: OnlineCompetitions/Create
+        // POST: OnlineCompetitions1/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,CompetitionName,AccountUserAccount,StartTime,EndTime,Content,ModifiedTime,Statement")] OnlineCompetition onlineCompetition)
-           
         {
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
+            //{
+            //    _context.Add(onlineCompetition);
+            //    await _context.SaveChangesAsync();
+            //    return RedirectToAction(nameof(Index));
+            //}
+            if (ModelState.IsValid != true)
             {
-
+                if (onlineCompetition.AccountUserAccountNavigation == null)
+                {
+                    ViewData["AccountUserAccount"] = onlineCompetition.AccountUserAccountNavigation;
+                    _context.Add(onlineCompetition);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            else
+            {
                 _context.Add(onlineCompetition);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", onlineCompetition.AccountUserAccount);
             return View(onlineCompetition);
         }
 
-        // GET: OnlineCompetitions/Edit/5
+        // GET: OnlineCompetitions1/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -89,7 +102,7 @@ namespace BabyCiao.Controllers
             return View(onlineCompetition);
         }
 
-        // POST: OnlineCompetitions/Edit/5
+        // POST: OnlineCompetitions1/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -125,7 +138,7 @@ namespace BabyCiao.Controllers
             return View(onlineCompetition);
         }
 
-        // GET: OnlineCompetitions/Delete/5
+        // GET: OnlineCompetitions1/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -144,7 +157,7 @@ namespace BabyCiao.Controllers
             return View(onlineCompetition);
         }
 
-        // POST: OnlineCompetitions/Delete/5
+        // POST: OnlineCompetitions1/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
