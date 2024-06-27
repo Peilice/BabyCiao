@@ -19,11 +19,46 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+                        @* 會員管理 *@
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">會員管理</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">會員權限</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">保母資格</a></li>
+                            </ul>
+                        </li>
+                        @* 委託單管理 *@
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">委託單管理</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">保母委託單</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">家長委託單</a></li>
+                            </ul>
+                        </li>
+                        @* 公告管理 *@
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">公告管理</a>
+                        </li>
+                        @* 社群管理 *@
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">社群管理</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="OnlineCompetitions" asp-action="Index">投票活動</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">團購管理</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Platforms" asp-action="Index">論壇文章管理</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="PlatformResponses" asp-action="Index">論壇回應管理</a></li>
+                                </ul>
+                        </li>
+                        @* 權限管理 *@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        @* test *@
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="OnlineCompetitions1" asp-action="Index">test</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
@@ -45,6 +80,6 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

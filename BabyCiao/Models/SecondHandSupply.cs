@@ -13,11 +13,11 @@ public partial class SecondHandSupply
 
     public string SuppliesDescription { get; set; } = null!;
 
-    public int Quantity { get; set; }
+    public int StockQuantity { get; set; }
 
     public DateTime ModifiedTime { get; set; }
 
-    public int Type { get; set; }
+    public string Type { get; set; } = null!;
 
     public bool Display { get; set; }
 

@@ -11,7 +11,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDbContext<BabyCiaoContext>(options => options.UseSqlServer("Babyciao"));
+//builder.Services.AddDbContext<BabyCiaoContext>(options => options.UseSqlServer("Babyciao"));
+
+builder.Services.AddDbContext<BabyCiaoContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Babyciao")));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();

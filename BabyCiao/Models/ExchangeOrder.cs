@@ -11,7 +11,7 @@ public partial class ExchangeOrder
 
     public DateTime ModifiedTime { get; set; }
 
-    public int Statement { get; set; }
+    public string Statement { get; set; } = null!;
 
     public virtual UserAccount AccountUserAccountNavigation { get; set; } = null!;
 
