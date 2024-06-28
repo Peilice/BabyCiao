@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BabyCiao.Models;
+using BabyCiao.Models.DTO;
 
 namespace BabyCiao.Controllers
 {
@@ -30,20 +31,38 @@ namespace BabyCiao.Controllers
         // GET: OnlineCompetitions/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            var onlineCompetition = await _context.OnlineCompetitions
-                .Include(o => o.AccountUserAccountNavigation)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (onlineCompetition == null)
+            var competitionDTO = from con in _context.OnlineCompetitions
+                                 join cp in _context.CompetitionPhotos on con.Id equals cp.IdOnlineCompetition
+                                 select new OnlineCompetitionsDTO
+                                 {
+                                     Id = con.Id,
+                                     CompetitionName = con.CompetitionName,
+                                     AccountUserAccount = con.AccountUserAccount,
+                                     StartTime = con.StartTime,
+                                     EndTime = con.EndTime,
+                                     Content = con.Content,
+                                     Statement = con.Statement,
+                                     ModifiedTime = con.ModifiedTime,
+                                     PhotoName = cp.PhotoName,
+
+                                 };
+
+            //var onlineCompetition = await _context.OnlineCompetitions
+            //    .Include(o => o.AccountUserAccountNavigation)
+            //    .FirstOrDefaultAsync(m => m.Id == id);
+            if (competitionDTO == null)
+            //if (ModelState.IsValid)
             {
                 return NotFound();
             }
 
-            return View(onlineCompetition);
+            return View(competitionDTO);
         }
 
         // GET: OnlineCompetitions/Create
@@ -61,6 +80,8 @@ namespace BabyCiao.Controllers
         public async Task<IActionResult> Create([Bind("Id,CompetitionName,AccountUserAccount,StartTime,EndTime,Content,ModifiedTime,Statement")] OnlineCompetition onlineCompetition)
            
         {
+            onlineCompetition.AccountUserAccountNavigation = _context.UserAccounts.FirstOrDefault(user=>user.Account==onlineCompetition.AccountUserAccount);
+           
             if (ModelState.IsValid)
             {
 
@@ -68,6 +89,14 @@ namespace BabyCiao.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            //else
+            //{
+            //    var errors = ModelState.Values.SelectMany(v => v.Errors);
+            //    foreach (var error in errors)
+            //    {
+            //        Console.WriteLine($"錯誤訊息：{error.ErrorMessage}");
+            //    }
+            //}
             ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", onlineCompetition.AccountUserAccount);
             return View(onlineCompetition);
         }
