@@ -17,6 +17,8 @@ public partial class UserAccount
 
     public virtual ICollection<Announcement> Announcements { get; set; } = new List<Announcement>();
 
+    public virtual ICollection<AuthGroup> AuthGroups { get; set; } = new List<AuthGroup>();
+
     public virtual ICollection<BabyResume> BabyResumes { get; set; } = new List<BabyResume>();
 
     public virtual ICollection<ContactBook> ContactBooks { get; set; } = new List<ContactBook>();
@@ -29,7 +31,9 @@ public partial class UserAccount
 
     public virtual ICollection<Evaluate> EvaluateEvaluatorUserAccountNavigations { get; set; } = new List<Evaluate>();
 
-    public virtual ICollection<ExchangeOrder> ExchangeOrders { get; set; } = new List<ExchangeOrder>();
+    public virtual ICollection<ExchangeOrder> ExchangeOrderAccountAUserAccountNavigations { get; set; } = new List<ExchangeOrder>();
+
+    public virtual ICollection<ExchangeOrder> ExchangeOrderAccountBUserAccountNavigations { get; set; } = new List<ExchangeOrder>();
 
     public virtual ICollection<GroupBuyingDetail> GroupBuyingDetails { get; set; } = new List<GroupBuyingDetail>();
 
@@ -40,8 +44,6 @@ public partial class UserAccount
     public virtual ICollection<NannyResume> NannyResumes { get; set; } = new List<NannyResume>();
 
     public virtual ICollection<OnlineCompetition> OnlineCompetitions { get; set; } = new List<OnlineCompetition>();
-
-    public virtual ICollection<PermissionGroup> PermissionGroups { get; set; } = new List<PermissionGroup>();
 
     public virtual ICollection<Platform> Platforms { get; set; } = new List<Platform>();
 

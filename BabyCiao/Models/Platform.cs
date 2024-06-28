@@ -15,7 +15,7 @@ public partial class Platform
 
     public string Content { get; set; } = null!;
 
-    public int Type { get; set; }
+    public string Type { get; set; } = null!;
 
     public bool Display { get; set; }
 

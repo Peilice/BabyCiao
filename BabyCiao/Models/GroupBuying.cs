@@ -13,7 +13,9 @@ public partial class GroupBuying
 
     public string ProductDescription { get; set; } = null!;
 
-    public int Statement { get; set; }
+    public int TargetCount { get; set; }
+
+    public string Statement { get; set; } = null!;
 
     public DateTime ModifiedTime { get; set; }
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BabyCiao.Models;
 using BabyCiao.Models.DTO;
+using NuGet.Protocol;
 
 namespace BabyCiao.Controllers
 {
@@ -22,10 +23,10 @@ namespace BabyCiao.Controllers
         // GET: OnlineCompetitions
         public async Task<IActionResult> Index()
         {
-            //var babyCiaoContext = _context.OnlineCompetitions.Include(o => o.AccountUserAccountNavigation);
-            //return View(await babyCiaoContext.ToListAsync());
-            var babyCiaoContext = _context.OnlineCompetitions;
+            var babyCiaoContext = _context.OnlineCompetitions.Include(o => o.AccountUserAccountNavigation);
             return View(await babyCiaoContext.ToListAsync());
+            //var babyCiaoContext = _context.OnlineCompetitions;
+            //return View(await babyCiaoContext.ToListAsync());
         }
 
         // GET: OnlineCompetitions/Details/5
@@ -37,21 +38,20 @@ namespace BabyCiao.Controllers
                 return NotFound();
             }
 
-            var competitionDTO = from con in _context.OnlineCompetitions
-                                 join cp in _context.CompetitionPhotos on con.Id equals cp.IdOnlineCompetition
-                                 select new OnlineCompetitionsDTO
-                                 {
-                                     Id = con.Id,
-                                     CompetitionName = con.CompetitionName,
-                                     AccountUserAccount = con.AccountUserAccount,
-                                     StartTime = con.StartTime,
-                                     EndTime = con.EndTime,
-                                     Content = con.Content,
-                                     Statement = con.Statement,
-                                     ModifiedTime = con.ModifiedTime,
-                                     PhotoName = cp.PhotoName,
-
-                                 };
+            var competitionDTO = (from con in _context.OnlineCompetitions
+                                  join cp in _context.CompetitionPhotos on con.Id equals cp.IdOnlineCompetition
+                                  select new OnlineCompetitionsDTO
+                                  {
+                                      Id = con.Id,
+                                      CompetitionName = con.CompetitionName,
+                                      AccountUserAccount = con.AccountUserAccount,
+                                      StartTime = con.StartTime,
+                                      EndTime = con.EndTime,
+                                      Content = con.Content,
+                                      Statement = con.Statement,
+                                      ModifiedTime = con.ModifiedTime,
+                                      PhotoName = cp.PhotoName,
+                                  }).FirstOrDefault();
 
             //var onlineCompetition = await _context.OnlineCompetitions
             //    .Include(o => o.AccountUserAccountNavigation)
