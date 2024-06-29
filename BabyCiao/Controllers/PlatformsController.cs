@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BabyCiao.Models;
+using BabyCiao.Models.DTO;
+using Microsoft.CodeAnalysis;
 
 namespace BabyCiao.Controllers
 {
@@ -32,16 +34,31 @@ namespace BabyCiao.Controllers
             {
                 return NotFound();
             }
+            
+            var platformDTO=(from pf in _context.Platforms join pr in _context.PlatformResponses on pf.Id equals pr.Id select new PlatformsDTO
+            {
+                PlatformId=pf.Id,
+                AccountUserAccount=pf.AccountUserAccount,
+                PlatformModifiedTime=pf.ModifiedTime,
+                PlatformTitle=pf.Title,
+                PlatformContent=pf.Content,
+                PlatformType=pf.Type,
+                PlatformDisplay=pf.Display,
+                ResponseContent=pr.Content,
+                ResponseModifiedTime=pr.ModifiedTime,
+                ResponseDisplay=pr.Display,
+            }).FirstOrDefault();
 
-            var platform = await _context.Platforms
-                .Include(p => p.AccountUserAccountNavigation)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (platform == null)
+
+            //var platform = await _context.Platforms
+            //    .Include(p => p.AccountUserAccountNavigation)
+            //    .FirstOrDefaultAsync(m => m.Id == id);
+            if (platformDTO == null)
             {
                 return NotFound();
             }
 
-            return View(platform);
+            return View(platformDTO);
         }
 
         // GET: Platforms/Create
@@ -56,7 +73,7 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AccountUserAccount,ModifiedTime,Title,Content,Type,Display")] Platform platform)
+        public async Task<IActionResult> Create([Bind("Id,AccountUserAccount,ModifiedTime,Title,Content,Type,Display")] PlatformsDTO platformDTO)
         {
 
             //if (ModelState.IsValid)
@@ -68,22 +85,22 @@ namespace BabyCiao.Controllers
 
             if (ModelState.IsValid != true)
             {
-                if (platform.AccountUserAccountNavigation == null)
+                if (platformDTO.AccountUserAccount == null)
                 {
-                    ViewData["AccountUserAccount"] = platform.AccountUserAccountNavigation;
-                    _context.Add(platform);
+                    ViewData["AccountUserAccount"] = platformDTO.AccountUserAccount;
+                    _context.Add(platformDTO);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
             }
             else
             {
-                _context.Add(platform);
+                _context.Add(platformDTO);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", platform.AccountUserAccount);
-            return View(platform);
+            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", platformDTO.AccountUserAccount);
+            return View(platformDTO);
         }
 
         // GET: Platforms/Edit/5
@@ -108,9 +125,9 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountUserAccount,ModifiedTime,Title,Content,Type,Display")] Platform platform)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountUserAccount,ModifiedTime,Title,Content,Type,Display")] PlatformsDTO platformDTO)
         {
-            if (id != platform.Id)
+            if (id != platformDTO.PlatformId)
             {
                 return NotFound();
             }
@@ -119,12 +136,12 @@ namespace BabyCiao.Controllers
             {
                 try
                 {
-                    _context.Update(platform);
+                    _context.Update(platformDTO);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PlatformExists(platform.Id))
+                    if (!PlatformExists(platformDTO.PlatformId))
                     {
                         return NotFound();
                     }
@@ -135,8 +152,8 @@ namespace BabyCiao.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", platform.AccountUserAccount);
-            return View(platform);
+            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", platformDTO.AccountUserAccount);
+            return View(platformDTO);
         }
 
         // GET: Platforms/Delete/5
