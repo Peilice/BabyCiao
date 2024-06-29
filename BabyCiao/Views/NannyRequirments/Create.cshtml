@@ -1,0 +1,57 @@
+﻿@model BabyCiao.Models.NannyRequirment
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>NannyRequirment</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="NannyAccountUserAccount" class="control-label"></label>
+                <select asp-for="NannyAccountUserAccount" class ="form-control" asp-items="ViewBag.NannyAccountUserAccount"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="PoliceCriminalRecordCertificate" class="control-label"></label>
+                <input asp-for="PoliceCriminalRecordCertificate" class="form-control" />
+                <span asp-validation-for="PoliceCriminalRecordCertificate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ChildCareCertificate" class="control-label"></label>
+                <input asp-for="ChildCareCertificate" class="form-control" />
+                <span asp-validation-for="ChildCareCertificate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NationalIdentificationCard" class="control-label"></label>
+                <input asp-for="NationalIdentificationCard" class="form-control" />
+                <span asp-validation-for="NationalIdentificationCard" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AddressesOfAgencies" class="control-label"></label>
+                <input asp-for="AddressesOfAgencies" class="form-control" />
+                <span asp-validation-for="AddressesOfAgencies" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ValidPeriodsOfCertificates" class="control-label"></label>
+                <input asp-for="ValidPeriodsOfCertificates" class="form-control" />
+                <span asp-validation-for="ValidPeriodsOfCertificates" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

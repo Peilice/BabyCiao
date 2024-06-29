@@ -1,0 +1,193 @@
+@charset "UTF-8";
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+
+html {
+    font-size: 100%;
+    background-color: #fff7f0;
+}
+
+body {
+    font-family: '華康溜溜體', '華康默字體', sans-serif;
+    line-height: 1.7;
+    color: #432;
+}
+
+img {
+    max-width: 100%;
+}
+
+.logo {
+    width: 100px;
+    /* margin-top: 20px; */
+    position: sticky;
+    top: 0;
+}
+
+.main-nav {
+    display: flex;
+    font-size: 1.25em;
+    margin-top: 34px;
+    list-style: none;
+    position: sticky;
+    top: 0;
+}
+
+.main-nav li {
+    margin-left: 36px;
+    color: black;
+    font-weight: bold;
+    /* background-color: #c0c0c0; */
+    /* text-shadow: 3px 3px 5px lightgray; */
+
+}
+
+.main-nav li:hover {
+    color: #d37c70;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background-color: lightgray;
+    opacity: .8;
+
+}
+
+h2 {
+    text-align: center;
+    font-size: 40px;
+}
+
+.wrapper {
+    /* max-width: 1100px; */
+    margin: 0 auto;
+    padding: 0 20px;
+    /* background-color: lightblue; */
+}
+
+#news {
+    background-image: url(../image/backgroundImg4.png);
+    height: 200px;
+    margin-bottom: 40px;
+    background-size: cover;
+
+    /* max-width: 1100px; */
+    /* background-blend-mode: darken; */
+}
+
+.page-title {
+    text-shadow: 3px 3px gray;
+}
+
+#news .page-title {
+    text-align: center;
+}
+
+.page-header img {
+    display: block
+}
+
+/* 頁面分割設定 */
+article {
+    width: 74%;
+}
+
+aside {
+    width: 22%;
+}
+
+.news-contents {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
+}
+
+.post-info {
+    position: relative;
+    padding-top: 4px;
+    margin-bottom: 40px;
+}
+
+/* 日期設定 */
+.post-date {
+    background-color: #d37c70;
+    border-radius: 50%;
+    color: #F5F5F5;
+    width: 70px;
+    height: 70px;
+    font-size: 1.5em;
+    text-align: center;
+    /* 以外層post-info元素為基準的絕對位置 */
+    position: absolute;
+    /* 以外層有relative元素為定位點 */
+    top: 0;
+    padding-top: 10px;
+}
+
+.post-date span {
+    font-size: 1rem;
+    border-top: 1px rgba(255, 255, 255, .5) solid;
+    /* 第四個數值指透明度設定，0~1 */
+    padding-top: 6px;
+    display: block;
+    width: 60%;
+    margin: 0 auto;
+}
+
+/* 標題與類別樣式 */
+.post-title {
+    font-family: "華康溜溜體", serif;
+    font-size: 2rem;
+    font-weight: normal;
+}
+
+.post-title,
+.post-cat {
+    margin-left: 120px;
+    /* 因為文章標題與類別都要在日期的右邊，所以都要用margin-left調整 */
+}
+
+article img {
+    width: 600px;
+}
+
+article p {
+    margin-bottom: 1rem;
+    line-height: 30px;
+}
+
+/* 分類側欄 */
+.sub-title {
+    font-size: 1.3rem;
+    padding: 0 8px 8px;
+    border-bottom: 2px #d37c70 solid;
+    font-weight: normal;
+}
+
+.sub-menu {
+    list-style: none;
+    margin-bottom: 60px;
+}
+
+.sub-menu li {
+    border-bottom: 1px #a8b548 solid;
+}
+
+/* 頁尾 */
+.footer {
+    background-color: #432;
+    text-align: center;
+    padding: 10px 0;
+}
+
+footer p {
+    color: azure;
+    font-size: 16px;
+}

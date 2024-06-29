@@ -1,0 +1,53 @@
+﻿@model IEnumerable<UserAccount>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Account)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Permissions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vip)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Account)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Permissions)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Vip)
+            </td>
+            <td>
+                    <a asp-controller="UserAccounts" asp-action="Edit" asp-route-UserAccountID="@item.UserId">Edit</a> |
+                    <a asp-controller="UserAccounts" asp-action="Details" asp-route-UserAccountID="@item.UserId">Details</a> |
+                    <a asp-controller="UserAccounts" asp-action="Delete" asp-route-UserAccountID="@item.UserId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

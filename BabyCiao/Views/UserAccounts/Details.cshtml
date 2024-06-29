@@ -1,0 +1,42 @@
+﻿@model UserAccount
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>UserAccount</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Account)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Account)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Password)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Password)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Permissions)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Permissions)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Vip)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Vip)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-controller="" asp-action="Edit" asp-route-UserAccountID="@Model?.UserId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

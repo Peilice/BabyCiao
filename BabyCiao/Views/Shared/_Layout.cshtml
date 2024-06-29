@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BabyCiao</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/BabyCiao.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BabyCiao</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        @* 會員管理 *@
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">會員管理</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="UserAccounts" asp-action="Index">會員權限</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="UserInformations" asp-action="Index">會員資訊</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="NannyRequirments" asp-action="Index">保母審核</a></li>
+                            </ul>
+                        </li>
+                        @* 委託單管理 *@
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">委託單管理</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="NannyResumes" asp-action="Index">保母委託單</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="BabyResumes" asp-action="Index">家長委託單</a></li>
+                            </ul>
+                        </li>
+                        @* 公告管理 *@
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">公告管理</a>
+                        </li>
+                        @* 社群管理 *@
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">社群管理</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="OnlineCompetitions" asp-action="Index">投票活動</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">團購管理</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Platforms" asp-action="Index">論壇文章管理</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="PlatformResponses" asp-action="Index">論壇回應管理</a></li>
+                                </ul>
+                        </li>
+                        @* 權限管理 *@
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        @* test *@
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="OnlineCompetitions1" asp-action="Index">test</a>
+                        </li>
+                        @* Contact *@
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contact">客服管理</a>
+                        </li>
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - BabyCiao - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+	@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<BabyCiao.Models.NannyRequirment>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RequirementDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PoliceCriminalRecordCertificate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChildCareCertificate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NationalIdentificationCard)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AddressesOfAgencies)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ValidPeriodsOfCertificates)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Statement)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NannyAccountUserAccountNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RequirementDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PoliceCriminalRecordCertificate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChildCareCertificate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NationalIdentificationCard)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AddressesOfAgencies)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ValidPeriodsOfCertificates)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Statement)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NannyAccountUserAccountNavigation.Account)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
