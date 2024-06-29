@@ -1,4 +1,4 @@
-﻿@model BabyCiao.Models.OnlineCompetition
+﻿@model BabyCiao.Models.DTO.OnlineCompetitionsDTO
 
 @{
     ViewData["Title"] = "Delete";
@@ -47,11 +47,11 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Statement)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AccountUserAccountNavigation)
+        <dt class="col-sm-2">活動照片
+           @*  @Html.DisplayNameFor(model => model.PhotoName) *@
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AccountUserAccountNavigation.Account)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PhotoName)
         </dd>
     </dl>
     
