@@ -13,9 +13,9 @@ namespace BabyCiao.Controllers
 {
     public class PlatformsController : Controller
     {
-        private readonly BabyCiaoContext _context;
+        private readonly BabyciaoContext _context;
 
-        public PlatformsController(BabyCiaoContext context)
+        public PlatformsController(BabyciaoContext context)
         {
             _context = context;
         }

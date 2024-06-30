@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BabyCiao.Models;
 
-public partial class BabyCiaoContext : DbContext
+public partial class BabyciaoContext : DbContext
 {
-    public BabyCiaoContext()
+    public BabyciaoContext()
     {
     }
 
-    public BabyCiaoContext(DbContextOptions<BabyCiaoContext> options)
+    public BabyciaoContext(DbContextOptions<BabyciaoContext> options)
         : base(options)
     {
     }
@@ -85,7 +85,7 @@ public partial class BabyCiaoContext : DbContext
 
 //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=BabyCiao;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;");
+//        => optionsBuilder.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=Babyciao;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -530,7 +530,7 @@ public partial class BabyCiaoContext : DbContext
 
         modelBuilder.Entity<GroupBuyingDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__GroupBuy__3214EC27B1576940");
+            entity.HasKey(e => e.Id).HasName("PK__GroupBuy__3214EC27743FA319");
 
             entity.ToTable("GroupBuyingDetail");
 
@@ -548,7 +548,12 @@ public partial class BabyCiaoContext : DbContext
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.AccountUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__GroupBuyi__Accou__2A164134");
+                .HasConstraintName("FK__GroupBuyi__Accou__3D2915A8");
+
+            entity.HasOne(d => d.GroupBuying).WithMany(p => p.GroupBuyingDetails)
+                .HasForeignKey(d => d.GroupBuyingId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__GroupBuyi__Group__3C34F16F");
         });
 
         modelBuilder.Entity<GroupBuyingPhoto>(entity =>
