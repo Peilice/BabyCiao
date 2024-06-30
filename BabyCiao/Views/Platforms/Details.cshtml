@@ -1,5 +1,5 @@
 ﻿@model BabyCiao.Models.DTO.PlatformsDTO
-@* @model IEnumerable<BabyCiao.Models.Platform> *@
+@* @model IEnumerable<BabyCiao.Models.DTO.PlatformsDTO> *@
 
 @{
     ViewData["Title"] = "Details";
@@ -39,32 +39,38 @@
         <dt class = "col-sm-2">發布者帳號
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AccountUserAccount)
+            @Html.DisplayFor(model => model.PlatformAccountUserAccount)
         </dd>
     </dl>
+    <h4 class="mb-3">留言回應</h4>
     <table class="table">
         <thead>
             <tr>
                 <th>更新時間</th>
                 <th>回應內容</th>
+                <th>發布者帳號</th>
                 <th>顯示控制</th>
             </tr>
         </thead>
+        
         <tbody>
-            @* @foreach (var item in model) *@
-            
+            @foreach (var item in Model.Responses)
+            {
                 <tr>
                     <td>
-                    @Html.DisplayFor(model => model.ResponseModifiedTime)
+                        @Html.DisplayFor(modelItem => item.ResponseModifiedTime)
                     </td>
                     <td>
-                    @Html.DisplayFor(model => model.ResponseContent)
+                        @Html.DisplayFor(modelItem => item.ResponseContent)
                     </td>
                     <td>
-                    @Html.DisplayFor(model => model.ResponseDisplay)
+                        @Html.DisplayFor(modelItem => item.ResponseAccountUserAccount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ResponseDisplay)
                     </td>
                 </tr>
-            
+            }
         </tbody>
     </table>
 </div>

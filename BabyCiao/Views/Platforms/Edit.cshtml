@@ -1,4 +1,4 @@
-﻿@model BabyCiao.Models.Platform
+﻿@model BabyCiao.Models.DTO.PlatformsDTO
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,36 +12,36 @@
     <div class="col-12">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="PlatformId" />
             <div class="form-group">
-                <label asp-for="AccountUserAccount" class="control-label">發佈者帳號</label>
-                <select asp-for="AccountUserAccount" class="form-control" asp-items="ViewBag.AccountUserAccount" readonly></select>
-                <span asp-validation-for="AccountUserAccount" class="text-danger"></span>
+                <label asp-for="PlatformAccountUserAccount" class="control-label">發佈者帳號</label>
+                <select asp-for="PlatformAccountUserAccount" class="form-control" asp-items="ViewBag.AccountUserAccount" readonly></select>
+                <span asp-validation-for="PlatformAccountUserAccount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ModifiedTime" class="control-label">最後更新時間</label>
-                <input asp-for="ModifiedTime" class="form-control" readonly />
-                <span asp-validation-for="ModifiedTime" class="text-danger"></span>
+                <label asp-for="PlatformModifiedTime" class="control-label">最後更新時間</label>
+                <input asp-for="PlatformModifiedTime" class="form-control" readonly />
+                <span asp-validation-for="PlatformModifiedTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Title" class="control-label">標題</label>
-                <input asp-for="Title" class="form-control" readonly/>
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <label asp-for="PlatformTitle" class="control-label">標題</label>
+                <input asp-for="PlatformTitle" class="form-control" readonly />
+                <span asp-validation-for="PlatformTitle" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Content" class="control-label">內文</label>
-                <textarea asp-for="Content" class="form-control" rows="10" readonly></textarea>
-                <span asp-validation-for="Content" class="text-danger"></span>
+                <label asp-for="PlatformContent" class="control-label">內文</label>
+                <textarea asp-for="PlatformContent" class="form-control" rows="10" readonly></textarea>
+                <span asp-validation-for="PlatformContent" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Type" class="control-label">類別</label>
-                <input asp-for="Type" class="form-control" />
-                <span asp-validation-for="Type" class="text-danger"></span>
+                <label asp-for="PlatformType" class="control-label">類別</label>
+                <input asp-for="PlatformType" class="form-control" />
+                <span asp-validation-for="PlatformType" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
-                <label class="form-check-label">顯示控制
-                    <input class="form-check-input" asp-for="Display" /> @* @Html.DisplayNameFor(model => model.Display) *@
-                </label>
+                <input class="form-check-input" asp-for="PlatformDisplay" />
+                <label class="form-check-label" asp-for="PlatformDisplay">顯示控制</label>
+                <span asp-validation-for="PlatformDisplay" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="儲存" class="btn btn-primary" />

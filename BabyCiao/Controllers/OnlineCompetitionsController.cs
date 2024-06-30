@@ -49,6 +49,7 @@ namespace BabyCiao.Controllers
                                       ModifiedTime = con.ModifiedTime,
                                       PhotoName = cp.PhotoName,
                                   }).FirstOrDefault();
+            
             if (competitionDTO == null)
             {
                 return NotFound();
