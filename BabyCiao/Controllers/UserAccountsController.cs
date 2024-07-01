@@ -9,7 +9,7 @@ using BabyCiao.Models;
 
 namespace BabyCiao.Controllers
 {
-    [Route("/UserAccounts/{action=Index}/{UserAccountID?}")]
+   // [Route("/UserAccounts/{action=Index}/{UserAccountsID?}")]
     public class UserAccountsController : Controller
     {
         private readonly BabyCiaoContext _context;
@@ -26,15 +26,15 @@ namespace BabyCiao.Controllers
         }
 
         // GET: UserAccounts/Details/5
-        public async Task<IActionResult> Details(int? UserAccountID)
+        public async Task<IActionResult> Details(int? UserAccountsID)
         {
-            if (UserAccountID == null)
+            if (UserAccountsID == null)
             {
                 return NotFound();
             }
 
             var userAccount = await _context.UserAccounts
-                .FirstOrDefaultAsync(m => m.UserId == UserAccountID);
+                .FirstOrDefaultAsync(m => m.UserId == UserAccountsID);
             if (userAccount == null)
             {
                 return NotFound();
@@ -66,14 +66,14 @@ namespace BabyCiao.Controllers
         }
 
         // GET: UserAccounts/Edit/5
-        public async Task<IActionResult> Edit(int UserAccountID)
+        public async Task<IActionResult> Edit(int UserAccountsID)
         {
-            if (UserAccountID == null)
+            if (UserAccountsID == null)
             {
                 return NotFound();
             }
 
-            var userAccount = await _context.UserAccounts.FindAsync(UserAccountID);
+            var userAccount = await _context.UserAccounts.FindAsync(UserAccountsID);
             if (userAccount == null)
             {
                 return NotFound();
@@ -117,15 +117,15 @@ namespace BabyCiao.Controllers
         }
 
         // GET: UserAccounts/Delete/5
-        public async Task<IActionResult> Delete(int UserAccountID)
+        public async Task<IActionResult> Delete(int UserAccountsID)
         {
-            if (UserAccountID == null)
+            if (UserAccountsID == null)
             {
                 return NotFound();
             }
 
             var userAccount = await _context.UserAccounts
-                .FirstOrDefaultAsync(m => m.UserId == UserAccountID);
+                .FirstOrDefaultAsync(m => m.UserId == UserAccountsID);
             if (userAccount == null)
             {
                 return NotFound();
@@ -137,9 +137,9 @@ namespace BabyCiao.Controllers
         // POST: UserAccounts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int UserAccountID)
+        public async Task<IActionResult> DeleteConfirmed(int UserAccountsID)
         {
-            var userAccount = await _context.UserAccounts.FindAsync(UserAccountID);
+            var userAccount = await _context.UserAccounts.FindAsync(UserAccountsID);
             if (userAccount != null)
             {
                 _context.UserAccounts.Remove(userAccount);
@@ -149,9 +149,9 @@ namespace BabyCiao.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserAccountExists(int UserAccountID)
+        private bool UserAccountExists(int UserAccountsID)
         {
-            return _context.UserAccounts.Any(e => e.UserId == UserAccountID);
+            return _context.UserAccounts.Any(e => e.UserId == UserAccountsID);
         }
     }
 }

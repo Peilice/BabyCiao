@@ -1,10 +1,11 @@
 ﻿@model IEnumerable<UserAccount>
+@inject BabyCiaoContext _context
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>目前客戶總數<cache expires-after="@TimeSpan.FromHours(1)">@_context.UserAccounts.Count()</cache></h1>
 
 <p>
     <a asp-action="Create">Create New</a>

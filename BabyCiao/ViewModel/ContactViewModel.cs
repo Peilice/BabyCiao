@@ -12,5 +12,7 @@ namespace BabyCiao.ViewModel
         public string Email { get; set; }
         [Required]
         public string Phone { get; set; }
+
+        public string context { get; set; }
     }
 }
