@@ -18,7 +18,7 @@ namespace BabyCiao.Controllers
         {
             return View();
         }
-
+        
         public IActionResult Privacy()
         {
             return View();
@@ -30,14 +30,12 @@ namespace BabyCiao.Controllers
 
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Contact([Bind("Name,Email,Phone")]ContactViewModel cvm)
+        public IActionResult Contact([Bind("Name,Email,Phone,Title,content")]ContactViewModel cvm)
         {
             if (!ModelState.IsValid)
             {
-
                 return RedirectToAction("Index");
             }
                 return View(cvm);   

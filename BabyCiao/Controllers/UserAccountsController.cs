@@ -9,7 +9,7 @@ using BabyCiao.Models;
 
 namespace BabyCiao.Controllers
 {
-   // [Route("/UserAccounts/{action=Index}/{UserAccountsID?}")]
+    [Route("/UserAccounts/{action=Index}/{UserID?}")]
     public class UserAccountsController : Controller
     {
         private readonly BabyCiaoContext _context;
@@ -20,21 +20,23 @@ namespace BabyCiao.Controllers
         }
 
         // GET: UserAccounts
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             return View(await _context.UserAccounts.ToListAsync());
         }
 
         // GET: UserAccounts/Details/5
-        public async Task<IActionResult> Details(int? UserAccountsID)
+        [HttpGet]
+        public async Task<IActionResult> Details(int?UserID)
         {
-            if (UserAccountsID == null)
+            if (UserID == null)
             {
                 return NotFound();
             }
 
             var userAccount = await _context.UserAccounts
-                .FirstOrDefaultAsync(m => m.UserId == UserAccountsID);
+                .FirstOrDefaultAsync(m => m.UserId == UserID);
             if (userAccount == null)
             {
                 return NotFound();
@@ -44,6 +46,7 @@ namespace BabyCiao.Controllers
         }
 
         // GET: UserAccounts/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
@@ -54,7 +57,7 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,Account,Password,Permissions,Vip")] UserAccount userAccount)
+        public async Task<IActionResult> CreatePost([Bind("UserId,Account,Password,Permissions,Vip")] UserAccount userAccount)
         {
             if (ModelState.IsValid)
             {
@@ -66,14 +69,14 @@ namespace BabyCiao.Controllers
         }
 
         // GET: UserAccounts/Edit/5
-        public async Task<IActionResult> Edit(int UserAccountsID)
+        public async Task<IActionResult> Edit(int? UserID)
         {
-            if (UserAccountsID == null)
+            if (UserID == null)
             {
                 return NotFound();
             }
 
-            var userAccount = await _context.UserAccounts.FindAsync(UserAccountsID);
+            var userAccount = await _context.UserAccounts.FindAsync(UserID);
             if (userAccount == null)
             {
                 return NotFound();
@@ -86,9 +89,9 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,Account,Password,Permissions,Vip")] UserAccount userAccount)
+        public async Task<IActionResult> EditPost(int UserID, [Bind("UserId,Account,Password,Permissions,Vip")] UserAccount userAccount)
         {
-            if (id != userAccount.UserId)
+            if (UserID != userAccount.UserId)
             {
                 return NotFound();
             }
@@ -117,15 +120,15 @@ namespace BabyCiao.Controllers
         }
 
         // GET: UserAccounts/Delete/5
-        public async Task<IActionResult> Delete(int UserAccountsID)
+        public async Task<IActionResult> Delete(int? UserID)
         {
-            if (UserAccountsID == null)
+            if (UserID == null)
             {
                 return NotFound();
             }
 
             var userAccount = await _context.UserAccounts
-                .FirstOrDefaultAsync(m => m.UserId == UserAccountsID);
+                .FirstOrDefaultAsync(m => m.UserId == UserID);
             if (userAccount == null)
             {
                 return NotFound();
@@ -137,9 +140,9 @@ namespace BabyCiao.Controllers
         // POST: UserAccounts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int UserAccountsID)
+        public async Task<IActionResult> DeleteConfirmed(int UserID)
         {
-            var userAccount = await _context.UserAccounts.FindAsync(UserAccountsID);
+            var userAccount = await _context.UserAccounts.FindAsync(UserID);
             if (userAccount != null)
             {
                 _context.UserAccounts.Remove(userAccount);
@@ -149,9 +152,9 @@ namespace BabyCiao.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserAccountExists(int UserAccountsID)
+        private bool UserAccountExists(int UserID)
         {
-            return _context.UserAccounts.Any(e => e.UserId == UserAccountsID);
+            return _context.UserAccounts.Any(e => e.UserId == UserID);
         }
     }
 }
