@@ -47,7 +47,7 @@ namespace BabyCiao.Controllers
                                       Content = con.Content,
                                       Statement = con.Statement,
                                       ModifiedTime = con.ModifiedTime,
-                                      PhotoName = cp.PhotoName,
+                                      //PhotoName = cp.PhotoName,
                                   }).FirstOrDefault();
             
             if (competitionDTO == null)
@@ -107,7 +107,7 @@ namespace BabyCiao.Controllers
                                       Content = con.Content,
                                       Statement = con.Statement,
                                       ModifiedTime = con.ModifiedTime,
-                                      PhotoName = cp.PhotoName,
+                                      //PhotoName = cp.PhotoName,
                                   }).FirstOrDefault();
             if (competitionDTO == null)
             {
@@ -161,16 +161,27 @@ namespace BabyCiao.Controllers
             {
                 return NotFound();
             }
+            var competitionDTO =(from con in _context.OnlineCompetitions
+                                  join cp in _context.CompetitionPhotos on con.Id equals cp.IdOnlineCompetition
+                                  select new OnlineCompetitionsDTO
+                                  {
+                                      Id = con.Id,
+                                      CompetitionName = con.CompetitionName,
+                                      AccountUserAccount = con.AccountUserAccount,
+                                      StartTime = con.StartTime,
+                                      EndTime = con.EndTime,
+                                      Content = con.Content,
+                                      Statement = con.Statement,
+                                      ModifiedTime = con.ModifiedTime,
+                                      //PhotoName = cp.PhotoName,
+                                  }).FirstOrDefault();
 
-            var onlineCompetition = await _context.OnlineCompetitions
-                .Include(o => o.AccountUserAccountNavigation)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (onlineCompetition == null)
+            if (competitionDTO == null)
             {
                 return NotFound();
             }
 
-            return View(onlineCompetition);
+            return View(competitionDTO);
         }
 
         // POST: OnlineCompetitions/Delete/5
@@ -192,5 +203,12 @@ namespace BabyCiao.Controllers
         {
             return _context.OnlineCompetitions.Any(e => e.Id == id);
         }
+
+        //public async Task<FileResult> GetPicture(int id)
+        //{
+        //    PlatformPhoto photoname = await _context.PlatformPhotos.FindAsync(id);
+        //    byte[]? picture = photoname?.PhotoName;
+        //    return File(picture, "image/jpeg");
+        //}
     }
 }

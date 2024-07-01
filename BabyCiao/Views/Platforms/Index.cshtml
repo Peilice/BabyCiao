@@ -21,8 +21,11 @@
             <th>
                 類別
             </th>
-            <th>顯示控制
+            <th>
+                發布者帳號
             </th>
+            @* <th>顯示控制
+            </th> *@
             <th></th>
         </tr>
     </thead>
@@ -40,8 +43,11 @@
                     @Html.DisplayFor(modelItem => item.Type)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Display)
+                    @Html.DisplayFor(modelItem => item.AccountUserAccount)
                 </td>
+                @* <td>
+                    @Html.DisplayFor(modelItem => item.Display)
+                </td> *@
             @* <td>
             @Html.DisplayFor(modelItem => item.AccountUserAccountNavigation.Account)
             </td> *@

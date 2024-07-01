@@ -12,25 +12,21 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">活動名稱
-            @* @Html.DisplayNameFor(model => model.CompetitionName) *@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CompetitionName)
         </dd>
         <dt class = "col-sm-2">活動開始時間
-            @* @Html.DisplayNameFor(model => model.StartTime) *@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.StartTime)
         </dd>
         <dt class = "col-sm-2">活動結束時間
-            @* @Html.DisplayNameFor(model => model.EndTime) *@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.EndTime)
         </dd>
         <dt class = "col-sm-2">活動介紹
-            @* @Html.DisplayNameFor(model => model.Content) *@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Content)
@@ -42,13 +38,11 @@
             @Html.DisplayFor(model => model.ModifiedTime)
         </dd>
         <dt class = "col-sm-2">活動狀態
-            @* @Html.DisplayNameFor(model => model.Statement) *@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Statement)
         </dd>
         <dt class="col-sm-2">活動照片
-           @*  @Html.DisplayNameFor(model => model.PhotoName) *@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.PhotoName)
@@ -57,7 +51,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input type="submit" value="刪除" class="btn btn-danger" onclick='return confirm("確定要刪除嗎?")'/> |
         <a asp-action="Index">回到活動列表</a>
     </form>
 </div>

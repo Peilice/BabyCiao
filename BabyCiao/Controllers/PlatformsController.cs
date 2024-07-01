@@ -142,7 +142,7 @@ namespace BabyCiao.Controllers
             {
                 return NotFound();
             }
-            //ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", platform.AccountUserAccount);
+            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", platformDTO.PlatformAccountUserAccount);
             return View(platformDTO);
         }
 
@@ -151,7 +151,8 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountUserAccount,ModifiedTime,Title,Content,Type,Display")] PlatformsDTO platformDTO)
+        //public async Task<IActionResult> Edit(int id, [Bind("Id,AccountUserAccount,ModifiedTime,Title,Content,Type,Display")] PlatformsDTO platformDTO)
+        public async Task<IActionResult> Edit(int id, [Bind("PlatformId,PlatformAccountUserAccount,PlatformModifiedTime,PlatformTitle,PlatformContent,PlatformType,PlatformDisplay")] PlatformsDTO platformDTO)
         {
             if (id != platformDTO.PlatformId)
             {
@@ -162,7 +163,14 @@ namespace BabyCiao.Controllers
             {
                 try
                 {
-                    _context.Update(platformDTO);
+                    var platform = await _context.Platforms.FindAsync(id);
+                    if (platform == null)
+                    {
+                        return NotFound();
+                    }
+                    platform.UpdateEntity(platformDTO);
+
+                    _context.Update(platform);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -220,5 +228,76 @@ namespace BabyCiao.Controllers
         {
             return _context.Platforms.Any(e => e.Id == id);
         }
+
+        // GET: Platforms/ResponseEdit/{id}
+        //public async Task<IActionResult> ResponseEdit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+
+        //    //var responseDTO = await (from pr in _context.PlatformResponses
+        //    //       where pr.Id == id
+        //    //       select new PlatformsDTO.Response
+        //    //       {
+        //    //           ResponseId = pr.Id,
+        //    //           ResponseModifiedTime = pr.ModifiedTime,
+        //    //           ResponseContent = pr.Content,
+        //    //           ResponseDisplay = pr.Display,
+        //    //           ResponseAccountUserAccount = pr.AccountUserAccount
+        //    //       }).FirstOrDefaultAsync();
+
+        //    //var platform = await _context.Platforms.FindAsync(id);
+        //    if (responseDTO == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", responseDTO.Responses);
+        //    var responses = responseDTO.Responses;
+        //    return View(responseDTO);
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> ResponseEdit(int id, [Bind("ResponseDisplay")] PlatformsDTO.Response responseDTO)
+        //{
+        //    if (id != responseDTO.ResponseId)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            var response = await _context.PlatformResponses.FindAsync(id);
+        //            if (response == null)
+        //            {
+        //                return NotFound();
+        //            }
+        //            response.UpdateEntity(responseDTO);
+
+        //            _context.Update(response);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!PlatformExists(responseDTO.ResponseId))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", responseDTO.ResponseContent);
+        //    return View(responseDTO);
+
+        //}
     }
 }
