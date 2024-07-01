@@ -1,0 +1,58 @@
+﻿@model BabyCiao.Models.DTO.AuthDTO
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>確認要刪除嗎?</h3>
+<div>
+    <h4>權限群組</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GroupId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.GroupId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GroupDescription)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.GroupDescription)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ModifiedDateStringOld)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ModifiedDateStringOld)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ModifiedPersonUserAccount)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ModifiedPersonUserAccount)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.settings)
+        </dt>
+        <dd class="col-sm-10">
+            <ul>
+                @foreach (var setting in Model.settings)
+                {
+                    <li>@setting.FunctionId - @setting.FunctionName</li>
+                }
+            </ul>
+        </dd>
+    </dl>
+</div>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="GroupId" />
+        
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

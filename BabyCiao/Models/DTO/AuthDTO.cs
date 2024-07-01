@@ -1,32 +1,43 @@
-﻿namespace BabyCiao.Models.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+
+namespace BabyCiao.Models.DTO
 {
     public class AuthDTO
 	{
-		public int GroupCode { get; set; }// 來自 PermissionGroup
-		public string GroupDescription { get; set; }// 來自 PermissionGroup
+        [Display(Name = "群組編號")]
+        public int GroupId { get; set; }// 來自 PermissionGroup
 
-		public string ModifiedPersonUserAccount { get; set; } = null!;// 來自 PermissionGroup
+        [Display(Name = "群組名稱")]
+        public string GroupDescription { get; set; }// 來自 PermissionGroup
 
-		public DateTime ModifiedDate { get; set; }// 來自 PermissionGroup
+        [Display(Name = "編輯者")]
+        public string ModifiedPersonUserAccount { get; set; } = null!;// 來自 PermissionGroup
 
-		//public string FunctionCodeSystemFunction { get; set; } = null!;// 來自 FunctionSetting
+        [Display(Name = "更新日期")]
+        public DateTime ModifiedDate { get; set; }// 來自 PermissionGroup
 
-		//          public DateTime ModifiedDateFunctionSetting { get; set; }// 來自 FunctionSetting
+        [Display(Name = "更新日期")]
+        public string? ModifiedDateStringOld { get; set; }//上次更新日期
+        [Display(Name = "更新日期")]
+        public string? ModifiedDateStringNew { get; set; }//此次更新日期
+        [Display(Name = "功能權限")]
+        public List<FunctionSettingDTO>? settings { get; set; }// 來自 FunctionSetting
+            //=new List<FunctionSettingDTO>()
 
-		public IEnumerable<FunctionSettingDTO> settings { get; set; }// 來自 FunctionSetting
 
 
 
-            public DateTime ModifiedDatePermissionGroup { get; set; }//來自PermissionGroup
 
-        
-    }
+	}
+
     public class FunctionSettingDTO {
+        public bool IsExsited { get; set; }
 
-		public int FunctionCode { get; set; }//來自SystemFunction
+		public int GroupId { get; set; }//來自PermissionGroup
+		public int FunctionId { get; set; }//來自SystemFunction
 
-		public string FunctionName { get; set; } = null!;//來自SystemFunction
+		public string? FunctionName { get; set; }//來自SystemFunction
 
-		public int GroupCode { get; set; }//來自PermissionGroup
 	}
 }

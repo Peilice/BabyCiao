@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BabyCiao.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <header>
@@ -44,14 +45,14 @@
                             <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">社群管理</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" asp-area="" asp-controller="OnlineCompetitions" asp-action="Index">投票活動</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">團購管理</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="GroupBuy" asp-action="Index">團購管理</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Platforms" asp-action="Index">論壇文章管理</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-controller="PlatformResponses" asp-action="Index">論壇回應管理</a></li>
                                 </ul>
                         </li>
                         @* 權限管理 *@
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Index">權限管理</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>

@@ -1,0 +1,156 @@
+﻿@* @{
+    ViewData["Title"] = "Index";
+}
+
+@section Styles {
+    <link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" asp-append-version="true" />
+    <style>
+        thead {
+            background-color: darksalmon;
+            color: white;
+        }
+    </style>
+}
+
+<h3>商品紀錄</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <td>商品編號</td>
+            <td>商品名稱</td>
+            <td>商品描述</td>
+            <td>成團數量</td>
+            <td>成團狀態</td>
+            <td>建立日期</td>
+            <td>顯示狀態</td>
+            <td>編輯者</td>
+        </tr>
+    </thead>
+</table>
+
+@section Scripts {
+    <script src="~/lib/datatables/js/jquery.datatables.min.js" asp-append-version="true"></script>
+    <script src="//cdn.datatables.net/fixedheader/3.3.1/js/dataTables.fixedHeader.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            //alert("ready");
+            $(".table").dataTable({
+                ajax: {
+                    type: "GET",
+                    url: "/Products/IndexJson",
+                    dataSrc: function (data) {
+                        return data;
+                    }
+                },//物件 ajax是一種呼叫
+                columns: [
+                    { "data": "Id", "width": "10 %" },
+                    { "data": "ProductName", "width": "10 %" },
+                    { "data": "ProductDescription", "width": "10 %" },
+                    { "data": "TargetCount", "width": "10 %" },
+                    { "data": "Statement", "width": "10 %" },
+                    { "data": "ModifiedTime", "width": "10 %" },
+                    { "data": "Display", "width": "10 %" },
+                    { "data": "AccountUserAccount", "width": "10 %" },
+                ],//陣列
+                fixedHeader: { header: true },//物件
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/2.0.8/i18n/zh-HANT.json',
+                }//物件
+            });
+        });
+    </script>
+}
+ *@
+@* @model IEnumerable< BabyCiao.Models.DTO.GroupBuyDTO> *@
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@section Styles {
+    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <style>
+        thead {
+            background-color: darksalmon;
+            color: white;
+        }
+    </style>
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-outline-secondary"><i class="fa-solid fa-plus"></i> 新增團購商品</a>
+</p>
+
+<table id="groupBuysTable" class="table">
+    <thead>
+        <tr>
+            <th>商品名稱</th>
+            <th>商品描述</th>
+            <th>成團數量</th>
+            <th>建立日期</th>
+            <th>顯示狀態</th>
+            <th>編輯者</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ProductName</td>
+                <td>@item.ProductDescription</td>
+                <td>@item.TargetCount</td>
+                <td>@item.ModifiedTimeView</td>
+                <td>@item.Display</td>
+                <td>@item.UserAccount</td>
+                <td>
+                    <a href="/GroupBuy/Edit/@item.Id">Edit</a> |
+                    <a href="/GroupBuy/Details/@item.Id">Details</a> |
+                    <a href="/GroupBuy/Delete/@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#groupBuysTable').DataTable({
+                "paging": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "processing": true,
+                "serverSide": false,
+                "ajax": {
+                    "url": "/GroupBuy/IndexJson",
+                    "type": "GET",
+                    "dataSrc": ""
+                },
+                "columns": [
+                    { "data": "productName" },
+                    { "data": "productDescription" },
+                    { "data": "targetCount" },
+                    { "data": "modifiedTime" },
+                    { "data": "display" },
+                    { "data": "userAccount" },
+                    {
+                        "render": function (data, type, row) {
+                            return '<a href="/GroupBuy/Edit/' + row.Id + '">Edit</a> | ' +
+                                '<a href="/GroupBuy/Details/' + row.Id + '">Details</a> | ' +
+                                '<a href="/GroupBuy/Delete/' + row.Id + '">Delete</a>';
+                        }
+                    }
+                ],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Chinese-traditional.json"
+                }
+            });
+        });
+    </script>
+}
