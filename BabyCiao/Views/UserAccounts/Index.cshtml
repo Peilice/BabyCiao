@@ -20,7 +20,8 @@
 }
 
 <h1>目前會員總數<cache expires-after="@TimeSpan.FromMinutes(30)">@_context.UserAccounts.Count()</cache></h1>
-
+<p>權限</p>
+<select asp-items="@ViewBag.Permissions"></select>
 <p>
     <a asp-action="Create">新增會員</a>
 </p>

@@ -23,6 +23,7 @@ namespace BabyCiao.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            ViewBag.Permissions = new SelectList(_context.UserAccounts.Select(c => c.Permissions).Distinct());
             return View(await _context.UserAccounts.ToListAsync());
         }
 
