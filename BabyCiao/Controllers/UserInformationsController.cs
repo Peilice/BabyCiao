@@ -95,7 +95,7 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserinfoId,AccountUser,UserFirstName,UserLastName,Phone,Address,Gender,Email,Birthday")] UserInformation userInformation)
+        public async Task<IActionResult> EditPost(int id, [Bind("UserinfoId,AccountUser,UserFirstName,UserLastName,Phone,Address,Gender,Email,Birthday")] UserInformation userInformation)
         {
             if (id != userInformation.UserinfoId)
             {
