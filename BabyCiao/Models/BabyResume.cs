@@ -1,48 +1,35 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
-namespace BabyCiao.Models
+namespace BabyCiao.Models;
+
+public partial class BabyResume
 {
-    public partial class BabyResume
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        [Required]
-        public string AccountUserAccount { get; set; } = null!;
+    public string AccountUserAccount { get; set; } 
 
-        public string? Photo { get; set; }
+    public string Photo { get; set; }
 
-        [Required]
-        public string FirstName { get; set; } = null!;
+    public string FirstName { get; set; } 
 
-        [Required]
-        public string City { get; set; } = null!;
+    public string City { get; set; } 
 
-        [Required]
-        public string District { get; set; } = null!;
+    public string District { get; set; } 
 
-        [DataType(DataType.Date)]
-        [Required]
-        public DateTime ApplyDate { get; set; }
+    public DateOnly ApplyDate { get; set; }
 
-        [DataType(DataType.Date)]
-        [Required]
-        public DateTime RequireDate { get; set; }
+    public DateOnly RequireDate { get; set; }
 
-        [Required]
-        public string Babyage { get; set; } = null!;
+    public DateOnly BabyBirthday { get; set; }
 
-        [Required]
-        public string TypeOfDaycare { get; set; } = null!;
+    public string TypeOfDaycare { get; set; }
 
-        [Required]
-        public string TimeSlot { get; set; } = null!;
+    public string TimeSlot { get; set; }
 
-        public string? Memo { get; set; }
+    public string Memo { get; set; }
 
-        [Required]
-        public bool Display { get; set; }
+    public bool Display { get; set; }
 
-        public virtual UserAccount? AccountUserAccountNavigation { get; set; } = null!;
-    }
+    public virtual UserAccount AccountUserAccountNavigation { get; set; } 
 }

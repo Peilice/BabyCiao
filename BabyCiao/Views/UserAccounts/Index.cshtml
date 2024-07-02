@@ -1,0 +1,82 @@
+﻿@model IEnumerable<UserAccount>
+@inject BabyCiaoContext _context
+
+@{
+    ViewData["Title"] = "Index";
+}
+@section Styles
+{
+    <style>
+        #UserAccount {
+            width: 100%;
+            overflow-y: auto;
+            display: block;
+            line-height: 100px;
+        }
+        thead{
+        background-color:antiquewhite;
+        }
+    </style>
+}
+
+<h1>目前會員總數<cache expires-after="@TimeSpan.FromMinutes(30)">@_context.UserAccounts.Count()</cache></h1>
+<p>權限</p>
+<select asp-items="@ViewBag.Permissions"></select>
+<p>
+    <a asp-action="Create">新增會員</a>
+</p>
+<table id="UserAccountTable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Account)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Permissions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vip)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Account)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Permissions)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Vip)
+            </td>
+            <td>
+                    <a asp-controller="UserAccounts" asp-action="Edit" asp-route-UserId="@item.UserId">Edit</a> |
+                    <a asp-controller="UserAccounts" asp-action="Details" asp-route-UserId="@item.UserId">Details</a> |
+                    <a asp-controller="UserAccounts" asp-action="Delete" asp-route-UserId="@item.UserId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+@section Scripts
+{
+    <script src="~/lib/jquery/dist/jquery.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery/dist/jquery.freezeheader.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            $("#UserAccountTable").freezeHeader({ 
+                'height': '600px',
+                'width': '100%'
+            });
+        });
+    </script>
+}

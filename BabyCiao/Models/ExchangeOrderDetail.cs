@@ -13,5 +13,5 @@ public partial class ExchangeOrderDetail
 
     public virtual ExchangeOrder IdExchangeOrderNavigation { get; set; } = null!;
 
-    public virtual SecondHandSupplies IdSecondHandSuppliesNavigation { get; set; } = null!;
+    public virtual SecondHandSupply IdSecondHandSuppliesNavigation { get; set; } = null!;
 }
