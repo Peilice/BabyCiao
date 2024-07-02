@@ -3,8 +3,11 @@ using System.Collections.Generic;
 
 namespace BabyCiao.Models;
 
-public partial class NannyResume
+public partial class nannyResume
 {
+    internal byte[] PoliceCriminalRecordCertificate;
+    internal byte[] NationalIdentificationCard;
+
     public int Id { get; set; }
 
     public string NannyAccountUserAccount { get; set; } = null!;
@@ -44,4 +47,5 @@ public partial class NannyResume
     public bool DisplayControl { get; set; }
 
     public virtual UserAccount NannyAccountUserAccountNavigation { get; set; } = null!;
+    public byte[] childCareCertificate { get; internal set; }
 }

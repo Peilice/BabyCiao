@@ -1,0 +1,36 @@
+﻿@model NannyRequirment
+
+@if (Model.PoliceCriminalRecordCertificate != null)
+{
+    <img src="@Url.Action("GetPicture", "Categories",
+	 new {id=Model.Id})"
+         style="width:320px;height:240px"
+         title="良民證" />
+}
+else
+{
+    <img src="@Url.Content("~/img/保母證照/良民證1.png")" style="width:320px;height:240px" />
+}
+@if (Model.ChildCareCertificate != null)
+{
+    <img src="@Url.Action("GetPicture", "Categories",
+	 new {id=Model.Id})"
+         style="width:320px;height:240px"
+         title="保母證" />
+}
+else
+{
+    <img src="@Url.Content("~/img/保母證照/保母證1.png")" style="width:320px;height:240px" />
+}
+
+@if (Model.NationalIdentificationCard != null)
+{
+    <img src="@Url.Action("GetPicture", "Categories",
+	 new {id=Model.Id})"
+         style="width:320px;height:240px"
+         title="身分證" />
+}
+else
+{
+    <img src="@Url.Content("~/img/保母證照/良民證1.png")" style="width:320px;height:240px" />
+}

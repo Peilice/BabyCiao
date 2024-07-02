@@ -59,7 +59,7 @@ public partial class BabyCiaoContext : DbContext
 
     public virtual DbSet<NannyRequirment> NannyRequirments { get; set; }
 
-    public virtual DbSet<NannyResume> NannyResumes { get; set; }
+    public virtual DbSet<nannyResume> NannyResumes { get; set; }
 
     public virtual DbSet<OnlineCompetition> OnlineCompetitions { get; set; }
 
@@ -634,7 +634,7 @@ public partial class BabyCiaoContext : DbContext
                 .HasConstraintName("FK__NannyRequ__Nanny__5070F446");
         });
 
-        modelBuilder.Entity<NannyResume>(entity =>
+        modelBuilder.Entity<nannyResume>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__NannyRes__3214EC279F5E2AF8");
 

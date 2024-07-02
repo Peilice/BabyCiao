@@ -1,19 +1,22 @@
-﻿@model IEnumerable<BabyCiao.Models.NannyRequirment>
+﻿@* @model IEnumerable<BabyCiao.Models.NannyRequirment>
 
-@{
-    ViewData["Title"] = "Index";
-}
 
-<h1>Index</h1>
+<h1>保母審核</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.RequirementDate)
+                審核
+            </th>
+            <th>
+                審核時間</br>
+                狀態
+            </th>
+            <th>
+                申請時間</br>
+                申請帳號</br>
+                申請地址</br>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.PoliceCriminalRecordCertificate)
@@ -25,25 +28,26 @@
                 @Html.DisplayNameFor(model => model.NationalIdentificationCard)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AddressesOfAgencies)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.ValidPeriodsOfCertificates)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Statement)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NannyAccountUserAccountNavigation)
-            </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">未審核</br></a>
+                    <a asp-action="Details" asp-route-id="@item.Id">合格</br></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id">退件</br></a>
+                </td>
+                <td>
+                @Html.DisplayFor(modelItem => item.ValidPeriodsOfCertificates)
+                @Html.DisplayFor(modelItem => item.Statement)
+                </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.RequirementDate)
+                @Html.DisplayFor(modelItem => item.NannyAccountUserAccountNavigation.Account)
+                @Html.DisplayFor(modelItem => item.AddressesOfAgencies)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PoliceCriminalRecordCertificate)
@@ -54,24 +58,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.NationalIdentificationCard)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AddressesOfAgencies)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ValidPeriodsOfCertificates)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Statement)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NannyAccountUserAccountNavigation.Account)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+       </tr>
+}    </tbody>
 </table>
+ *@

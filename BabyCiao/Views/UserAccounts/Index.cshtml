@@ -1,72 +1,73 @@
-﻿@model IEnumerable<UserAccount>
+﻿@{
+    ViewBag.Title = "User Accounts";
+    var userIds = ViewBag.UserIds as List<int>;
+    var accounts = ViewBag.Accounts as List<string>;
+    var passwords = ViewBag.Passwords as List<string>;
+    var permissionsList = ViewBag.PermissionsList as List<int>;
+    var vips = ViewBag.Vips as List<bool>;
+    var permissionsDictionary = ViewBag.PermissionsDictionary as Dictionary<int, string>;
+}
+@model IEnumerable<UserAccount>
 @inject BabyCiaoContext _context
 
-@{
-    ViewData["Title"] = "Index";
-}
-@section Styles
-{
-    <style>
-        #UserAccount {
-            width: 100%;
-            overflow-y: auto;
-            display: block;
-            line-height: 100px;
-        }
-        thead{
-        background-color:antiquewhite;
-        }
-    </style>
-}
 
-<h1>目前會員總數<cache expires-after="@TimeSpan.FromMinutes(30)">@_context.UserAccounts.Count()</cache></h1>
-<p>權限</p>
-<select asp-items="@ViewBag.Permissions"></select>
+@{
+<style>
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="css/ruang-admin.min.css" rel="stylesheet">
+    </style> 
+   }
+
+<body>
+<h1>帳戶管理</h1>
+    </br> </br>
+<h2>目前會員總數<cache expires-after="@TimeSpan.FromMinutes(30)">@_context.UserAccounts.Count()</cache></h2>
 <p>
     <a asp-action="Create">新增會員</a>
 </p>
-<table id="UserAccountTable">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Account)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Password)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Permissions)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Vip)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Account)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Permissions)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Vip)
-            </td>
-            <td>
-                    <a asp-controller="UserAccounts" asp-action="Edit" asp-route-UserId="@item.UserId">Edit</a> |
-                    <a asp-controller="UserAccounts" asp-action="Details" asp-route-UserId="@item.UserId">Details</a> |
-                    <a asp-controller="UserAccounts" asp-action="Delete" asp-route-UserId="@item.UserId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <form method="get" asp-action="Index">
+        <div class="form-group">
+            <label for="permissionsFilter">權限：</label>
+            <select id="permissionsFilter" name="selectedPermission" class="form-control" asp-items="ViewBag.Permissions">
+                <option value="">全部</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">篩選</button>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>UserId</th>
+                <th>Account</th>
+                <th>Password</th>
+                <th>Permissions</th>
+                <th>Vip</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < userIds.Count; i++)
+            {
+                <tr>
+                    <td>@userIds[i]</td>
+                    <td>@accounts[i]</td>
+                    <td>@passwords[i]</td>
+                    <td>@(permissionsDictionary.ContainsKey(permissionsList[i]) ? permissionsDictionary[permissionsList[i]] : "未知")</td>
+                    <td>@vips[i]</td>
+                    <td>
+                        <a asp-controller="UserAccounts" asp-action="Edit" asp-route-userId="@userIds[i]">Edit</a> |
+                        <a asp-controller="UserAccounts" asp-action="Details" asp-route-userId="@userIds[i]">Details</a> |
+                        <a asp-controller="UserAccounts" asp-action="Delete" asp-route-userId="@userIds[i]">Delete</a>
+                    </td>
+                </tr>
+            }
+                  </tbody>
+           </table>
+        </div>
+        <div class="card-footer"></div>
+
+     </body>
 @section Scripts
 {
     <script src="~/lib/jquery/dist/jquery.js" asp-append-version="true"></script>
@@ -79,4 +80,5 @@
             });
         });
     </script>
-}
+} 
+

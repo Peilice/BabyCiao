@@ -56,16 +56,35 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,NannyAccountUserAccount,City,District,Introduction,TypeOfDaycare,ServiceItems,QuasiPublicChildcare,ChildcareAvailableUnder2,ChildcareAvailableOver2,Language,ServiceCenter,ProfessionalPortrait,InternalPhoto1,InternalPhoto2,InternalPhoto3,InternalPhoto4,InternalPhoto5,DisplayControl")] NannyResume nannyResume)
+        public async Task<IActionResult> Create([Bind("Id,NannyAccountUserAccount,City,District,Introduction,TypeOfDaycare,ServiceItems,QuasiPublicChildcare,ChildcareAvailableUnder2,ChildcareAvailableOver2,Language,ServiceCenter,ProfessionalPortrait,InternalPhoto1,InternalPhoto2,InternalPhoto3,InternalPhoto4,InternalPhoto5,DisplayControl")] nannyResume nannyResume)
         {
             if (ModelState.IsValid)
             {
+                if (Request.Form.Files["Picture"] != null)
+                {
+                    await ReadUploadImage(nannyResume);
+                }
                 _context.Add(nannyResume);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["NannyAccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", nannyResume.NannyAccountUserAccount);
             return View(nannyResume);
+        }
+
+        private async Task ReadUploadImage(nannyResume nannyResume)
+        {
+            using (BinaryReader br = new BinaryReader(Request.Form.Files["PoliceCriminalRecordCertificate || ChildCareCertificate || NationalIdentificationCard"].OpenReadStream()))
+            {
+                byte[]? Policedata = br.ReadBytes((int)Request.Form.Files["PoliceCriminalRecordCertificate "].Length);
+                byte[]? Nannydata = br.ReadBytes((int)Request.Form.Files["ChildCareCertificate"].Length);
+                byte[]? IDdata = br.ReadBytes((int)Request.Form.Files["NationalIdentificationCard"].Length);
+
+                nannyResume.PoliceCriminalRecordCertificate = Policedata;
+                nannyResume.childCareCertificate = Nannydata;
+                nannyResume.NationalIdentificationCard = IDdata;
+
+            }
         }
 
         // GET: NannyResumes/Edit/5
@@ -90,7 +109,7 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NannyAccountUserAccount,City,District,Introduction,TypeOfDaycare,ServiceItems,QuasiPublicChildcare,ChildcareAvailableUnder2,ChildcareAvailableOver2,Language,ServiceCenter,ProfessionalPortrait,InternalPhoto1,InternalPhoto2,InternalPhoto3,InternalPhoto4,InternalPhoto5,DisplayControl")] NannyResume nannyResume)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,NannyAccountUserAccount,City,District,Introduction,TypeOfDaycare,ServiceItems,QuasiPublicChildcare,ChildcareAvailableUnder2,ChildcareAvailableOver2,Language,ServiceCenter,ProfessionalPortrait,InternalPhoto1,InternalPhoto2,InternalPhoto3,InternalPhoto4,InternalPhoto5,DisplayControl")] nannyResume nannyResume)
         {
             if (id != nannyResume.Id)
             {
@@ -158,6 +177,30 @@ namespace BabyCiao.Controllers
         private bool NannyResumeExists(int id)
         {
             return _context.NannyResumes.Any(e => e.Id == id);
+        }
+        public async Task<FileResult> GetPicture(int id, string type)
+        {
+            nannyResume? nannyResume = await _context.NannyResumes.FindAsync(id);
+
+            if (nannyResume == null)
+            {
+                return null; // or handle the case when nannyResume is not found
+            }
+
+            byte[]? content = type switch
+            {
+                "PoliceCriminalRecordCertificate" => nannyResume.PoliceCriminalRecordCertificate,
+                "ChildCareCertificate" => nannyResume.childCareCertificate,
+                "NationalIdentificationCard" => nannyResume.NationalIdentificationCard,
+                _ => null
+            };
+
+            if (content == null)
+            {
+                return null; // or handle the case when the specified certificate is not found
+            }
+
+            return File(content, "image/jpeg");
         }
     }
 }
