@@ -1,0 +1,84 @@
+﻿@model IEnumerable<BabyCiao.Models.OnlineCompetition>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>投票活動管理</h1>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">後台管理</a></li>
+        <li class="breadcrumb-item"><a href="#">社群管理</a></li>
+        <li class="breadcrumb-item active" aria-current="page">投票活動管理</li>
+    </ol>
+</nav>
+
+<a type="button" class="btn btn-outline-secondary mb-4" asp-action="Create">創建新活動</a>
+    <div class="row">
+        <main class="col-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        名稱
+                    </th>
+                    <th>
+                        活動開始時間
+                    </th>
+                    <th>
+                        活動結束時間
+                    </th>
+                    @* <th>
+                    @Html.DisplayNameFor(model => model.Content)
+                    </th> *@
+                    @* <th>
+                    @Html.DisplayNameFor(model => model.ModifiedTime)
+                    </th> *@
+                    <th>
+                        活動狀態
+                    </th>
+                    @* <th>
+                    @Html.DisplayNameFor(model => model.AccountUserAccountNavigation)
+                    </th> *@
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CompetitionName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EndTime)
+                        </td>
+                        @* <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                    </td> *@
+                        @* <td>
+                    @Html.DisplayFor(modelItem => item.ModifiedTime)
+                    </td> *@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Statement)
+                        </td>
+                        @* <td>
+                    @Html.DisplayFor(modelItem => item.AccountUserAccountNavigation.Account)
+                    </td> *@
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">編輯</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">詳細資料</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">刪除</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        </main>
+    </div>
+
+
+
