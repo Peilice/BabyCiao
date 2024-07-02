@@ -15,9 +15,9 @@ public partial class NannyResume
 
     public string? Introduction { get; set; }
 
-    public int TypeOfDaycare { get; set; }
+    public string TypeOfDaycare { get; set; } = null!;
 
-    public int ServiceItems { get; set; }
+    public string ServiceItems { get; set; } = null!;
 
     public bool QuasiPublicChildcare { get; set; }
 
