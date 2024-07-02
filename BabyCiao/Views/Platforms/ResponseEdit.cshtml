@@ -1,0 +1,53 @@
+﻿@model BabyCiao.Models.DTO.PlatformsDTO
+
+<h1>論壇管理</h1>
+<hr />
+<div class="row">
+    <div class="col-12">
+        <form asp-action="ResponseEdit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <table class="table">
+                <thead>
+                   <tr>
+                       <th>更新時間</th>
+                       <th>回應內容</th>
+                       <th>發布者帳號</th>
+                       <th>顯示控制</th>
+                    </tr>
+             </thead>
+
+            <tbody>
+                    @foreach (var item in Model.Responses)
+                  {
+                        <input type="hidden" asp-for="@Html.DisplayFor(modelItem => item.ResponseId)" />
+                     <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ResponseModifiedTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ResponseContent)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ResponseAccountUserAccount)
+                        </td>
+                        <td>
+                        <div class="form-group form-check">
+                            <input class="form-check-input" asp-for="@item.ResponseDisplay" />
+                            <label class="form-check-label" asp-for="@item.ResponseDisplay">顯示控制</label>
+                            <span asp-validation-for="@item.ResponseDisplay" class="text-danger"></span>
+                        </div>
+                        </td>
+                     </tr>
+                  }
+            </tbody>
+        </table>
+        <div class="form-group">
+            <input type="submit" value="儲存" class="btn btn-primary" />
+        </div>
+        </form>
+    </div>
+    <div>
+        <a asp-action="Index">回到論壇管理列表</a>
+    </div>
+</div>

@@ -1,0 +1,78 @@
+﻿@model BabyCiao.Models.DTO.PlatformsDTO
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>論壇管理</h1>
+
+<h4>管理文章</h4>
+<hr />
+<div class="row">
+        <form asp-action="Edit" method="post">
+            <div class="row">
+              @* 左半邊 *@
+              <div class="col-6">
+                  <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                  <input type="hidden" asp-for="PlatformId" />
+                  <div class="form-group">
+                      <label asp-for="PlatformAccountUserAccount" class="control-label">發佈者帳號</label>
+                      <input asp-for="PlatformAccountUserAccount" class="form-control" asp-items="ViewBag.AccountUserAccount" readonly />
+                      <span asp-validation-for="PlatformAccountUserAccount" class="text-danger"></span>
+                  </div>
+                  <div class="form-group">
+                      <label asp-for="PlatformModifiedTime" class="control-label">最後更新時間</label>
+                      <input asp-for="PlatformModifiedTime" class="form-control" readonly />
+                      <span asp-validation-for="PlatformModifiedTime" class="text-danger"></span>
+                  </div>
+                  <div class="form-group">
+                      <label asp-for="PlatformTitle" class="control-label">標題</label>
+                      <input asp-for="PlatformTitle" class="form-control" readonly />
+                      <span asp-validation-for="PlatformTitle" class="text-danger"></span>
+                  </div>
+                
+                  <div class="form-group d-flex">
+                      <label asp-for="PlatformType" class="control-label">類別</label>
+                      @* <select asp-for="PlatformType" asp-items="@ViewBag.Type" class="form-control" ></select> *@
+                      <div class="form-check">
+                          <input class="form-check-input" type="radio" asp-for="PlatformType" id="flexRadioDefault1" value="育兒生活">
+                          <label class="form-check-label" for="flexRadioDefault1">育兒生活</label>
+                      </div>
+                      <div class="form-check">
+                          <input class="form-check-input" type="radio" asp-for="PlatformType" id="flexRadioDefault1" value="好物分享">
+                          <label class="form-check-label" for="flexRadioDefault1">好物分享</label>
+                      </div>
+                      <div class="form-check">
+                          <input class="form-check-input" type="radio" asp-for="PlatformType" id="flexRadioDefault1" value="保母交流">
+                          <label class="form-check-label" for="flexRadioDefault1">保母交流</label>
+                      </div>
+                      <span asp-validation-for="PlatformType" class="text-danger"></span>
+                  </div>
+                  <div class="form-group form-check">
+                      <input class="form-check-input" asp-for="PlatformDisplay" />
+                      <label class="form-check-label" asp-for="PlatformDisplay">顯示控制</label>
+                      <span asp-validation-for="PlatformDisplay" class="text-danger"></span>
+                  </div>
+            </div>
+            
+              @* 右半邊 *@
+            <div class="col-6">
+                  <div class="form-group">
+                      <label asp-for="PlatformContent" class="control-label">內文</label>
+                      <textarea asp-for="PlatformContent" class="form-control" rows="5" readonly></textarea>
+                      <span asp-validation-for="PlatformContent" class="text-danger"></span>
+                  </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="儲存" class="btn btn-primary" />
+            </div>
+        </form>
+</div>
+
+<div>
+    <a asp-action="Index">回到論壇管理列表</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
