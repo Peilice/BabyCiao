@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BabyCiao.Models;
 
-public partial class BabyciaoContext : DbContext
+public partial class BabyCiaoContext : DbContext
 {
-    public BabyciaoContext()
+    public BabyCiaoContext()
     {
     }
 
-    public BabyciaoContext(DbContextOptions<BabyciaoContext> options)
+    public BabyCiaoContext(DbContextOptions<BabyCiaoContext> options)
         : base(options)
     {
     }
@@ -107,7 +107,6 @@ public partial class BabyciaoContext : DbContext
             entity.Property(e => e.ReferenceName).HasMaxLength(500);
             entity.Property(e => e.ReferenceRoute).HasMaxLength(500);
             entity.Property(e => e.Tittle).HasMaxLength(50);
-            entity.Property(e => e.Type).HasMaxLength(20);
 
             entity.HasOne(d => d.AccountUserAccountNavigation).WithMany(p => p.Announcements)
                 .HasPrincipalKey(p => p.Account)
@@ -300,7 +299,7 @@ public partial class BabyciaoContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("NannyAccount_UserAccount");
-            entity.Property(e => e.Statement).HasMaxLength(10);
+            entity.Property(e => e.Statement).HasDefaultValue(1);
 
             entity.HasOne(d => d.AccountUserAccountNavigation).WithMany(p => p.ContractAccountUserAccountNavigations)
                 .HasPrincipalKey(p => p.Account)
@@ -386,7 +385,6 @@ public partial class BabyciaoContext : DbContext
             entity.Property(e => e.RecodeTime)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
-            entity.Property(e => e.Type).HasMaxLength(10);
 
             entity.HasOne(d => d.IdContactBookNavigation).WithMany(p => p.DietDetails)
                 .HasForeignKey(d => d.IdContactBook)
@@ -433,20 +431,16 @@ public partial class BabyciaoContext : DbContext
             entity.ToTable("ExchangeOrder");
 
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.AccountAUserAccount)
+            entity.Property(e => e.AccountUserAccount)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("AccountA_UserAccount");
-            entity.Property(e => e.AccountBUserAccount)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("AccountB_UserAccount");
+                .HasColumnName("Account_UserAccount");
             entity.Property(e => e.ModifiedTime).HasColumnType("datetime");
             entity.Property(e => e.Statement).HasMaxLength(20);
 
-            entity.HasOne(d => d.AccountAUserAccountNavigation).WithMany(p => p.ExchangeOrderAccountAUserAccountNavigations)
+            entity.HasOne(d => d.AccountUserAccountNavigation).WithMany(p => p.ExchangeOrders)
                 .HasPrincipalKey(p => p.Account)
-                .HasForeignKey(d => d.AccountAUserAccount)
+                .HasForeignKey(d => d.AccountUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__ExchangeO__Accou__1BC821DD");
         });
@@ -656,15 +650,15 @@ public partial class BabyciaoContext : DbContext
             entity.Property(e => e.InternalPhoto4).HasMaxLength(200);
             entity.Property(e => e.InternalPhoto5).HasMaxLength(200);
             entity.Property(e => e.Introduction).HasMaxLength(500);
-            entity.Property(e => e.Language).HasMaxLength(10);
+            entity.Property(e => e.Language)
+                .HasMaxLength(10)
+                .HasDefaultValue("??");
             entity.Property(e => e.NannyAccountUserAccount)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("NannyAccount_UserAccount");
             entity.Property(e => e.ProfessionalPortrait).HasMaxLength(200);
             entity.Property(e => e.ServiceCenter).HasMaxLength(50);
-            entity.Property(e => e.ServiceItems).HasMaxLength(10);
-            entity.Property(e => e.TypeOfDaycare).HasMaxLength(10);
 
             entity.HasOne(d => d.NannyAccountUserAccountNavigation).WithMany(p => p.NannyResumes)
                 .HasPrincipalKey(p => p.Account)
@@ -804,7 +798,6 @@ public partial class BabyciaoContext : DbContext
             entity.Property(e => e.ModifiedTime)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
-            entity.Property(e => e.SleepState).HasMaxLength(10);
             entity.Property(e => e.SleepTime).HasColumnType("datetime");
             entity.Property(e => e.WakeUpTime).HasColumnType("datetime");
 
