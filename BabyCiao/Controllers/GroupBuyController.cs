@@ -13,10 +13,12 @@ namespace BabyCiao.Controllers
     public class GroupBuyController : Controller
     {
         private readonly BabyCiaoContext _context;
+        private IWebHostEnvironment _webHostEnvironment;
 
-        public GroupBuyController(BabyCiaoContext context)
+        public GroupBuyController(BabyCiaoContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
         // GET: Products/IndexJson
         public async Task<IActionResult> IndexJson()
@@ -172,11 +174,36 @@ namespace BabyCiao.Controllers
             _context.Add(buy);
             await _context.SaveChangesAsync();
             var newId = buy.Id;//加入相片用
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
+            if (model.PhotoFiles != null && model.PhotoFiles.Count > 0) {
+                //這裡處理檔案寫入資料庫的處理ˋ
+                var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");// upload file path here
+                if (!Directory.Exists(uploadPath)) { 
+                    Directory.CreateDirectory(uploadPath);// check folder exist
+                }
+
+                foreach (var file in model.PhotoFiles) { 
+                    var filePath = Path.Combine(uploadPath, file.FileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create)) { 
+                        await file.CopyToAsync(fileStream);// write file into fileStream
+                    }
+                    // please let GroupBuyPhotoDTO complete
+
+                    var groupBuyPhoto = new GroupBuyingPhoto
+                    {
+                         PhotoName = file.FileName,
+                         IdGroupBuying = newId,
+                         ModifiedTime = DateTime.Now,
+                    };
+                   
+                    _context.GroupBuyingPhotos.Add(groupBuyPhoto);
+                }
+
+                await _context.SaveChangesAsync();
+            }
             return RedirectToAction(nameof(Index));
 
 
-            return View(model);
         }
 
         // GET: GroupBuy/Edit/5
