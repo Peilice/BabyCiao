@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BabyCiao.Models;
 
-public partial class BabyCiaoContext : DbContext
+public partial class BabyciaoContext : DbContext
 {
-    public BabyCiaoContext()
+    public BabyciaoContext()
     {
     }
 
-    public BabyCiaoContext(DbContextOptions<BabyCiaoContext> options)
+    public BabyciaoContext(DbContextOptions<BabyciaoContext> options)
         : base(options)
     {
     }
@@ -83,9 +83,9 @@ public partial class BabyCiaoContext : DbContext
 
     public virtual DbSet<Vip> Vips { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=BabyCiao;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;");
+    //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+    //        => optionsBuilder.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=Babyciao;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -445,39 +445,27 @@ public partial class BabyCiaoContext : DbContext
                 .HasColumnName("AccountB_UserAccount");
             entity.Property(e => e.ModifiedTime).HasColumnType("datetime");
             entity.Property(e => e.Statement).HasMaxLength(20);
-
-            entity.HasOne(d => d.AccountAUserAccountNavigation).WithMany(p => p.ExchangeOrderAccountAUserAccountNavigations)
-                .HasPrincipalKey(p => p.Account)
-                .HasForeignKey(d => d.AccountAUserAccount)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ExchangeO__Accou__19DFD96B");
-
-            entity.HasOne(d => d.AccountBUserAccountNavigation).WithMany(p => p.ExchangeOrderAccountBUserAccountNavigations)
-                .HasPrincipalKey(p => p.Account)
-                .HasForeignKey(d => d.AccountBUserAccount)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ExchangeO__Accou__1AD3FDA4");
         });
 
-        modelBuilder.Entity<ExchangeOrderDetail>(entity =>
-        {
-            entity.HasKey(e => new { e.IdExchangeOrder, e.IdSecondHandSupplies }).HasName("PK__Exchange__4C80FCD507C79D16");
+        //modelBuilder.Entity<ExchangeOrderDetail>(entity =>
+        //{
+        //    entity.HasKey(e => new { e.IdExchangeOrder, e.IdSecondHandSupplies }).HasName("PK__Exchange__4C80FCD507C79D16");
 
-            entity.ToTable("ExchangeOrderDetail");
+        //    entity.ToTable("ExchangeOrderDetail");
 
-            entity.Property(e => e.IdExchangeOrder).HasColumnName("ID_ExchangeOrder");
-            entity.Property(e => e.IdSecondHandSupplies).HasColumnName("ID_SecondHandSupplies");
+        //    entity.Property(e => e.IdExchangeOrder).HasColumnName("ID_ExchangeOrder");
+        //    entity.Property(e => e.IdSecondHandSupplies).HasColumnName("ID_SecondHandSupplies");
 
-            entity.HasOne(d => d.IdExchangeOrderNavigation).WithMany(p => p.ExchangeOrderDetails)
-                .HasForeignKey(d => d.IdExchangeOrder)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ExchangeO__ID_Ex__1DB06A4F");
+        //    entity.HasOne(d => d.IdExchangeOrderNavigation).WithMany(p => p.ExchangeOrderDetails)
+        //        .HasForeignKey(d => d.IdExchangeOrder)
+        //        .OnDelete(DeleteBehavior.ClientSetNull)
+        //        .HasConstraintName("FK__ExchangeO__ID_Ex__1DB06A4F");
 
-            entity.HasOne(d => d.IdSecondHandSuppliesNavigation).WithMany(p => p.ExchangeOrderDetails)
-                .HasForeignKey(d => d.IdSecondHandSupplies)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ExchangeO__ID_Se__1EA48E88");
-        });
+        //    entity.HasOne(d => d.IdSecondHandSuppliesNavigation).WithMany(p => p.ExchangeOrderDetails)
+        //        .HasForeignKey(d => d.IdSecondHandSupplies)
+        //        .OnDelete(DeleteBehavior.ClientSetNull)
+        //        .HasConstraintName("FK__ExchangeO__ID_Se__1EA48E88");
+        //});
 
         modelBuilder.Entity<FunctionSetting>(entity =>
         {
