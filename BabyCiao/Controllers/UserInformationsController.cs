@@ -73,6 +73,7 @@ namespace BabyCiao.Controllers
         }
 
         // GET: UserInformations/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)

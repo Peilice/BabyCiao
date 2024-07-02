@@ -12,7 +12,7 @@
 
 //namespace BabyCiao.Controllers
 //{
-//    [Authorize(Roles ="公告編輯")]
+//    [Authorize(Roles = "公告編輯")]
 //    public class AnnouncementsController : Controller
 //    {
 //        private readonly BabyCiaoContext _context;
@@ -22,14 +22,14 @@
 //            _context = context;
 //        }
 
-//        // GET: Announcements
+//        GET: Announcements
 //        public async Task<IActionResult> Index()
 //        {
 //            var babyCiaoContext = _context.Announcements.Include(a => a.AccountUserAccountNavigation);
 //            return View(await babyCiaoContext.ToListAsync());
 //        }
 
-//        // GET: Announcements/Details/5
+//        GET: Announcements/Details/5
 //        public async Task<IActionResult> Details(int? id)
 //        {
 //            if (id == null)
@@ -48,17 +48,18 @@
 //            return View(announcement);
 //        }
 
-//        // GET: Announcements/Create
+//        GET: Announcements/Create
 //        public IActionResult Create()
 //        {
 //            ViewData["AccountUserAccount"] = HttpContext.User.Identity.Name;
 //            return View();
 //        }
 
-//        // POST: Announcements/Create
-//        // To protect from overposting attacks, enable the specific properties you want to bind to.
-//        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-//        [HttpPost]
+//        POST: Announcements/Create
+//        To protect from overposting attacks, enable the specific properties you want to bind to.
+//        For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+//       [HttpPost]
 //        [ValidateAntiForgeryToken]
 //        public async Task<IActionResult> Create([Bind("AccountUserAccount,Tittle,Article,ReferenceName,ReferenceRoute,Type,Display")] andy_announcementViewModel my_vm)
 //        {
@@ -84,7 +85,7 @@
 //            return View(announcement);
 //        }
 
-//        // GET: Announcements/Edit/5
+//        GET: Announcements/Edit/5
 //        public async Task<IActionResult> Edit(int? id)
 //        {
 //            if (id == null)
@@ -103,9 +104,9 @@
 //            return View(announcement);
 //        }
 
-//        // POST: Announcements/Edit/5
-//        // To protect from overposting attacks, enable the specific properties you want to bind to.
-//        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+//        POST: Announcements/Edit/5
+//         To protect from overposting attacks, enable the specific properties you want to bind to.
+//         For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 //        [HttpPost]
 //        [ValidateAntiForgeryToken]
 //        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountUserAccount,PublishTime,Tittle,Article,ReferenceName,ReferenceRoute,Type,Display")] andy_announcementViewModel my_announcement)
@@ -116,7 +117,7 @@
 //            {
 //                return NotFound();
 //            }
-            
+
 //            announcement.AccountUserAccount = my_announcement.AccountUserAccount;
 //            announcement.Tittle = my_announcement.Tittle;
 //            announcement.Article = my_announcement.Article;
@@ -149,7 +150,7 @@
 //            return View(my_announcement);
 //        }
 
-//        // GET: Announcements/Delete/5
+//        GET: Announcements/Delete/5
 //        public async Task<IActionResult> Delete(int? id)
 //        {
 //            if (id == null)
@@ -168,7 +169,7 @@
 //            return View(announcement);
 //        }
 
-//        // POST: Announcements/Delete/5
+//        POST: Announcements/Delete/5
 //        [HttpPost, ActionName("Delete")]
 //        [ValidateAntiForgeryToken]
 //        public async Task<IActionResult> DeleteConfirmed(int id)

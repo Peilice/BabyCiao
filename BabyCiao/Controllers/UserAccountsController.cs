@@ -70,6 +70,7 @@ namespace BabyCiao.Controllers
         }
 
         // GET: UserAccounts/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? UserID)
         {
             if (UserID == null)
@@ -90,7 +91,7 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPost(int UserID, [Bind("UserId,Account,Password,Permissions,Vip")] UserAccount userAccount)
+        public async Task<IActionResult> Edit(int UserID, [Bind("UserId,Account,Password,Permissions,Vip")] UserAccount userAccount)
         {
             if (UserID != userAccount.UserId)
             {
