@@ -35,27 +35,28 @@ namespace BabyCiao.Controllers
                 return NotFound();
             }
             
-            var platformDTO= (from pf in _context.Platforms
+            var platformDTO=await (from pf in _context.Platforms
+                            where pf.Id == id
                              select new PlatformsDTO
-            {
-                PlatformId=pf.Id,
-                PlatformAccountUserAccount = pf.AccountUserAccount,
-                PlatformModifiedTime=pf.ModifiedTime,
-                PlatformTitle=pf.Title,
-                PlatformContent=pf.Content,
-                PlatformType=pf.Type,
-                PlatformDisplay=pf.Display,
-                Responses = (from pr in _context.PlatformResponses
-                             where pr.IdPlatform == pf.Id
-                             select new PlatformsDTO.Response
-                             {   
-                                ResponseModifiedTime = pr.ModifiedTime,
-                                ResponseContent = pr.Content,
-                                ResponseDisplay = pr.Display,
-                                 ResponseAccountUserAccount = pr.AccountUserAccount,
-                             }).ToList()
+                            {
+                                 PlatformId=pf.Id,
+                                 PlatformAccountUserAccount = pf.AccountUserAccount,
+                                 PlatformModifiedTime=pf.ModifiedTime,
+                                 PlatformTitle=pf.Title,
+                                 PlatformContent=pf.Content,
+                                 PlatformType=pf.Type,
+                                 PlatformDisplay=pf.Display,
+                                 Responses = (from pr in _context.PlatformResponses
+                                              where pr.IdPlatform == pf.Id
+                                              select new PlatformsDTO.Response
+                                              {   
+                                                ResponseModifiedTime = pr.ModifiedTime,
+                                                ResponseContent = pr.Content,
+                                                ResponseDisplay = pr.Display,
+                                                ResponseAccountUserAccount = pr.AccountUserAccount,
+                                              }).ToList()
                     
-            }).FirstOrDefault();
+                             }).FirstOrDefaultAsync();
 
             if (platformDTO == null)
             {
@@ -116,6 +117,7 @@ namespace BabyCiao.Controllers
             }
 
             var platformDTO = (from pf in _context.Platforms
+                               where pf.Id == id
                                select new PlatformsDTO
                                {
                                    PlatformId = pf.Id,
