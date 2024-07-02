@@ -15,9 +15,9 @@ namespace BabyCiao.Controllers
     [Authorize(Roles ="公告編輯")]
     public class AnnouncementsController : Controller
     {
-        private readonly BabyCiaoContext _context;
+        private readonly BabyciaoContext _context;
 
-        public AnnouncementsController(BabyCiaoContext context)
+        public AnnouncementsController(BabyciaoContext context)
         {
             _context = context;
         }
