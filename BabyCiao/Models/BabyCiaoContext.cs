@@ -85,13 +85,13 @@ public partial class BabyCiaoContext : DbContext
 
 //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=BabyCiao;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;");
+//        => optionsBuilder.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=Babyciao;Integrated Security=true;Encrypt=true;TrustServerCertificate=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Announcement>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Announce__3214EC270172B06E");
+            entity.HasKey(e => e.Id).HasName("PK__Announce__3214EC27CCF29BF4");
 
             entity.ToTable("Announcement");
 
@@ -107,17 +107,18 @@ public partial class BabyCiaoContext : DbContext
             entity.Property(e => e.ReferenceName).HasMaxLength(500);
             entity.Property(e => e.ReferenceRoute).HasMaxLength(500);
             entity.Property(e => e.Tittle).HasMaxLength(50);
+            entity.Property(e => e.Type).HasMaxLength(20);
 
             entity.HasOne(d => d.AccountUserAccountNavigation).WithMany(p => p.Announcements)
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.AccountUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Announcem__Accou__46E78A0C");
+                .HasConstraintName("FK__Announcem__Accou__09746778");
         });
 
         modelBuilder.Entity<AnnouncementPhoto>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Announce__3214EC27795A614E");
+            entity.HasKey(e => e.Id).HasName("PK__Announce__3214EC27C4632B26");
 
             entity.ToTable("AnnouncementPhoto");
 
@@ -131,12 +132,12 @@ public partial class BabyCiaoContext : DbContext
             entity.HasOne(d => d.IdAnnouncementNavigation).WithMany(p => p.AnnouncementPhotos)
                 .HasForeignKey(d => d.IdAnnouncement)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Announcem__ID_An__4BAC3F29");
+                .HasConstraintName("FK__Announcem__ID_An__49C3F6B7");
         });
 
         modelBuilder.Entity<AuthGroup>(entity =>
         {
-            entity.HasKey(e => e.GroupId).HasName("PK__AuthGrou__149AF36AC5202EE8");
+            entity.HasKey(e => e.GroupId).HasName("PK__tmp_ms_x__149AF36A97C11558");
 
             entity.ToTable("AuthGroup");
 
@@ -153,12 +154,12 @@ public partial class BabyCiaoContext : DbContext
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.ModifiedPersonUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__AuthGroup__Modif__797309D9");
+                .HasConstraintName("FK__AuthGroup__Modif__0B5CAFEA");
         });
 
         modelBuilder.Entity<BabyResume>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__BabyResu__3214EC2724A3CC7C");
+            entity.HasKey(e => e.Id).HasName("PK__BabyResu__3214EC279331422C");
 
             entity.ToTable("BabyResume");
 
@@ -174,17 +175,19 @@ public partial class BabyCiaoContext : DbContext
             entity.Property(e => e.FirstName).HasMaxLength(50);
             entity.Property(e => e.Memo).HasMaxLength(500);
             entity.Property(e => e.Photo).HasMaxLength(200);
+            entity.Property(e => e.TimeSlot).HasMaxLength(10);
+            entity.Property(e => e.TypeOfDaycare).HasMaxLength(10);
 
             entity.HasOne(d => d.AccountUserAccountNavigation).WithMany(p => p.BabyResumes)
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.AccountUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BabyResum__Accou__32E0915F");
+                .HasConstraintName("FK__BabyResum__Accou__04AFB25B");
         });
 
         modelBuilder.Entity<CompetitionDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Competit__3214EC27E5D3FD92");
+            entity.HasKey(e => e.Id).HasName("PK__Competit__3214EC271A07B9BF");
 
             entity.ToTable("CompetitionDetail");
 
@@ -203,12 +206,12 @@ public partial class BabyCiaoContext : DbContext
             entity.HasOne(d => d.IdOnlineCompetitionNavigation).WithMany(p => p.CompetitionDetails)
                 .HasForeignKey(d => d.IdOnlineCompetition)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Competiti__ID_On__0B91BA14");
+                .HasConstraintName("FK__Competiti__ID_On__09A971A2");
         });
 
         modelBuilder.Entity<CompetitionPhoto>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Competit__3214EC278346E474");
+            entity.HasKey(e => e.Id).HasName("PK__Competit__3214EC27867F78BD");
 
             entity.ToTable("CompetitionPhoto");
 
@@ -222,12 +225,12 @@ public partial class BabyCiaoContext : DbContext
             entity.HasOne(d => d.IdOnlineCompetitionNavigation).WithMany(p => p.CompetitionPhotos)
                 .HasForeignKey(d => d.IdOnlineCompetition)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Competiti__ID_On__07C12930");
+                .HasConstraintName("FK__Competiti__ID_On__05D8E0BE");
         });
 
         modelBuilder.Entity<CompetitionRecord>(entity =>
         {
-            entity.HasKey(e => new { e.VoterAccount, e.IdCompetitionDetail }).HasName("PK__Competit__9202720E3175AB39");
+            entity.HasKey(e => new { e.VoterAccount, e.IdCompetitionDetail }).HasName("PK__Competit__9202720E69916F50");
 
             entity.ToTable("CompetitionRecord");
 
@@ -242,12 +245,12 @@ public partial class BabyCiaoContext : DbContext
             entity.HasOne(d => d.IdCompetitionDetailNavigation).WithMany(p => p.CompetitionRecords)
                 .HasForeignKey(d => d.IdCompetitionDetail)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Competiti__ID_Co__0F624AF8");
+                .HasConstraintName("FK__Competiti__ID_Co__0D7A0286");
         });
 
         modelBuilder.Entity<ContactBook>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ContactB__3214EC27E1879F60");
+            entity.HasKey(e => e.Id).HasName("PK__ContactB__3214EC2730DB618F");
 
             entity.ToTable("ContactBook");
 
@@ -273,12 +276,12 @@ public partial class BabyCiaoContext : DbContext
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.ParentsIdUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ContactBo__Paren__5441852A");
+                .HasConstraintName("FK__ContactBo__Paren__0C50D423");
         });
 
         modelBuilder.Entity<Contract>(entity =>
         {
-            entity.HasKey(e => e.ContractId).HasName("PK__Contract__5E2E73FAA6663E23");
+            entity.HasKey(e => e.ContractId).HasName("PK__Contract__5E2E73FAE941357D");
 
             entity.ToTable("Contract");
 
@@ -299,24 +302,24 @@ public partial class BabyCiaoContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("NannyAccount_UserAccount");
-            entity.Property(e => e.Statement).HasDefaultValue(1);
+            entity.Property(e => e.Statement).HasMaxLength(10);
 
             entity.HasOne(d => d.AccountUserAccountNavigation).WithMany(p => p.ContractAccountUserAccountNavigations)
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.AccountUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Contract__Accoun__398D8EEE");
+                .HasConstraintName("FK__Contract__Accoun__0697FACD");
 
             entity.HasOne(d => d.NannyAccountUserAccountNavigation).WithMany(p => p.ContractNannyAccountUserAccountNavigations)
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.NannyAccountUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Contract__NannyA__37A5467C");
+                .HasConstraintName("FK__Contract__NannyA__05A3D694");
         });
 
         modelBuilder.Entity<DiaperDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__DiaperDe__3214EC27EDA19D2A");
+            entity.HasKey(e => e.Id).HasName("PK__DiaperDe__3214EC27BDA1DABE");
 
             entity.ToTable("DiaperDetail");
 
@@ -339,12 +342,12 @@ public partial class BabyCiaoContext : DbContext
             entity.HasOne(d => d.IdContactBookNavigation).WithMany(p => p.DiaperDetails)
                 .HasForeignKey(d => d.IdContactBook)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__DiaperDet__ID_Co__6383C8BA");
+                .HasConstraintName("FK__DiaperDet__ID_Co__619B8048");
         });
 
         modelBuilder.Entity<Diary>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Diary__3214EC275A4D320F");
+            entity.HasKey(e => e.Id).HasName("PK__Diary__3214EC27B579FA76");
 
             entity.ToTable("Diary");
 
@@ -364,12 +367,12 @@ public partial class BabyCiaoContext : DbContext
             entity.HasOne(d => d.IdContactBookNavigation).WithMany(p => p.Diaries)
                 .HasForeignKey(d => d.IdContactBook)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Diary__ID_Contac__71D1E811");
+                .HasConstraintName("FK__Diary__ID_Contac__6FE99F9F");
         });
 
         modelBuilder.Entity<DietDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__DietDeta__3214EC27B04C7058");
+            entity.HasKey(e => e.Id).HasName("PK__DietDeta__3214EC2770774F3F");
 
             entity.ToTable("DietDetail");
 
@@ -385,16 +388,17 @@ public partial class BabyCiaoContext : DbContext
             entity.Property(e => e.RecodeTime)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
+            entity.Property(e => e.Type).HasMaxLength(10);
 
             entity.HasOne(d => d.IdContactBookNavigation).WithMany(p => p.DietDetails)
                 .HasForeignKey(d => d.IdContactBook)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__DietDetai__ID_Co__5EBF139D");
+                .HasConstraintName("FK__DietDetai__ID_Co__5CD6CB2B");
         });
 
         modelBuilder.Entity<Evaluate>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Evaluate__3214EC274A64C97C");
+            entity.HasKey(e => e.Id).HasName("PK__Evaluate__3214EC27012CCB78");
 
             entity.ToTable("Evaluate");
 
@@ -415,39 +419,49 @@ public partial class BabyCiaoContext : DbContext
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.AppraiseeUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Evaluate__Apprai__4222D4EF");
+                .HasConstraintName("FK__Evaluate__Apprai__0880433F");
 
             entity.HasOne(d => d.EvaluatorUserAccountNavigation).WithMany(p => p.EvaluateEvaluatorUserAccountNavigations)
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.EvaluatorUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Evaluate__Evalua__412EB0B6");
+                .HasConstraintName("FK__Evaluate__Evalua__078C1F06");
         });
 
         modelBuilder.Entity<ExchangeOrder>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Exchange__3214EC273AD55876");
+            entity.HasKey(e => e.Id).HasName("PK__Exchange__3214EC27308E4F72");
 
             entity.ToTable("ExchangeOrder");
 
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.AccountUserAccount)
+            entity.Property(e => e.AccountAUserAccount)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("Account_UserAccount");
+                .HasColumnName("AccountA_UserAccount");
+            entity.Property(e => e.AccountBUserAccount)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("AccountB_UserAccount");
             entity.Property(e => e.ModifiedTime).HasColumnType("datetime");
             entity.Property(e => e.Statement).HasMaxLength(20);
 
-            entity.HasOne(d => d.AccountUserAccountNavigation).WithMany(p => p.ExchangeOrders)
+            entity.HasOne(d => d.AccountAUserAccountNavigation).WithMany(p => p.ExchangeOrderAccountAUserAccountNavigations)
                 .HasPrincipalKey(p => p.Account)
-                .HasForeignKey(d => d.AccountUserAccount)
+                .HasForeignKey(d => d.AccountAUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ExchangeO__Accou__1BC821DD");
+                .HasConstraintName("FK__ExchangeO__Accou__7E02B4CC");
+
+            entity.HasOne(d => d.AccountBUserAccountNavigation).WithMany(p => p.ExchangeOrderAccountBUserAccountNavigations)
+                .HasPrincipalKey(p => p.Account)
+                .HasForeignKey(d => d.AccountBUserAccount)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__ExchangeO__Accou__7EF6D905");
         });
 
         modelBuilder.Entity<ExchangeOrderDetail>(entity =>
         {
-            entity.HasKey(e => new { e.IdExchangeOrder, e.IdSecondHandSupplies }).HasName("PK__Exchange__4C80FCD572D028B5");
+            entity.HasKey(e => new { e.IdExchangeOrder, e.IdSecondHandSupplies }).HasName("PK__Exchange__4C80FCD5BA1AE543");
 
             entity.ToTable("ExchangeOrderDetail");
 
@@ -457,17 +471,17 @@ public partial class BabyCiaoContext : DbContext
             entity.HasOne(d => d.IdExchangeOrderNavigation).WithMany(p => p.ExchangeOrderDetails)
                 .HasForeignKey(d => d.IdExchangeOrder)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ExchangeO__ID_Ex__1EA48E88");
+                .HasConstraintName("FK__ExchangeO__ID_Ex__1DB06A4F");
 
             entity.HasOne(d => d.IdSecondHandSuppliesNavigation).WithMany(p => p.ExchangeOrderDetails)
                 .HasForeignKey(d => d.IdSecondHandSupplies)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ExchangeO__ID_Se__1F98B2C1");
+                .HasConstraintName("FK__ExchangeO__ID_Se__1EA48E88");
         });
 
         modelBuilder.Entity<FunctionSetting>(entity =>
         {
-            entity.HasKey(e => new { e.GroupIdAuthGroup, e.FunctionCodeSystemFunction }).HasName("PK__Function__6316C9248EBA1D4C");
+            entity.HasKey(e => new { e.GroupIdAuthGroup, e.FunctionCodeSystemFunction }).HasName("PK__Function__6316C924CA893EE4");
 
             entity.ToTable("FunctionSetting");
 
@@ -480,17 +494,17 @@ public partial class BabyCiaoContext : DbContext
             entity.HasOne(d => d.FunctionCodeSystemFunctionNavigation).WithMany(p => p.FunctionSettings)
                 .HasForeignKey(d => d.FunctionCodeSystemFunction)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__FunctionS__Funct__00200768");
+                .HasConstraintName("FK__FunctionS__Funct__7E37BEF6");
 
             entity.HasOne(d => d.GroupIdAuthGroupNavigation).WithMany(p => p.FunctionSettings)
                 .HasForeignKey(d => d.GroupIdAuthGroup)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__FunctionS__Group__7F2BE32F");
+                .HasConstraintName("FK__FunctionS__Group__51300E55");
         });
 
         modelBuilder.Entity<GroupBuying>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__GroupBuy__3214EC2793F74E5F");
+            entity.HasKey(e => e.Id).HasName("PK__GroupBuy__3214EC273395CDCD");
 
             entity.ToTable("GroupBuying");
 
@@ -511,12 +525,12 @@ public partial class BabyCiaoContext : DbContext
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.AccountUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__GroupBuyi__Accou__22751F6C");
+                .HasConstraintName("FK__GroupBuyi__Accou__7FEAFD3E");
         });
 
         modelBuilder.Entity<GroupBuyingDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__GroupBuy__3214EC27DB346EDF");
+            entity.HasKey(e => e.Id).HasName("PK__GroupBuy__3214EC27E78E2FAF");
 
             entity.ToTable("GroupBuyingDetail");
 
@@ -534,12 +548,12 @@ public partial class BabyCiaoContext : DbContext
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.AccountUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__GroupBuyi__Accou__2B0A656D");
+                .HasConstraintName("FK__GroupBuyi__Accou__01D345B0");
         });
 
         modelBuilder.Entity<GroupBuyingPhoto>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__GroupBuy__3214EC27BAE4BD8A");
+            entity.HasKey(e => e.Id).HasName("PK__GroupBuy__3214EC27281308C9");
 
             entity.ToTable("GroupBuyingPhoto");
 
@@ -553,12 +567,12 @@ public partial class BabyCiaoContext : DbContext
             entity.HasOne(d => d.IdGroupBuyingNavigation).WithMany(p => p.GroupBuyingPhotos)
                 .HasForeignKey(d => d.IdGroupBuying)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__GroupBuyi__ID_Gr__2739D489");
+                .HasConstraintName("FK__GroupBuyi__ID_Gr__2645B050");
         });
 
         modelBuilder.Entity<HealthInformation>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__HealthIn__3214EC2743ED039F");
+            entity.HasKey(e => e.Id).HasName("PK__HealthIn__3214EC27CA342BAD");
 
             entity.ToTable("HealthInformation");
 
@@ -578,12 +592,12 @@ public partial class BabyCiaoContext : DbContext
             entity.HasOne(d => d.IdContactBookNavigation).WithMany(p => p.HealthInformations)
                 .HasForeignKey(d => d.IdContactBook)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__HealthInf__ID_Co__59063A47");
+                .HasConstraintName("FK__HealthInf__ID_Co__571DF1D5");
         });
 
         modelBuilder.Entity<Memo>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Memo__3214EC27DC89F656");
+            entity.HasKey(e => e.Id).HasName("PK__Memo__3214EC2767FFB63B");
 
             entity.ToTable("Memo");
 
@@ -604,12 +618,12 @@ public partial class BabyCiaoContext : DbContext
             entity.HasOne(d => d.IdContactBookNavigation).WithMany(p => p.Memos)
                 .HasForeignKey(d => d.IdContactBook)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Memo__ID_Contact__6E01572D");
+                .HasConstraintName("FK__Memo__ID_Contact__6C190EBB");
         });
 
         modelBuilder.Entity<NannyRequirment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__NannyReq__3214EC270D0BEE30");
+            entity.HasKey(e => e.Id).HasName("PK__NannyReq__3214EC276AFF3DE8");
 
             entity.ToTable("NannyRequirment");
 
@@ -631,12 +645,12 @@ public partial class BabyCiaoContext : DbContext
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.NannyAccountUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__NannyRequ__Nanny__5070F446");
+                .HasConstraintName("FK__NannyRequ__Nanny__0A688BB1");
         });
 
         modelBuilder.Entity<NannyResume>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__NannyRes__3214EC279F5E2AF8");
+            entity.HasKey(e => e.Id).HasName("PK__NannyRes__3214EC27F6D891DC");
 
             entity.ToTable("NannyResume");
 
@@ -650,26 +664,26 @@ public partial class BabyCiaoContext : DbContext
             entity.Property(e => e.InternalPhoto4).HasMaxLength(200);
             entity.Property(e => e.InternalPhoto5).HasMaxLength(200);
             entity.Property(e => e.Introduction).HasMaxLength(500);
-            entity.Property(e => e.Language)
-                .HasMaxLength(10)
-                .HasDefaultValue("??");
+            entity.Property(e => e.Language).HasMaxLength(10);
             entity.Property(e => e.NannyAccountUserAccount)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("NannyAccount_UserAccount");
             entity.Property(e => e.ProfessionalPortrait).HasMaxLength(200);
             entity.Property(e => e.ServiceCenter).HasMaxLength(50);
+            entity.Property(e => e.ServiceItems).HasMaxLength(10);
+            entity.Property(e => e.TypeOfDaycare).HasMaxLength(10);
 
             entity.HasOne(d => d.NannyAccountUserAccountNavigation).WithMany(p => p.NannyResumes)
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.NannyAccountUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__NannyResu__Nanny__2C3393D0");
+                .HasConstraintName("FK__NannyResu__Nanny__02C769E9");
         });
 
         modelBuilder.Entity<OnlineCompetition>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__OnlineCo__3214EC275D72B24F");
+            entity.HasKey(e => e.Id).HasName("PK__OnlineCo__3214EC2731D26CC5");
 
             entity.ToTable("OnlineCompetition");
 
@@ -687,12 +701,12 @@ public partial class BabyCiaoContext : DbContext
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.AccountUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OnlineCom__Accou__03F0984C");
+                .HasConstraintName("FK__OnlineCom__Accou__7C1A6C5A");
         });
 
         modelBuilder.Entity<Platform>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Platform__3214EC27F8EEC734");
+            entity.HasKey(e => e.Id).HasName("PK__Platform__3214EC27A06A7781");
 
             entity.ToTable("Platform");
 
@@ -711,12 +725,12 @@ public partial class BabyCiaoContext : DbContext
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.AccountUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Platform__Accoun__2EDAF651");
+                .HasConstraintName("FK__Platform__Accoun__03BB8E22");
         });
 
         modelBuilder.Entity<PlatformPhoto>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Platform__3214EC27E19D029A");
+            entity.HasKey(e => e.Id).HasName("PK__Platform__3214EC2702858BA1");
 
             entity.ToTable("PlatformPhoto");
 
@@ -730,12 +744,12 @@ public partial class BabyCiaoContext : DbContext
             entity.HasOne(d => d.IdPlatformNavigation).WithMany(p => p.PlatformPhotos)
                 .HasForeignKey(d => d.IdPlatform)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PlatformP__ID_Pl__339FAB6E");
+                .HasConstraintName("FK__PlatformP__ID_Pl__32AB8735");
         });
 
         modelBuilder.Entity<PlatformResponse>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Platform__3214EC27078F51E7");
+            entity.HasKey(e => e.Id).HasName("PK__Platform__3214EC2721E88B91");
 
             entity.ToTable("PlatformResponse");
 
@@ -753,12 +767,12 @@ public partial class BabyCiaoContext : DbContext
             entity.HasOne(d => d.IdPlatformNavigation).WithMany(p => p.PlatformResponses)
                 .HasForeignKey(d => d.IdPlatform)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PlatformR__ID_Pl__37703C52");
+                .HasConstraintName("FK__PlatformR__ID_Pl__367C1819");
         });
 
         modelBuilder.Entity<SecondHandSupply>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__SecondHa__3214EC27AD418932");
+            entity.HasKey(e => e.Id).HasName("PK__SecondHa__3214EC277A0C35AA");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.AccountUserAccount)
@@ -777,12 +791,12 @@ public partial class BabyCiaoContext : DbContext
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.AccountUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SecondHan__Accou__1332DBDC");
+                .HasConstraintName("FK__SecondHan__Accou__7D0E9093");
         });
 
         modelBuilder.Entity<SleepDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__SleepDet__3214EC275EE90F0F");
+            entity.HasKey(e => e.Id).HasName("PK__SleepDet__3214EC27F3E7E8A9");
 
             entity.ToTable("SleepDetail");
 
@@ -798,18 +812,19 @@ public partial class BabyCiaoContext : DbContext
             entity.Property(e => e.ModifiedTime)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
+            entity.Property(e => e.SleepState).HasMaxLength(10);
             entity.Property(e => e.SleepTime).HasColumnType("datetime");
             entity.Property(e => e.WakeUpTime).HasColumnType("datetime");
 
             entity.HasOne(d => d.IdContactBookNavigation).WithMany(p => p.SleepDetails)
                 .HasForeignKey(d => d.IdContactBook)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SleepDeta__ID_Co__693CA210");
+                .HasConstraintName("FK__SleepDeta__ID_Co__6754599E");
         });
 
         modelBuilder.Entity<SuppliesPhoto>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Supplies__3214EC27FFA94182");
+            entity.HasKey(e => e.Id).HasName("PK__Supplies__3214EC2753594F8D");
 
             entity.ToTable("SuppliesPhoto");
 
@@ -823,12 +838,12 @@ public partial class BabyCiaoContext : DbContext
             entity.HasOne(d => d.IdSecondHandSuppliesNavigation).WithMany(p => p.SuppliesPhotos)
                 .HasForeignKey(d => d.IdSecondHandSupplies)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SuppliesP__ID_Se__17F790F9");
+                .HasConstraintName("FK__SuppliesP__ID_Se__160F4887");
         });
 
         modelBuilder.Entity<SystemFunction>(entity =>
         {
-            entity.HasKey(e => e.FunctionId).HasName("PK__SystemFu__31ABFAF866B43E87");
+            entity.HasKey(e => e.FunctionId).HasName("PK__SystemFu__31ABFAF8255FA0B0");
 
             entity.ToTable("SystemFunction");
 
@@ -837,11 +852,11 @@ public partial class BabyCiaoContext : DbContext
 
         modelBuilder.Entity<UserAccount>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__UserAcco__1788CCAC6ECE9700");
+            entity.HasKey(e => e.UserId).HasName("PK__tmp_ms_x__1788CCAC0A33CB76");
 
             entity.ToTable("UserAccount");
 
-            entity.HasIndex(e => e.Account, "UQ__UserAcco__B0C3AC46D89CFC99").IsUnique();
+            entity.HasIndex(e => e.Account, "UQ__tmp_ms_x__B0C3AC469613B225").IsUnique();
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.Account)
@@ -850,13 +865,12 @@ public partial class BabyCiaoContext : DbContext
             entity.Property(e => e.Password)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.Permissions).HasDefaultValue(1);
             entity.Property(e => e.Vip).HasColumnName("VIP");
         });
 
         modelBuilder.Entity<UserInformation>(entity =>
         {
-            entity.HasKey(e => e.UserinfoId).HasName("PK__UserInfo__E7D64B31F6D0A28E");
+            entity.HasKey(e => e.UserinfoId).HasName("PK__UserInfo__E7D64B3181361260");
 
             entity.ToTable("UserInformation");
 
@@ -879,12 +893,12 @@ public partial class BabyCiaoContext : DbContext
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.AccountUser)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__UserInfor__Accou__29572725");
+                .HasConstraintName("FK__UserInfor__Accou__00DF2177");
         });
 
         modelBuilder.Entity<Vip>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__VIP__3214EC27199D9EEF");
+            entity.HasKey(e => e.Id).HasName("PK__VIP__3214EC270CA5D0C0");
 
             entity.ToTable("VIP");
 
@@ -898,7 +912,7 @@ public partial class BabyCiaoContext : DbContext
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.AccountUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__VIP__Account_Use__76969D2E");
+                .HasConstraintName("FK__VIP__Account_Use__0D44F85C");
         });
 
         OnModelCreatingPartial(modelBuilder);

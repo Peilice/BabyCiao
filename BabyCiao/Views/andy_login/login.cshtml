@@ -1,0 +1,44 @@
+﻿@model andy_loginViewModel
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <section>
+                <h1 class="mb-5">註冊介面</h1>
+                <form id="account" method="post">
+                    <h2>請填寫帳號</h2>
+                    <hr />
+                    <div class="form-floating mb-3">
+                        <input asp-for="name" class="form-control" />
+                        <label asp-for="name" class="form-label">帳號</label>
+                    </div>
+                    <h2>請填寫密碼</h2>
+                    <div class="form-floating mb-3">
+                        <input asp-for="password" class="form-control" type="password"/>
+                        <label asp-for="password" class="form-label">密碼</label>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">submit</button>
+                    </div>
+                    <div>@ViewBag.ErrorMessage</div>
+                </form>
+            </section>
+        </div>
+    </div>
+
+</div>
+@section Scripts
+{
+    <script>
+
+       
+
+        if (@ViewBag.islogin)
+        {
+            alert('登錄成功');
+            window.location.href = "/Home/Index";
+        }
+    </script>
+    
+}
