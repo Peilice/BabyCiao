@@ -30,19 +30,56 @@ namespace BabyCiao.Controllers
                                 ProductName = gb.ProductName,
                                 ProductDescription = gb.ProductDescription,
                                 TargetCount = gb.TargetCount,
+                                Price = gb.Price,
                                 Statement = gb.Statement,
                                 ModifiedTime = gb.ModifiedTime,
                                 ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
                                 Display = gb.Display,
-                                //JoinQuantity=from gbd in _context.GroupBuyingDetails.Where(id=>id.).Sum(gbd => gbd.Id)
 
                             };
             return Json(groupBuys);
         }
-    // GET: GroupBuy
+        // GET: GroupBuy
+        public async Task<IActionResult> OrdersJson()
+        //public async Task<JsonResult> IndexJson()
+        {
 
+            var orders = from gbd in _context.GroupBuyingDetails
+                         join gb in _context.GroupBuyings on gbd.GroupBuyingId equals gb.Id
+                         select new GroupBuyDTO
+                         {
+                             JoinId = gbd.Id,
+                             JoinGroupId = gbd.GroupBuyingId,
+                             JoinUserAccount = gbd.AccountUserAccount,
+                             Quantity = gbd.Quantity,
+                             OrderPrice = gbd.Quantity * gb.Price,
+                             JoinModifiedTime = gbd.ModifiedTime,
+                             ViewJoinModifiedTime = gbd.ModifiedTime.ToString("yyyy-MM-dd"),
+                             Statement = gbd.Statement,
+                         };
+            return Json(orders);
+        }
+        public async Task<IActionResult> Orders()
+        {
+            var orders = from gbd in _context.GroupBuyingDetails
+                         join gb in _context.GroupBuyings on gbd.GroupBuyingId equals gb.Id
+                         select new GroupBuyDTO
+                         {
+                             JoinId = gbd.Id,
+                             JoinGroupId = gbd.GroupBuyingId,
+                             JoinUserAccount = gbd.AccountUserAccount,
+                             Quantity = gbd.Quantity,
+                             OrderPrice = gbd.Quantity * gb.Price,
+                             ViewJoinModifiedTime = gbd.ModifiedTime.ToString("yyyy-MM-dd"),
+                             JoinModifiedTime = gbd.ModifiedTime,
+                             Statement = gbd.Statement,
+                         };
 
-    public async Task<IActionResult> Index()
+            var ordersList = await orders.ToListAsync();
+            return View(ordersList);
+        }
+
+        public async Task<IActionResult> Index()
         {
             var groupBuys = from gb in _context.GroupBuyings
                             select new GroupBuyDTO
@@ -52,6 +89,7 @@ namespace BabyCiao.Controllers
                                 ProductName = gb.ProductName,
                                 ProductDescription = gb.ProductDescription,
                                 TargetCount = gb.TargetCount,
+                                Price = gb.Price,
                                 Statement = gb.Statement,
                                 ModifiedTime = gb.ModifiedTime,
                                 ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
@@ -71,9 +109,20 @@ namespace BabyCiao.Controllers
                 return NotFound();
             }
 
-            var groupBuying = await _context.GroupBuyings
-                .Include(g => g.AccountUserAccountNavigation)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var groupBuying = (from gb in _context.GroupBuyings
+                               select new GroupBuyDTO
+                               {
+                                   Id = gb.Id,
+                                   UserAccount = gb.AccountUserAccount,
+                                   ProductName = gb.ProductName,
+                                   ProductDescription = gb.ProductDescription,
+                                   TargetCount = gb.TargetCount,
+                                   Price = gb.Price,
+                                   Statement = gb.Statement,
+                                   ModifiedTime = DateTime.Now,
+                                   ModifiedTimeView = DateTime.Now.ToString("yyyy-MM-dd"),
+                                   Display = gb.Display,
+                               }).FirstOrDefault();
             if (groupBuying == null)
             {
                 return NotFound();
@@ -85,8 +134,13 @@ namespace BabyCiao.Controllers
         // GET: GroupBuy/Create
         public IActionResult Create()
         {
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account");
-            return View();
+            var group = (from gb in _context.GroupBuyings
+                         select new GroupBuyDTO
+                         {
+                             ModifiedTime = DateTime.Now,
+                             ModifiedTimeView = DateTime.Now.ToString("yyyy-MM-dd")
+                         }).FirstOrDefault();
+            return View(group);
         }
 
         // POST: GroupBuy/Create
@@ -94,32 +148,65 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AccountUserAccount,ProductName,ProductDescription,TargetCount,Statement,ModifiedTime,Display")] GroupBuying groupBuying)
+        public async Task<IActionResult> Create([FromForm] GroupBuyDTO model)
         {
-            if (ModelState.IsValid)
+
+            if (model == null)
             {
-                _context.Add(groupBuying);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", groupBuying.AccountUserAccount);
-            return View(groupBuying);
+
+            var buy = new GroupBuying
+            {
+                Id = model.Id,
+                AccountUserAccount = model.UserAccount,
+                ProductName = model.ProductName,
+                ProductDescription = model.ProductDescription,
+                Price = model.Price,
+                TargetCount = model.TargetCount,
+                Statement = model.Statement,
+                ModifiedTime = model.ModifiedTime,
+                Display = model.Display,
+            };
+
+            _context.Add(buy);
+            await _context.SaveChangesAsync();
+            var newId = buy.Id;//加入相片用
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+
+
+            return View(model);
         }
 
         // GET: GroupBuy/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var groupBuying = await _context.GroupBuyings.FindAsync(id);
+            var groupBuying = (from gb in _context.GroupBuyings
+                               where gb.Id == id
+                               select new GroupBuyDTO
+                               {
+                                   Id = gb.Id,
+                                   UserAccount = gb.AccountUserAccount,
+                                   ProductName = gb.ProductName,
+                                   ProductDescription = gb.ProductDescription,
+                                   TargetCount = gb.TargetCount,
+                                   Price = gb.Price,
+                                   Statement = gb.Statement,
+                                   ModifiedTime = DateTime.Now,
+                                   ModifiedTimeView = DateTime.Now.ToString("yyyy-MM-dd"),
+                                   Display = gb.Display,
+                               }).FirstOrDefault();
             if (groupBuying == null)
             {
                 return NotFound();
             }
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", groupBuying.AccountUserAccount);
+
             return View(groupBuying);
         }
 
@@ -128,35 +215,43 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountUserAccount,ProductName,ProductDescription,TargetCount,Statement,ModifiedTime,Display")] GroupBuying groupBuying)
+        public async Task<IActionResult> Edit(int Id, [FromForm] GroupBuyDTO model)
         {
-            if (id != groupBuying.Id)
+            if (Id == null)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            var buy =  new GroupBuying
             {
-                try
-                {
-                    _context.Update(groupBuying);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!GroupBuyingExists(groupBuying.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                Id=model.Id,
+                AccountUserAccount = model.UserAccount,
+                ProductName = model.ProductName,
+                ProductDescription = model.ProductDescription,
+                TargetCount = model.TargetCount,
+                Price = model.Price,
+                Statement = model.Statement,
+                ModifiedTime = model.ModifiedTime,
+                Display = model.Display,
+            };
+            _context.Update(buy);
+            try
+            {
+
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", groupBuying.AccountUserAccount);
-            return View(groupBuying);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!GroupBuyingExists(model.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return View(model);
         }
 
         // GET: GroupBuy/Delete/5
@@ -166,9 +261,27 @@ namespace BabyCiao.Controllers
             {
                 return NotFound();
             }
-            var groupBuying = await _context.GroupBuyings
-                .Include(g => g.AccountUserAccountNavigation)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var groupBuying = (from gb in _context.GroupBuyings
+                               where gb.Id==id
+                               select new GroupBuyDTO
+                               {
+                                   Id = gb.Id,
+                                   ProductName= gb.ProductName,
+                                   ProductDescription= gb.ProductDescription,
+                                   TargetCount = gb.TargetCount,
+                                   Price = gb.Price,
+                                   Statement = gb.Statement,
+                                   ModifiedTime = gb.ModifiedTime,
+                                   Display = gb.Display,
+                                   ModifiedTimeView= gb.ModifiedTime.ToString("yyyy-MM-dd"),
+                               }).FirstOrDefault();
+            var hasPendingOrders = _context.GroupBuyingDetails.Any(o => o.GroupBuyingId == id);
+
+            if (hasPendingOrders)
+            {
+                TempData["PendingOrdersMessage"] = "該商品尚有未出貨訂單，無法刪除。";
+                return RedirectToAction(nameof(Index));
+            }
             if (groupBuying == null)
             {
                 return NotFound();
@@ -196,5 +309,6 @@ namespace BabyCiao.Controllers
         {
             return _context.GroupBuyings.Any(e => e.Id == id);
         }
+
     }
 }

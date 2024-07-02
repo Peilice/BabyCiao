@@ -126,13 +126,17 @@ namespace BabyCiao.Controllers
 					ModifiedDate = DateTime.Now,
 				};
 				_context.Add(authGroup);
-				for (int i = 0; i < authDTO.settings.Count(); i++)
+
+                await _context.SaveChangesAsync();
+				var newId = authGroup.GroupId;
+
+                for (int i = 0; i < authDTO.settings.Count(); i++)
 				{
 					if (authDTO.settings[i].IsExsited)
 					{
 						var newFuncSet = new FunctionSetting
 						{
-							GroupIdAuthGroup = authDTO.GroupId,
+							GroupIdAuthGroup = newId,
 							ModifiedDate = DateTime.Now,
 							FunctionCodeSystemFunction = authDTO.settings[i].FunctionId
 						};

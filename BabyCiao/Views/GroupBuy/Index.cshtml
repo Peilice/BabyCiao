@@ -1,77 +1,14 @@
-﻿@* @{
-    ViewData["Title"] = "Index";
-}
-
-@section Styles {
-    <link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" asp-append-version="true" />
-    <style>
-        thead {
-            background-color: darksalmon;
-            color: white;
-        }
-    </style>
-}
-
-<h3>商品紀錄</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <td>商品編號</td>
-            <td>商品名稱</td>
-            <td>商品描述</td>
-            <td>成團數量</td>
-            <td>成團狀態</td>
-            <td>建立日期</td>
-            <td>顯示狀態</td>
-            <td>編輯者</td>
-        </tr>
-    </thead>
-</table>
-
-@section Scripts {
-    <script src="~/lib/datatables/js/jquery.datatables.min.js" asp-append-version="true"></script>
-    <script src="//cdn.datatables.net/fixedheader/3.3.1/js/dataTables.fixedHeader.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            //alert("ready");
-            $(".table").dataTable({
-                ajax: {
-                    type: "GET",
-                    url: "/Products/IndexJson",
-                    dataSrc: function (data) {
-                        return data;
-                    }
-                },//物件 ajax是一種呼叫
-                columns: [
-                    { "data": "Id", "width": "10 %" },
-                    { "data": "ProductName", "width": "10 %" },
-                    { "data": "ProductDescription", "width": "10 %" },
-                    { "data": "TargetCount", "width": "10 %" },
-                    { "data": "Statement", "width": "10 %" },
-                    { "data": "ModifiedTime", "width": "10 %" },
-                    { "data": "Display", "width": "10 %" },
-                    { "data": "AccountUserAccount", "width": "10 %" },
-                ],//陣列
-                fixedHeader: { header: true },//物件
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/2.0.8/i18n/zh-HANT.json',
-                }//物件
-            });
-        });
-    </script>
-}
- *@
-@* @model IEnumerable< BabyCiao.Models.DTO.GroupBuyDTO> *@
-
+﻿
 @{
     ViewData["Title"] = "Index";
 }
 
 @section Styles {
     <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
     <style>
         thead {
-            background-color: darksalmon;
+            background-color: #ACD6FF;
             color: white;
         }
     </style>
@@ -82,13 +19,24 @@
 <p>
     <a asp-action="Create" class="btn btn-outline-secondary"><i class="fa-solid fa-plus"></i> 新增團購商品</a>
 </p>
+<p>
+    <a asp-action="Orders" class="btn btn-outline-secondary"><i class="fa-regular fa-file-lines"></i> 訂單管理</a>
+</p>
+@if (TempData["PendingOrdersMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["PendingOrdersMessage"]
+    </div>
+}
 
-<table id="groupBuysTable" class="table">
+<table id="groupBuysTable" class="table  py-2">
     <thead>
         <tr>
-            <th>商品名稱</th>
-            <th>商品描述</th>
+            <th>編號</th>
+            <th>商品</th>
+            <th>描述</th>
             <th>成團數量</th>
+            <th>價錢</th>
             <th>建立日期</th>
             <th>顯示狀態</th>
             <th>編輯者</th>
@@ -102,6 +50,7 @@
                 <td>@item.ProductName</td>
                 <td>@item.ProductDescription</td>
                 <td>@item.TargetCount</td>
+                <td>@item.Price</td>
                 <td>@item.ModifiedTimeView</td>
                 <td>@item.Display</td>
                 <td>@item.UserAccount</td>
@@ -133,17 +82,22 @@
                     "dataSrc": ""
                 },
                 "columns": [
+
+                    { "data": "id" },
                     { "data": "productName" },
                     { "data": "productDescription" },
                     { "data": "targetCount" },
-                    { "data": "modifiedTime" },
+                    { "data": "price" },
+                    { "data": "modifiedTimeView" },
                     { "data": "display" },
                     { "data": "userAccount" },
                     {
                         "render": function (data, type, row) {
-                            return '<a href="/GroupBuy/Edit/' + row.Id + '">Edit</a> | ' +
-                                '<a href="/GroupBuy/Details/' + row.Id + '">Details</a> | ' +
-                                '<a href="/GroupBuy/Delete/' + row.Id + '">Delete</a>';
+                            return '<div class="btn-group" role="group">' +
+                                '<a href="/GroupBuy/Edit/' + row.id + '" class="btn btn-outline-secondary"><i class="fa-solid fa-pen-to-square"></i> 編輯</a>' +
+                                '<a href="/GroupBuy/Details/' + row.id + '" class="btn btn-outline-secondary"><i class="fa-solid fa-file-lines"></i> 明細</a>' +
+                                '<a href="/GroupBuy/Delete/' + row.id + '" class="btn btn-outline-danger"><i class="fa-regular fa-trash-can"></i> 刪除</a>' +
+                                '</div>'
                         }
                     }
                 ],

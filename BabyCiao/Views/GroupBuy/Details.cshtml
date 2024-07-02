@@ -1,13 +1,19 @@
-﻿@model BabyCiao.Models.GroupBuying
+﻿@model BabyCiao.Models.DTO.GroupBuyDTO
 
 @{
     ViewData["Title"] = "Details";
 }
+@section Styles
+{
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <style>
 
-<h1>Details</h1>
+    </style>
+}
+<h1>商品明細</h1>
 
 <div>
-    <h4>GroupBuying</h4>
+    <h4>團購商品</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -28,6 +34,12 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.TargetCount)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Statement)
         </dt>
@@ -47,14 +59,14 @@
             @Html.DisplayFor(model => model.Display)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AccountUserAccountNavigation)
+            @Html.DisplayNameFor(model => model.UserAccount)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AccountUserAccountNavigation.Account)
+            @Html.DisplayFor(model => model.UserAccount)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-secondary"><i class="fa-solid fa-pen-to-square"></i> 編輯</a> 
+    <a asp-controller="GroupBuy" asp-action="Index" class="btn btn-outline-secondary"><i class="fa-solid fa-rotate-left"></i>返回列表</a>
 </div>
