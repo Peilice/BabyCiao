@@ -1,4 +1,5 @@
 using BabyCiao.Models;
+using BabyCiao.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -17,11 +18,32 @@ namespace BabyCiao.Controllers
         {
             return View();
         }
-
+        
         public IActionResult Privacy()
         {
             return View();
         }
+        [HttpGet]
+        public IActionResult Contact()
+        {
+            return View();
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Contact([Bind("Name,Email,Phone,Title,content")]ContactViewModel cvm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Index");
+            }
+                return View(cvm);   
+
+        }
+
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
