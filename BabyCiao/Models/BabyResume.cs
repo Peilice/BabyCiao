@@ -30,7 +30,7 @@ namespace BabyCiao.Models
         public DateTime RequireDate { get; set; }
 
         [Required]
-        public string Babyago { get; set; } = null!;
+        public string Babyage { get; set; } = null!;
 
         [Required]
         public string TypeOfDaycare { get; set; } = null!;

@@ -21,9 +21,9 @@ public partial class NannyResume
 
     public bool QuasiPublicChildcare { get; set; }
 
-    public string ChildcareAvailableUnder2 { get; set; } = null!;
+    public int ChildcareAvailableUnder2 { get; set; }
 
-    public string ChildcareAvailableOver2 { get; set; } = null!;
+    public int ChildcareAvailableOver2 { get; set; }
 
     public string Language { get; set; } = null!;
 
