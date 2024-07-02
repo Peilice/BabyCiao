@@ -28,7 +28,6 @@ namespace BabyCiao.Controllers
             //    ViewBag.AccountName = account_name;
             //}
 
-            //123
 
             return View();
         }
