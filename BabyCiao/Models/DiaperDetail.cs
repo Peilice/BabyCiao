@@ -11,7 +11,7 @@ public partial class DiaperDetail
 
     public DateTime RecodeTime { get; set; }
 
-    public string? Content { get; set; }
+    public int Content { get; set; }
 
     public string BowelSituation { get; set; } = null!;
 

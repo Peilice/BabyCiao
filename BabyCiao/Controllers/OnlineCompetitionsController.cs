@@ -51,7 +51,7 @@ namespace BabyCiao.Controllers
                                       ModifiedTime = con.ModifiedTime,
                                       //PhotoName = cp.PhotoName,
                                   }).FirstOrDefaultAsync();
-            
+
             if (competitionDTO == null)
             {
                 return NotFound();
@@ -86,14 +86,14 @@ namespace BabyCiao.Controllers
                 { 
                   newcompetiton.UpdateEntity(onlineCompetitionDTO);
                   _context.Add(newcompetiton);
-                  await _context.SaveChangesAsync();
-                  return RedirectToAction(nameof(Index));
-                }
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
                 else
                 {
                     return NotFound();
-                }
-               
+        }
+
             }
             var errors = ModelState.Values.SelectMany(v => v.Errors);
             foreach (var error in errors)

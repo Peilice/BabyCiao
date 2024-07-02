@@ -13,7 +13,7 @@ public partial class ContactBook
 
     public string BabyName { get; set; } = null!;
 
-    public bool Gender { get; set; }
+    public int Gender { get; set; }
 
     public DateOnly Birthday { get; set; }
 

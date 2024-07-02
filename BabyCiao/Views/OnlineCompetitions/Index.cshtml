@@ -16,67 +16,67 @@
 <a type="button" class="btn btn-outline-secondary mb-4" asp-action="Create">創建新活動</a>
     <div class="row">
         <main class="col-12">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
                         名稱
-                    </th>
-                    <th>
+            </th>
+            <th>
                         活動開始時間
-                    </th>
-                    <th>
+            </th>
+            <th>
                         活動結束時間
-                    </th>
+            </th>
                     @* <th>
-                    @Html.DisplayNameFor(model => model.Content)
+                @Html.DisplayNameFor(model => model.Content)
                     </th> *@
                     @* <th>
-                    @Html.DisplayNameFor(model => model.ModifiedTime)
+                @Html.DisplayNameFor(model => model.ModifiedTime)
                     </th> *@
-                    <th>
+            <th>
                         活動狀態
-                    </th>
+            </th>
                     @* <th>
-                    @Html.DisplayNameFor(model => model.AccountUserAccountNavigation)
+                @Html.DisplayNameFor(model => model.AccountUserAccountNavigation)
                     </th> *@
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CompetitionName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.StartTime)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.EndTime)
-                        </td>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompetitionName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndTime)
+            </td>
                         @* <td>
-                    @Html.DisplayFor(modelItem => item.Content)
+                @Html.DisplayFor(modelItem => item.Content)
                     </td> *@
                         @* <td>
-                    @Html.DisplayFor(modelItem => item.ModifiedTime)
+                @Html.DisplayFor(modelItem => item.ModifiedTime)
                     </td> *@
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Statement)
-                        </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Statement)
+            </td>
                         @* <td>
-                    @Html.DisplayFor(modelItem => item.AccountUserAccountNavigation.Account)
+                @Html.DisplayFor(modelItem => item.AccountUserAccountNavigation.Account)
                     </td> *@
-                        <td>
+            <td>
                             <a asp-action="Edit" asp-route-id="@item.Id">編輯</a> |
                             <a asp-action="Details" asp-route-id="@item.Id">詳細資料</a> |
                             <a asp-action="Delete" asp-route-id="@item.Id">刪除</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
         </main>
     </div>
 
