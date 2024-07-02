@@ -5,7 +5,7 @@ namespace BabyCiao.Models;
 
 public partial class SystemFunction
 {
-    public string FunctionCode { get; set; } = null!;
+    public int FunctionId { get; set; }
 
     public string FunctionName { get; set; } = null!;
 

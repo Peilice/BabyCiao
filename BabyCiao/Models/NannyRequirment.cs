@@ -17,7 +17,7 @@ public partial class NannyRequirment
 
     public string NationalIdentificationCard { get; set; } = null!;
 
-    public DateOnly AddressesOfAgencies { get; set; }
+    public string AddressesOfAgencies { get; set; } = null!;
 
     public DateOnly ValidPeriodsOfCertificates { get; set; }
 

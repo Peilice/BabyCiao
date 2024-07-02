@@ -14,25 +14,17 @@
         <tr>
             <th>
                 更新時間
-                @* @Html.DisplayNameFor(model => model.ModifiedTime) *@
             </th>
             <th>
                 標題
-                @* @Html.DisplayNameFor(model => model.Title) *@
             </th>
-@*             <th>
-                內文
-                @Html.DisplayNameFor(model => model.Content)
-            </th> *@
             <th>
                 類別
-                @* @Html.DisplayNameFor(model => model.Type) *@
             </th>
-            <th>顯示控制
-            @* @Html.DisplayNameFor(model => model.Display) *@
+            <th>
+                發布者帳號
             </th>
-            @* <th>
-            @Html.DisplayNameFor(model => model.AccountUserAccountNavigation)
+            @* <th>顯示控制
             </th> *@
             <th></th>
         </tr>
@@ -47,15 +39,15 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
-                @* <td>
-                    @Html.DisplayFor(modelItem => item.Content)
-                </td> *@
                 <td>
                     @Html.DisplayFor(modelItem => item.Type)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Display)
+                    @Html.DisplayFor(modelItem => item.AccountUserAccount)
                 </td>
+                @* <td>
+                    @Html.DisplayFor(modelItem => item.Display)
+                </td> *@
             @* <td>
             @Html.DisplayFor(modelItem => item.AccountUserAccountNavigation.Account)
             </td> *@

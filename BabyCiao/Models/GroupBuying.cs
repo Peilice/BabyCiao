@@ -13,13 +13,17 @@ public partial class GroupBuying
 
     public string ProductDescription { get; set; } = null!;
 
-    public int Statement { get; set; }
+    public int TargetCount { get; set; }
+
+    public string Statement { get; set; } = null!;
 
     public DateTime ModifiedTime { get; set; }
 
     public bool Display { get; set; }
 
     public virtual UserAccount AccountUserAccountNavigation { get; set; } = null!;
+
+    public virtual ICollection<GroupBuyingDetail> GroupBuyingDetails { get; set; } = new List<GroupBuyingDetail>();
 
     public virtual ICollection<GroupBuyingPhoto> GroupBuyingPhotos { get; set; } = new List<GroupBuyingPhoto>();
 }

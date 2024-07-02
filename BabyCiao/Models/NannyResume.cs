@@ -15,9 +15,9 @@ public partial class NannyResume
 
     public string? Introduction { get; set; }
 
-    public int TypeOfDaycare { get; set; }
+    public string TypeOfDaycare { get; set; } = null!;
 
-    public int ServiceItems { get; set; }
+    public string ServiceItems { get; set; } = null!;
 
     public bool QuasiPublicChildcare { get; set; }
 
@@ -29,17 +29,17 @@ public partial class NannyResume
 
     public string ServiceCenter { get; set; } = null!;
 
-    public string ProfessionalPortrait { get; set; } = null!;
+    public string? ProfessionalPortrait { get; set; }
 
-    public string InternalPhoto1 { get; set; } = null!;
+    public string? InternalPhoto1 { get; set; }
 
-    public string InternalPhoto2 { get; set; } = null!;
+    public string? InternalPhoto2 { get; set; }
 
-    public string InternalPhoto3 { get; set; } = null!;
+    public string? InternalPhoto3 { get; set; }
 
-    public string InternalPhoto4 { get; set; } = null!;
+    public string? InternalPhoto4 { get; set; }
 
-    public string InternalPhoto5 { get; set; } = null!;
+    public string? InternalPhoto5 { get; set; }
 
     public bool DisplayControl { get; set; }
 

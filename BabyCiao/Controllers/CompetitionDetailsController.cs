@@ -11,9 +11,9 @@ namespace BabyCiao.Controllers
 {
     public class CompetitionDetailsController : Controller
     {
-        private readonly BabyCiaoContext _context;
+        private readonly BabyciaoContext _context;
 
-        public CompetitionDetailsController(BabyCiaoContext context)
+        public CompetitionDetailsController(BabyciaoContext context)
         {
             _context = context;
         }
@@ -21,8 +21,8 @@ namespace BabyCiao.Controllers
         // GET: CompetitionDetails
         public async Task<IActionResult> Index()
         {
-            var babyCiaoContext = _context.CompetitionDetails.Include(c => c.IdOnlineCompetitionNavigation);
-            return View(await babyCiaoContext.ToListAsync());
+            var babyciaoContext = _context.CompetitionDetails.Include(c => c.IdOnlineCompetitionNavigation);
+            return View(await babyciaoContext.ToListAsync());
         }
 
         // GET: CompetitionDetails/Details/5

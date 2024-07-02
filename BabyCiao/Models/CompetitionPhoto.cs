@@ -11,7 +11,7 @@ public partial class CompetitionPhoto
 
     public string PhotoName { get; set; } = null!;
 
-    public string ModifiedTime { get; set; } = null!;
+    public DateTime ModifiedTime { get; set; }
 
     public virtual OnlineCompetition IdOnlineCompetitionNavigation { get; set; } = null!;
 }

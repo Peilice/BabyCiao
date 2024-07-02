@@ -9,6 +9,8 @@ public partial class BabyResume
 
     public string AccountUserAccount { get; set; } = null!;
 
+    public string? Photo { get; set; }
+
     public string FirstName { get; set; } = null!;
 
     public string City { get; set; } = null!;
@@ -21,9 +23,9 @@ public partial class BabyResume
 
     public DateOnly BabyBirthday { get; set; }
 
-    public int TypeOfDaycare { get; set; }
+    public string TypeOfDaycare { get; set; } = null!;
 
-    public int TimeSlot { get; set; }
+    public string TimeSlot { get; set; } = null!;
 
     public string? Memo { get; set; }
 

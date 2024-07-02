@@ -5,13 +5,13 @@ namespace BabyCiao.Models;
 
 public partial class FunctionSetting
 {
-    public int GroupCodePermissionGroup { get; set; }
+    public int GroupIdAuthGroup { get; set; }
 
-    public string FunctionCodeSystemFunction { get; set; } = null!;
+    public int FunctionCodeSystemFunction { get; set; }
 
     public DateTime ModifiedDate { get; set; }
 
     public virtual SystemFunction FunctionCodeSystemFunctionNavigation { get; set; } = null!;
 
-    public virtual PermissionGroup GroupCodePermissionGroupNavigation { get; set; } = null!;
+    public virtual AuthGroup GroupIdAuthGroupNavigation { get; set; } = null!;
 }
