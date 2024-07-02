@@ -1,17 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BabyCiao.Models;
-
-public partial class ExchangeOrder
+namespace BabyCiao.Models
 {
-    public int Id { get; set; }
+    public partial class ExchangeOrder
+    {
+        public int Id { get; set; }
 
-    public string AccountAUserAccount { get; set; } = null!;
+        public string AccountA_UserAccount { get; set; } = null!;
 
-    public string AccountBUserAccount { get; set; } = null!;
+        public string AccountB_UserAccount { get; set; } = null!;
 
-    public DateTime ModifiedTime { get; set; }
+        public DateTime ModifiedTime { get; set; }
 
-    public string Statement { get; set; } = null!;
+        public string Statement { get; set; } = null!;
+
+        // 導覽屬性
+        public virtual UserAccount AccountA { get; set; } = null!;
+
+        public virtual UserAccount AccountB { get; set; } = null!;
+
+        public virtual ICollection<ExchangeOrderDetail> ExchangeOrderDetails { get; set; } = new List<ExchangeOrderDetail>();
+    }
 }

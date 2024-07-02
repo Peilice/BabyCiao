@@ -23,7 +23,5 @@ public partial class GroupBuying
 
     public virtual UserAccount AccountUserAccountNavigation { get; set; } = null!;
 
-    public virtual ICollection<GroupBuyingDetail> GroupBuyingDetails { get; set; } = new List<GroupBuyingDetail>();
-
     public virtual ICollection<GroupBuyingPhoto> GroupBuyingPhotos { get; set; } = new List<GroupBuyingPhoto>();
 }

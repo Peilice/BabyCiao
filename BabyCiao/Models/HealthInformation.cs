@@ -17,7 +17,7 @@ public partial class HealthInformation
 
     public int Weight { get; set; }
 
-    public int HeadCircumference { get; set; }
+    public int? HeadCircumference { get; set; }
 
     public DateTime ModifiedDate { get; set; }
 
