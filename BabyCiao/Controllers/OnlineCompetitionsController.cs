@@ -14,9 +14,9 @@ namespace BabyCiao.Controllers
 {
     public class OnlineCompetitionsController : Controller
     {
-        private readonly BabyciaoContext _context;
+        private readonly BabyCiaoContext _context;
 
-        public OnlineCompetitionsController(BabyciaoContext context)
+        public OnlineCompetitionsController(BabyCiaoContext context)
         {
             _context = context;
         }
@@ -51,13 +51,16 @@ namespace BabyCiao.Controllers
                                       ModifiedTime = con.ModifiedTime,
                                       //PhotoName = cp.PhotoName,
                                   }).FirstOrDefaultAsync();
-            
-            if (competitionDTO == null)
+
+            var onlineCompetition = await _context.OnlineCompetitions
+                .Include(o => o.AccountUserAccountNavigation)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (onlineCompetition == null)
             {
                 return NotFound();
             }
 
-            return View(competitionDTO);
+            return View(onlineCompetition);
         }
 
         // GET: OnlineCompetitions/Create
@@ -72,28 +75,21 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Id,CompetitionName,AccountUserAccount,StartTime,EndTime,Content,ModifiedTime,Statement,PhotoName")] OnlineCompetitionsDTO onlineCompetitionDTO)
-        public async Task<IActionResult> Create([Bind("CompetitionName,AccountUserAccount,StartTime,EndTime,Content,Statement")] OnlineCompetitionsDTO onlineCompetitionDTO)
-
+        public async Task<IActionResult> Create([Bind("Id,CompetitionName,AccountUserAccount,StartTime,EndTime,Content,ModifiedTime,Statement")] OnlineCompetition onlineCompetition)
         {
 
             //onlineCompetition.AccountUserAccountNavigation = _context.UserAccounts.FirstOrDefault(user => user.Account == onlineCompetition.AccountUserAccount);
 
             if (ModelState.IsValid)
             {
-                var newcompetiton = await _context.OnlineCompetitions.FirstOrDefaultAsync(c =>c.CompetitionName == onlineCompetitionDTO.CompetitionName);
-                if (newcompetiton == null)
-                { 
-                  newcompetiton.UpdateEntity(onlineCompetitionDTO);
-                  _context.Add(newcompetiton);
-                  await _context.SaveChangesAsync();
-                  return RedirectToAction(nameof(Index));
-                }
-                else
-                {
-                    return NotFound();
-                }
-               
+                _context.Add(onlineCompetition);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", onlineCompetition.AccountUserAccount);
+            return View(onlineCompetition);
+        }
+
             }
             var errors = ModelState.Values.SelectMany(v => v.Errors);
             foreach (var error in errors)
@@ -126,11 +122,13 @@ namespace BabyCiao.Controllers
                                       ModifiedTime = con.ModifiedTime
                                   }).FirstOrDefaultAsync();
 
-            if (competitionDTO == null)
+            var onlineCompetition = await _context.OnlineCompetitions.FindAsync(id);
+            if (onlineCompetition == null)
             {
                 return NotFound();
             }
-            return View(competitionDTO);
+            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", onlineCompetition.AccountUserAccount);
+            return View(onlineCompetition);
         }
 
         // POST: OnlineCompetitions/Edit/5
@@ -138,10 +136,9 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("Id,CompetitionName,AccountUserAccount,StartTime,EndTime,Content,ModifiedTime,Statement,PhotoName")] OnlineCompetitionsDTO onlineCompetitionDTO)
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CompetitionName,AccountUserAccount,StartTime,EndTime,Content,ModifiedTime,Statement")] OnlineCompetitionsDTO onlineCompetitionDTO)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CompetitionName,AccountUserAccount,StartTime,EndTime,Content,ModifiedTime,Statement")] OnlineCompetition onlineCompetition)
         {
-            if (id != onlineCompetitionDTO.Id)
+            if (id != onlineCompetition.Id)
             {
                 return NotFound();
             }
@@ -150,19 +147,13 @@ namespace BabyCiao.Controllers
             {
                 try
                 {
-                    var editcompetity = await _context.OnlineCompetitions.FindAsync(id);
-                    if (editcompetity == null)
-                    {
-                        return NotFound();
-                    }
-                    editcompetity.UpdateEntity(onlineCompetitionDTO);
-                    _context.Update(editcompetity);
+                    _context.Update(onlineCompetition);
                     await _context.SaveChangesAsync();
 
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OnlineCompetitionExists(onlineCompetitionDTO.Id))
+                    if (!OnlineCompetitionExists(onlineCompetition.Id))
                     {
                         return NotFound();
                     }
@@ -173,8 +164,8 @@ namespace BabyCiao.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", onlineCompetitionDTO.AccountUserAccount);
-            return View(onlineCompetitionDTO);
+            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", onlineCompetition.AccountUserAccount);
+            return View(onlineCompetition);
         }
 
         // GET: OnlineCompetitions/Delete/5
@@ -200,12 +191,15 @@ namespace BabyCiao.Controllers
                                       //PhotoName = cp.PhotoName,
                                  }).FirstOrDefaultAsync();
 
-            if (competitionDTO == null)
+            var onlineCompetition = await _context.OnlineCompetitions
+                .Include(o => o.AccountUserAccountNavigation)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (onlineCompetition == null)
             {
                 return NotFound();
             }
 
-            return View(competitionDTO);
+            return View(onlineCompetition);
         }
 
         // POST: OnlineCompetitions/Delete/5
