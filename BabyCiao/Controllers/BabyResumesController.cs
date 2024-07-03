@@ -1,28 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BabyCiao.Models;
+using Microsoft.AspNetCore.Hosting;
+using PagedList;
 
 namespace BabyCiao.Controllers
 {
     public class BabyResumesController : Controller
     {
         private readonly BabyCiaoContext _context;
+        private readonly string _imagePath;
 
-        public BabyResumesController(BabyCiaoContext context)
+        public BabyResumesController(BabyCiaoContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _imagePath = Path.Combine(webHostEnvironment.WebRootPath, "uploads");
         }
 
         // GET: BabyResumes
-        public async Task<IActionResult> Index()
+
+
+        public IActionResult Index(int? page)
         {
-            var babyCiaoContext = _context.BabyResumes.Include(b => b.AccountUserAccountNavigation);
-            return View(await babyCiaoContext.ToListAsync());
+            int pageSize = 15;
+            int pageNumber = (page ?? 1);
+            var resumes = _context.BabyResumes.Include(b => b.AccountUserAccountNavigation).ToList();
+            return View(resumes.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: BabyResumes/Details/5
@@ -48,23 +57,52 @@ namespace BabyCiao.Controllers
         public IActionResult Create()
         {
             ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account");
+            ViewData["DaycareTypes"] = new SelectList(new List<string>
+            {
+                "半日托育",
+                "日間托育(平日)",
+                "全日托育",
+                "夜間托育",
+                "臨時托育(平日)",
+                "臨時托育(假日)"
+            });
             return View();
         }
 
         // POST: BabyResumes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AccountUserAccount,Photo,FirstName,City,District,ApplyDate,RequireDate,BabyBirthday,TypeOfDaycare,TimeSlot,Memo,Display")] BabyResume babyResume)
+        public async Task<IActionResult> Create([Bind("Id,AccountUserAccount,FirstName,City,District,ApplyDate,RequireDate,Babyage,TypeOfDaycare,TimeSlot,Memo,Display")] BabyResume babyResume, IFormFile? Photo)
         {
             if (ModelState.IsValid)
             {
+                if (Photo != null && Photo.Length > 0)
+                {
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Photo.FileName);
+                    var filePath = Path.Combine(_imagePath, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await Photo.CopyToAsync(stream);
+                    }
+
+                    babyResume.Photo = "/uploads/" + fileName;
+                }
+
                 _context.Add(babyResume);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", babyResume.AccountUserAccount);
+            ViewData["DaycareTypes"] = new SelectList(new List<string>
+            {
+                "半日托育",
+                "日間托育(平日)",
+                "全日托育",
+                "夜間托育",
+                "臨時托育(平日)",
+                "臨時托育(假日)"
+            });
             return View(babyResume);
         }
 
@@ -82,15 +120,22 @@ namespace BabyCiao.Controllers
                 return NotFound();
             }
             ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", babyResume.AccountUserAccount);
+            ViewData["DaycareTypes"] = new SelectList(new List<string>
+            {
+                "半日托育",
+                "日間托育(平日)",
+                "全日托育",
+                "夜間托育",
+                "臨時托育(平日)",
+                "臨時托育(假日)"
+            }, babyResume.TypeOfDaycare);
             return View(babyResume);
         }
 
         // POST: BabyResumes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountUserAccount,Photo,FirstName,City,District,ApplyDate,RequireDate,BabyBirthday,TypeOfDaycare,TimeSlot,Memo,Display")] BabyResume babyResume)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountUserAccount,FirstName,City,District,ApplyDate,RequireDate,Babyage,TypeOfDaycare,TimeSlot,Memo,Display")] BabyResume babyResume, IFormFile? Photo)
         {
             if (id != babyResume.Id)
             {
@@ -101,6 +146,41 @@ namespace BabyCiao.Controllers
             {
                 try
                 {
+                    var existingResume = await _context.BabyResumes.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
+                    if (existingResume == null)
+                    {
+                        return NotFound();
+                    }
+
+                    if (Photo != null && Photo.Length > 0)
+                    {
+                        // 刪除原本的照片
+                        if (!string.IsNullOrEmpty(existingResume.Photo))
+                        {
+                            var oldFilePath = Path.Combine(_imagePath, Path.GetFileName(existingResume.Photo));
+                            if (System.IO.File.Exists(oldFilePath))
+                            {
+                                System.IO.File.Delete(oldFilePath);
+                            }
+                        }
+
+                        // 上傳新照片
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Photo.FileName);
+                        var filePath = Path.Combine(_imagePath, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await Photo.CopyToAsync(stream);
+                        }
+
+                        babyResume.Photo = "/uploads/" + fileName;
+                    }
+                    else
+                    {
+                        // 保持原來的照片路徑
+                        babyResume.Photo = existingResume.Photo;
+                    }
+
                     _context.Update(babyResume);
                     await _context.SaveChangesAsync();
                 }
@@ -118,6 +198,15 @@ namespace BabyCiao.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", babyResume.AccountUserAccount);
+            ViewData["DaycareTypes"] = new SelectList(new List<string>
+            {
+                "半日托育",
+                "日間托育(平日)",
+                "全日托育",
+                "夜間托育",
+                "臨時托育(平日)",
+                "臨時托育(假日)"
+            }, babyResume.TypeOfDaycare);
             return View(babyResume);
         }
 
@@ -148,10 +237,20 @@ namespace BabyCiao.Controllers
             var babyResume = await _context.BabyResumes.FindAsync(id);
             if (babyResume != null)
             {
+                // 刪除照片
+                if (!string.IsNullOrEmpty(babyResume.Photo))
+                {
+                    var filePath = Path.Combine(_imagePath, Path.GetFileName(babyResume.Photo));
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                }
+
                 _context.BabyResumes.Remove(babyResume);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

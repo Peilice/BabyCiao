@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>@ViewBag.Title - 深色管理面板</title>
+    <title>@ViewBag.Title - 貝比巧遇後臺管理系統</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex">
@@ -18,29 +18,11 @@
     <!-- Favicon-->
     <link rel="shortcut icon" href="~/img/favicon.ico">
     <!-- Tweaks for older IEs-->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
-    <style>
-        input[readonly] {
-            color: black; /* 設定 readonly 狀態下的字顏色 */
-            background-color: white; /* 可選：設定 readonly 狀態下的背景色 */
-            border: 1px solid #ccc; /* 可選：設定 readonly 狀態下的邊框顏色 */
-        }
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
 
-        label, div {
-            color: #E0E0E0;
-        }
 
-        .form-control:focus {
-            color: white;
-            background-color: #2d3035;
-            border-color: #37cfdc;
-            outline: 0;
-            -webkit-box-shadow: none;
-            box-shadow: none
-        }
-    </style>
+
     @RenderSection("styles", required: false)
 </head>
 <body>
@@ -201,14 +183,15 @@
                             <li><a class="dropdown-item" rel="nofollow" href="#"> <img class="me-2" src="~/img/flags/16/FR.png" alt="English"><span>French                   </span></a></li>
                         </ul>
                     </li>
-                    <li class="list-inline-item logout px-lg-2">
+                    @* <li class="list-inline-item logout px-lg-2">
                         <a class="nav-link text-sm text-reset px-1 px-lg-0" id="logout" href="@Url.Action("Logout", "Account")">
                             <span class="d-none d-sm-inline-block">登出 </span>
                             <svg class="svg-icon svg-icon-xs svg-icon-heavy">
                                 <use xlink:href="#disable-1"> </use>
                             </svg>
                         </a>
-                    </li>
+                    </li> *@
+                    <partial name="_LoginPartial_self" />
                 </ul>
             </div>
         </nav>
@@ -240,8 +223,6 @@
                     </a>
                     <ul class="collapse list-unstyled " id="tablesDropdown">
                         <li><a class="sidebar-link" href="tables.html"> 帳號管理</a></li>
-                        <li><a class="sidebar-link" href="tables-datatable.html">權限管理</a></li>
-                        <li><a class="sidebar-link" href="/Auth/Index">權限群組管理</a></li>
                         <li><a class="sidebar-link" href="tables-datatable.html">保母審核</a></li>
                     </ul>
                 </li>
@@ -277,9 +258,7 @@
                         </svg><span>公告管理 </span>
                     </a>
                     <ul class="collapse list-unstyled " id="pagesDropdown">
-                        <li><a class="sidebar-link" href="pages-contacts.html">主頁公告事項</a></li>
-                        <li><a class="sidebar-link" href="pages-invoice.html">最新資訊</a></li>
-
+                        <li><a class="sidebar-link" asp-area="" asp-controller="Announcements" asp-action="Index">公告管理</a></li>
                     </ul>
                 </li>
                 <li class="sidebar-item">
@@ -300,11 +279,11 @@
                         </svg><span>數據分析</span>
                     </a>
                     <ul class="collapse list-unstyled " id="DataAnalytics">
-                        <li><a class="sidebar-link" href="charts-gauge-sparkline.html">數據分析</a></li>
+                        <li><a class="sidebar-link" href="/DataAnalysis/Index">數據分析</a></li>
                     </ul>
                 </li>
-            </ul><span class="text-uppercase text-gray-600 text-xs mx-3 px-2 heading mb-2">附加功能</span>
-            <ul class="list-unstyled">
+            @* </ul><span class="text-uppercase text-gray-600 text-xs mx-3 px-2 heading mb-2">附加功能</span> *@
+            @* <ul class="list-unstyled">
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="#">
                         <svg class="svg-icon svg-icon-sm svg-icon-heavy">
@@ -333,7 +312,7 @@
                         </svg><span>範例 </span>
                     </a>
                 </li>
-            </ul>
+            </ul> *@
         </nav>
         <div class="page-content">
             <!-- Page Header-->
@@ -361,6 +340,7 @@
     <script src="~/js/js-cookie.js"> </script>
     <script src="~/js/demo.js"> </script>
     <script src="~/js/charts-home.js"></script>
+
     <!-- Notifications  -->
     <!-- Toast-->
 

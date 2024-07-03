@@ -13,7 +13,7 @@ public partial class NannyResume
 
     public string District { get; set; } = null!;
 
-    public string Introduction { get; set; }
+    public string? Introduction { get; set; }
 
     public string TypeOfDaycare { get; set; }
 
@@ -43,5 +43,5 @@ public partial class NannyResume
 
     public bool DisplayControl { get; set; }
 
-    public virtual UserAccount NannyAccountUserAccountNavigation { get; set; } = null!;
+    public virtual UserAccount? NannyAccountUserAccountNavigation { get; set; } = null!;
 }
