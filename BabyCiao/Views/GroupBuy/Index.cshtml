@@ -108,15 +108,6 @@
 				"language": {
 					"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Chinese-traditional.json"
 				},
-				// 		"createdRow": function (row, data, dataIndex) {
-				// 	if (data.statement === '出貨中') {
-				// 		$('td', row).css('background-color', '#d4edda');
-				// 	} else if (data.statement === '進行中') {
-				// 		$('td', row).css('background-color', '#fff3cd');
-				// 	} else if (data.statement === '已結束') {
-				// 		$('td', row).css('background-color', '#f8d7da');
-				// 	}
-				// }
 				"createdRow": function (row, data, dataIndex) {
 					var statementCell = $('td', row).eq(8); // 假設 statement 欄位是第九列 (索引為8)
 					if (data.statement === '出貨中') {

@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <Content Remove="Views\Auth\List.cshtml" />
+    <Content Remove="Views\SecondHand\Create.cshtml" />
     <Content Remove="wwwroot\uploads\09876299-ad53-42d4-a9f1-4df496137d18.png" />
     <Content Remove="wwwroot\uploads\0ba27f24-0d4d-4324-851c-611d6e4dc75c.png" />
     <Content Remove="wwwroot\uploads\3503f27d-68d8-44e0-8a53-3ba58c87e643.jpg" />
