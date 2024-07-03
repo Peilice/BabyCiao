@@ -1,0 +1,102 @@
+﻿@model BabyCiao.Controllers.DataAnalysisViewModel
+
+<div id="app">
+    <h2 class="text-center">保母和家長的委託單數量</h2>
+    <div id="chart" style="width: 800px; height: 600px;"></div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                parentTotalCount: @Model.ParentTotalCount,
+                nannyTotalCount: @Model.NannyTotalCount
+                    },
+            mounted() {
+                console.log('家長總數量:', this.parentTotalCount);
+                console.log('保母總數量:', this.nannyTotalCount);
+                this.drawChart();
+            },
+            methods: {
+                drawChart() {
+                    var chartDom = document.getElementById('chart');
+                    var myChart = echarts.init(chartDom);
+                    var option;
+
+                    option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'shadow'
+                            }
+                        },
+                        legend: {
+                            data: ['保母數量', '家長數量'],
+                            textStyle: {
+                                fontSize: 18, // 設定圖例字體大小
+                                color: '#FFFFFF' // 設定圖例字體顏色
+                            }
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'category',
+                            data: ['委託單'],
+                            axisLabel: {
+                                fontSize: 24, // 設定X軸標籤字體大小
+                                color: '#FFFFFF' // 設定X軸標籤字體顏色
+                            }
+                        },
+                        yAxis: {
+                            type: 'value',
+                            axisLabel: {
+                                fontSize: 16, // 設定Y軸標籤字體大小
+                                color: '#FFFFFF' // 設定Y軸標籤字體顏色
+                            }
+                        },
+                        series: [
+                            {
+                                name: '保母數量',
+                                type: 'bar',
+                                data: [this.nannyTotalCount],
+                                itemStyle: {
+                                    color: 'rgba(255, 99, 132, 0.5)'
+                                },
+                                label: {
+                                    show: true,
+                                    position: 'top',
+                                    fontSize: 16, // 設定柱狀圖頂部標籤字體大小
+                                    color: '#FFFFFF' // 設定柱狀圖頂部標籤字體顏色
+                                }
+                            },
+                            {
+                                name: '家長數量',
+                                type: 'bar',
+                                data: [this.parentTotalCount],
+                                itemStyle: {
+                                    color: 'rgba(54, 162, 235, 0.5)'
+                                },
+                                label: {
+                                    show: true,
+                                    position: 'top',
+                                    fontSize: 16, // 設定柱狀圖頂部標籤字體大小
+                                    color: '#FFFFFF' // 設定柱狀圖頂部標籤字體顏色
+                                }
+                            }
+                        ]
+                    };
+
+                    option && myChart.setOption(option);
+                }
+            }
+        });
+    </script>
+}

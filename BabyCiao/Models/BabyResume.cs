@@ -21,7 +21,8 @@ public partial class BabyResume
 
     public DateOnly RequireDate { get; set; }
 
-    public string Babyage { get; set; }
+        [Required]
+        public string Babyage { get; set; } = null!;
 
     public string TypeOfDaycare { get; set; }
 

@@ -11,7 +11,7 @@ public partial class UserAccount
 
     public string Password { get; set; } = null!;
 
-    public int Permissions { get; set; }
+        public int Permissions { get; set; }
 
     public bool Vip { get; set; }
 

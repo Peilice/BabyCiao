@@ -10,17 +10,17 @@
 //using NuGet.Protocol;
 //using Microsoft.AspNetCore.Authorization;
 
-//namespace BabyCiao.Controllers
-//{
-//    [Authorize(Roles ="公告編輯")]
-//    public class AnnouncementsController : Controller
-//    {
-//        private readonly BabyCiaoContext _context;
+namespace BabyCiao.Controllers
+{
+    [Authorize(Roles ="公告編輯")]
+    public class AnnouncementsController : Controller
+    {
+        private readonly BabyCiaoContext _context;
 
-//        public AnnouncementsController(BabyCiaoContext context)
-//        {
-//            _context = context;
-//        }
+        public AnnouncementsController(BabyCiaoContext context)
+        {
+            _context = context;
+        }
 
 //        // GET: Announcements
 //        public async Task<IActionResult> Index()
