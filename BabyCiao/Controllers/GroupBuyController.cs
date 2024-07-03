@@ -20,6 +20,28 @@ namespace BabyCiao.Controllers
             _context = context;
             _webHostEnvironment = webHostEnvironment;
         }
+
+        public async Task<IActionResult> Index()
+        {
+            var groupBuys = from gb in _context.GroupBuyings
+                            select new GroupBuyDTO
+                            {
+                                Id = gb.Id,
+                                UserAccount = gb.AccountUserAccount,
+                                ProductName = gb.ProductName,
+                                ProductDescription = gb.ProductDescription,
+                                TargetCount = gb.TargetCount,
+                                Price = gb.Price,
+                                Statement = gb.Statement,
+                                ModifiedTime = gb.ModifiedTime,
+                                ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
+                                Display = gb.Display,
+                                //JoinQuantity=from gbd in _context.GroupBuyingDetails.Where(id=>id.).Sum(gbd => gbd.Id)
+
+                            };
+            //return View(await groupBuys.ToListAsync());
+            return View(groupBuys);
+        }
         // GET: Products/IndexJson
         public async Task<IActionResult> IndexJson()
         //public async Task<JsonResult> IndexJson()
@@ -81,27 +103,6 @@ namespace BabyCiao.Controllers
             return View(ordersList);
         }
 
-        public async Task<IActionResult> Index()
-        {
-            var groupBuys = from gb in _context.GroupBuyings
-                            select new GroupBuyDTO
-                            {
-                                Id = gb.Id,
-                                UserAccount = gb.AccountUserAccount,
-                                ProductName = gb.ProductName,
-                                ProductDescription = gb.ProductDescription,
-                                TargetCount = gb.TargetCount,
-                                Price = gb.Price,
-                                Statement = gb.Statement,
-                                ModifiedTime = gb.ModifiedTime,
-                                ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
-                                Display = gb.Display,
-                                //JoinQuantity=from gbd in _context.GroupBuyingDetails.Where(id=>id.).Sum(gbd => gbd.Id)
-
-                            };
-            //return View(await groupBuys.ToListAsync());
-            return View(groupBuys);
-        }
 
         // GET: GroupBuy/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -174,14 +175,12 @@ namespace BabyCiao.Controllers
             _context.Add(buy);
             await _context.SaveChangesAsync();
             var newId = buy.Id;//加入相片用
-            //await _context.SaveChangesAsync();
             if (model.PhotoFiles != null && model.PhotoFiles.Count > 0) {
                 //這裡處理檔案寫入資料庫的處理ˋ
                 var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");// upload file path here
                 if (!Directory.Exists(uploadPath)) { 
                     Directory.CreateDirectory(uploadPath);// check folder exist
                 }
-
                 foreach (var file in model.PhotoFiles) { 
                     var filePath = Path.Combine(uploadPath, file.FileName);
                     using (var fileStream = new FileStream(filePath, FileMode.Create)) { 
@@ -191,7 +190,7 @@ namespace BabyCiao.Controllers
 
                     var groupBuyPhoto = new GroupBuyingPhoto
                     {
-                         PhotoName = file.FileName,
+                         PhotoName = file.FileName + DateTime.Now,
                          IdGroupBuying = newId,
                          ModifiedTime = DateTime.Now,
                     };
