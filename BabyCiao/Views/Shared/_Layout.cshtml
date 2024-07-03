@@ -20,8 +20,9 @@
     <!-- Tweaks for older IEs-->
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
-    
-    
+
+
+
     @RenderSection("styles", required: false)
 </head>
 <body>
@@ -180,14 +181,15 @@
                             <li><a class="dropdown-item" rel="nofollow" href="#"> <img class="me-2" src="~/img/flags/16/FR.png" alt="English"><span>French                   </span></a></li>
                         </ul>
                     </li>
-                    <li class="list-inline-item logout px-lg-2">
+                    @* <li class="list-inline-item logout px-lg-2">
                         <a class="nav-link text-sm text-reset px-1 px-lg-0" id="logout" href="@Url.Action("Logout", "Account")">
                             <span class="d-none d-sm-inline-block">登出 </span>
                             <svg class="svg-icon svg-icon-xs svg-icon-heavy">
                                 <use xlink:href="#disable-1"> </use>
                             </svg>
                         </a>
-                    </li>
+                    </li> *@
+                    <partial name="_LoginPartial_self" />
                 </ul>
             </div>
         </nav>
@@ -218,7 +220,7 @@
                         </svg><span>使用者管理 </span>
                     </a>
                     <ul class="collapse list-unstyled " id="tablesDropdown">
-                        <li><a class="sidebar-link" href="tables.html"> 帳號管理</a></li>
+                        <li><a class="sidebar-link" href="/UserInformations/Index"> 帳號管理</a></li>
                         <li><a class="sidebar-link" href="tables-datatable.html">保母審核</a></li>
                     </ul>
                 </li>
@@ -253,9 +255,7 @@
                         </svg><span>公告管理 </span>
                     </a>
                     <ul class="collapse list-unstyled " id="pagesDropdown">
-                        <li><a class="sidebar-link" href="pages-contacts.html">主頁公告事項</a></li>
-                        <li><a class="sidebar-link" href="pages-invoice.html">最新資訊</a></li>
-
+                        <li><a class="sidebar-link" asp-area="" asp-controller="Announcements" asp-action="Index">公告管理</a></li>
                     </ul>
                 </li>
                 <li class="sidebar-item">
@@ -276,7 +276,7 @@
                         </svg><span>數據分析</span>
                     </a>
                     <ul class="collapse list-unstyled " id="DataAnalytics">
-                        <li><a class="sidebar-link" href="charts-gauge-sparkline.html">數據分析</a></li>
+                        <li><a class="sidebar-link" href="/DataAnalysis/Index">數據分析</a></li>
                     </ul>
                 </li>
             @* </ul><span class="text-uppercase text-gray-600 text-xs mx-3 px-2 heading mb-2">附加功能</span> *@

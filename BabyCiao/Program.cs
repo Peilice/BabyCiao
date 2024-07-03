@@ -1,5 +1,7 @@
+using BabyCiao;
 using BabyCiao.Data;
 using BabyCiao.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +19,9 @@ builder.Services.AddDbContext<BabyCiaoContext>(options => options.UseSqlServer(b
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddSession(options =>
@@ -28,6 +33,17 @@ builder.Services.AddSession(options =>
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
+builder.Services.AddHttpContextAccessor();
+
+
+builder.Services.AddScoped<UserInfoServer>();
+
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+{
+    option.LoginPath = new PathString("/Home/NoLogin");
+    option.AccessDeniedPath = new PathString("/Home/NoRole");
+});
 
 var app = builder.Build();
 
@@ -45,12 +61,13 @@ else
 
 
 
-
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCookiePolicy();
+app.UseAuthentication();
 
 app.UseAuthorization();
 
@@ -60,3 +77,4 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 app.Run();
+
