@@ -266,19 +266,8 @@
                     <ul class="collapse list-unstyled " id="formsDropdown">
                         <li><a class="sidebar-link" href="forms.html">二手商品管理</a></li>
                         <li><a class="sidebar-link" href="/GroupBuy/Index">團購管理</a></li>
-                        <li><a class="sidebar-link" href="forms-autocomplete.html">論壇管理</a></li>
-                    </ul>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="#componentsDropdown" data-bs-toggle="collapse">
-                        <svg class="svg-icon svg-icon-sm svg-icon-heavy">
-                            <use xlink:href="#stack-1"> </use>
-                        </svg><span>活動管理 </span>
-                    </a>
-                    <ul class="collapse list-unstyled " id="componentsDropdown">
-                        <li><a class="sidebar-link" href="components-cards.html">活動事項</a></li>
-                        <li><a class="sidebar-link" href="components-calendar.html">活動照片</a></li>
-
+                        <li><a class="sidebar-link" asp-area="" asp-controller="OnlineCompetitions" asp-action="Index">投票活動</a></li>
+                        <li><a class="sidebar-link" asp-area="" asp-controller="Platforms" asp-action="Index">論壇管理</a></li>
                     </ul>
                 </li>
                 <li class="sidebar-item">
@@ -291,6 +280,27 @@
                         <li><a class="sidebar-link" href="pages-contacts.html">主頁公告事項</a></li>
                         <li><a class="sidebar-link" href="pages-invoice.html">最新資訊</a></li>
 
+                    </ul>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#AuthGroup" data-bs-toggle="collapse">
+                        <svg class="svg-icon svg-icon-sm svg-icon-heavy">
+                            <use xlink:href="#multiple-windows-1"> </use>
+                        </svg><span>權限管理</span>
+                    </a>
+                    <ul class="collapse list-unstyled " id="AuthGroup">
+                        <li><a class="sidebar-link" href="pages-contacts.html">功能設定</a></li>
+                        <li><a class="sidebar-link" href="/Auth/Index">權限群組管理</a></li>
+                    </ul>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#DataAnalytics" data-bs-toggle="collapse">
+                        <svg class="svg-icon svg-icon-sm svg-icon-heavy">
+                            <use xlink:href="#multiple-windows-1"> </use>
+                        </svg><span>數據分析</span>
+                    </a>
+                    <ul class="collapse list-unstyled " id="DataAnalytics">
+                        <li><a class="sidebar-link" href="charts-gauge-sparkline.html">數據分析</a></li>
                     </ul>
                 </li>
             </ul><span class="text-uppercase text-gray-600 text-xs mx-3 px-2 heading mb-2">附加功能</span>
