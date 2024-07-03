@@ -17,13 +17,18 @@ namespace BabyCiao.Controllers
         {
             _context = context;
         }
-
+        private static readonly Dictionary<int, string> GenderDictionary = new Dictionary<int, string>
+          {
+            { 1, "男" },
+            { 2, "女" },
+           };
 
         // GET: UserInformations
 
         public async Task<IActionResult> Index()
         {
             var babyCiaoContext = _context.UserInformations.Include(u => u.AccountUserNavigation);
+            ViewBag.GenderDictionary = GenderDictionary;
             return View(await babyCiaoContext.ToListAsync());
         }
 

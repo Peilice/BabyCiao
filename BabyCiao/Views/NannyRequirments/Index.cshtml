@@ -1,4 +1,4 @@
-﻿@* @model IEnumerable<BabyCiao.Models.NannyRequirment>
+﻿@model IEnumerable<BabyCiao.Models.NannyRequirment>
 
 
 <h1>保母審核</h1>
@@ -16,49 +16,44 @@
             <th>
                 申請時間</br>
                 申請帳號</br>
-                申請地址</br>
+                申請地址
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PoliceCriminalRecordCertificate)
+                良民證
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ChildCareCertificate)
+                保母證
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NationalIdentificationCard)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ValidPeriodsOfCertificates)
+                身分證
             </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">未審核</br></a>
-                    <a asp-action="Details" asp-route-id="@item.Id">合格</br></a>
-                    <a asp-action="Delete" asp-route-id="@item.Id">退件</br></a>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">審核</a><br />
+                    <a asp-action="Delete" asp-route-id="@item.Id">退件</a>
                 </td>
                 <td>
-                @Html.DisplayFor(modelItem => item.ValidPeriodsOfCertificates)
+                @Html.DisplayFor(modelItem => item.ValidPeriodsOfCertificates)<br />
                 @Html.DisplayFor(modelItem => item.Statement)
                 </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RequirementDate)
-                @Html.DisplayFor(modelItem => item.NannyAccountUserAccountNavigation.Account)
+                 <td>
+                @Html.DisplayFor(modelItem => item.RequirementDate)<br />
+                @Html.DisplayFor(modelItem => item.NannyAccountUserAccountNavigation.Account)<br />
                 @Html.DisplayFor(modelItem => item.AddressesOfAgencies)
-            </td>
-            <td>
+                </td>
+                 <td>
                 @Html.DisplayFor(modelItem => item.PoliceCriminalRecordCertificate)
-            </td>
-            <td>
+                 </td>
+                  <td>
                 @Html.DisplayFor(modelItem => item.ChildCareCertificate)
-            </td>
-            <td>
+                 </td>
+                  <td>
                 @Html.DisplayFor(modelItem => item.NationalIdentificationCard)
-            </td>
-       </tr>
-}    </tbody>
+                 </td>
+       </tr>}
+  </tbody>
 </table>
- *@

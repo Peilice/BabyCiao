@@ -62,7 +62,7 @@ namespace BabyCiao.Controllers
             {
                 if (Request.Form.Files["Picture"] != null)
                 {
-                    await ReadUploadImage(nannyResume);
+                    return View(nannyResume);
                 }
                 _context.Add(nannyResume);
                 await _context.SaveChangesAsync();
@@ -72,20 +72,7 @@ namespace BabyCiao.Controllers
             return View(nannyResume);
         }
 
-        private async Task ReadUploadImage(nannyResume nannyResume)
-        {
-            using (BinaryReader br = new BinaryReader(Request.Form.Files["PoliceCriminalRecordCertificate || ChildCareCertificate || NationalIdentificationCard"].OpenReadStream()))
-            {
-                byte[]? Policedata = br.ReadBytes((int)Request.Form.Files["PoliceCriminalRecordCertificate "].Length);
-                byte[]? Nannydata = br.ReadBytes((int)Request.Form.Files["ChildCareCertificate"].Length);
-                byte[]? IDdata = br.ReadBytes((int)Request.Form.Files["NationalIdentificationCard"].Length);
-
-                nannyResume.PoliceCriminalRecordCertificate = Policedata;
-                nannyResume.childCareCertificate = Nannydata;
-                nannyResume.NationalIdentificationCard = IDdata;
-
-            }
-        }
+ 
 
         // GET: NannyResumes/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -178,29 +165,7 @@ namespace BabyCiao.Controllers
         {
             return _context.NannyResumes.Any(e => e.Id == id);
         }
-        public async Task<FileResult> GetPicture(int id, string type)
-        {
-            nannyResume? nannyResume = await _context.NannyResumes.FindAsync(id);
-
-            if (nannyResume == null)
-            {
-                return null; // or handle the case when nannyResume is not found
-            }
-
-            byte[]? content = type switch
-            {
-                "PoliceCriminalRecordCertificate" => nannyResume.PoliceCriminalRecordCertificate,
-                "ChildCareCertificate" => nannyResume.childCareCertificate,
-                "NationalIdentificationCard" => nannyResume.NationalIdentificationCard,
-                _ => null
-            };
-
-            if (content == null)
-            {
-                return null; // or handle the case when the specified certificate is not found
-            }
-
-            return File(content, "image/jpeg");
+       
         }
     }
-}
+

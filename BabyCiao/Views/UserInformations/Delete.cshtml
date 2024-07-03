@@ -1,8 +1,5 @@
 ﻿@model BabyCiao.Models.UserInformation
 
-@{
-    ViewData["Title"] = "Delete";
-}
 
 <h1>刪除</h1>
 
@@ -10,54 +7,55 @@
     <h4>會員資料</h4>
     <hr />
     <dl class="row">
+        <dt class="col-sm-2">
+            帳號
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AccountUserNavigation.Account)
+        </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserFirstName)
+            名字
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.UserFirstName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserLastName)
+            姓氏
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.UserLastName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Phone)
+            電話
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Phone)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Address)
+            地址
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Address)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gender)
+            性別
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Gender)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
+           電子郵件
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Email)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Birthday)
+            生日
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Birthday)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AccountUserNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AccountUserNavigation.Account)
-        </dd>
+
     </dl>
     
     <form asp-action="Delete">
