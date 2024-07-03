@@ -1,77 +1,148 @@
 ﻿@model BabyCiao.Models.DTO.GroupBuyDTO
 
 @{
-    ViewData["Title"] = "編輯團購商品";
+	ViewData["Title"] = "編輯團購商品";
 }
 @section Styles
 {
-    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
-    <style>
+	<link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+	<style>
+		.photos, .preview {
+			width: 200px;
+			border: 1px solid #ccc;
+			margin-top: 10px;
+			margin-bottom: 10px;
+			object-fit: cover;
+			margin-right: 10px;
+		}
 
-    </style>
+		.preview-container {
+			display: flex;
+			flex-wrap: wrap;
+		}
+	</style>
 }
 <h1>編輯</h1>
 
 <h4>團購商品</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="UserAccount" class="control-label"></label>
-                <input asp-for="UserAccount" class="form-control">
-                <span asp-validation-for="UserAccount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="hidden" asp-for="Id" class="form-control" readonly />
-            </div>
-            <div class="form-group">
-                <label asp-for="ProductName" class="control-label"></label>
-                <input asp-for="ProductName" class="form-control" />
-                <span asp-validation-for="ProductName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProductDescription" class="control-label"></label>
-                <input asp-for="ProductDescription" class="form-control" />
-                <span asp-validation-for="ProductDescription" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TargetCount" class="control-label"></label>
-                <input asp-for="TargetCount" class="form-control" />
-                <span asp-validation-for="TargetCount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Statement" class="control-label"></label>
-                <input asp-for="Statement" class="form-control" />
-                <span asp-validation-for="Statement" class="text-danger"></span>
-            </div>
-            <label asp-for="Display" class="control-label"></label>
-            <div class="form-check">
-                <label><input type="checkbox" asp-for="Display" />顯示</label>
-                <br>
+	<div class="col-md-4">
+		<form asp-action="Edit">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="Id" />
+			<div class="form-group">
+				<label asp-for="UserAccount" class="control-label"></label>
+				<input asp-for="UserAccount" class="form-control">
+				<span asp-validation-for="UserAccount" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<input type="hidden" asp-for="Id" class="form-control" readonly />
+			</div>
+			<div class="form-group">
+				<label asp-for="ProductName" class="control-label"></label>
+				<input asp-for="ProductName" class="form-control" />
+				<span asp-validation-for="ProductName" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="ProductDescription" class="control-label"></label>
+				<input asp-for="ProductDescription" class="form-control" />
+				<span asp-validation-for="ProductDescription" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="TargetCount" class="control-label"></label>
+				<input asp-for="TargetCount" class="form-control" />
+				<span asp-validation-for="TargetCount" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Price" class="control-label"></label>
+				<input asp-for="Price" class="form-control" />
+				<span asp-validation-for="Price" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Statement" class="control-label"></label>
+				<input asp-for="Statement" class="form-control" />
+				<span asp-validation-for="Statement" class="text-danger"></span>
+			</div>
+			<label asp-for="Display" class="control-label"></label>
+			<div class="form-check">
+				<label><input type="checkbox" asp-for="Display" />顯示</label>
+				<br>
 
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedTimeView" class="control-label"></label>
-                <input asp-for="ModifiedTimeView" class="form-control" readonly />
-                <input type="hidden" asp-for="ModifiedTime" class="form-control" readonly />
-                <span asp-validation-for="ModifiedTimeView" class="text-danger"></span>
-            </div>
-            <div class="form-group  mb-2">
-                <input type="submit" value="Save" class="btn btn-secondary my-3" />
-            </div>
-        </form>
-    </div>
+			</div>
+			<div class="form-group">
+				<label asp-for="ModifiedTimeView" class="control-label"></label>
+				<input asp-for="ModifiedTimeView" class="form-control" readonly />
+				<input type="hidden" asp-for="ModifiedTime" class="form-control" readonly />
+				<span asp-validation-for="ModifiedTimeView" class="text-danger"></span>
+			</div>
+			<div>
+				@if (Model.Photos != null && Model.Photos.Count > 0)
+				{
+					for (int i=0;i<Model.Photos.Count();i++)
+					{
+						<div style="display: flex; align-items: center; margin-bottom: 10px;">
+							<img src="~/uploads/@Model.Photos[i].PhotoName" alt="" class="photos" />
+							<form asp-controller="GroupBuy" asp-action="DeletePhoto" method="post" onsubmit="return confirmDelete(this);">
+								<input type="hidden" asp-for="@Model.Photos[i].Id" name="@Model.Photos[i].Id" value="@Model.Photos[i].Id" />
+								<button type="submit" class="btn btn-outline-danger" style="padding: 0 10px;">
+									<i class="fa-regular fa-trash-can"></i>
+								</button>
+							</form>
+						</div>
+					}
+				}
+				else
+				{
+					<img src="~/img/noimage.jpg" class="photos" />
+				}
+			</div>
+			<div class="form-group">
+				<label asp-for="@Model.PhotoFiles" for="fileInput" class="control-label"></label>				
+				<input type="file" asp-for="PhotoFiles" id="fileInput" class="form-control" multiple />
+					@* <span asp-validation-for="PhotoFiles" class="text-danger"></span> *@
+				<div id="preview-container" class="preview-container"></div>
+
+			</div>
+			<div class="form-group  mb-2">
+				<input type="submit" value="Save" class="btn btn-secondary my-3" />
+			</div>
+			<div>
+	<a asp-controller="GroupBuy" asp-action="Index" class="btn btn-outline-secondary"><i class="fa-solid fa-rotate-left"></i>返回列表</a>
+</div>
+		</form>
+	</div>
 </div>
 
-<div>
-    <a asp-controller="GroupBuy" asp-action="Index" class="btn btn-outline-secondary"><i class="fa-solid fa-rotate-left"></i>返回列表</a>
-</div>
 
+
+@section Scripts {
+	<script type="text/javascript">
+		function confirmDelete() {
+			return confirm('確定要刪除此照片嗎?');
+		}
+	</script>
+	<script>
+		document.getElementById('fileInput').addEventListener('change', function (event) {
+			var files = event.target.files;
+			var previewContainer = document.getElementById('preview-container');
+			previewContainer.innerHTML = ''; // 清空現有預覽
+
+			for (var i = 0; i < files.length; i++) {
+				var file = files[i];
+				if (file) {
+					var reader = new FileReader();
+					reader.onload = (function (file) {
+						return function (e) {
+							var img = document.createElement('img');
+							img.src = e.target.result;
+							img.className = 'preview';
+							previewContainer.appendChild(img);
+						};
+					})(file);
+					reader.readAsDataURL(file);
+				}
+			}
+		});
+	</script>
+}

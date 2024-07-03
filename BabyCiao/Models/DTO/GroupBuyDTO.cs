@@ -27,11 +27,13 @@ namespace BabyCiao.Models.DTO
         [Display(Name = "建立日期")]
         public string ModifiedTimeView { get; set; }//建立時間
 
-        [Display(Name = "顯示狀態")]
+        [Display(Name = "顯示")]
 		public bool Display { get; set; }//顯示控制
+        [Display(Name = "顯示")]
+        public string DisplayString { get; set; }//顯示控制
 
 
-        [Display(Name = "參團編號")]
+        [Display(Name = "目前參加團購數")]
         public int JoinQuantity { get; set; }//目前參加團購數
 
         //////////////////////////
@@ -48,9 +50,9 @@ namespace BabyCiao.Models.DTO
 		public int Quantity { get; set; }//加購數量
 
         [Display(Name = "商品價錢")]
-        public int Price { get; set; }//加購數量
+        public int Price { get; set; }//$$
         [Display(Name = "商品價錢")]
-        public int OrderPrice { get; set; }//加購數量
+        public int OrderPrice { get; set; }//訂單價格
         [Display(Name = "下單時間")]
 		public DateTime JoinModifiedTime { get; set; }//下單時間
 
@@ -58,9 +60,11 @@ namespace BabyCiao.Models.DTO
         public string ViewJoinModifiedTime { get; set; }//下單時間
         [Display(Name = "參加狀態")]
 		public string JoinStatement { get; set; } = null!;//參加狀態
-		public List<GroupBuyPhotoDTO>? photos { get; set; }
+		public string? photoUrl { get; set; }
+        public List<GroupBuyPhotoDTO>? Photos { get; set; }
 
-		public List<IFormFile> PhotoFiles { get; set; }	
+        [Display(Name = "商品照片")]
+        public List<IFormFile> PhotoFiles { get; set; }	
 	}
 	public class GroupBuyPhotoDTO
 	{

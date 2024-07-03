@@ -1,110 +1,114 @@
-﻿
-@{
-    ViewData["Title"] = "團購管理";
+﻿@{
+	ViewData["Title"] = "團購管理";
 }
 
 @section Styles {
-    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" />
-    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
-    <style>
-        thead {
-            background-color: #ACD6FF;
-            color: white;
-        }
-    </style>
+	<link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" />
+	<link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+	<style>
+		thead {
+			background-color: #ACD6FF;
+			color: white;
+		}
+	</style>
 }
 
 <h1>團購商品列表</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-outline-secondary"><i class="fa-solid fa-plus"></i> 新增團購商品</a>
+	<a asp-action="Create" class="btn btn-outline-secondary"><i class="fa-solid fa-plus"></i> 新增團購商品</a>
 </p>
 <p>
-    <a asp-action="Orders" class="btn btn-outline-secondary"><i class="fa-regular fa-file-lines"></i> 訂單管理</a>
+	<a asp-action="Orders" class="btn btn-outline-secondary"><i class="fa-regular fa-file-lines"></i> 訂單管理</a>
 </p>
 @if (TempData["PendingOrdersMessage"] != null)
 {
-    <div class="alert alert-danger">
-        @TempData["PendingOrdersMessage"]
-    </div>
+	<div class="alert alert-danger">
+		@TempData["PendingOrdersMessage"]
+	</div>
 }
 
 <table id="groupBuysTable" class="table  py-2">
-    <thead>
-        <tr>
-            <th>編號</th>
-            <th>商品</th>
-            <th>描述</th>
-            <th>成團數量</th>
-            <th>價錢</th>
-            <th>建立日期</th>
-            <th>顯示狀態</th>
-            <th>編輯者</th>
-            <th>操作</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.ProductName</td>
-                <td>@item.ProductDescription</td>
-                <td>@item.TargetCount</td>
-                <td>@item.Price</td>
-                <td>@item.ModifiedTimeView</td>
-                <td>@item.Display</td>
-                <td>@item.UserAccount</td>
-                <td>
-                    <a href="/GroupBuy/Edit/@item.Id">Edit</a> |
-                    <a href="/GroupBuy/Details/@item.Id">Details</a> |
-                    <a href="/GroupBuy/Delete/@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
+	<thead>
+		<tr>
+			<th>編號</th>
+			<th>商品</th>
+			<th>商品圖片</th>
+			<th>成團數量</th>
+			<th>訂購數</th>
+			<th>價錢</th>
+			<th>建立日期</th>
+			<th>顯示</th>
+			<th>編輯者</th>
+			<th>操作</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>@item.ProductName</td>
+				<td>@item.photoUrl</td>
+				<td>@item.TargetCount</td>
+				<td>@item.JoinQuantity</td>
+				<td>@item.Price</td>
+				<td>@item.ModifiedTimeView</td>
+				<td>@item.Display</td>
+				<td>@item.UserAccount</td>
+				<td>
+					<div class="btn-group" role="group">
+					<a href="/GroupBuy/Edit/@item.Id" class="btn btn-outline-secondary"><i class="fa-solid fa-pen-to-square"></i>編輯</a> 
+					<a href="/GroupBuy/Details/@item.Id"class="btn btn-outline-secondary"><i class="fa-solid fa-file-lines"></i> 明細</a> 
+					<a href="/GroupBuy/Delete/@item.Id"class="btn btn-outline-danger"><i class="fa-regular fa-trash-can"></i> 刪除</a>
+					</div>
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>
 
 @section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#groupBuysTable').DataTable({
-                "paging": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "processing": true,
-                "serverSide": false,
-                "ajax": {
-                    "url": "/GroupBuy/IndexJson",
-                    "type": "GET",
-                    "dataSrc": ""
-                },
-                "columns": [
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$('#groupBuysTable').DataTable({
+				"paging": true,
+				"searching": true,
+				"ordering": true,
+				"info": true,
+				"processing": true,
+				"serverSide": false,
+				"ajax": {
+					"url": "/GroupBuy/IndexJson",
+					"type": "GET",
+					"dataSrc": ""
+				},
+				"columns": [
 
-                    { "data": "id" },
-                    { "data": "productName" },
-                    { "data": "productDescription" },
-                    { "data": "targetCount" },
-                    { "data": "price" },
-                    { "data": "modifiedTimeView" },
-                    { "data": "display" },
-                    { "data": "userAccount" },
-                    {
-                        "render": function (data, type, row) {
-                            return '<div class="btn-group" role="group">' +
-                                '<a href="/GroupBuy/Edit/' + row.id + '" class="btn btn-outline-secondary"><i class="fa-solid fa-pen-to-square"></i> 編輯</a>' +
-                                '<a href="/GroupBuy/Details/' + row.id + '" class="btn btn-outline-secondary"><i class="fa-solid fa-file-lines"></i> 明細</a>' +
-                                '<a href="/GroupBuy/Delete/' + row.id + '" class="btn btn-outline-danger"><i class="fa-regular fa-trash-can"></i> 刪除</a>' +
-                                '</div>'
-                        }
-                    }
-                ],
-                "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Chinese-traditional.json"
-                }
-            });
-        });
-    </script>
+					{ "data": "id" },
+					{ "data": "productName" },
+					{ "data": "photoUrl" },
+					{ "data": "targetCount" },
+					{ "data": "joinQuantity" },
+					{ "data": "price" },
+					{ "data": "modifiedTimeView" },
+					{ "data": "displayString" },
+					{ "data": "userAccount" },
+					{
+						"render": function (data, type, row) {
+							return '<div class="btn-group" role="group">' +
+								'<a href="/GroupBuy/Edit/' + row.id + '" class="btn btn-outline-secondary"><i class="fa-solid fa-pen-to-square"></i> </a>' +
+								'<a href="/GroupBuy/Details/' + row.id + '" class="btn btn-outline-secondary"><i class="fa-solid fa-file-lines"></i> </a>' +
+								'<a href="/GroupBuy/Delete/' + row.id + '" class="btn btn-outline-danger"><i class="fa-regular fa-trash-can"></i> </a>' +
+								'</div>'
+						}
+					}
+				],
+				"language": {
+					"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Chinese-traditional.json"
+				}
+			});
+		});
+	</script>
 }
