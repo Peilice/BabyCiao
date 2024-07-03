@@ -21,7 +21,7 @@
                     <a asp-action="Create" class="btn btn-primary btn-sm">新增</a>
                 </div>
             </ol>
-            
+
         </nav>
     </div>
     <section class="pt-0">
@@ -60,26 +60,11 @@
                             </div>
                             <div id="carouselExampleIndicators-@item.Id" class="carousel slide" data-bs-ride="carousel">
                                 <div class="carousel-indicators">
-                                    @if (!string.IsNullOrEmpty(item.InternalPhoto1))
-                                    {
-                                        <button type="button" data-bs-target="#carouselExampleIndicators-@item.Id" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                                    }
-                                    @if (!string.IsNullOrEmpty(item.InternalPhoto2))
-                                    {
-                                        <button type="button" data-bs-target="#carouselExampleIndicators-@item.Id" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                                    }
-                                    @if (!string.IsNullOrEmpty(item.InternalPhoto3))
-                                    {
-                                        <button type="button" data-bs-target="#carouselExampleIndicators-@item.Id" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                                    }
-                                    @if (!string.IsNullOrEmpty(item.InternalPhoto4))
-                                    {
-                                        <button type="button" data-bs-target="#carouselExampleIndicators-@item.Id" data-bs-slide-to="3" aria-label="Slide 4"></button>
-                                    }
-                                    @if (!string.IsNullOrEmpty(item.InternalPhoto5))
-                                    {
-                                        <button type="button" data-bs-target="#carouselExampleIndicators-@item.Id" data-bs-slide-to="4" aria-label="Slide 5"></button>
-                                    }
+                                    <button type="button" data-bs-target="#carouselExampleIndicators-@item.Id" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                                    <button type="button" data-bs-target="#carouselExampleIndicators-@item.Id" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                                    <button type="button" data-bs-target="#carouselExampleIndicators-@item.Id" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                                    <button type="button" data-bs-target="#carouselExampleIndicators-@item.Id" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                                    <button type="button" data-bs-target="#carouselExampleIndicators-@item.Id" data-bs-slide-to="4" aria-label="Slide 5"></button>
                                 </div>
                                 <div class="carousel-inner">
                                     @if (!string.IsNullOrEmpty(item.InternalPhoto1))
@@ -88,38 +73,68 @@
                                             <img src="@item.InternalPhoto1" class="d-block w-100" alt="Internal Photo 1" style="width: 150px; height: 150px; object-fit: cover;">
                                         </div>
                                     }
+                                    else
+                                    {
+                                        <div class="carousel-item active">
+                                            <img src="/img/環境照1.jpg" class="d-block w-100" alt="Default Internal Photo 1" style="width: 150px; height: 150px; object-fit: cover;">
+                                        </div>
+                                    }
                                     @if (!string.IsNullOrEmpty(item.InternalPhoto2))
                                     {
                                         <div class="carousel-item">
                                             <img src="@item.InternalPhoto2" class="d-block w-100" alt="Internal Photo 2" style="width: 150px; height: 150px; object-fit: cover;">
                                         </div>
                                     }
+                                    else
+                                    {
+                                        <div class="carousel-item">
+                                            <img src="/img/環境照1.jpg" class="d-block w-100" alt="Default Internal Photo 2" style="width: 150px; height: 150px; object-fit: cover;">
+                                        </div>
+                                    }
                                     @if (!string.IsNullOrEmpty(item.InternalPhoto3))
                                     {
                                         <div class="carousel-item">
-                                            <img src="@item.InternalPhoto3" class="d-block w-100" alt="Internal Photo 3" style="width: 150px; height: 150px; object-fit: cover;">
+                                            <img src="/img/@item.InternalPhoto3" class="d-block w-100" alt="Internal Photo 3" style="width: 150px; height: 150px; object-fit: cover;">
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="carousel-item">
+                                            <img src="/img/環境照1.jpg" class="d-block w-100" alt="Default Internal Photo 3" style="width: 150px; height: 150px; object-fit: cover;">
                                         </div>
                                     }
                                     @if (!string.IsNullOrEmpty(item.InternalPhoto4))
                                     {
                                         <div class="carousel-item">
-                                            <img src="@item.InternalPhoto4" class="d-block w-100" alt="Internal Photo 4" style="width: 150px; height: 150px; object-fit: cover;">
+                                            <img src="/img/@item.InternalPhoto4" class="d-block w-100" alt="Internal Photo 4" style="width: 150px; height: 150px; object-fit: cover;">
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="carousel-item">
+                                            <img src="/img/環境照1.jpg" class="d-block w-100" alt="Default Internal Photo 4" style="width: 150px; height: 150px; object-fit: cover;">
                                         </div>
                                     }
                                     @if (!string.IsNullOrEmpty(item.InternalPhoto5))
                                     {
                                         <div class="carousel-item">
-                                            <img src="@item.InternalPhoto5" class="d-block w-100" alt="Internal Photo 5" style="width: 150px; height: 150px; object-fit: cover;">
+                                            <img src="/img/@item.InternalPhoto5" class="d-block w-100" alt="Internal Photo 5" style="width: 150px; height: 150px; object-fit: cover;">
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="carousel-item">
+                                            <img src="/img/環境照1.jpg" class="d-block w-100" alt="Default Internal Photo 5" style="width: 150px; height: 150px; object-fit: cover;">
                                         </div>
                                     }
                                 </div>
                                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators-@item.Id" data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
+                                    <span class="visually-hidden">上一個</span>
                                 </button>
                                 <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators-@item.Id" data-bs-slide="next">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
+                                    <span class="visually-hidden">下一個</span>
                                 </button>
                             </div>
                         </div>
@@ -135,6 +150,5 @@
 </div>
 
 @section Scripts {
-    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 }

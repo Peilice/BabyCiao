@@ -11,7 +11,7 @@ namespace BabyCiao.Models
 
         public string Password { get; set; } = null!;
 
-        public string Permissions { get; set; } = null!;
+        public int Permissions { get; set; }
 
         public bool Vip { get; set; }
 

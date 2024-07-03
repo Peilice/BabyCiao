@@ -14,11 +14,11 @@ namespace BabyCiao.Controllers
 {
     public class andy_loginController : Controller
     {
-        private readonly BabyciaoContext _context;
+        private readonly BabyCiaoContext _context;
         
 
 
-        public  andy_loginController(BabyciaoContext context)
+        public  andy_loginController(BabyCiaoContext context)
         {
             _context= context;
         }
