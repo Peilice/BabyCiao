@@ -7,7 +7,7 @@
 	<link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
 	<style>
 		thead {
-			background-color: #ACD6FF;
+			background-color: #97CBFF;
 			color: white;
 		}
 	</style>
@@ -34,8 +34,8 @@
 			<th>編號</th>
 			<th>商品</th>
 			<th>商品圖片</th>
-			<th>成團數</th>
 			<th>訂購數</th>
+			<th>成團數</th>
 			<th>價錢</th>
 			<th>建立日期</th>
 			<th>顯示</th>
@@ -49,8 +49,8 @@
 			<tr>
 				<td>@item.ProductName</td>
 				<td>@item.photoUrl</td>
-				<td>@item.TargetCount</td>
 				<td>@item.JoinQuantity</td>
+				<td>@item.TargetCount</td>
 				<td>@item.Price</td>
 				<td>@item.ModifiedTimeView</td>
 				<td>@item.Display</td>
@@ -89,8 +89,8 @@
 					{ "data": "id" },
 					{ "data": "productName" },
 					{ "data": "photoUrl" },
-					{ "data": "targetCount" },
 					{ "data": "joinQuantity" },
+					{ "data": "targetCount" },
 					{ "data": "price" },
 					{ "data": "modifiedTimeView" },
 					{ "data": "displayString" },
@@ -107,6 +107,25 @@
 				],
 				"language": {
 					"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Chinese-traditional.json"
+				},
+				// 		"createdRow": function (row, data, dataIndex) {
+				// 	if (data.statement === '出貨中') {
+				// 		$('td', row).css('background-color', '#d4edda');
+				// 	} else if (data.statement === '進行中') {
+				// 		$('td', row).css('background-color', '#fff3cd');
+				// 	} else if (data.statement === '已結束') {
+				// 		$('td', row).css('background-color', '#f8d7da');
+				// 	}
+				// }
+				"createdRow": function (row, data, dataIndex) {
+					var statementCell = $('td', row).eq(8); // 假設 statement 欄位是第九列 (索引為8)
+					if (data.statement === '出貨中') {
+						statementCell.css('background-color', '#d4edda');
+					} else if (data.statement === '進行中') {
+						statementCell.css('background-color', '#fff3cd');
+					} else if (data.statement === '已結束') {
+						statementCell.css('background-color', '#f8d7da');
+					}
 				}
 			});
 		});

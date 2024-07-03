@@ -87,13 +87,23 @@
                     {
                         "render": function (data, type, row) {
                             return '<div class="btn-group" role="group">' + '<a href="/GroupBuy/Ship/' + row.joinId + '" class="btn btn-outline-secondary"><i class="fa-solid fa-pen-to-square"></i> 出貨</a>  ' +
-                                '<a href="/GroupBuy/DeleteOrder/' + row.joinId + '" class="btn btn-outline-danger"><i class="fa-regular fa-trash-can"></i> 取消</a>' +
+                                '<a href="/GroupBuy/Cancel/' + row.joinId + '" class="btn btn-outline-danger"><i class="fa-regular fa-trash-can"></i> 取消</a>' +
                                 '</div>';
                         }
                     }
                 ],
                 "language": {
                     "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Chinese-traditional.json"
+                },
+                "createdRow": function (row, data, dataIndex) {
+                    var statementCell = $('td', row).eq(7); 
+                    if (data.statement === '已出貨') {
+                        statementCell.css('background-color', '#d4edda');
+                    } else if (data.statement === '已參加') {
+                        statementCell.css('background-color', '#fff3cd');
+                    } else if (data.statement === '已取消') {
+                        statementCell.css('background-color', '#f8d7da');
+                    }
                 }
             });
         });

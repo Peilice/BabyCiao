@@ -38,9 +38,9 @@ namespace BabyCiao.Models.DTO
 
         //////////////////////////
         [Display(Name = "參團編號")]
-		public int JoinId { get; set; }//參加編號 AccountUserAccount
+		public int JoinId { get; set; }//參加編號 
 
-        public int JoinGroupId { get; set; }//參加編號 AccountUserAccount
+        public int JoinGroupId { get; set; }//參加團號 
 
 
         [Display(Name = "會員帳號")]
@@ -48,8 +48,10 @@ namespace BabyCiao.Models.DTO
 
 		[Display(Name = "團購數量")]
 		public int Quantity { get; set; }//加購數量
+		[Display(Name = "訂購數/成團數")]
+		public int Percent { get; set; }//加購數量
 
-        [Display(Name = "商品價錢")]
+		[Display(Name = "商品價錢")]
         public int Price { get; set; }//$$
         [Display(Name = "商品價錢")]
         public int OrderPrice { get; set; }//訂單價格
@@ -60,7 +62,9 @@ namespace BabyCiao.Models.DTO
         public string ViewJoinModifiedTime { get; set; }//下單時間
         [Display(Name = "參加狀態")]
 		public string JoinStatement { get; set; } = null!;//參加狀態
-		public string? photoUrl { get; set; }
+														  [Display(Name = "地址")]
+        public string Address { get; set; } = null!;//參加狀態
+        public string? photoUrl { get; set; }
         public List<GroupBuyPhotoDTO>? Photos { get; set; }
 
         [Display(Name = "商品照片")]

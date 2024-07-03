@@ -4,10 +4,10 @@
 	ViewData["Title"] = "訂單管理";
 }
 
-<h1>出貨</h1>
+<h1>取消</h1>
 
 <div>
-	<h4>訂單明細</h4>
+	<h4>確認要取消此訂單嗎?</h4>
 	<hr />
 	<dl class="row">
 		<dt class="col-sm-2">
@@ -67,24 +67,12 @@
 	</dl>
 </div>
 <div>
-	@using (Html.BeginForm("Shipped", "GroupBuy", FormMethod.Post))
+	@using (Html.BeginForm("Canceled", "GroupBuy", FormMethod.Post))
 	{
-
-
-		@if (Model.Statement == "已出貨" || Model.Statement == "已取消")
-		{
-			<div class="mb-2">
-				<input type="hidden" asp-for="JoinId" value="@Model.JoinId" />
-				<button type="submit" class="btn btn-secondary" disabled>確認出貨</button>
-			</div>
-		}
-		else
-		{
-			<div class="mb-2">
-				<input type="hidden" asp-for="JoinId" value="@Model.JoinId" />
-				<button type="submit" class="btn btn-secondary">確認出貨</button>
-			</div>
-		}
+		<div class="mb-2">
+			<input type="hidden" asp-for="JoinId" value="@Model.JoinId" />
+			<button type="submit" class="btn btn-danger">取消訂單</button>
+		</div>
 	}
 	<div>
 		<a asp-controller="GroupBuy" asp-action="Orders" class="btn btn-outline-secondary"><i class="fa-solid fa-rotate-left"></i>返回列表</a>
