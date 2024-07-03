@@ -34,12 +34,12 @@
 			<th>編號</th>
 			<th>商品</th>
 			<th>商品圖片</th>
-			<th>成團數量</th>
+			<th>成團數</th>
 			<th>訂購數</th>
 			<th>價錢</th>
 			<th>建立日期</th>
 			<th>顯示</th>
-			<th>編輯者</th>
+			<th>狀態</th>
 			<th>操作</th>
 		</tr>
 	</thead>
@@ -54,7 +54,7 @@
 				<td>@item.Price</td>
 				<td>@item.ModifiedTimeView</td>
 				<td>@item.Display</td>
-				<td>@item.UserAccount</td>
+				<td>@item.Statement</td>
 				<td>
 					<div class="btn-group" role="group">
 					<a href="/GroupBuy/Edit/@item.Id" class="btn btn-outline-secondary"><i class="fa-solid fa-pen-to-square"></i>編輯</a> 
@@ -94,7 +94,7 @@
 					{ "data": "price" },
 					{ "data": "modifiedTimeView" },
 					{ "data": "displayString" },
-					{ "data": "userAccount" },
+					{ "data": "statement" },
 					{
 						"render": function (data, type, row) {
 							return '<div class="btn-group" role="group">' +

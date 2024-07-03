@@ -86,8 +86,9 @@
                     { "data": "statement" },
                     {
                         "render": function (data, type, row) {
-                            return '<a href="/GroupBuy/Ship/' + row.joinId + '" class="btn btn-outline-secondary"><i class="fa-solid fa-pen-to-square"></i> 出貨</a>  '  +
-                                '<a href="/GroupBuy/DeleteOrder/' + row.joinId + '" class="btn btn-outline-danger"><i class="fa-regular fa-trash-can"></i> 取消</a>';
+                            return '<div class="btn-group" role="group">' + '<a href="/GroupBuy/Ship/' + row.joinId + '" class="btn btn-outline-secondary"><i class="fa-solid fa-pen-to-square"></i> 出貨</a>  ' +
+                                '<a href="/GroupBuy/DeleteOrder/' + row.joinId + '" class="btn btn-outline-danger"><i class="fa-regular fa-trash-can"></i> 取消</a>' +
+                                '</div>';
                         }
                     }
                 ],

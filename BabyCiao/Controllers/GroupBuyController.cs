@@ -38,6 +38,8 @@ namespace BabyCiao.Controllers
 								ModifiedTime = gb.ModifiedTime,
 								ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
 								Display = gb.Display,
+
+								DisplayString = gb.Display ? "☑" : "",
 								JoinQuantity = _context.GroupBuyingDetails.Where(id => id.GroupBuyingId == gb.Id).Sum(q => q.Quantity),
 								photoUrl = gbp.PhotoName != null ? $"<img src=\" /uploads/{gbp.PhotoName}\" width=\"100\" />" : "<img src=\" /img/noImage.jpg\" width=\"100\" />"
 
@@ -64,7 +66,9 @@ namespace BabyCiao.Controllers
                                 ModifiedTime = gb.ModifiedTime,
                                 ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
                                 Display = gb.Display,
-                                JoinQuantity = _context.GroupBuyingDetails.Where(id => id.GroupBuyingId == gb.Id).Sum(q => q.Quantity),
+								DisplayString=gb.Display? "☑":"",
+
+								JoinQuantity = _context.GroupBuyingDetails.Where(id => id.GroupBuyingId == gb.Id).Sum(q => q.Quantity),
                                 photoUrl = gbp.PhotoName != null ? $"<img src=\" /uploads/{gbp.PhotoName}\" width=\"100\" />" : "<img src=\" /img/noImage.jpg\" width=\"100\" />"
 
                             };
@@ -114,7 +118,7 @@ namespace BabyCiao.Controllers
 
 
 		// GET: GroupBuy/Details/5
-		public async Task<IActionResult> Details(int? id)
+		public async Task<IActionResult> Details(int id)
 		{
 			if (id == null)
 			{
@@ -124,17 +128,27 @@ namespace BabyCiao.Controllers
 			var groupBuying = (from gb in _context.GroupBuyings
 							   select new GroupBuyDTO
 							   {
-								   Id = gb.Id,
+								   Id = id,
 								   UserAccount = gb.AccountUserAccount,
 								   ProductName = gb.ProductName,
 								   ProductDescription = gb.ProductDescription,
 								   TargetCount = gb.TargetCount,
 								   Price = gb.Price,
 								   Statement = gb.Statement,
-								   ModifiedTime = DateTime.Now,
-								   ModifiedTimeView = DateTime.Now.ToString("yyyy-MM-dd"),
+								   ModifiedTime = gb.ModifiedTime,
+								   ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
 								   Display = gb.Display,
-							   }).FirstOrDefault();
+                                   Photos = (from ph in _context.GroupBuyingPhotos
+                                             where ph.IdGroupBuying == id
+                                             select new GroupBuyPhotoDTO
+                                             {
+                                                 Id = ph.Id,
+                                                 IdGroupBuying = ph.IdGroupBuying,
+                                                 PhotoName = ph.PhotoName,
+                                                 ModifiedTime = ph.ModifiedTime,
+
+                                             }).ToList()
+                               }).FirstOrDefault();
 			if (groupBuying == null)
 			{
 				return NotFound();
@@ -237,13 +251,14 @@ namespace BabyCiao.Controllers
 								   TargetCount = gb.TargetCount,
 								   Price = gb.Price,
 								   Statement = gb.Statement,
-								   ModifiedTime = DateTime.Now,
-								   ModifiedTimeView = DateTime.Now.ToString("yyyy-MM-dd"),
+								   ModifiedTime = gb.ModifiedTime,
+								   ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
 								   Display = gb.Display,
 								   Photos=(from ph in _context.GroupBuyingPhotos
 										  where ph.IdGroupBuying==id
 										  select new GroupBuyPhotoDTO
 										  {
+											  Id = ph.Id,
 											  IdGroupBuying=ph.IdGroupBuying,
 											  PhotoName=ph.PhotoName,
 											  ModifiedTime=ph.ModifiedTime,
@@ -270,20 +285,22 @@ namespace BabyCiao.Controllers
 			{
 				return NotFound();
 			}
+
 			var buy = new GroupBuying
 			{
-				Id = model.Id,
 				AccountUserAccount = model.UserAccount,
 				ProductName = model.ProductName,
 				ProductDescription = model.ProductDescription,
-				TargetCount = model.TargetCount,
 				Price = model.Price,
+				TargetCount = model.TargetCount,
 				Statement = model.Statement,
 				ModifiedTime = model.ModifiedTime,
 				Display = model.Display,
 			};
-			_context.Update(buy);
 
+			_context.Update(buy);
+			await _context.SaveChangesAsync();
+			var newId = model.Id;//加入相片用
 			if (model.PhotoFiles != null && model.PhotoFiles.Count > 0)
 			{
 				//這裡處理檔案寫入資料庫的處理ˋ
@@ -303,33 +320,20 @@ namespace BabyCiao.Controllers
 
 					var groupBuyPhoto = new GroupBuyingPhoto
 					{
+						
 						PhotoName = file.FileName,
-						IdGroupBuying = Id,
+						IdGroupBuying = newId,
 						ModifiedTime = DateTime.Now,
 					};
 
 					_context.GroupBuyingPhotos.Add(groupBuyPhoto);
 				}
-			}
-				await _context.SaveChangesAsync();
-				try
-			{
 
 				await _context.SaveChangesAsync();
-				return RedirectToAction(nameof(Index));
 			}
-			catch (DbUpdateConcurrencyException)
-			{
-				if (!GroupBuyingExists(model.Id))
-				{
-					return NotFound();
-				}
-				else
-				{
-					throw;
-				}
-			}
-			return View(model);
+			return RedirectToAction(nameof(Index));
+
+
 		}
 
 		[HttpPost]

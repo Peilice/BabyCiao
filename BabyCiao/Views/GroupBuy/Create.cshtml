@@ -59,7 +59,11 @@
             </div>
             <div class="form-group">
                 <label asp-for="Statement" class="control-label"></label>
-                <input asp-for="Statement" class="form-control" />
+                <select asp-for="Statement" class="form-control">
+                    <option value="進行中">進行中</option>
+                    <option value="出貨中">出貨中</option>
+                    <option value="已結束">已結束</option>
+                </select>
                 <span asp-validation-for="Statement" class="text-danger"></span>
             </div>
             <label asp-for="Display" class="control-label"></label>
