@@ -24,19 +24,27 @@ namespace BabyCiao.Models.DTO
         [Display(Name = "活動進行狀態")]
         public string Statement { get; set; }
 
-
+        [Display(Name = "更新時間")]
         public DateOnly ModifiedTime { get; set; }
 
-    }
-
-    public class CompetitionPhotoDTO
-    {
-
+        //活動照片
+        [Display(Name = "活動照片")]
         public string? CompetitionPhotoName { get; set; }
         public int CompetitionPhotoId { get; set; }
         public DateTime CompetitionPhotoModifiedTime { get; set; }
         public int IdOnlineCompetition { get; set; }
+        public string photoUrl {  get; set; }
+
     }
+
+    //public class CompetitionPhotoDTO
+    //{
+
+    //    public string? CompetitionPhotoName { get; set; }
+    //    public int CompetitionPhotoId { get; set; }
+    //    public DateTime CompetitionPhotoModifiedTime { get; set; }
+    //    public int IdOnlineCompetition { get; set; }
+    //}
 
     public static class CompetitionsExtensions
     {
