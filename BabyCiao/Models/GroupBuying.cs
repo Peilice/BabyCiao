@@ -15,6 +15,8 @@ public partial class GroupBuying
 
     public int TargetCount { get; set; }
 
+    public int Price { get; set; }
+
     public string Statement { get; set; } = null!;
 
     public DateTime ModifiedTime { get; set; }

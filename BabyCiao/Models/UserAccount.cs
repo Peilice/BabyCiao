@@ -31,7 +31,9 @@ public partial class UserAccount
 
     public virtual ICollection<Evaluate> EvaluateEvaluatorUserAccountNavigations { get; set; } = new List<Evaluate>();
 
-    public virtual ICollection<ExchangeOrder> ExchangeOrders { get; set; } = new List<ExchangeOrder>();
+    public virtual ICollection<ExchangeOrder> ExchangeOrderAccountAUserAccountNavigations { get; set; } = new List<ExchangeOrder>();
+
+    public virtual ICollection<ExchangeOrder> ExchangeOrderAccountBUserAccountNavigations { get; set; } = new List<ExchangeOrder>();
 
     public virtual ICollection<GroupBuyingDetail> GroupBuyingDetails { get; set; } = new List<GroupBuyingDetail>();
 

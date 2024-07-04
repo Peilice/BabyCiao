@@ -14,9 +14,9 @@ namespace BabyCiao.Controllers
 {
     public class OnlineCompetitionsController : Controller
     {
-        private readonly BabyCiaoContext _context;
+        private readonly BabyciaoContext _context;
 
-        public OnlineCompetitionsController(BabyCiaoContext context)
+        public OnlineCompetitionsController(BabyciaoContext context)
         {
             _context = context;
         }
@@ -37,7 +37,7 @@ namespace BabyCiao.Controllers
                 return NotFound();
             }
             var competitionDTO =await (from con in _context.OnlineCompetitions
-                                  join cp in _context.CompetitionPhotos on con.Id equals cp.IdOnlineCompetition
+                                  //join cp in _context.CompetitionPhotos on con.Id equals cp.IdOnlineCompetition
                                   where con.Id == id
                                   select new OnlineCompetitionsDTO
                                   {

@@ -1,14 +1,5 @@
-﻿@{
-    ViewBag.Title = "User Accounts";
-    var userIds = ViewBag.UserIds as List<int>;
-    var accounts = ViewBag.Accounts as List<string>;
-    var passwords = ViewBag.Passwords as List<string>;
-    var permissionsList = ViewBag.PermissionsList as List<int>;
-    var vips = ViewBag.Vips as List<bool>;
-    var permissionsDictionary = ViewBag.PermissionsDictionary as Dictionary<int, string>;
-}
-@model IEnumerable<UserAccount>
-@inject BabyCiaoContext _context
+﻿@model IEnumerable<UserAccount>
+@inject BabyciaoContext _context
 
 
 @{
