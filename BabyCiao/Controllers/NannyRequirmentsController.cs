@@ -11,9 +11,9 @@ namespace BabyCiao.Controllers
 {
     public class NannyRequirmentsController : Controller
     {
-        private readonly BabyCiaoContext _context;
+        private readonly BabyciaoContext _context;
 
-        public NannyRequirmentsController(BabyCiaoContext context)
+        public NannyRequirmentsController(BabyciaoContext context)
         {
             _context = context;
         }

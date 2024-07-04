@@ -9,7 +9,7 @@ public partial class CompetitionPhoto
 
     public int IdOnlineCompetition { get; set; }
 
-    public string PhotoName { get; set; } = null!;
+    public string? PhotoName { get; set; }
 
     public DateTime ModifiedTime { get; set; }
 

@@ -1,0 +1,59 @@
+﻿@model BabyCiao.Models.DTO.AuthDTO
+
+@{
+    ViewData["Title"] = "權限群組明細";
+}
+@section Styles
+{
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <style>
+
+    </style>
+}
+<h1>明細</h1>
+
+<div>
+    <h4>權限群組</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GroupId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.GroupId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GroupDescription)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.GroupDescription)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ModifiedDateStringOld)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ModifiedDateStringOld)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ModifiedPersonUserAccount)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ModifiedPersonUserAccount)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.settings)
+        </dt>
+        <dd class="col-sm-10">
+            <ul>
+                @foreach (var setting in Model.settings)
+                {
+                    <li>@setting.FunctionId - @setting.FunctionName</li>
+                }
+            </ul>
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-controller="Auth" asp-action="Edit" asp-route-GroupId="@Model.GroupId" class="btn btn-outline-secondary"><i class="fa-solid fa-pen-to-square"></i>編輯</a>
+    <a asp-controller="Auth" asp-action="Index" class="btn btn-outline-secondary"><i class="fa-solid fa-rotate-left"></i>返回列表</a>
+</div>
