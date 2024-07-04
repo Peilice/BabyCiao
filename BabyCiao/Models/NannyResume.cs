@@ -15,9 +15,9 @@ public partial class NannyResume
 
     public string? Introduction { get; set; }
 
-    public string TypeOfDaycare { get; set; }
+    public string TypeOfDaycare { get; set; } = null!;
 
-    public string ServiceItems { get; set; }
+    public string ServiceItems { get; set; } = null!;
 
     public bool QuasiPublicChildcare { get; set; }
 
@@ -43,5 +43,5 @@ public partial class NannyResume
 
     public bool DisplayControl { get; set; }
 
-    public virtual UserAccount? NannyAccountUserAccountNavigation { get; set; } = null!;
+    public virtual UserAccount NannyAccountUserAccountNavigation { get; set; } = null!;
 }

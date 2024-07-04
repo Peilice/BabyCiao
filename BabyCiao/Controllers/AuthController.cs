@@ -13,8 +13,8 @@ namespace BabyCiao.Controllers
 {
 	public class AuthController : Controller
 	{
-		private readonly BabyCiaoContext _context;
-		public AuthController(BabyCiaoContext context)
+		private readonly BabyciaoContext _context;
+		public AuthController(BabyciaoContext context)
 		{
 			_context = context;
 		}

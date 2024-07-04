@@ -12,12 +12,12 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BabyCiao.Controllers
 {
-    [Authorize(Roles ="公告編輯")]
+    [Authorize(Roles = "公告編輯")]
     public class AnnouncementsController : Controller
     {
-        private readonly BabyCiaoContext _context;
+        private readonly BabyciaoContext _context;
 
-        public AnnouncementsController(BabyCiaoContext context)
+        public AnnouncementsController(BabyciaoContext context)
         {
             _context = context;
         }
@@ -149,6 +149,7 @@ namespace BabyCiao.Controllers
             return View(my_announcement);
         }
 
+        [Authorize(Roles = "公告刪除")]
         //        // GET: Announcements/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

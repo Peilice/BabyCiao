@@ -19,7 +19,7 @@ public partial class Announcement
 
     public string ReferenceRoute { get; set; } = null!;
 
-    public string Type { get; set; }
+    public string Type { get; set; } = null!;
 
     public bool Display { get; set; }
 

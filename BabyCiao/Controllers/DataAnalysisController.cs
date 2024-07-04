@@ -10,9 +10,9 @@ namespace BabyCiao.Controllers
 {
     public class DataAnalysisController : Controller
     {
-        private readonly BabyCiaoContext _context;
+        private readonly BabyciaoContext _context;
 
-        public DataAnalysisController(BabyCiaoContext context)
+        public DataAnalysisController(BabyciaoContext context)
         {
             _context = context;
         }
