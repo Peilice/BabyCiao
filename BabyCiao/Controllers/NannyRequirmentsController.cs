@@ -19,12 +19,7 @@ public class NannyRequirmentsController : Controller
         _webHostEnvironment = webHostEnvironment;
     }
 
-    private static readonly Dictionary<int, string> StatementDictionary = new Dictionary<int, string>
-          {
-            { 1, "成功" },
-            { 2, "未讀" },
-            { 3, "退件" },
-           };
+
 
     // GET: NannyRequirments
     [HttpGet]
@@ -52,7 +47,7 @@ public class NannyRequirmentsController : Controller
              AddressesOfAgencies = n.AddressesOfAgencies,
              ValidPeriodsOfCertificates = n.ValidPeriodsOfCertificates,
              Statement = n.Statement,
-             photoA=n.PoliceCriminalRecordCertificate,
+             photoA =n.PoliceCriminalRecordCertificate,
              photoB=n.ChildCareCertificate,
              photoC=n.NationalIdentificationCard,
 
@@ -213,11 +208,10 @@ public class NannyRequirmentsController : Controller
             AddressesOfAgencies = model.AddressesOfAgencies,
             ValidPeriodsOfCertificates = model.ValidPeriodsOfCertificates,
             Statement = model.Statement,
-            
-             
-        };
 
-        if (model.NannyAccountUserAccount != null && model.ChildCareCertificate != null && model.NationalIdentificationCard != null)
+        };
+        _context.Update(Requirment);
+        if (model.photoA != null && model.photoB != null && model.photoC != null)
         {
             //這裡處理檔案寫入資料庫的處理ˋ
             var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "保母證照");// upload file path here
@@ -246,11 +240,10 @@ public class NannyRequirmentsController : Controller
             Requirment.PoliceCriminalRecordCertificate = model.photo1.FileName;
             Requirment.ChildCareCertificate = model.photo2.FileName;
             Requirment.NationalIdentificationCard = model.photo3.FileName;
-            _context.Add(Requirment);
             Requirment.PoliceCriminalRecordCertificate = model.photoA;
             Requirment.ChildCareCertificate = model.photoB;
             Requirment.NationalIdentificationCard = model.photoC;
-            _context.Add(Requirment);
+            _context.Update(Requirment);
             await _context.SaveChangesAsync();
              try
              {
@@ -271,6 +264,7 @@ public class NannyRequirmentsController : Controller
             return View(model);
         }
 
+        await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
 

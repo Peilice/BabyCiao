@@ -40,6 +40,22 @@
                 </td>
                 <td>
                 @Html.DisplayFor(modelItem => item.ValidPeriodsOfCertificates)<br />
+
+                    @switch (item.Statement)
+                    {
+                        case 1:
+                            <text>成功</text>
+                            break;
+                        case 2:
+                            <text>未讀</text>
+                            break;
+                        case 3:
+                            <text>退件</text>
+                            break;
+                        default:
+                            <text></text>
+                            break;
+                    }
                 @* @StatementDictionary[item.Statement] *@
                 </td>
                  <td>

@@ -23,6 +23,8 @@ namespace BabyCiao.Models.DTO
         public DateOnly ValidPeriodsOfCertificates { get; set; }
 
         public int Statement { get; set; }
+
+
         //[Display(Name = "我是照片A")]
         public string photoA { get; set; }//保母證
         public string photoB { get; set; }//身分證
