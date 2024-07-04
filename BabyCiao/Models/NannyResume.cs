@@ -6,7 +6,7 @@ namespace BabyCiao.Models;
 public partial class NannyResume
 {
     public int Id { get; set; }
-
+    
     public string NannyAccountUserAccount { get; set; } = null!;
 
     public string City { get; set; } = null!;
@@ -43,5 +43,5 @@ public partial class NannyResume
 
     public bool DisplayControl { get; set; }
 
-    public virtual UserAccount NannyAccountUserAccountNavigation { get; set; } = null!;
+    public virtual UserAccount? NannyAccountUserAccountNavigation { get; set; } = null!;
 }
