@@ -1,57 +1,95 @@
-﻿@model BabyCiao.Models.NannyRequirment
+﻿@model BabyCiao.Models.DTO.NannyRequirementDTO
 
-@{
-    ViewData["Title"] = "Create";
-}
+@* @section Styles
+{
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <style>
+        .preview {
+            width: 200px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
 
-<h1>Create</h1>
+        .preview-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+    </style>
+} *@
 
-<h4>NannyRequirment</h4>
+<h1>新增保母資料</h1>
+
+<h4>保母申請資料</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="NannyAccountUserAccount" class="control-label"></label>
+                <label asp-for="NannyAccountUserAccount" class="control-label">帳號</label>
                 <select asp-for="NannyAccountUserAccount" class ="form-control" asp-items="ViewBag.NannyAccountUserAccount"></select>
             </div>
             <div class="form-group">
-                <label asp-for="PoliceCriminalRecordCertificate" class="control-label"></label>
+                <label asp-for="PoliceCriminalRecordCertificate" class="control-label">良民證</label>
                 <input asp-for="PoliceCriminalRecordCertificate" class="form-control" />
                 <span asp-validation-for="PoliceCriminalRecordCertificate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ChildCareCertificate" class="control-label"></label>
+                <label asp-for="ChildCareCertificate" class="control-label">保母證</label>
                 <input asp-for="ChildCareCertificate" class="form-control" />
                 <span asp-validation-for="ChildCareCertificate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="NationalIdentificationCard" class="control-label"></label>
+                <label asp-for="NationalIdentificationCard" class="control-label">身分證</label>
                 <input asp-for="NationalIdentificationCard" class="form-control" />
                 <span asp-validation-for="NationalIdentificationCard" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AddressesOfAgencies" class="control-label"></label>
+                <label asp-for="AddressesOfAgencies" class="control-label">申請地址</label>
                 <input asp-for="AddressesOfAgencies" class="form-control" />
                 <span asp-validation-for="AddressesOfAgencies" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ValidPeriodsOfCertificates" class="control-label"></label>
+                <label asp-for="ValidPeriodsOfCertificates" class="control-label">審核時間</label>
                 <input asp-for="ValidPeriodsOfCertificates" class="form-control" />
                 <span asp-validation-for="ValidPeriodsOfCertificates" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="新增" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">回到列表</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+@* @section Scripts {
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function (event) {
+            var files = event.target.files;
+            var previewContainer = document.getElementById('preview-container');
+            previewContainer.innerHTML = ''; // 清空現有預覽
+
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = (function (file) {
+                        return function (e) {
+                            var img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.className = 'preview';
+                            previewContainer.appendChild(img);
+                        };
+                    })(file);
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+    </script>
+} *@

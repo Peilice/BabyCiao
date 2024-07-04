@@ -1,5 +1,11 @@
 ﻿@model IEnumerable<BabyCiao.Models.NannyRequirment>
-
+@{
+    var StatementDictionary = ViewBag.StatementDictionary as Dictionary<int, string>;
+}
+@section Styled
+{
+    
+}
 
 <h1>保母審核</h1>
 
@@ -38,22 +44,31 @@
                 </td>
                 <td>
                 @Html.DisplayFor(modelItem => item.ValidPeriodsOfCertificates)<br />
-                @Html.DisplayFor(modelItem => item.Statement)
+                @StatementDictionary[item.Statement]
                 </td>
                  <td>
                 @Html.DisplayFor(modelItem => item.RequirementDate)<br />
                 @Html.DisplayFor(modelItem => item.NannyAccountUserAccountNavigation.Account)<br />
                 @Html.DisplayFor(modelItem => item.AddressesOfAgencies)
                 </td>
-                 <td>
-                @Html.DisplayFor(modelItem => item.PoliceCriminalRecordCertificate)
-                 </td>
-                  <td>
-                @Html.DisplayFor(modelItem => item.ChildCareCertificate)
-                 </td>
-                  <td>
-                @Html.DisplayFor(modelItem => item.NationalIdentificationCard)
-                 </td>
+                <td>
+                    @Html.Raw(GetImageHtml(item.PoliceCriminalRecordCertificate, "保母證照"))
+                </td>
+                <td>
+                    <img src="~/img/保母證照/@item.PoliceCriminalRecordCertificate" />
+                </td>
+                <td>
+                    <img src="~/img/保母證照/身分證.jpg" />
+                </td>
+
        </tr>}
   </tbody>
 </table>
+@functions {
+    private string GetImageHtml(string fileName, string 保母證照)
+    {
+        return !string.IsNullOrEmpty(fileName)
+            ? $"<img src=\"/保母證照/{fileName}\" width=\"100\" />"
+            : "<img src=\"/img/noImage.jpg\" width=\"100\" />";
+    }
+}
