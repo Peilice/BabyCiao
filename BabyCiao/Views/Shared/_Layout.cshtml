@@ -22,7 +22,15 @@
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
 
 
+    <style>
+        input[readonly]{
+            color:aliceblue
+        }
 
+            input[readonly]:focus {
+            color: aliceblue
+        }
+    </style>
     @RenderSection("styles", required: false)
 </head>
 <body>
@@ -50,13 +58,15 @@
             </div>
             <div class="container-fluid d-flex align-items-center justify-content-between py-1">
                 <div class="navbar-header d-flex align-items-center">
+
+
                     <a class="navbar-brand text-uppercase text-reset" href="https://localhost:7031/">
-                        <div class="brand-text brand-big"><img class="avatar shadow-0 img-fluid rounded-circle" src="" alt="..."><strong class="text-primary">貝比</strong><strong>巧遇</strong></div>
-                        <div class="brand-text brand-sm"><strong class="text-primary">貝比</strong></div>
+                        <div class="brand-text brand-big"><strong class="text-primary">深色</strong><strong>管理面板</strong></div>
+                        <div class="brand-text brand-sm"><strong class="text-primary">深</strong><strong>色</strong></div>
                     </a>
                     <button class="sidebar-toggle">
                         <svg class="svg-icon svg-icon-sm svg-icon-heavy transform-none">
-                            <use xlink:href="#arrow-left-1"></use>
+                            <use xlink:href="#arrow-left-1"> </use>
                         </svg>
                     </button>
                 </div>
@@ -199,18 +209,18 @@
         <nav id="sidebar">
             <!-- Sidebar Header-->
             <div class="sidebar-header d-flex align-items-center p-4">
-                @* <a class="d-inline-block" href="pages-profile.html"><img class="avatar shadow-0 img-fluid rounded-circle" src="" alt="..."></a> *@
+                <a class="d-inline-block" href="pages-profile.html"><img class="avatar shadow-0 img-fluid rounded-circle" src="" alt="..."></a>
                 <div class="ms-3 title">
-                    <h1 class="h5 mb-1">後台管理</h1>
-                    @* <p class="text-sm text-gray-700 mb-0 lh-1">網頁設計師</p> *@
+                    <h1 class="h5 mb-1">貝比巧遇</h1>
+                    <p class="text-sm text-gray-700 mb-0 lh-1">網頁設計師</p>
                 </div>
-            </div><span class="text-uppercase text-gray-600 text-xs mx-3 px-2 heading mb-2"> </span>
+            </div><span class="text-uppercase text-gray-600 text-xs mx-3 px-2 heading mb-2">後臺管理</span>
             <ul class="list-unstyled">
                 <li class="sidebar-item active">
                     <a class="sidebar-link" href="index.html">
                         <svg class="svg-icon svg-icon-sm svg-icon-heavy">
                             <use xlink:href="#real-estate-1"> </use>
-                        </svg><span> 後台公告</span>
+                        </svg><span> 後臺公告</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
@@ -220,7 +230,7 @@
                         </svg><span>使用者管理 </span>
                     </a>
                     <ul class="collapse list-unstyled " id="tablesDropdown">
-                        <li><a class="sidebar-link" href="/UserInformations/Index"> 帳號管理</a></li>
+                        <li><a class="sidebar-link" href="tables.html"> 帳號管理</a></li>
                         <li><a class="sidebar-link" href="tables-datatable.html">保母審核</a></li>
                     </ul>
                 </li>
@@ -231,18 +241,19 @@
                         </svg><span>委託單管理 </span>
                     </a>
                     <ul class="collapse list-unstyled " id="chartsDropdown">
-                        <li><a class="sidebar-link" asp-area="" asp-controller="BabyResumes" asp-action="Index">家長委託單</a></li>
-                        <li><a class="sidebar-link" asp-area="" asp-controller="NannyResumes" asp-action="Index">保母委託單</a></li>
+                        <li><a class="sidebar-link" href="/BabyResumes/Index">家長委託單</a></li>
+                        <li><a class="sidebar-link" href="/NannyResumes/Index">保母委託單</a></li>
+                        <li><a class="sidebar-link" href="charts-gauge-sparkline.html">數據分析</a></li>
                     </ul>
                 </li>
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="#formsDropdown" data-bs-toggle="collapse">
                         <svg class="svg-icon svg-icon-sm svg-icon-heavy">
                             <use xlink:href="#survey-1"> </use>
-                        </svg><span>社群管理 </span>
+                        </svg><span>二手商品與團購管理 </span>
                     </a>
                     <ul class="collapse list-unstyled " id="formsDropdown">
-                        <li><a class="sidebar-link" href="forms.html">二手商品管理</a></li>
+                        <li><a class="sidebar-link" href="/SecondHand/Index">二手商品管理</a></li>
                         <li><a class="sidebar-link" href="/GroupBuy/Index">團購管理</a></li>
                         <li><a class="sidebar-link" asp-area="" asp-controller="OnlineCompetitions" asp-action="Index">投票活動</a></li>
                         <li><a class="sidebar-link" asp-area="" asp-controller="Platforms" asp-action="Index">論壇管理</a></li>
@@ -313,14 +324,11 @@
         </nav>
         <div class="page-content">
             <!-- Page Header-->
-            @* <div class="bg-dash-dark-2 py-4">
+            <div class="bg-dash-dark-2 py-4">
                 <div class="container-fluid">
                 </div>
-            </div> *@
-            <div class="m-3">
-                @RenderBody()
             </div>
-            
+            @RenderBody()
 
 
             <!-- Page Footer-->

@@ -13,6 +13,7 @@ public partial class GroupBuying
 
     public string ProductDescription { get; set; } = null!;
 
+    public int Price { get; set; }//加購數量
     public int TargetCount { get; set; }
 
     public string Statement { get; set; } = null!;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using BabyCiao.Models;
 
 namespace BabyCiao.Models;
 
@@ -905,4 +906,6 @@ public partial class BabyCiaoContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+public DbSet<BabyCiao.Models.SecondHandSupplies> SecondHandSupplies_1 { get; set; } = default!;
 }

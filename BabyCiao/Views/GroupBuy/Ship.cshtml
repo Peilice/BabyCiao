@@ -1,0 +1,92 @@
+﻿@model BabyCiao.Models.DTO.GroupBuyDTO
+
+@{
+	ViewData["Title"] = "訂單管理";
+}
+
+<h1>出貨</h1>
+
+<div>
+	<h4>訂單明細</h4>
+	<hr />
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.JoinId)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.JoinId)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.ProductName)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.ProductName)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.JoinUserAccount)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.JoinUserAccount)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Quantity)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Quantity)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Price)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Price)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.OrderPrice)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.OrderPrice)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Address)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Address)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.ViewJoinModifiedTime)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.ViewJoinModifiedTime)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Statement)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Statement)
+		</dd>
+	</dl>
+</div>
+<div>
+	@using (Html.BeginForm("Shipped", "GroupBuy", FormMethod.Post))
+	{
+
+
+		@if (Model.Statement == "已出貨" || Model.Statement == "已取消")
+		{
+			<div class="mb-2">
+				<input type="hidden" asp-for="JoinId" value="@Model.JoinId" />
+				<button type="submit" class="btn btn-secondary" disabled>確認出貨</button>
+			</div>
+		}
+		else
+		{
+			<div class="mb-2">
+				<input type="hidden" asp-for="JoinId" value="@Model.JoinId" />
+				<button type="submit" class="btn btn-secondary">確認出貨</button>
+			</div>
+		}
+	}
+	<div>
+		<a asp-controller="GroupBuy" asp-action="Orders" class="btn btn-outline-secondary"><i class="fa-solid fa-rotate-left"></i>返回列表</a>
+	</div>
+</div>
