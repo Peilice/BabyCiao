@@ -24,8 +24,9 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">會員管理</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">會員權限</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">保母資格</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="UserAccounts" asp-action="Index">會員權限</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="UserInformations" asp-action="Index">會員權限</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="NannyRequirments" asp-action="Index">保母審核</a></li>
                             </ul>
                         </li>
                         @* 委託單管理 *@
@@ -60,117 +61,6 @@
             </div>
         </nav>
     </header>
-    <div class="d-flex align-items-stretch">
-        <!-- Sidebar Navigation-->
-        <nav id="sidebar">
-            <!-- Sidebar Header-->
-            <div class="sidebar-header d-flex align-items-center p-4">
-                <a class="d-inline-block" href="pages-profile.html"><img class="avatar shadow-0 img-fluid rounded-circle" src="" alt="..."></a>
-                <div class="ms-3 title">
-                    <h1 class="h5 mb-1">貝比巧遇</h1>
-                    <p class="text-sm text-gray-700 mb-0 lh-1">網頁設計師</p>
-                </div>
-            </div><span class="text-uppercase text-gray-600 text-xs mx-3 px-2 heading mb-2">後臺管理</span>
-            <ul class="list-unstyled">
-                <li class="sidebar-item active">
-                    <a class="sidebar-link" href="index.html">
-                        <svg class="svg-icon svg-icon-sm svg-icon-heavy">
-                            <use xlink:href="#real-estate-1"> </use>
-                        </svg><span> 後臺公告</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="#tablesDropdown" data-bs-toggle="collapse">
-                        <svg class="svg-icon svg-icon-sm svg-icon-heavy">
-                            <use xlink:href="#portfolio-grid-1"> </use>
-                        </svg><span>使用者管理 </span>
-                    </a>
-                    <ul class="collapse list-unstyled " id="tablesDropdown">
-                        <li><a class="sidebar-link" href="tables.html"> 帳號管理</a></li>
-                        <li><a class="sidebar-link" href="tables-datatable.html">權限管理</a></li>
-                        <li><a class="sidebar-link" href="tables-datatable.html">保母審核</a></li>
-                    </ul>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="#chartsDropdown" data-bs-toggle="collapse">
-                        <svg class="svg-icon svg-icon-sm svg-icon-heavy">
-                            <use xlink:href="#sales-up-1"> </use>
-                        </svg><span>委託單管理 </span>
-                    </a>
-                    <ul class="collapse list-unstyled " id="chartsDropdown">
-                        <li><a class="sidebar-link" href="/BabyResumes/Index">家長委託單</a></li>
-                        <li><a class="sidebar-link" href="/NannyResumes/Index">保母委託單</a></li>
-                        <li><a class="sidebar-link" href="charts-gauge-sparkline.html">數據分析</a></li>
-                    </ul>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="#formsDropdown" data-bs-toggle="collapse">
-                        <svg class="svg-icon svg-icon-sm svg-icon-heavy">
-                            <use xlink:href="#survey-1"> </use>
-                        </svg><span>二手商品與團購管理 </span>
-                    </a>
-                    <ul class="collapse list-unstyled " id="formsDropdown">
-                        <li><a class="sidebar-link" href="forms.html">二手商品管理</a></li>
-                        <li><a class="sidebar-link" href="forms-advanced.html">團購管理</a></li>
-                        <li><a class="sidebar-link" href="forms-autocomplete.html">論壇管理</a></li>
-                    </ul>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="#componentsDropdown" data-bs-toggle="collapse">
-                        <svg class="svg-icon svg-icon-sm svg-icon-heavy">
-                            <use xlink:href="#stack-1"> </use>
-                        </svg><span>活動管理 </span>
-                    </a>
-                    <ul class="collapse list-unstyled " id="componentsDropdown">
-                        <li><a class="sidebar-link" href="components-cards.html">活動事項</a></li>
-                        <li><a class="sidebar-link" href="components-calendar.html">活動照片</a></li>
-
-                    </ul>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="#pagesDropdown" data-bs-toggle="collapse">
-                        <svg class="svg-icon svg-icon-sm svg-icon-heavy">
-                            <use xlink:href="#multiple-windows-1"> </use>
-                        </svg><span>公告管理 </span>
-                    </a>
-                    <ul class="collapse list-unstyled " id="pagesDropdown">
-                        <li><a class="sidebar-link" href="pages-contacts.html">主頁公告事項</a></li>
-                        <li><a class="sidebar-link" href="pages-invoice.html">最新資訊</a></li>
-
-                    </ul>
-                </li>
-            </ul><span class="text-uppercase text-gray-600 text-xs mx-3 px-2 heading mb-2">附加功能</span>
-            <ul class="list-unstyled">
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="#">
-                        <svg class="svg-icon svg-icon-sm svg-icon-heavy">
-                            <use xlink:href="#imac-screen-1"> </use>
-                        </svg><span>範例 </span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="#">
-                        <svg class="svg-icon svg-icon-sm svg-icon-heavy">
-                            <use xlink:href="#chart-1"></use>
-                        </svg><span>範例 </span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="#">
-                        <svg class="svg-icon svg-icon-sm svg-icon-heavy">
-                            <use xlink:href="#quality-1"> </use>
-                        </svg><span>範例 </span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="#">
-                        <svg class="svg-icon svg-icon-sm svg-icon-heavy">
-                            <use xlink:href="#security-shield-1"> </use>
-                        </svg><span>範例 </span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
         <div class="page-content">
             <!-- Page Header-->
             <div class="bg-dash-dark-2 py-4">

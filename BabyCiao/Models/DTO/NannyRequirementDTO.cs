@@ -1,4 +1,8 @@
-﻿namespace BabyCiao.Models.DTO
+﻿using System.ComponentModel.DataAnnotations;
+using BabyCiao.Models;
+
+
+namespace BabyCiao.Models.DTO
 {
     public class NannyRequirementDTO
     {
@@ -19,6 +23,10 @@
         public DateOnly ValidPeriodsOfCertificates { get; set; }
 
         public int Statement { get; set; }
+        //[Display(Name = "我是照片A")]
+        public string photoA { get; set; }//保母證
+        public string photoB { get; set; }//身分證
+        public string photoC { get; set; }//良民證
 
         public IFormFile photo1 { get; set; }//保母證
         public IFormFile photo2 { get; set; }//身分證

@@ -1,12 +1,10 @@
-﻿@model BabyCiao.Models.NannyRequirment
+﻿@model BabyCiao.Models.DTO.NannyRequirementDTO
 
-@{
-    ViewData["Title"] = "Edit";
-}
 
-<h1>Edit</h1>
 
-<h4>NannyRequirment</h4>
+<h1>審核保母資格</h1>
+
+<h4>申請資料</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,54 +12,54 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="RequirementDate" class="control-label"></label>
+                <label asp-for="RequirementDate" class="control-label">申請時間</label>
                 <input asp-for="RequirementDate" class="form-control" />
                 <span asp-validation-for="RequirementDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="NannyAccountUserAccount" class="control-label"></label>
+                <label asp-for="NannyAccountUserAccount" class="control-label">帳號</label>
                 <select asp-for="NannyAccountUserAccount" class="form-control" asp-items="ViewBag.NannyAccountUserAccount"></select>
                 <span asp-validation-for="NannyAccountUserAccount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PoliceCriminalRecordCertificate" class="control-label"></label>
-                <input asp-for="PoliceCriminalRecordCertificate" class="form-control" />
-                <span asp-validation-for="PoliceCriminalRecordCertificate" class="text-danger"></span>
+                <label asp-for="photoA" class="control-label">良民證</label>
+                <img src="@Url.Content("~/img/保母證照/" + Model.photoA)" width="400" />
+                <span asp-validation-for="photoA" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ChildCareCertificate" class="control-label"></label>
-                <input asp-for="ChildCareCertificate" class="form-control" />
-                <span asp-validation-for="ChildCareCertificate" class="text-danger"></span>
+                <label asp-for="photoB" class="control-label">保母證</label>
+                <img src="@Url.Content("~/img/保母證照/" + Model.photoB)" width="400" />
+                <span asp-validation-for="photoB" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="NationalIdentificationCard" class="control-label"></label>
-                <input asp-for="NationalIdentificationCard" class="form-control" />
-                <span asp-validation-for="NationalIdentificationCard" class="text-danger"></span>
+                <label asp-for="photoC" class="control-label">身分證</label>
+                <img src="@Url.Content("~/img/保母證照/" + Model.photoC)" width="400" />
+                <span asp-validation-for="photoC" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AddressesOfAgencies" class="control-label"></label>
+                <label asp-for="AddressesOfAgencies" class="control-label">申請地址</label>
                 <input asp-for="AddressesOfAgencies" class="form-control" />
                 <span asp-validation-for="AddressesOfAgencies" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ValidPeriodsOfCertificates" class="control-label"></label>
+                <label asp-for="ValidPeriodsOfCertificates" class="control-label">證照有效期限</label>
                 <input asp-for="ValidPeriodsOfCertificates" class="form-control" />
                 <span asp-validation-for="ValidPeriodsOfCertificates" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Statement" class="control-label"></label>
+                <label asp-for="Statement" class="control-label">狀態</label>
                 <input asp-for="Statement" class="form-control" />
                 <span asp-validation-for="Statement" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="儲存" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">回到列表</a>
 </div>
 
 @section Scripts {

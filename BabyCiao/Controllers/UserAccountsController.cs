@@ -12,9 +12,9 @@ namespace BabyCiao.Controllers
     [Route("/UserAccounts/{action=Index}/{UserID?}")]
     public class UserAccountsController : Controller
     {
-            private readonly BabyCiaoContext _context;
+            private readonly BabyciaoContext _context;
 
-            public UserAccountsController(BabyCiaoContext context)
+            public UserAccountsController(BabyciaoContext context)
             {
                 _context = context;
             }

@@ -63,7 +63,7 @@ namespace BabyCiao.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,NannyAccountUserAccount,City,District,Introduction,TypeOfDaycare,ServiceItems,QuasiPublicChildcare,ChildcareAvailableUnder2,ChildcareAvailableOver2,Language,ServiceCenter,DisplayControl")] NannyResume nannyResume, IFormFile? ProfessionalPortrait, IFormFile? InternalPhoto1, IFormFile? InternalPhoto2, IFormFile? InternalPhoto3, IFormFile? InternalPhoto4, IFormFile? InternalPhoto5)
+        public async Task<IActionResult> Create([Bind("Id,NannyAccountUserAccount,City,District,Introduction,TypeOfDaycare,ServiceItems,QuasiPublicChildcare,ChildcareAvailableUnder2,ChildcareAvailableOver2,Language,ServiceCenter,DisplayControl")] nannyResume nannyResume, IFormFile? ProfessionalPortrait, IFormFile? InternalPhoto1, IFormFile? InternalPhoto2, IFormFile? InternalPhoto3, IFormFile? InternalPhoto4, IFormFile? InternalPhoto5)
         {
             if (ModelState.IsValid)
             {
@@ -112,7 +112,7 @@ namespace BabyCiao.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NannyAccountUserAccount,City,District,Introduction,TypeOfDaycare,ServiceItems,QuasiPublicChildcare,ChildcareAvailableUnder2,ChildcareAvailableOver2,Language,ServiceCenter,DisplayControl")] NannyResume nannyResume, IFormFile? ProfessionalPortrait, IFormFile? InternalPhoto1, IFormFile? InternalPhoto2, IFormFile? InternalPhoto3, IFormFile? InternalPhoto4, IFormFile? InternalPhoto5)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,NannyAccountUserAccount,City,District,Introduction,TypeOfDaycare,ServiceItems,QuasiPublicChildcare,ChildcareAvailableUnder2,ChildcareAvailableOver2,Language,ServiceCenter,DisplayControl")] nannyResume nannyResume, IFormFile? ProfessionalPortrait, IFormFile? InternalPhoto1, IFormFile? InternalPhoto2, IFormFile? InternalPhoto3, IFormFile? InternalPhoto4, IFormFile? InternalPhoto5)
         {
             if (id != nannyResume.Id)
             {
@@ -198,7 +198,7 @@ namespace BabyCiao.Controllers
             return _context.NannyResumes.Any(e => e.Id == id);
         }
 
-        private async Task SaveFilesAsync(NannyResume nannyResume, IFormFile? professionalPortrait, IFormFile? internalPhoto1, IFormFile? internalPhoto2, IFormFile? internalPhoto3, IFormFile? internalPhoto4, IFormFile? internalPhoto5, NannyResume? existingResume = null)
+        private async Task SaveFilesAsync(nannyResume nannyResume, IFormFile? professionalPortrait, IFormFile? internalPhoto1, IFormFile? internalPhoto2, IFormFile? internalPhoto3, IFormFile? internalPhoto4, IFormFile? internalPhoto5, nannyResume? existingResume = null)
         {
             var uploadsFolder = Path.Combine(_hostEnvironment.WebRootPath, "Nannyphoto");
             Directory.CreateDirectory(uploadsFolder);
@@ -333,7 +333,7 @@ namespace BabyCiao.Controllers
             }
         }
 
-        private void DeletePhotos(NannyResume nannyResume)
+        private void DeletePhotos(nannyResume nannyResume)
         {
             if (!string.IsNullOrEmpty(nannyResume.ProfessionalPortrait))
             {

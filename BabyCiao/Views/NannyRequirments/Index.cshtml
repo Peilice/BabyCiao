@@ -1,10 +1,6 @@
-﻿@model IEnumerable<BabyCiao.Models.NannyRequirment>
+﻿@model IEnumerable<BabyCiao.Models.DTO.NannyRequirementDTO>
 @{
     var StatementDictionary = ViewBag.StatementDictionary as Dictionary<int, string>;
-}
-@section Styled
-{
-    
 }
 
 <h1>保母審核</h1>
@@ -39,26 +35,26 @@
 @foreach (var item in Model) {
         <tr>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">審核</a><br />
-                    <a asp-action="Delete" asp-route-id="@item.Id">退件</a>
+                    <a asp-controller="NannyRequirments" asp-action="Edit" asp-route-Id="@item.Id">審核</a><br />
+                    <a asp-controller="NannyRequirments" asp-action="Delete" asp-route-Id="@item.Id">退件</a>
                 </td>
                 <td>
                 @Html.DisplayFor(modelItem => item.ValidPeriodsOfCertificates)<br />
-                @StatementDictionary[item.Statement]
+                @* @StatementDictionary[item.Statement] *@
                 </td>
                  <td>
                 @Html.DisplayFor(modelItem => item.RequirementDate)<br />
-                @Html.DisplayFor(modelItem => item.NannyAccountUserAccountNavigation.Account)<br />
+                @Html.DisplayFor(modelItem => item.NannyAccountUserAccount)<br />
                 @Html.DisplayFor(modelItem => item.AddressesOfAgencies)
                 </td>
                 <td>
-                    @Html.Raw(GetImageHtml(item.PoliceCriminalRecordCertificate, "保母證照"))
+                    <img src="img/保母證照/@item.photoA" width="100" />
                 </td>
                 <td>
-                    <img src="~/img/保母證照/@item.PoliceCriminalRecordCertificate" />
+                    <img src="img/保母證照/@item.photoB" width="100" />
                 </td>
                 <td>
-                    <img src="~/img/保母證照/身分證.jpg" />
+                    <img src="img/保母證照/@item.photoC" width="100" />
                 </td>
 
        </tr>}

@@ -10,10 +10,10 @@ using BabyCiao.Models.DTO;
 
 public class NannyRequirmentsController : Controller
 {
-    private readonly BabyCiaoContext _context;
+    private readonly BabyciaoContext _context;
     private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public NannyRequirmentsController(BabyCiaoContext context, IWebHostEnvironment webHostEnvironment)
+    public NannyRequirmentsController(BabyciaoContext context, IWebHostEnvironment webHostEnvironment)
     {
         _context = context;
         _webHostEnvironment = webHostEnvironment;
@@ -27,10 +27,39 @@ public class NannyRequirmentsController : Controller
            };
 
     // GET: NannyRequirments
+    [HttpGet]
+
+    //public async Task<IActionResult> Index()
+    //{
+    //    var babyCiaoContext = await _context.NannyRequirments
+    //        .Include(n => n.NannyAccountUserAccountNavigation)
+    //        .ToListAsync();
+
+    //    return View(babyCiaoContext);
+    //}
     public async Task<IActionResult> Index()
     {
-        var babyCiaoContext = _context.NannyRequirments.Include(n => n.NannyAccountUserAccountNavigation);
-        return View(await babyCiaoContext.ToListAsync());
+        var babyCiaoContext = await _context.NannyRequirments
+         .Include(n => n.NannyAccountUserAccountNavigation)
+         .Select(n => new NannyRequirementDTO
+         {
+             Id= n.Id,
+             RequirementDate = n.RequirementDate,
+             NannyAccountUserAccount = n.NannyAccountUserAccount,
+             PoliceCriminalRecordCertificate = n.PoliceCriminalRecordCertificate,
+             ChildCareCertificate = n.ChildCareCertificate,
+             NationalIdentificationCard = n.NationalIdentificationCard,
+             AddressesOfAgencies = n.AddressesOfAgencies,
+             ValidPeriodsOfCertificates = n.ValidPeriodsOfCertificates,
+             Statement = n.Statement,
+             photoA=n.PoliceCriminalRecordCertificate,
+             photoB=n.ChildCareCertificate,
+             photoC=n.NationalIdentificationCard,
+
+         }).ToListAsync();
+
+        return View(babyCiaoContext);
+        //return View(await babyCiaoContext.ToListAsync());
     }
 
 
@@ -90,7 +119,7 @@ public class NannyRequirmentsController : Controller
 
         if (model.NannyAccountUserAccount != null && model.ChildCareCertificate != null && model.NationalIdentificationCard != null)
         {
-            //這裡處理檔案寫入資料庫的處理ˋ
+            //這裡處理檔案寫入資料庫的處理
             var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "保母證照");// upload file path here
             if (!Directory.Exists(uploadPath))
             {
@@ -115,26 +144,28 @@ public class NannyRequirmentsController : Controller
             // please let GroupBuyPhotoDTO complete
             Requirment.PoliceCriminalRecordCertificate = model.photo1.FileName;
             Requirment.ChildCareCertificate = model.photo2.FileName;
-                Requirment.NationalIdentificationCard = model.photo3.FileName;
+            Requirment.NationalIdentificationCard = model.photo3.FileName;
             _context.Add(Requirment);
+
+            Requirment.PoliceCriminalRecordCertificate = model.photoA;
+            Requirment.ChildCareCertificate=model.photoB;
+            Requirment.NationalIdentificationCard=model.photoC;
 
             await _context.SaveChangesAsync();
         }
         return RedirectToAction(nameof(Index));
-
-
     }
 
 
     // GET: NannyRequirments/Edit/5
-    public async Task<IActionResult> Edit(int id)
+    public async Task<IActionResult> Edit(int Id)
     {
-        if (id == null)
+        if (Id == null)
         {
             return NotFound();
         }
         var Requirment = (from nn in _context.NannyRequirments
-                          where nn.Id == id
+                          where nn.Id == Id
                           select new NannyRequirementDTO
                           {
                               Id = nn.Id,
@@ -146,6 +177,9 @@ public class NannyRequirmentsController : Controller
                               AddressesOfAgencies = nn.AddressesOfAgencies,
                               ValidPeriodsOfCertificates = nn.ValidPeriodsOfCertificates,
                               Statement = nn.Statement,
+                              photoA = nn.PoliceCriminalRecordCertificate,
+                              photoB = nn.ChildCareCertificate,
+                              photoC = nn.NationalIdentificationCard,
                           }).FirstOrDefault();
 
 
@@ -179,6 +213,8 @@ public class NannyRequirmentsController : Controller
             AddressesOfAgencies = model.AddressesOfAgencies,
             ValidPeriodsOfCertificates = model.ValidPeriodsOfCertificates,
             Statement = model.Statement,
+            
+             
         };
 
         if (model.NannyAccountUserAccount != null && model.ChildCareCertificate != null && model.NationalIdentificationCard != null)
@@ -194,6 +230,7 @@ public class NannyRequirmentsController : Controller
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 await model.photo1.CopyToAsync(fileStream);// write file into fileStream
+              
             }
             var filePath2 = Path.Combine(uploadPath, model.photo2.FileName);
             using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -210,7 +247,10 @@ public class NannyRequirmentsController : Controller
             Requirment.ChildCareCertificate = model.photo2.FileName;
             Requirment.NationalIdentificationCard = model.photo3.FileName;
             _context.Add(Requirment);
-
+            Requirment.PoliceCriminalRecordCertificate = model.photoA;
+            Requirment.ChildCareCertificate = model.photoB;
+            Requirment.NationalIdentificationCard = model.photoC;
+            _context.Add(Requirment);
             await _context.SaveChangesAsync();
              try
              {
@@ -270,6 +310,9 @@ public class NannyRequirmentsController : Controller
                               AddressesOfAgencies = nn.AddressesOfAgencies,
                               ValidPeriodsOfCertificates = nn.ValidPeriodsOfCertificates,
                               Statement = nn.Statement,
+                              photoA = nn.PoliceCriminalRecordCertificate,
+                              photoB = nn.ChildCareCertificate,
+                              photoC = nn.NationalIdentificationCard,
                           }).FirstOrDefault();
 
 
@@ -285,9 +328,9 @@ public class NannyRequirmentsController : Controller
     // POST: NannyRequirments/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
+    public async Task<IActionResult> DeleteConfirmed(int Id)
     {
-        var nannyRequirment = await _context.NannyRequirments.FindAsync(id);
+        var nannyRequirment = await _context.NannyRequirments.FindAsync(Id);
         if (nannyRequirment != null)
         {
             _context.NannyRequirments.Remove(nannyRequirment);
@@ -297,9 +340,9 @@ public class NannyRequirmentsController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    private bool NannyRequirmentExists(int id)
+    private bool NannyRequirmentExists(int Id)
     {
-        return _context.NannyRequirments.Any(e => e.Id == id);
+        return _context.NannyRequirments.Any(e => e.Id == Id);
     }
 }
 

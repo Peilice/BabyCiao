@@ -5,8 +5,6 @@ namespace BabyCiao.Models;
 
 public partial class nannyResume
 {
-    internal byte[] PoliceCriminalRecordCertificate;
-    internal byte[] NationalIdentificationCard;
 
     public int Id { get; set; }
     
