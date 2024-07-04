@@ -1,19 +1,41 @@
 ﻿using BabyCiao.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace BabyCiao.Models.DTO
 {
     public class OnlineCompetitionsDTO
     {
         public int Id { get; set; }
+        [Display(Name = "活動名稱")]
         public string CompetitionName { get; set; }
-        public string AccountUserAccount { get; set; }
-        public DateOnly StartTime { get; set; }
-        public DateOnly EndTime { get; set; }
-        public string Content { get; set; }
-        public string Statement { get; set; }
-        public DateOnly ModifiedTime { get; set; }
-        public string? PhotoName { get; set; }
 
+        [Display(Name = "修改人員")]
+        public string AccountUserAccount { get; set; }
+
+        [Display(Name = "活動開始時間")]
+        public DateOnly StartTime { get; set; }
+
+        [Display(Name = "活動結束時間")]
+        public DateOnly EndTime { get; set; }
+
+        [Display(Name = "活動介紹")]
+        public string Content { get; set; }
+
+        [Display(Name = "活動進行狀態")]
+        public string Statement { get; set; }
+
+
+        public DateOnly ModifiedTime { get; set; }
+
+    }
+
+    public class CompetitionPhotoDTO
+    {
+
+        public string? CompetitionPhotoName { get; set; }
+        public int CompetitionPhotoId { get; set; }
+        public DateTime CompetitionPhotoModifiedTime { get; set; }
+        public int IdOnlineCompetition { get; set; }
     }
 
     public static class CompetitionsExtensions
