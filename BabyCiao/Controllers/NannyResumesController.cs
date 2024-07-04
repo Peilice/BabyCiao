@@ -13,10 +13,10 @@ namespace BabyCiao.Controllers
 {
     public class NannyResumesController : Controller
     {
-        private readonly BabyCiaoContext _context;
+        private readonly BabyciaoContext _context;
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public NannyResumesController(BabyCiaoContext context, IWebHostEnvironment hostEnvironment)
+        public NannyResumesController(BabyciaoContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             _hostEnvironment = hostEnvironment;

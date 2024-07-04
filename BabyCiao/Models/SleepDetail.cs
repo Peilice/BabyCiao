@@ -13,7 +13,7 @@ public partial class SleepDetail
 
     public DateTime WakeUpTime { get; set; }
 
-    public int SleepState { get; set; }
+    public string SleepState { get; set; } = null!;
 
     public string Content { get; set; } = null!;
 

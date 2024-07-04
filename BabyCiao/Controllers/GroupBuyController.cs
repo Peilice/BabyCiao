@@ -14,10 +14,10 @@ namespace BabyCiao.Controllers
 {
 	public class GroupBuyController : Controller
 	{
-		private readonly BabyCiaoContext _context;
+		private readonly BabyciaoContext _context;
 		private IWebHostEnvironment _webHostEnvironment;
 
-		public GroupBuyController(BabyCiaoContext context, IWebHostEnvironment webHostEnvironment)
+		public GroupBuyController(BabyciaoContext context, IWebHostEnvironment webHostEnvironment)
 		{
 			_context = context;
 			_webHostEnvironment = webHostEnvironment;

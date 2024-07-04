@@ -13,9 +13,9 @@ namespace BabyCiao.Controllers
 {
     public class SecondHandController : Controller
     {
-        private readonly BabyCiaoContext _context;
+        private readonly BabyciaoContext _context;
 
-        public SecondHandController(BabyCiaoContext context)
+        public SecondHandController(BabyciaoContext context)
         {
             _context = context;
         }
