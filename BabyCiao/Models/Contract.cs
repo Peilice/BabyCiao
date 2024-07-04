@@ -21,7 +21,7 @@ public partial class Contract
 
     public string ContractFile { get; set; } = null!;
 
-    public string Statement { get; set; } = null!;
+    public int Statement { get; set; }
 
     public DateTime ModifiedTime { get; set; }
 

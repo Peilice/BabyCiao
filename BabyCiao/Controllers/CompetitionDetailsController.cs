@@ -11,9 +11,9 @@ namespace BabyCiao.Controllers
 {
     public class CompetitionDetailsController : Controller
     {
-        private readonly BabyciaoContext _context;
+        private readonly BabyCiaoContext _context;
 
-        public CompetitionDetailsController(BabyciaoContext context)
+        public CompetitionDetailsController(BabyCiaoContext context)
         {
             _context = context;
         }

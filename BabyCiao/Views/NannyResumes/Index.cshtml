@@ -1,0 +1,137 @@
+﻿@model IEnumerable<BabyCiao.Models.NannyResume>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.District)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Introduction)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TypeOfDaycare)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ServiceItems)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuasiPublicChildcare)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChildcareAvailableUnder2)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChildcareAvailableOver2)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Language)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ServiceCenter)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProfessionalPortrait)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InternalPhoto1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InternalPhoto2)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InternalPhoto3)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InternalPhoto4)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InternalPhoto5)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DisplayControl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NannyAccountUserAccountNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.District)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Introduction)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TypeOfDaycare)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ServiceItems)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuasiPublicChildcare)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChildcareAvailableUnder2)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChildcareAvailableOver2)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Language)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ServiceCenter)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProfessionalPortrait)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InternalPhoto1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InternalPhoto2)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InternalPhoto3)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InternalPhoto4)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InternalPhoto5)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DisplayControl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NannyAccountUserAccountNavigation.Account)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

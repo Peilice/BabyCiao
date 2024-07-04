@@ -14,9 +14,9 @@ namespace BabyCiao.Controllers
 {
     public class OnlineCompetitionsController : Controller
     {
-        private readonly BabyciaoContext _context;
+        private readonly BabyCiaoContext _context;
 
-        public OnlineCompetitionsController(BabyciaoContext context)
+        public OnlineCompetitionsController(BabyCiaoContext context)
         {
             _context = context;
         }
@@ -37,7 +37,7 @@ namespace BabyCiao.Controllers
                 return NotFound();
             }
             var competitionDTO =await (from con in _context.OnlineCompetitions
-                                  join cp in _context.CompetitionPhotos on con.Id equals cp.IdOnlineCompetition
+                                  //join cp in _context.CompetitionPhotos on con.Id equals cp.IdOnlineCompetition
                                   where con.Id == id
                                   select new OnlineCompetitionsDTO
                                   {
@@ -51,7 +51,7 @@ namespace BabyCiao.Controllers
                                       ModifiedTime = con.ModifiedTime,
                                       //PhotoName = cp.PhotoName,
                                   }).FirstOrDefaultAsync();
-            
+
             if (competitionDTO == null)
             {
                 return NotFound();
@@ -86,14 +86,14 @@ namespace BabyCiao.Controllers
                 { 
                   newcompetiton.UpdateEntity(onlineCompetitionDTO);
                   _context.Add(newcompetiton);
-                  await _context.SaveChangesAsync();
-                  return RedirectToAction(nameof(Index));
-                }
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
                 else
                 {
                     return NotFound();
-                }
-               
+        }
+
             }
             var errors = ModelState.Values.SelectMany(v => v.Errors);
             foreach (var error in errors)
@@ -126,7 +126,8 @@ namespace BabyCiao.Controllers
                                       ModifiedTime = con.ModifiedTime
                                   }).FirstOrDefaultAsync();
 
-            if (competitionDTO == null)
+            var onlineCompetition = await _context.OnlineCompetitions.FindAsync(id);
+            if (onlineCompetition == null)
             {
                 return NotFound();
             }
