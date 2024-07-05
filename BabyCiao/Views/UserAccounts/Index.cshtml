@@ -41,10 +41,10 @@
     <table class="table">
         <thead>
             <tr>
-                <th>UserId</th>
-                <th>Account</th>
-                <th>Password</th>
-                <th>Permissions</th>
+                <th>使用者ID</th>
+                <th>帳號</th>
+                <th>密碼</th>
+                <th>權限</th>
                 <th>Vip</th>
             </tr>
         </thead>
@@ -58,10 +58,10 @@
                     <td>@(permissionsDictionary.ContainsKey(permissionsList[i]) ? permissionsDictionary[permissionsList[i]] : "未知")</td>
                     <td>@vips[i]</td>
                     <td>
-                        <a asp-controller="UserAccounts" asp-action="Edit" asp-route-userId="@userIds[i]">Edit</a> |
-                        <a asp-controller="UserAccounts" asp-action="Details" asp-route-userId="@userIds[i]">Details</a> |
-                        <a asp-controller="UserAccounts" asp-action="Delete" asp-route-userId="@userIds[i]">Delete</a>
-                    </td>
+                        <a asp-controller="UserAccounts" asp-action="Edit" asp-route-userId="@userIds[i]">編輯</a> |
+                        <a asp-controller="UserAccounts" asp-action="Details" asp-route-userId="@userIds[i]">詳細資訊</a> 
+@*                         <a asp-controller="UserAccounts" asp-action="Delete" asp-route-userId="@userIds[i]" type="">Delete</a>
+ *@                    </td>
                 </tr>
             }
                   </tbody>
