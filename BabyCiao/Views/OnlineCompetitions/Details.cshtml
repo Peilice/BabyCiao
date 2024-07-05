@@ -9,50 +9,61 @@
 <div>
     <h4>投票活動詳細資訊</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">活動名稱
-            @* @Html.DisplayNameFor(model => model.CompetitionName) *@
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CompetitionName)
-        </dd>
-        <dt class = "col-sm-2">活動開始時間
-            @* @Html.DisplayNameFor(model => model.StartTime) *@
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartTime)
-        </dd>
-        <dt class = "col-sm-2">活動結束時間
-            @* @Html.DisplayNameFor(model => model.EndTime) *@
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndTime)
-        </dd>
-        <dt class = "col-sm-2">活動介紹
-            @* @Html.DisplayNameFor(model => model.Content) *@
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Content)
-        </dd>
-        <dt class = "col-sm-2">最後更新時間
-            @* @Html.DisplayNameFor(model => model.ModifiedTime) *@
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedTime)
-        </dd>
-        <dt class = "col-sm-2">活動進度
-            @* @Html.DisplayNameFor(model => model.Statement) *@
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Statement)
-        </dd>
-        @* <dt class="col-sm-2">
-            活動照片
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PhotoName)
-        </dd> *@
-    </dl>
+    <div class="row d-flex">
+        <div calss="col-6">
+            <dl>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.CompetitionName)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.CompetitionName)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.StartTime)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.StartTime)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.EndTime)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.EndTime)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Content)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Content)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ModifiedTime)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ModifiedTime)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Statement)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Statement)
+                </dd>
+            </dl>       
+        </div>
+        <div calss="col-6">
+            <dl enctype="multipart/form-data">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.CompetitionPhotoName)
+                </dt>
+                <dd class="col-sm-10">
+                    <div>
+                        <img src="~/uploads/@Html.DisplayFor(model => model.CompetitionPhotoNames)" alt="" class="photos w-50 h-50" />
+                    </div>
+                </dd>
+            </dl>
+        </div>
+    </div>
+
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">編輯</a> |
