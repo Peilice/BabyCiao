@@ -28,8 +28,10 @@ namespace BabyCiao.Models.DTO
         public DateOnly ModifiedTime { get; set; }
 
         //活動照片
+        
+        public string? CompetitionPhotoNames { get; set; }
         [Display(Name = "活動照片")]
-        public string? CompetitionPhotoName { get; set; }
+        public IFormFile CompetitionPhotoName { get; set; }
         public int CompetitionPhotoId { get; set; }
         public DateTime CompetitionPhotoModifiedTime { get; set; }
         public int IdOnlineCompetition { get; set; }

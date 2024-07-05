@@ -15,10 +15,12 @@ namespace BabyCiao.Controllers
     public class OnlineCompetitionsController : Controller
     {
         private readonly BabyciaoContext _context;
+        private IWebHostEnvironment _webHostEnvironment;
 
-        public OnlineCompetitionsController(BabyciaoContext context)
+        public OnlineCompetitionsController(BabyciaoContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: OnlineCompetitions
@@ -50,8 +52,8 @@ namespace BabyCiao.Controllers
                                       Statement = con.Statement,
                                       ModifiedTime = con.ModifiedTime,
 
-                                      CompetitionPhotoName = cp.PhotoName,
-                                      photoUrl=cp.PhotoName != null ? $"<img src=\" /uploads/{cp.PhotoName}\" width=\"100\" />" : "<img src=\" /img/noImage.jpg\" width=\"100\" />"
+                                      CompetitionPhotoNames = cp.PhotoName,
+                                      IdOnlineCompetition=cp.IdOnlineCompetition,
                                   }).FirstOrDefaultAsync();
 
             if (competitionDTO == null)
@@ -74,33 +76,53 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Id,CompetitionName,AccountUserAccount,StartTime,EndTime,Content,ModifiedTime,Statement,PhotoName")] OnlineCompetitionsDTO onlineCompetitionDTO)
-        public async Task<IActionResult> Create([Bind("Id,CompetitionName,AccountUserAccount,StartTime,EndTime,Content,Statement")] OnlineCompetitionsDTO onlineCompetitionDTO)
+        public async Task<IActionResult> Create([FromForm] OnlineCompetitionsDTO onlineCompetitionDTO)
 
         {
-
-            //onlineCompetition.AccountUserAccountNavigation = _context.UserAccounts.FirstOrDefault(user => user.Account == onlineCompetition.AccountUserAccount);
-
-            if (ModelState.IsValid)
+            if (onlineCompetitionDTO == null)
             {
-                var newcompetiton = await _context.OnlineCompetitions.FirstOrDefaultAsync(c =>c.Id == onlineCompetitionDTO.Id);
-                if (newcompetiton == null)
-                { 
-                  newcompetiton.UpdateEntity(onlineCompetitionDTO);
-                  _context.Add(newcompetiton);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-                }
-                else
-                {
-                    return NotFound();
-                }
-
+                return NotFound();
             }
-            
 
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", onlineCompetitionDTO.AccountUserAccount);
-            return View(onlineCompetitionDTO);
+
+            var newcompetiton = new OnlineCompetition
+            {
+                Id=onlineCompetitionDTO.Id,
+                CompetitionName = onlineCompetitionDTO.CompetitionName,
+                AccountUserAccount = onlineCompetitionDTO.AccountUserAccount,
+                StartTime = onlineCompetitionDTO.StartTime,
+                EndTime = onlineCompetitionDTO.EndTime,
+                Content = onlineCompetitionDTO.Content,
+                ModifiedTime = onlineCompetitionDTO.ModifiedTime,
+                Statement = onlineCompetitionDTO.Statement,
+
+            };
+            _context.Add(newcompetiton);
+            await _context.SaveChangesAsync();
+
+            var newid= newcompetiton.Id;
+            var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+            var filepath = Path.Combine(uploadPath, onlineCompetitionDTO.CompetitionPhotoName.FileName);
+            using (var fileStream = new FileStream(filepath, FileMode.Create))
+            {
+                await onlineCompetitionDTO.CompetitionPhotoName.CopyToAsync(fileStream);// write file into fileStream
+            }
+
+            onlineCompetitionDTO.CompetitionPhotoNames = onlineCompetitionDTO.CompetitionPhotoName.FileName;
+            var newphoto = new CompetitionPhoto
+            {
+                IdOnlineCompetition = newid,
+                PhotoName = onlineCompetitionDTO.CompetitionPhotoNames,
+            };
+            _context.Add(newphoto);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+            
         }
 
         // GET: OnlineCompetitions/Edit/5
@@ -124,10 +146,10 @@ namespace BabyCiao.Controllers
                                       Statement = con.Statement,
                                       ModifiedTime = con.ModifiedTime,
 
-                                      CompetitionPhotoName = cp.PhotoName,
-                                      photoUrl = cp.PhotoName != null ? $"<img src=\" /uploads/{cp.PhotoName}\" width=\"100\" />" : "<img src=\" /img/noImage.jpg\" width=\"100\" />"
-                                  }).FirstOrDefaultAsync();
 
+                                      CompetitionPhotoNames = cp.PhotoName,
+
+                                  }).FirstOrDefaultAsync();
 
 
 
@@ -144,44 +166,105 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("Id,CompetitionName,AccountUserAccount,StartTime,EndTime,Content,ModifiedTime,Statement,PhotoName")] OnlineCompetitionsDTO onlineCompetitionDTO)
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CompetitionName,AccountUserAccount,StartTime,EndTime,Content,ModifiedTime,Statement")] OnlineCompetitionsDTO onlineCompetitionDTO)
+        public async Task<IActionResult> Edit(int id, [FromForm] OnlineCompetitionsDTO CompetitionDTO)
         {
-            if (id != onlineCompetitionDTO.Id)
+            
+            if (id == 0)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var editcompetition = await _context.OnlineCompetitions.FindAsync(id);
+            if (editcompetition == null)
             {
-                try
-                {
-                    var editcompetity = await _context.OnlineCompetitions.FindAsync(id);
-                    if (editcompetity == null)
-                    {
-                        return NotFound();
-                    }
-                    editcompetity.UpdateEntity(onlineCompetitionDTO);
-                    _context.Update(editcompetity);
-                    await _context.SaveChangesAsync();
-
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OnlineCompetitionExists(onlineCompetitionDTO.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", onlineCompetitionDTO.AccountUserAccount);
-            return View(onlineCompetitionDTO);
+
+            editcompetition.CompetitionName = CompetitionDTO.CompetitionName;
+            editcompetition.AccountUserAccount = CompetitionDTO.AccountUserAccount;
+            editcompetition.StartTime = CompetitionDTO.StartTime;
+            editcompetition.EndTime = CompetitionDTO.EndTime;
+            editcompetition.Content = CompetitionDTO.Content;
+            editcompetition.ModifiedTime = DateOnly.FromDateTime(DateTime.Now);
+            editcompetition.Statement = CompetitionDTO.Statement;
+
+            try
+            {            
+                _context.Update(editcompetition);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!OnlineCompetitionExists(CompetitionDTO.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            //var newid = id;
+            var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+            var filepath = Path.Combine(uploadPath, CompetitionDTO.CompetitionPhotoName.FileName);
+            using (var fileStream = new FileStream(filepath, FileMode.Create))
+            {
+                await CompetitionDTO.CompetitionPhotoName.CopyToAsync(fileStream);// write file into fileStream
+            }
+
+            CompetitionDTO.CompetitionPhotoNames = CompetitionDTO.CompetitionPhotoName.FileName;
+
+            var existingPhoto = _context.CompetitionPhotos
+                            .FirstOrDefault(cp => cp.IdOnlineCompetition == id);
+
+            if (existingPhoto != null)
+            {
+                existingPhoto.PhotoName = CompetitionDTO.CompetitionPhotoNames;
+                existingPhoto.ModifiedTime = DateTime.Now;
+
+                _context.CompetitionPhotos.Update(existingPhoto);
+                _context.SaveChanges();
+            }
+            else
+            {
+                var newphoto = (from cp in _context.CompetitionPhotos
+                                where cp.IdOnlineCompetition == id
+                                select new CompetitionPhoto
+                                {
+                                    //修改新照片，但已經有原始的ID可以讀取
+                                    IdOnlineCompetition = id,
+                                    PhotoName = CompetitionDTO.CompetitionPhotoNames,
+                                    ModifiedTime = DateTime.Now
+                                }).FirstOrDefault();
+                _context.CompetitionPhotos.Update(newphoto);
+                await _context.SaveChangesAsync();
+            }
+           
+            return RedirectToAction(nameof(Index));
+            
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DeletePhoto(int CompetitionPhotoId)
+        {
+
+            var photo = await _context.CompetitionPhotos.FindAsync(CompetitionPhotoId);
+            if (photo == null)
+            {
+                return NotFound();
+            }
+
+            _context.CompetitionPhotos.Remove(photo);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Edit), new { id = photo.IdOnlineCompetition });
+        }
+
 
         // GET: OnlineCompetitions/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -204,8 +287,7 @@ namespace BabyCiao.Controllers
                                       Statement = con.Statement,
                                       ModifiedTime = con.ModifiedTime,
 
-                                     CompetitionPhotoName = cp.PhotoName,
-                                     photoUrl = cp.PhotoName != null ? $"<img src=\" /uploads/{cp.PhotoName}\" width=\"100\" />" : "<img src=\" /img/noImage.jpg\" width=\"100\" />"
+                                     CompetitionPhotoNames = cp.PhotoName,
                                  }).FirstOrDefaultAsync();
 
             if (competitionDTO == null)
