@@ -71,13 +71,25 @@ namespace BabyCiao.Controllers
                 ReferenceRoute = my_vm.ReferenceRoute,
                 Type = my_vm.Type,
                 Display = my_vm.Display
-
             };
+            
+            
 
             if (ModelState.IsValid)
             {
                 _context.Add(announcement);
                 await _context.SaveChangesAsync();
+
+                ////先取得新公告的ID
+                //var newAnnouncement = await _context.Announcements.FindAsync(my_vm.Tittle);
+                ////新增公告照片
+                //AnnouncementPhoto announcementPhoto = new AnnouncementPhoto()
+                //{
+                //    PhotoName = my_vm.Picture,
+                //    IdAnnouncement= newAnnouncement.Id
+                //};
+                //_context.Add(announcementPhoto);
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", announcement);
@@ -149,7 +161,7 @@ namespace BabyCiao.Controllers
             return View(my_announcement);
         }
 
-        [Authorize(Roles = "公告刪除")]
+        
         //        // GET: Announcements/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -188,5 +200,42 @@ namespace BabyCiao.Controllers
         {
             return _context.Announcements.Any(e => e.Id == id);
         }
+        
+        [HttpPost]
+        public async Task<IActionResult> Index(int id)
+        {
+            var babyCiaoContext = _context.Announcements.Include(a => a.AccountUserAccountNavigation);
+            var announcement = await _context.Announcements.FindAsync(id);
+            if (announcement != null)
+            {
+                if (announcement.Display) {
+                    announcement.Display=false;
+                }
+                else
+                {
+                    announcement.Display = true;
+                }
+                _context.Announcements.Update(announcement);
+                await _context.SaveChangesAsync();
+            }
+            return PartialView("Index", babyCiaoContext);
+        }
+
+        //private void ReadUploadImage(AnnouncementPhoto announcementPhoto)
+        //{
+        //    using (BinaryReader br = new BinaryReader(Request.Form.Files["Picture"].OpenReadStream()))
+        //    {
+        //        announcementPhoto.PhotoName = br.ReadBytes((int)Request.Form.Files["Picture"].Length);
+        //    }
+        //}
+
+        // GET: Categories/GetPicture/{id}
+        //public async Task<FileResult> GetPicture(int id)
+        //{
+        //    AnnouncementPhoto announcementPhoto = await _context.AnnouncementPhotos.FindAsync(id);
+        //    byte[] picture = announcementPhoto?.PhotoName;
+        //    return File(picture, "image/jpeg");
+        //}
+       
     }
 }

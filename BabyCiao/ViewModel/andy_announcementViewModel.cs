@@ -18,5 +18,7 @@ namespace BabyCiao.ViewModel
         public string Type { get; set; }
 
         public bool Display { get; set; }
+
+        public string? Picture { get; set; }
     }
 }

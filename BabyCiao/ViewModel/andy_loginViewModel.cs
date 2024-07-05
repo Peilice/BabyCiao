@@ -10,11 +10,13 @@ namespace BabyCiao.ViewModel
 
         public string password { get; set; }
 
-      
+        
 
        
 
-        
+
+
+
 
 
     }
