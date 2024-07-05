@@ -3,6 +3,14 @@
 @{
     ViewData["Title"] = "Details";
 }
+@section Styles{
+    <style>
+        img{
+            width:200px;
+            height:200px
+        }
+    </style>
+}
 
 <h1>投票活動管理</h1>
 
@@ -57,7 +65,7 @@
                 </dt>
                 <dd class="col-sm-10">
                     <div>
-                        <img src="~/uploads/@Html.DisplayFor(model => model.CompetitionPhotoNames)" alt="" class="photos w-50 h-50" />
+                        <img src="~/uploads/@Html.DisplayFor(model => model.CompetitionPhotoNames)" alt="" class="photos" />
                     </div>
                 </dd>
             </dl>

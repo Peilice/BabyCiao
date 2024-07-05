@@ -3,6 +3,14 @@
 @{
     ViewData["Title"] = "Edit";
 }
+@section Styles {
+    <style>
+        img {
+            width: 200px;
+            height: 200px
+        }
+    </style>
+}
 
 <h1>投票活動管理</h1>
 
@@ -55,7 +63,7 @@
             </div>
             <div class="form-group">
                 <div>
-                    <img src="~/uploads/@Html.DisplayFor(model => model.CompetitionPhotoNames)" alt="" class="photos w-50 h-50" />
+                    <img src="~/uploads/@Html.DisplayFor(model => model.CompetitionPhotoNames)" alt="" class="photos" />
                     <form asp-controller="OnlineCompetition" asp-action="DeletePhoto" method="post" onsubmit="return confirmDelete(this);">
                         <input type="hidden" asp-for="@Model.IdOnlineCompetition" name="IdOnlineCompetition" value="@Model.IdOnlineCompetition" />
                     </form>

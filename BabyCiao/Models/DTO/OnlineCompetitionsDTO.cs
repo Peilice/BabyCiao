@@ -39,37 +39,29 @@ namespace BabyCiao.Models.DTO
 
     }
 
-    //public class CompetitionPhotoDTO
+
+    //public static class CompetitionsExtensions
     //{
+    //    public static OnlineCompetition ToEntity(this OnlineCompetitionsDTO dto)
+    //    {
+    //        return new OnlineCompetition
+    //        {
+    //            Id = dto.Id,
+    //            AccountUserAccount = dto.AccountUserAccount,
+    //            ModifiedTime = dto.ModifiedTime,
+    //            Content = dto.Content,
+    //            Statement = dto.Statement,
+    //        };
+    //    }
 
-    //    public string? CompetitionPhotoName { get; set; }
-    //    public int CompetitionPhotoId { get; set; }
-    //    public DateTime CompetitionPhotoModifiedTime { get; set; }
-    //    public int IdOnlineCompetition { get; set; }
+    //    public static void UpdateEntity(this OnlineCompetition entity, OnlineCompetitionsDTO dto)
+    //    {
+    //        entity.Id = dto.Id;
+    //        entity.AccountUserAccount = dto.AccountUserAccount;
+    //        entity.ModifiedTime = dto.ModifiedTime;
+    //        entity.Content = dto.Content;
+    //        entity.Statement = dto.Statement;
+    //    }
     //}
-
-    public static class CompetitionsExtensions
-    {
-        public static OnlineCompetition ToEntity(this OnlineCompetitionsDTO dto)
-        {
-            return new OnlineCompetition
-            {
-                Id = dto.Id,
-                AccountUserAccount = dto.AccountUserAccount,
-                ModifiedTime = dto.ModifiedTime,
-                Content = dto.Content,
-                Statement = dto.Statement,
-            };
-        }
-
-        public static void UpdateEntity(this OnlineCompetition entity, OnlineCompetitionsDTO dto)
-        {
-            entity.Id = dto.Id;
-            entity.AccountUserAccount = dto.AccountUserAccount;
-            entity.ModifiedTime = dto.ModifiedTime;
-            entity.Content = dto.Content;
-            entity.Statement = dto.Statement;
-        }
-    }
 
 }
