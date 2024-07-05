@@ -60,7 +60,7 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AccountUserAccount,Tittle,Article,ReferenceName,ReferenceRoute,Type,Display")] andy_announcementViewModel my_vm)
+        public async Task<IActionResult> Create([Bind("AccountUserAccount,Tittle,Article,ReferenceName,ReferenceRoute,Type,Display,Picture")] andy_announcementViewModel my_vm)
         {
             Announcement announcement = new Announcement()
             {
@@ -80,15 +80,15 @@ namespace BabyCiao.Controllers
                 _context.Add(announcement);
                 await _context.SaveChangesAsync();
 
-                ////先取得新公告的ID
-                //var newAnnouncement = await _context.Announcements.FindAsync(my_vm.Tittle);
-                ////新增公告照片
-                //AnnouncementPhoto announcementPhoto = new AnnouncementPhoto()
-                //{
-                //    PhotoName = my_vm.Picture,
-                //    IdAnnouncement= newAnnouncement.Id
-                //};
-                //_context.Add(announcementPhoto);
+                //先取得新公告的ID
+                var newAnnouncement = await _context.Announcements.FindAsync(my_vm.Tittle);
+                //新增公告照片
+                AnnouncementPhoto announcementPhoto = new AnnouncementPhoto()
+                {
+                    PhotoName = my_vm.Picture,
+                    IdAnnouncement = newAnnouncement.Id
+                };
+                _context.Add(announcementPhoto);
 
                 return RedirectToAction(nameof(Index));
             }
