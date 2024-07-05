@@ -447,25 +447,25 @@ public partial class BabyciaoContext : DbContext
             entity.Property(e => e.Statement).HasMaxLength(20);
         });
 
-        //modelBuilder.Entity<ExchangeOrderDetail>(entity =>
-        //{
-        //    entity.HasKey(e => new { e.IdExchangeOrder, e.IdSecondHandSupplies }).HasName("PK__Exchange__4C80FCD507C79D16");
+        modelBuilder.Entity<ExchangeOrderDetail>(entity =>
+        {
+            entity.HasKey(e => new { e.IdExchangeOrder, e.IdSecondHandSupplies }).HasName("PK__Exchange__4C80FCD507C79D16");
 
-        //    entity.ToTable("ExchangeOrderDetail");
+            entity.ToTable("ExchangeOrderDetail");
 
-        //    entity.Property(e => e.IdExchangeOrder).HasColumnName("ID_ExchangeOrder");
-        //    entity.Property(e => e.IdSecondHandSupplies).HasColumnName("ID_SecondHandSupplies");
+            entity.Property(e => e.IdExchangeOrder).HasColumnName("ID_ExchangeOrder");
+            entity.Property(e => e.IdSecondHandSupplies).HasColumnName("ID_SecondHandSupplies");
 
-        //    entity.HasOne(d => d.IdExchangeOrderNavigation).WithMany(p => p.ExchangeOrderDetails)
-        //        .HasForeignKey(d => d.IdExchangeOrder)
-        //        .OnDelete(DeleteBehavior.ClientSetNull)
-        //        .HasConstraintName("FK__ExchangeO__ID_Ex__1DB06A4F");
+            entity.HasOne(d => d.IdExchangeOrderNavigation).WithMany(p => p.ExchangeOrderDetails)
+                .HasForeignKey(d => d.IdExchangeOrder)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__ExchangeO__ID_Ex__1DB06A4F");
 
-        //    entity.HasOne(d => d.IdSecondHandSuppliesNavigation).WithMany(p => p.ExchangeOrderDetails)
-        //        .HasForeignKey(d => d.IdSecondHandSupplies)
-        //        .OnDelete(DeleteBehavior.ClientSetNull)
-        //        .HasConstraintName("FK__ExchangeO__ID_Se__1EA48E88");
-        //});
+            entity.HasOne(d => d.IdSecondHandSuppliesNavigation).WithMany(p => p.ExchangeOrderDetails)
+                .HasForeignKey(d => d.IdSecondHandSupplies)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__ExchangeO__ID_Se__1EA48E88");
+        });
 
         modelBuilder.Entity<FunctionSetting>(entity =>
         {
