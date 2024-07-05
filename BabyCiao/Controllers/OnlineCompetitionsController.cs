@@ -205,7 +205,7 @@ namespace BabyCiao.Controllers
                 }
             }
 
-            //var newid = id;
+            //尋找照片資料
             var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
             if (!Directory.Exists(uploadPath))
             {
