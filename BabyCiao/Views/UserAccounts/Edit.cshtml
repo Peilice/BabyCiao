@@ -1,8 +1,11 @@
 ﻿@model UserAccount
 
-@{
-    ViewData["Title"] = "Edit";
+
+ @{
+ 
+    var permissionsDictionary = ViewBag.PermissionsDictionary as Dictionary<int, string>;
 }
+
 
 <h1>編輯</h1>
 

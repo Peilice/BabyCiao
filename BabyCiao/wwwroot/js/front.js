@@ -45,8 +45,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function adjustFooter() {
-        var footerBlockHeight = document.querySelector("#footer").outerHeight;
-        pageContent.style.paddingBottom = `${footerBlockHeight}px`;
+        if (footer) {
+            var footerBlockHeight = footer.offsetHeight;
+            var pageContent = document.querySelector(".page-content");
+            if (pageContent) {
+                pageContent.style.paddingBottom = `${footerBlockHeight}px`;
+            }
+        }
     }
 
     // ------------------------------------------------------- //
@@ -98,12 +103,18 @@ document.addEventListener("DOMContentLoaded", function () {
     if (searchOpenBtn) {
         searchOpenBtn.addEventListener("click", function (e) {
             e.preventDefault();
-            searchPanel.style.display = "block";
+            if (searchPanel) {
+                searchPanel.style.display = "block";
+            }
         });
-        searchCloseBtn.addEventListener("click", function (e) {
-            e.preventDefault();
-            searchPanel.style.display = "none";
-        });
+        if (searchCloseBtn) {
+            searchCloseBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                if (searchPanel) {
+                    searchPanel.style.display = "none";
+                }
+            });
+        }
     }
 
     // ------------------------------------------------------- //
@@ -124,10 +135,10 @@ document.addEventListener("DOMContentLoaded", function () {
     if (sidebarToggler) {
         sidebarToggler.addEventListener("click", function () {
             this.classList.toggle("active");
-            navBrand.classList.toggle("active");
+            if (navBrand) navBrand.classList.toggle("active");
 
-            sidebar.classList.toggle("shrinked");
-            pageContent.classList.toggle("active");
+            if (sidebar) sidebar.classList.toggle("shrinked");
+            if (pageContent) pageContent.classList.toggle("active");
             document.dispatchEvent(new Event("sidebarChanged"));
         });
     }
@@ -163,8 +174,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
             },
             messages: {
-                loginUsername: "Please enter a valid email",
-                loginPassword: "Please enter your password",
+                loginUsername: "請輸入信箱",
+                loginPassword: "請輸入密碼",
             },
             invalidFormCallback: function () {
                 let errorInputs = document.querySelectorAll(".login-form input[required]");
@@ -196,10 +207,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
             },
             messages: {
-                registerUsername: "Please enter your username",
-                registerEmail: "Please enter a valid email address",
-                registerPassword: "Please enter your password",
-                registerAgree: "Your agreement is required",
+                registerUsername: "請輸入用戶名",
+                registerEmail: "請輸入信箱",
+                registerPassword: "請輸入密碼",
+                registerAgree: "請同意條款和政策",
             },
             invalidFormCallback: function () {
                 let errorInputs = document.querySelectorAll(".register-form input[required]");
@@ -239,5 +250,30 @@ document.addEventListener("DOMContentLoaded", function () {
         imagesLoaded(masonryGrid).on("progress", function () {
             msnry.layout();
         });
+    }
+
+    // ------------------------------------------------------- //
+    // Theme Color Switcher
+    // ------------------------------------------------------ //
+    var stylesheet = document.getElementById("theme-stylesheet");
+    if (stylesheet) {
+        var alternateStylesheet = document.createElement("link");
+        alternateStylesheet.setAttribute("id", "new-stylesheet");
+        alternateStylesheet.setAttribute("rel", "stylesheet");
+        stylesheet.parentNode.insertBefore(alternateStylesheet, stylesheet.nextSibling);
+
+        var styleSwitcher = document.getElementById("colour");
+        if (styleSwitcher) {
+            styleSwitcher.addEventListener("change", function () {
+                var e = styleSwitcher.value;
+                alternateStylesheet.setAttribute("href", e);
+                Cookies.set("switcherColor", e, { expires: 365, path: "/" });
+            });
+
+            var theCookie = Cookies.get("switcherColor");
+            if (theCookie) {
+                alternateStylesheet.setAttribute("href", theCookie);
+            }
+        }
     }
 });

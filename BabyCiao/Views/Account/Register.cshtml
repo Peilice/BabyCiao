@@ -1,0 +1,145 @@
+﻿@model BabyCiao.ViewModels.UserRegistrationViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>註冊</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <!-- Choices.js-->
+    <link rel="stylesheet" href="~/vendor/choices.js/public/assets/styles/choices.min.css">
+    <!-- Google 字體 - Muli-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli:300,400,700">
+    <!-- 主題樣式表-->
+    <link rel="stylesheet" href="~/css/style.default.premium.css" id="theme-stylesheet">
+    <!-- 自定義樣式表-->
+    <link rel="stylesheet" href="~/css/custom.css">
+    <!-- 網站圖標-->
+    <link rel="shortcut icon" href="~/img/favicon.ico">
+</head>
+
+<body>
+    <div class="login-page">
+        <div class="container d-flex align-items-center position-relative py-5">
+            <div class="card shadow-sm w-100 rounded overflow-hidden bg-none">
+                <div class="card-body p-0">
+                    <div class="row gx-0 align-items-stretch">
+                        <!-- 標誌和資訊面板-->
+                        <div class="col-lg-6">
+                            <div class="info d-flex justify-content-center flex-column p-4 h-100">
+                                <div class="py-5">
+                                    <h1 class="display-6 fw-bold">貝比巧遇</h1>
+                                    <p class="fw-light mb-0">最好的，最專業的保母等著您</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 表單面板-->
+                        <div class="col-lg-6 bg-white">
+                            <div class="d-flex align-items-center px-4 px-lg-5 h-100 bg-dash-dark-2">
+                                @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "register-form py-5 w-100" }))
+                                {
+                                    <div class="input-material-group mb-3">
+                                        @Html.TextBoxFor(m => m.Account, new { @class = "input-material", placeholder = "用戶名" })
+                                        @Html.ValidationMessageFor(m => m.Account, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="input-material-group mb-3">
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "input-material", type = "email", placeholder = "電子郵件" })
+                                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="input-material-group mb-4">
+                                        @Html.PasswordFor(m => m.Password, new { @class = "input-material", placeholder = "密碼" })
+                                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-check mb-4">
+                                        @Html.CheckBoxFor(m => m.Agree, new { @class = "form-check-input", id = "register-agree" })
+                                        @Html.ValidationMessageFor(m => m.Agree, "", new { @class = "text-danger" })
+                                        <label for="register-agree" class="form-check-label">我同意條款和政策</label>
+                                    </div>
+                                    <button class="btn btn-primary mb-3" id="register" type="submit">註冊</button>
+
+                                    <br />
+                                    <small class="text-gray-500">已經有帳戶？</small>
+                                    <a class="text-sm text-paleBlue" href="~/Account/Login">登錄</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 文件-->
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/vendor/just-validate/js/just-validate.min.js"></script>
+    <script src="~/vendor/chart.js/Chart.min.js"></script>
+    <script src="~/vendor/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="~/js/js-cookie.js"> </script>
+    <script src="~/js/demo.js"> </script>
+    <!-- 主文件-->
+    <script src="~/js/front.js"></script>
+    <script>
+        // ------------------------------------------------------- //
+        //   注入 SVG 圖標
+        //   詳見 https://css-tricks.com/ajaxing-svg-sprite/
+        // ------------------------------------------------------ //
+        function injectSvgSprite(path) {
+            var ajax = new XMLHttpRequest();
+            ajax.open("GET", path, true);
+            ajax.send();
+            ajax.onload = function (e) {
+                var div = document.createElement("div");
+                div.className = 'd-none';
+                div.innerHTML = ajax.responseText;
+                document.body.insertBefore(div, document.body.childNodes[0]);
+            }
+        }
+        injectSvgSprite('~/icons/orion-svg-sprite.svg');
+
+        // Register Form Validation
+        let registerForm = document.querySelector(".register-form");
+        if (registerForm) {
+            new window.JustValidate(".register-form", {
+                rules: {
+                    Account: {
+                        required: true,
+                    },
+                    Email: {
+                        required: true,
+                        email: true,
+                    },
+                    Password: {
+                        required: true,
+                    },
+                    Agree: {
+                        required: true,
+                    },
+                },
+                messages: {
+                    Account: "請輸入用戶名",
+                    Email: "請輸入信箱",
+                    Password: "請輸入密碼",
+                    Agree: "請同意條款和政策",
+                },
+                invalidFormCallback: function () {
+                    let errorInputs = document.querySelectorAll(".register-form input[required]");
+                    bsValidationBehavior(errorInputs, registerForm);
+                    registerForm.addEventListener("keyup", () => bsValidationBehavior(errorInputs, registerForm));
+                    registerForm.addEventListener("change", () => bsValidationBehavior(errorInputs, registerForm));
+                },
+            });
+        }
+    </script>
+    <!-- FontAwesome CSS - 最後加載，以免阻塞渲染-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+</body>
+
+</html>
