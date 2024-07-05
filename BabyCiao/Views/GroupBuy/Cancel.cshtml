@@ -1,0 +1,80 @@
+﻿@model BabyCiao.Models.DTO.GroupBuyDTO
+
+@{
+	ViewData["Title"] = "訂單管理";
+}
+
+<h1>取消</h1>
+
+<div>
+	<h4>確認要取消此訂單嗎?</h4>
+	<hr />
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.JoinId)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.JoinId)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.ProductName)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.ProductName)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.JoinUserAccount)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.JoinUserAccount)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Quantity)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Quantity)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Price)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Price)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.OrderPrice)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.OrderPrice)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Address)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Address)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.ViewJoinModifiedTime)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.ViewJoinModifiedTime)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Statement)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Statement)
+		</dd>
+	</dl>
+</div>
+<div>
+	@using (Html.BeginForm("Canceled", "GroupBuy", FormMethod.Post))
+	{
+		<div class="mb-2">
+			<input type="hidden" asp-for="JoinId" value="@Model.JoinId" />
+			<button type="submit" class="btn btn-danger">取消訂單</button>
+		</div>
+	}
+	<div>
+		<a asp-controller="GroupBuy" asp-action="Orders" class="btn btn-outline-secondary"><i class="fa-solid fa-rotate-left"></i>返回列表</a>
+	</div>
+</div>

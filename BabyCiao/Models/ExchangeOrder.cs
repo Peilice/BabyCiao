@@ -15,5 +15,9 @@ public partial class ExchangeOrder
 
     public string Statement { get; set; } = null!;
 
+    public virtual UserAccount AccountAUserAccountNavigation { get; set; } = null!;
+
+    public virtual UserAccount AccountBUserAccountNavigation { get; set; } = null!;
+
     public virtual ICollection<ExchangeOrderDetail> ExchangeOrderDetails { get; set; } = new List<ExchangeOrderDetail>();
 }

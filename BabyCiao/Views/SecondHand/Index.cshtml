@@ -1,0 +1,103 @@
+﻿@{
+	ViewData["Title"] = "二手商品管理";
+}
+
+@section Styles {
+	<link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" />
+	<link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+	<style>
+		thead {
+			background-color: #97CBFF;
+			color: white;
+		}
+	</style>
+}
+
+<h1>二手商品管理
+</h1>
+
+@if (TempData["PendingOrdersMessage"] != null)
+{
+	<div class="alert alert-danger">
+		@TempData["PendingOrdersMessage"]
+	</div>
+}
+
+<table id="secondTable" class="table  py-2">
+	<thead>
+		<tr>
+			<th>編號</th>
+			<th>用戶</th>
+			<th>商品名稱</th>
+			<th>商品數量</th>
+			<th>類型</th>
+			<th>顯示</th>
+			<th>建立日期</th>
+			<th>操作</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>@item.Id</td>
+				<td>@item.AccountUserAccount</td>
+				<td>@item.SuppliesName</td>
+				<td>@item.StockQuantity</td>
+				<td>@item.Type</td>
+				<td>@item.Display</td>
+				<td>@item.ModifiedTimeString</td>
+				<td>
+					<div class="btn-group" role="group">
+						<a href="/GroupBuy/Edit/@item.Id" class="btn btn-outline-secondary"><i class="fa-solid fa-pen-to-square"></i>編輯</a>
+						<a href="/GroupBuy/Details/@item.Id" class="btn btn-outline-secondary"><i class="fa-solid fa-file-lines"></i> 明細</a>
+						<a href="/GroupBuy/Delete/@item.Id" class="btn btn-outline-danger"><i class="fa-regular fa-trash-can"></i> 刪除</a>
+					</div>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+@section Scripts {
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$('#secondTable').DataTable({
+				"paging": true,
+				"searching": true,
+				"ordering": true,
+				"info": true,
+				"processing": true,
+				"serverSide": false,
+				"ajax": {
+					"url": "/SecondHand/IndexJson",
+					"type": "GET",
+					"dataSrc": ""
+				},
+				"columns": [
+
+					{ "data": "id" },
+					{ "data": "accountUserAccount" },
+					{ "data": "suppliesName" },
+					{ "data": "stockQuantity" },
+					{ "data": "type" },
+					{ "data": "displayString" },
+					{ "data": "modifiedTimeString" },
+					{
+						"render": function (data, type, row) {
+							return '<div class="btn-group" role="group">' +
+								'<a href="/SecondHand/Edit/' + row.id + '" class="btn btn-outline-secondary"><i class="fa-solid fa-pen-to-square"></i> </a>' +
+								'</div>'
+						}
+					}
+				],
+				"language": {
+					"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Chinese-traditional.json"
+				},
+				
+			});
+		});
+	</script>
+}

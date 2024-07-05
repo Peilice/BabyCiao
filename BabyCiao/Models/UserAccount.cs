@@ -7,9 +7,9 @@ public partial class UserAccount
 {
     public int UserId { get; set; }
 
-    public string Account { get; set; } = null!;
+    public string Account { get; set; } 
 
-    public string Password { get; set; } = null!;
+    public string Password { get; set; }
 
     public int Permissions { get; set; }
 
@@ -41,7 +41,7 @@ public partial class UserAccount
 
     public virtual ICollection<NannyRequirment> NannyRequirments { get; set; } = new List<NannyRequirment>();
 
-    public virtual ICollection<NannyResume> NannyResumes { get; set; } = new List<NannyResume>();
+    public virtual ICollection<nannyResume> NannyResumes { get; set; } = new List<nannyResume>();
 
     public virtual ICollection<OnlineCompetition> OnlineCompetitions { get; set; } = new List<OnlineCompetition>();
 

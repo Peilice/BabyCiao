@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BabyCiao.styles.css" asp-append-version="true" />
+
     @await RenderSectionAsync("Styles", required: false)
     <style>
         body {
@@ -30,16 +31,17 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">會員管理</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">會員權限</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">保母資格</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="UserAccounts" asp-action="Index">帳戶管理</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="UserInformations" asp-action="Index">會員資料管理</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="NannyRequirments" asp-action="Index">保母審核</a></li>
                             </ul>
                         </li>
                         @* 委託單管理 *@
                         <li class="nav-item dropdown">
                             <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">委託單管理</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">保母委託單</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">家長委託單</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="NannyResumes" asp-action="Index">保母委託單</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="BabyResumes" asp-action="Index">家長委託單</a></li>
                             </ul>
                         </li>
                         @* 公告管理 *@
@@ -50,46 +52,91 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">社群管理</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="SecondHand" asp-action="Index">二手商品管理</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="GroupBuy" asp-action="Index">團購管理</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-controller="OnlineCompetitions" asp-action="Index">投票活動</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">團購管理</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Platforms" asp-action="Index">論壇文章管理</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="PlatformResponses" asp-action="Index">論壇回應管理</a></li>
-                                </ul>
+                            </ul>
                         </li>
                         @* 權限管理 *@
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Index">權限群組管理</a>
                         </li>
+                        @* 數據分析 *@
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="DataAnalysis" asp-action="Index">數據分析管理</a>
                         </li>
-                        @* test *@
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="OnlineCompetitions1" asp-action="Index">test</a>
-                        </li>
-                        
                     </ul>
-                    
                     <partial name="_LoginPartial_self" />
-                    
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+        <div class="page-content">
+            <!-- Page Header-->
+            <div class="bg-dash-dark-2 py-4">
+                <div class="container-fluid">
+                </div>
+            </div>
             @RenderBody()
-        </main>
+
+
+            <!-- Page Footer-->
+            <footer class="position-absolute bottom-0 bg-dash-dark-2 text-white text-center py-3 w-100 text-xs" id="footer">
+                <div class="container-fluid text-center">
+                    <p class="mb-0 text-dash-gray">&copy; 貝比巧遇 <a target="_blank" href=""></a></p>
+                </div>
+            </footer>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - BabyCiao - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-	@await RenderSectionAsync("Scripts", required: false)
+    <!-- JavaScript files-->
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/vendor/just-validate/js/just-validate.min.js"></script>
+    <script src="~/vendor/chart.js/Chart.min.js"></script>
+    <script src="~/vendor/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="~/js/js-cookie.js"> </script>
+    <script src="~/js/demo.js"> </script>
+    <script src="~/js/charts-home.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Notifications  -->
+    <!-- Toast-->
+
+    <script src="~/js/home-premium.js">  </script>
+    <!-- Main File-->
+    <script src="~/js/front.js"></script>
+    <script>
+        // ------------------------------------------------------- //
+        //   Inject SVG Sprite -
+        //   see more here
+        //   https://css-tricks.com/ajaxing-svg-sprite/
+        // ------------------------------------------------------ //
+        function injectSvgSprite(path) {
+
+            var ajax = new XMLHttpRequest();
+            ajax.open("GET", path, true);
+            ajax.send();
+            ajax.onload = function (e) {
+                var div = document.createElement("div");
+                div.className = 'd-none';
+                div.innerHTML = ajax.responseText;
+                document.body.insertBefore(div, document.body.childNodes[0]);
+            }
+        }
+        // this is set to BootstrapTemple website as you cannot
+        // inject local SVG sprite (using only 'icons/orion-svg-sprite.svg' path)
+        // while using file:// protocol
+        // pls don't forget to change to your domain :)
+        injectSvgSprite('~/icons/orion-svg-sprite.svg');
+
+
+
+
+
+
+    </script>
+    <!-- FontAwesome CSS - loading as last, so it doesn't block rendering-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    @RenderSection("scripts", required: false)
 </body>
 </html>
