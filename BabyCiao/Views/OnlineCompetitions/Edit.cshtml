@@ -63,7 +63,7 @@
             </div>
             <div class="form-group">
                 <div>
-                    <img src="~/uploads/@Html.DisplayFor(model => model.CompetitionPhotoNames)" alt="" class="photos" />
+                    <img src="~/uploads/@Html.DisplayFor(model => model.CompetitionPhotoNames)" alt="@Html.DisplayFor(model=>model.CompetitionName)" class="photos" />
                     <form asp-controller="OnlineCompetition" asp-action="DeletePhoto" method="post" onsubmit="return confirmDelete(this);">
                         <input type="hidden" asp-for="@Model.IdOnlineCompetition" name="IdOnlineCompetition" value="@Model.IdOnlineCompetition" />
                     </form>
