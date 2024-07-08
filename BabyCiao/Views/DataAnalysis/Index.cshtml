@@ -1,5 +1,6 @@
 ﻿@model BabyCiao.Controllers.DataAnalysisViewModel
 
+
 <div id="app">
     <h2 class="text-center">保母和家長的委託單數量</h2>
     <div id="chart" style="width: 800px; height: 600px;"></div>
@@ -38,7 +39,7 @@
                             data: ['保母數量', '家長數量'],
                             textStyle: {
                                 fontSize: 18, // 設定圖例字體大小
-                                color: '#FFFFFF' // 設定圖例字體顏色
+                                color: 'black' // 設定圖例字體顏色
                             }
                         },
                         grid: {
@@ -52,14 +53,14 @@
                             data: ['委託單'],
                             axisLabel: {
                                 fontSize: 24, // 設定X軸標籤字體大小
-                                color: '#FFFFFF' // 設定X軸標籤字體顏色
+                                color: 'black' // 設定X軸標籤字體顏色
                             }
                         },
                         yAxis: {
                             type: 'value',
                             axisLabel: {
                                 fontSize: 16, // 設定Y軸標籤字體大小
-                                color: '#FFFFFF' // 設定Y軸標籤字體顏色
+                                color: 'balck' // 設定Y軸標籤字體顏色
                             }
                         },
                         series: [
@@ -74,7 +75,7 @@
                                     show: true,
                                     position: 'top',
                                     fontSize: 16, // 設定柱狀圖頂部標籤字體大小
-                                    color: '#FFFFFF' // 設定柱狀圖頂部標籤字體顏色
+                                    color: 'black' // 設定柱狀圖頂部標籤字體顏色
                                 }
                             },
                             {
@@ -88,7 +89,7 @@
                                     show: true,
                                     position: 'top',
                                     fontSize: 16, // 設定柱狀圖頂部標籤字體大小
-                                    color: '#FFFFFF' // 設定柱狀圖頂部標籤字體顏色
+                                    color: 'black' // 設定柱狀圖頂部標籤字體顏色
                                 }
                             }
                         ]

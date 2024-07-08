@@ -6,3 +6,20 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+@section Scripts
+{
+    <script>
+        var statue = @TempData["statue"];
+        if (statue=="1") {
+            alert('登錄成功');
+        }
+        if (statue == "2") {
+            alert('登出成功');
+        }
+        if (statue == "3") {
+            alert('註冊成功');
+        }
+       
+    </script>
+
+}

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 
 namespace BabyCiao.Models;
 
-public partial class NannyResume
+public partial class nannyResume
 {
+
     public int Id { get; set; }
     
     public string NannyAccountUserAccount { get; set; } = null!;

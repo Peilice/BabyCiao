@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BabyCiao.Models.NannyResume>
+﻿@model IEnumerable<BabyCiao.Models.nannyResume>
 
 @{
     ViewData["Title"] = "保母委託單";
@@ -94,7 +94,7 @@
                                     @if (!string.IsNullOrEmpty(item.InternalPhoto3))
                                     {
                                         <div class="carousel-item">
-                                            <img src="/img/@item.InternalPhoto3" class="d-block w-100" alt="Internal Photo 3" style="width: 150px; height: 150px; object-fit: cover;">
+                                            <img src="@item.InternalPhoto3" class="d-block w-100" alt="Internal Photo 3" style="width: 150px; height: 150px; object-fit: cover;">
                                         </div>
                                     }
                                     else
@@ -106,7 +106,7 @@
                                     @if (!string.IsNullOrEmpty(item.InternalPhoto4))
                                     {
                                         <div class="carousel-item">
-                                            <img src="/img/@item.InternalPhoto4" class="d-block w-100" alt="Internal Photo 4" style="width: 150px; height: 150px; object-fit: cover;">
+                                            <img src="@item.InternalPhoto4" class="d-block w-100" alt="Internal Photo 4" style="width: 150px; height: 150px; object-fit: cover;">
                                         </div>
                                     }
                                     else
@@ -118,7 +118,7 @@
                                     @if (!string.IsNullOrEmpty(item.InternalPhoto5))
                                     {
                                         <div class="carousel-item">
-                                            <img src="/img/@item.InternalPhoto5" class="d-block w-100" alt="Internal Photo 5" style="width: 150px; height: 150px; object-fit: cover;">
+                                            <img src="@item.InternalPhoto5" class="d-block w-100" alt="Internal Photo 5" style="width: 150px; height: 150px; object-fit: cover;">
                                         </div>
                                     }
                                     else

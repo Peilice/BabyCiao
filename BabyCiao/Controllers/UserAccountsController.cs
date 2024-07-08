@@ -12,24 +12,54 @@ namespace BabyCiao.Controllers
     [Route("/UserAccounts/{action=Index}/{UserID?}")]
     public class UserAccountsController : Controller
     {
-        private readonly BabyciaoContext _context;
+            private readonly BabyciaoContext _context;
 
-        public UserAccountsController(BabyciaoContext context)
-        {
-            _context = context;
-        }
+            public UserAccountsController(BabyciaoContext context)
+            {
+                _context = context;
+            }
 
+        private static readonly Dictionary<int, string> PermissionsDictionary = new Dictionary<int, string>
+          {
+            { 0, "審核中" },
+            { 1, "家長" },
+            { 2, "保母" },
+            { 3, "家長 / 保母" },
+            { 4, "停權"}
+           };
         // GET: UserAccounts
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string selectedPermission = null)
         {
-            ViewBag.Permissions = new SelectList(_context.UserAccounts.Select(c => c.Permissions).Distinct());
-            return View(await _context.UserAccounts.ToListAsync());
+            var userAccounts = await _context.UserAccounts.ToListAsync();
+           
+
+            if (!string.IsNullOrEmpty(selectedPermission))
+            {
+                userAccounts = userAccounts.Where(u => u.Permissions == int.Parse(selectedPermission)).ToList();
+            }
+
+            var permissionsSelectList = PermissionsDictionary.Select(p => new SelectListItem
+            {
+                Value = p.Key.ToString(),
+                Text = p.Value
+            }).ToList();
+
+            ViewBag.Permissions = new SelectList(permissionsSelectList, "Value", "Text", selectedPermission);
+            ViewBag.UserIds = userAccounts.Select(u => u.UserId).ToList();
+            ViewBag.Accounts = userAccounts.Select(u => u.Account).ToList();
+            ViewBag.Passwords = userAccounts.Select(u => u.Password).ToList();
+            ViewBag.PermissionsList = userAccounts.Select(u => u.Permissions).ToList();
+            ViewBag.Vips = userAccounts.Select(u => u.Vip).ToList();
+            ViewBag.PermissionsDictionary = PermissionsDictionary;
+
+            return View();
         }
+
 
         // GET: UserAccounts/Details/5
         [HttpGet]
-        public async Task<IActionResult> Details(int?UserID)
+        public async Task<IActionResult> Details(int UserID)
         {
             if (UserID == null)
             {
@@ -70,7 +100,8 @@ namespace BabyCiao.Controllers
         }
 
         // GET: UserAccounts/Edit/5
-        public async Task<IActionResult> Edit(int? UserID)
+        [HttpGet]
+        public async Task<IActionResult> Edit(int UserID)
         {
             if (UserID == null)
             {
@@ -90,7 +121,7 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPost(int UserID, [Bind("UserId,Account,Password,Permissions,Vip")] UserAccount userAccount)
+        public async Task<IActionResult> Edit(int UserID, [Bind("UserId,Account,Password,Permissions,Vip")] UserAccount userAccount)
         {
             if (UserID != userAccount.UserId)
             {
@@ -121,7 +152,7 @@ namespace BabyCiao.Controllers
         }
 
         // GET: UserAccounts/Delete/5
-        public async Task<IActionResult> Delete(int? UserID)
+        public async Task<IActionResult> Delete(int UserID)
         {
             if (UserID == null)
             {

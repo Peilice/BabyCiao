@@ -1,4 +1,4 @@
-﻿@model BabyCiao.Models.NannyRequirment
+﻿@model BabyCiao.Models.DTO.NannyRequirementDTO
 
 @{
     ViewData["Title"] = "Details";
@@ -52,12 +52,7 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Statement)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NannyAccountUserAccountNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NannyAccountUserAccountNavigation.Account)
-        </dd>
+       
     </dl>
 </div>
 <div>

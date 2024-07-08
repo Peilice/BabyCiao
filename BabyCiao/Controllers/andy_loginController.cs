@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using NuGet.Protocol;
+using System.Runtime.Intrinsics.X86;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -63,9 +64,9 @@ namespace BabyCiao.Controllers
                     HttpContextAccessor httpContextAccessor= new HttpContextAccessor();
 
                     HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(varClaimsIdentity));
-                    ViewBag.islogin = "true";
+                    TempData["statue"] = "1";
 
-                    return View();
+                    return RedirectToAction("Index","Home", TempData["statue"]);
 
                 }
                 ViewBag.ErrorMessage = "防偽標籤驗證失敗";
@@ -104,18 +105,72 @@ namespace BabyCiao.Controllers
         }
 
         
-
-        
         public IActionResult logout()
         {
-
+            string name = HttpContext.User.Identity.Name;
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            ViewBag.islogout = "true";
+            OnlineUsers.RemoveOnlineUser(name);
+            TempData["statue"] = "2";
 
-            return View();
+
+            return RedirectToAction("Index", "Home", TempData["statue"]);
         }
 
+        public IActionResult andy_register()
+        {
+            
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> andy_register([Bind("name,password,confirmPassword")]andy_registerViewModel avm)
+        {
+            var s = _context.UserAccounts.Where(u => u.Account == avm.name).FirstOrDefault();
+            
+            if (s!=null) {
+                ViewBag.errMSG = "已有此帳號，請填寫其他帳號名稱";
+                return View(avm);
+            }
 
+            if (avm.password != avm.confirmPassword)
+            {
+                ViewBag.errMSG = "密碼錯誤，請確認密碼輸入是否一致";
+                return View(avm);
+            }
+           
+            if (ModelState.IsValid)
+            {
+                UserAccount userAccount = new UserAccount();
+                userAccount.Account = avm.name;
+                userAccount.Password = avm.confirmPassword;
+                _context.Add(userAccount);
+                await _context.SaveChangesAsync();
 
+                List<string> user_roles = getKeysByAccountName(avm.name);
+                var varClaims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name,avm.name),
+
+                    };
+                foreach (string role in user_roles)
+                {
+                    varClaims.Add(new Claim(ClaimTypes.Role, role));
+                }
+                OnlineUsers.AddOnlineUser(avm.name);
+
+                var varClaimsIdentity = new ClaimsIdentity(varClaims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                HttpContextAccessor httpContextAccessor = new HttpContextAccessor();
+
+                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(varClaimsIdentity));
+                TempData["statue"] = "3";
+
+                return RedirectToAction("Index", "Home", TempData["statue"]);
+            }
+            ViewBag.errMSG = "驗證失敗，請聯絡客服人員";
+            return View(avm);
+        }
+
+       
     }
 }

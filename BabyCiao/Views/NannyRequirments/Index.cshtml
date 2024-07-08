@@ -1,77 +1,86 @@
-﻿@model IEnumerable<BabyCiao.Models.NannyRequirment>
-
+﻿@model IEnumerable<BabyCiao.Models.DTO.NannyRequirementDTO>
 @{
-    ViewData["Title"] = "Index";
+    var StatementDictionary = ViewBag.StatementDictionary as Dictionary<int, string>;
 }
 
-<h1>Index</h1>
+<h1>保母審核</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.RequirementDate)
+                審核
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PoliceCriminalRecordCertificate)
+                審核時間</br>
+                狀態
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ChildCareCertificate)
+                申請時間</br>
+                申請帳號</br>
+                申請地址
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NationalIdentificationCard)
+                良民證
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AddressesOfAgencies)
+                保母證
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ValidPeriodsOfCertificates)
+                身分證
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Statement)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NannyAccountUserAccountNavigation)
-            </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.RequirementDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PoliceCriminalRecordCertificate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChildCareCertificate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NationalIdentificationCard)
-            </td>
-            <td>
+                <td>
+                    <a asp-controller="NannyRequirments" asp-action="Edit" asp-route-Id="@item.Id">審核</a><br />
+                    <a asp-controller="NannyRequirments" asp-action="Delete" asp-route-Id="@item.Id">退件</a>
+                </td>
+                <td>
+                @Html.DisplayFor(modelItem => item.ValidPeriodsOfCertificates)<br />
+
+                    @switch (item.Statement)
+                    {
+                        case 1:
+                            <text>成功</text>
+                            break;
+                        case 2:
+                            <text>未讀</text>
+                            break;
+                        case 3:
+                            <text>退件</text>
+                            break;
+                        default:
+                            <text></text>
+                            break;
+                    }
+                @* @StatementDictionary[item.Statement] *@
+                </td>
+                 <td>
+                @Html.DisplayFor(modelItem => item.RequirementDate)<br />
+                @Html.DisplayFor(modelItem => item.NannyAccountUserAccount)<br />
                 @Html.DisplayFor(modelItem => item.AddressesOfAgencies)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ValidPeriodsOfCertificates)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Statement)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NannyAccountUserAccountNavigation.Account)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+                </td>
+                <td>
+                    <img src="img/保母證照/@item.photoA" width="100" />
+                </td>
+                <td>
+                    <img src="img/保母證照/@item.photoB" width="100" />
+                </td>
+                <td>
+                    <img src="img/保母證照/@item.photoC" width="100" />
+                </td>
+
+       </tr>}
+  </tbody>
 </table>
+@functions {
+    private string GetImageHtml(string fileName, string 保母證照)
+    {
+        return !string.IsNullOrEmpty(fileName)
+            ? $"<img src=\"/保母證照/{fileName}\" width=\"100\" />"
+            : "<img src=\"/img/noImage.jpg\" width=\"100\" />";
+    }
+}
