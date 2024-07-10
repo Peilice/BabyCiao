@@ -3,11 +3,10 @@ using System.Collections.Generic;
 
 namespace BabyCiao.Models;
 
-public partial class nannyResume
+public partial class NannyResume
 {
-
     public int Id { get; set; }
-    
+
     public string NannyAccountUserAccount { get; set; } = null!;
 
     public string City { get; set; } = null!;
@@ -32,17 +31,9 @@ public partial class nannyResume
 
     public string? ProfessionalPortrait { get; set; }
 
-    public string? InternalPhoto1 { get; set; }
-
-    public string? InternalPhoto2 { get; set; }
-
-    public string? InternalPhoto3 { get; set; }
-
-    public string? InternalPhoto4 { get; set; }
-
-    public string? InternalPhoto5 { get; set; }
-
     public bool DisplayControl { get; set; }
 
-    public virtual UserAccount? NannyAccountUserAccountNavigation { get; set; } = null!;
+    public virtual UserAccount NannyAccountUserAccountNavigation { get; set; } = null!;
+
+    public virtual ICollection<NannyResumePhoto> NannyResumePhotos { get; set; } = new List<NannyResumePhoto>();
 }

@@ -1,4 +1,4 @@
-﻿@model BabyCiao.Models.nannyResume
+﻿@model BabyCiao.Models.NannyResume
 
 <div class="container-fluid">
     <div class="row">
@@ -56,7 +56,7 @@
 
                         <dt class="col-sm-2">內部照片1</dt>
                         <dd class="col-sm-10">
-                            @if (!string.IsNullOrEmpty(Model.InternalPhoto1))
+                            @* @if (!string.IsNullOrEmpty(Model.InternalPhoto1))
                             {
                                 <img src="@Model.InternalPhoto1" alt="Internal Photo 1" class="img-thumbnail" style="width: 150px; height: 150px;" />
                             }
@@ -111,7 +111,7 @@
                             else
                             {
                                 <img src="~/img/環境照1.jpg" alt="Default Internal Photo 5" class="img-thumbnail" style="width: 150px; height: 150px;" />
-                            }
+                            } *@
                         </dd>
 
                         <dt class="col-sm-2">顯示控制</dt>

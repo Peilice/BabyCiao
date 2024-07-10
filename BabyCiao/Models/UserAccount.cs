@@ -7,13 +7,17 @@ public partial class UserAccount
 {
     public int UserId { get; set; }
 
-    public string Account { get; set; } 
+    public string Account { get; set; } = null!;
 
-    public string Password { get; set; }
+    public string Password { get; set; } = null!;
 
     public int Permissions { get; set; }
 
     public bool Vip { get; set; }
+
+    public DateTime CreateddDate { get; set; }
+
+    public DateTime ModiifiedDate { get; set; }
 
     public virtual ICollection<Announcement> Announcements { get; set; } = new List<Announcement>();
 
@@ -26,6 +30,8 @@ public partial class UserAccount
     public virtual ICollection<Contract> ContractAccountUserAccountNavigations { get; set; } = new List<Contract>();
 
     public virtual ICollection<Contract> ContractNannyAccountUserAccountNavigations { get; set; } = new List<Contract>();
+
+    public virtual ICollection<CustomerService> CustomerServices { get; set; } = new List<CustomerService>();
 
     public virtual ICollection<Evaluate> EvaluateAppraiseeUserAccountNavigations { get; set; } = new List<Evaluate>();
 
@@ -41,7 +47,7 @@ public partial class UserAccount
 
     public virtual ICollection<NannyRequirment> NannyRequirments { get; set; } = new List<NannyRequirment>();
 
-    public virtual ICollection<nannyResume> NannyResumes { get; set; } = new List<nannyResume>();
+    public virtual ICollection<NannyResume> NannyResumes { get; set; } = new List<NannyResume>();
 
     public virtual ICollection<OnlineCompetition> OnlineCompetitions { get; set; } = new List<OnlineCompetition>();
 
