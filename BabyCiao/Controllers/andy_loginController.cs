@@ -112,7 +112,7 @@ namespace BabyCiao.Controllers
             OnlineUsers.RemoveOnlineUser(name);
             TempData["statue"] = "2";
 
-
+            
             return RedirectToAction("Index", "Home", TempData["statue"]);
         }
 
