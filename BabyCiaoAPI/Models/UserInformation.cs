@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BabyCiao.Models;
+namespace BabyCiaoAPI.Models;
 
 public partial class UserInformation
 {

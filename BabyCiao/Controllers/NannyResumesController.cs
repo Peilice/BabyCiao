@@ -63,11 +63,11 @@ namespace BabyCiao.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,NannyAccountUserAccount,City,District,Introduction,TypeOfDaycare,ServiceItems,QuasiPublicChildcare,ChildcareAvailableUnder2,ChildcareAvailableOver2,Language,ServiceCenter,DisplayControl")] nannyResume nannyResume, IFormFile? ProfessionalPortrait, IFormFile? InternalPhoto1, IFormFile? InternalPhoto2, IFormFile? InternalPhoto3, IFormFile? InternalPhoto4, IFormFile? InternalPhoto5)
+        public async Task<IActionResult> Create([Bind("Id,NannyAccountUserAccount,City,District,Introduction,TypeOfDaycare,ServiceItems,QuasiPublicChildcare,ChildcareAvailableUnder2,ChildcareAvailableOver2,Language,ServiceCenter,DisplayControl")] NannyResume nannyResume, IFormFile? ProfessionalPortrait, IFormFile? InternalPhoto1, IFormFile? InternalPhoto2, IFormFile? InternalPhoto3, IFormFile? InternalPhoto4, IFormFile? InternalPhoto5)
         {
             if (ModelState.IsValid)
             {
-                await SaveFilesAsync(nannyResume, ProfessionalPortrait, InternalPhoto1, InternalPhoto2, InternalPhoto3, InternalPhoto4, InternalPhoto5);
+                //await SaveFilesAsync(nannyResume, ProfessionalPortrait, InternalPhoto1, InternalPhoto2, InternalPhoto3, InternalPhoto4, InternalPhoto5);
                 _context.Add(nannyResume);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -112,7 +112,7 @@ namespace BabyCiao.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NannyAccountUserAccount,City,District,Introduction,TypeOfDaycare,ServiceItems,QuasiPublicChildcare,ChildcareAvailableUnder2,ChildcareAvailableOver2,Language,ServiceCenter,DisplayControl")] nannyResume nannyResume, IFormFile? ProfessionalPortrait, IFormFile? InternalPhoto1, IFormFile? InternalPhoto2, IFormFile? InternalPhoto3, IFormFile? InternalPhoto4, IFormFile? InternalPhoto5)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,NannyAccountUserAccount,City,District,Introduction,TypeOfDaycare,ServiceItems,QuasiPublicChildcare,ChildcareAvailableUnder2,ChildcareAvailableOver2,Language,ServiceCenter,DisplayControl")] NannyResume nannyResume, IFormFile? ProfessionalPortrait, IFormFile? InternalPhoto1, IFormFile? InternalPhoto2, IFormFile? InternalPhoto3, IFormFile? InternalPhoto4, IFormFile? InternalPhoto5)
         {
             if (id != nannyResume.Id)
             {
@@ -129,7 +129,7 @@ namespace BabyCiao.Controllers
                         return NotFound();
                     }
 
-                    await SaveFilesAsync(nannyResume, ProfessionalPortrait, InternalPhoto1, InternalPhoto2, InternalPhoto3, InternalPhoto4, InternalPhoto5, existingResume);
+                    //await SaveFilesAsync(nannyResume, ProfessionalPortrait, InternalPhoto1, InternalPhoto2, InternalPhoto3, InternalPhoto4, InternalPhoto5, existingResume);
 
                     _context.Update(nannyResume);
                     await _context.SaveChangesAsync();
@@ -185,7 +185,7 @@ namespace BabyCiao.Controllers
             var nannyResume = await _context.NannyResumes.FindAsync(id);
             if (nannyResume != null)
             {
-                DeletePhotos(nannyResume);
+                //DeletePhotos(nannyResume);
                 _context.NannyResumes.Remove(nannyResume);
                 await _context.SaveChangesAsync();
             }
@@ -198,7 +198,7 @@ namespace BabyCiao.Controllers
             return _context.NannyResumes.Any(e => e.Id == id);
         }
 
-        private async Task SaveFilesAsync(nannyResume nannyResume, IFormFile? professionalPortrait, IFormFile? internalPhoto1, IFormFile? internalPhoto2, IFormFile? internalPhoto3, IFormFile? internalPhoto4, IFormFile? internalPhoto5, nannyResume? existingResume = null)
+        private async Task SaveFilesAsync(NannyResume nannyResume, IFormFile? professionalPortrait, IFormFile? internalPhoto1, IFormFile? internalPhoto2, IFormFile? internalPhoto3, IFormFile? internalPhoto4, IFormFile? internalPhoto5, NannyResume? existingResume = null)
         {
             var uploadsFolder = Path.Combine(_hostEnvironment.WebRootPath, "Nannyphoto");
             Directory.CreateDirectory(uploadsFolder);
@@ -225,10 +225,10 @@ namespace BabyCiao.Controllers
 
             if (internalPhoto1 != null && internalPhoto1.Length > 0)
             {
-                if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto1))
-                {
-                    DeletePhoto(existingResume.InternalPhoto1);
-                }
+                //if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto1))
+                //{
+                //    DeletePhoto(existingResume.InternalPhoto1);
+                //}
 
                 var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(internalPhoto1.FileName);
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
@@ -236,19 +236,19 @@ namespace BabyCiao.Controllers
                 {
                     await internalPhoto1.CopyToAsync(fileStream);
                 }
-                nannyResume.InternalPhoto1 = "/Nannyphoto/" + uniqueFileName;
+                //nannyResume.InternalPhoto1 = "/Nannyphoto/" + uniqueFileName;
             }
             else if (existingResume != null)
             {
-                nannyResume.InternalPhoto1 = existingResume.InternalPhoto1;
+                //nannyResume.InternalPhoto1 = existingResume.InternalPhoto1;
             }
 
             if (internalPhoto2 != null && internalPhoto2.Length > 0)
             {
-                if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto2))
-                {
-                    DeletePhoto(existingResume.InternalPhoto2);
-                }
+                //if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto2))
+                //{
+                //    DeletePhoto(existingResume.InternalPhoto2);
+                //}
 
                 var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(internalPhoto2.FileName);
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
@@ -256,19 +256,19 @@ namespace BabyCiao.Controllers
                 {
                     await internalPhoto2.CopyToAsync(fileStream);
                 }
-                nannyResume.InternalPhoto2 = "/Nannyphoto/" + uniqueFileName;
+                //nannyResume.InternalPhoto2 = "/Nannyphoto/" + uniqueFileName;
             }
             else if (existingResume != null)
             {
-                nannyResume.InternalPhoto2 = existingResume.InternalPhoto2;
+                //nannyResume.InternalPhoto2 = existingResume.InternalPhoto2;
             }
 
             if (internalPhoto3 != null && internalPhoto3.Length > 0)
             {
-                if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto3))
-                {
-                    DeletePhoto(existingResume.InternalPhoto3);
-                }
+                //if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto3))
+                //{
+                //    DeletePhoto(existingResume.InternalPhoto3);
+                //}
 
                 var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(internalPhoto3.FileName);
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
@@ -276,19 +276,19 @@ namespace BabyCiao.Controllers
                 {
                     await internalPhoto3.CopyToAsync(fileStream);
                 }
-                nannyResume.InternalPhoto3 = "/Nannyphoto/" + uniqueFileName;
+                //nannyResume.InternalPhoto3 = "/Nannyphoto/" + uniqueFileName;
             }
             else if (existingResume != null)
             {
-                nannyResume.InternalPhoto3 = existingResume.InternalPhoto3;
+                //nannyResume.InternalPhoto3 = existingResume.InternalPhoto3;
             }
 
             if (internalPhoto4 != null && internalPhoto4.Length > 0)
             {
-                if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto4))
-                {
-                    DeletePhoto(existingResume.InternalPhoto4);
-                }
+                //if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto4))
+                //{
+                //    DeletePhoto(existingResume.InternalPhoto4);
+                //}
 
                 var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(internalPhoto4.FileName);
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
@@ -296,19 +296,19 @@ namespace BabyCiao.Controllers
                 {
                     await internalPhoto4.CopyToAsync(fileStream);
                 }
-                nannyResume.InternalPhoto4 = "/Nannyphoto/" + uniqueFileName;
+                //nannyResume.InternalPhoto4 = "/Nannyphoto/" + uniqueFileName;
             }
             else if (existingResume != null)
             {
-                nannyResume.InternalPhoto4 = existingResume.InternalPhoto4;
+                //nannyResume.InternalPhoto4 = existingResume.InternalPhoto4;
             }
 
             if (internalPhoto5 != null && internalPhoto5.Length > 0)
             {
-                if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto5))
-                {
-                    DeletePhoto(existingResume.InternalPhoto5);
-                }
+                //if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto5))
+                //{
+                //    DeletePhoto(existingResume.InternalPhoto5);
+                //}
 
                 var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(internalPhoto5.FileName);
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
@@ -316,11 +316,11 @@ namespace BabyCiao.Controllers
                 {
                     await internalPhoto5.CopyToAsync(fileStream);
                 }
-                nannyResume.InternalPhoto5 = "/Nannyphoto/" + uniqueFileName;
+                //nannyResume.InternalPhoto5 = "/Nannyphoto/" + uniqueFileName;
             }
             else if (existingResume != null)
             {
-                nannyResume.InternalPhoto5 = existingResume.InternalPhoto5;
+                //nannyResume.InternalPhoto5 = existingResume.InternalPhoto5;
             }
         }
 
@@ -333,37 +333,37 @@ namespace BabyCiao.Controllers
             }
         }
 
-        private void DeletePhotos(nannyResume nannyResume)
+        private void DeletePhotos(NannyResume nannyResume)
         {
             if (!string.IsNullOrEmpty(nannyResume.ProfessionalPortrait))
             {
                 DeletePhoto(nannyResume.ProfessionalPortrait);
             }
 
-            if (!string.IsNullOrEmpty(nannyResume.InternalPhoto1))
-            {
-                DeletePhoto(nannyResume.InternalPhoto1);
-            }
+            //if (!string.IsNullOrEmpty(nannyResume.InternalPhoto1))
+            //{
+            //    DeletePhoto(nannyResume.InternalPhoto1);
+            //}
 
-            if (!string.IsNullOrEmpty(nannyResume.InternalPhoto2))
-            {
-                DeletePhoto(nannyResume.InternalPhoto2);
-            }
+            //if (!string.IsNullOrEmpty(nannyResume.InternalPhoto2))
+            //{
+            //    DeletePhoto(nannyResume.InternalPhoto2);
+            //}
 
-            if (!string.IsNullOrEmpty(nannyResume.InternalPhoto3))
-            {
-                DeletePhoto(nannyResume.InternalPhoto3);
-            }
+            //if (!string.IsNullOrEmpty(nannyResume.InternalPhoto3))
+            //{
+            //    DeletePhoto(nannyResume.InternalPhoto3);
+            //}
 
-            if (!string.IsNullOrEmpty(nannyResume.InternalPhoto4))
-            {
-                DeletePhoto(nannyResume.InternalPhoto4);
-            }
+            //if (!string.IsNullOrEmpty(nannyResume.InternalPhoto4))
+            //{
+            //    DeletePhoto(nannyResume.InternalPhoto4);
+            //}
 
-            if (!string.IsNullOrEmpty(nannyResume.InternalPhoto5))
-            {
-                DeletePhoto(nannyResume.InternalPhoto5);
-            }
+            //if (!string.IsNullOrEmpty(nannyResume.InternalPhoto5))
+            //{
+            //    DeletePhoto(nannyResume.InternalPhoto5);
+            //}
         }
     }
 }
