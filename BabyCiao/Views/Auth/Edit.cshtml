@@ -1,5 +1,10 @@
 ﻿@model BabyCiao.Models.DTO.AuthDTO
+@inject UserInfoServer userInfoServer
 
+
+@{
+	string name = userInfoServer.GetUserName();
+}
 @{
 	ViewData["Title"] = "編輯權限群組";
 }
@@ -31,7 +36,7 @@
 			</div>
 			<div class="form-group">
 				<label asp-for="ModifiedPersonUserAccount" class="control-label"></label>
-				<input asp-for="ModifiedPersonUserAccount" class="form-control" readonly>@*這裡要寫成帶入登入帳號*@
+				<input asp-for="ModifiedPersonUserAccount" class="form-control" value="@name" readonly>
 				<span asp-validation-for="ModifiedPersonUserAccount" class="text-danger"></span>
 			</div>
 				<div class="form-group">
