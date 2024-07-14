@@ -56,6 +56,17 @@
                             }
                            
                         }
+                        @* 電子聯絡簿 *@
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole("電子聯絡簿"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="https://localhost:7231">電子聯絡簿</a>
+                                </li>
+                            }
+
+                        }
                         @* 社群管理 *@
                         <li class="nav-item dropdown">
                             <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">社群管理</a>
