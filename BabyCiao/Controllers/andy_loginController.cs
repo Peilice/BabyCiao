@@ -1,6 +1,7 @@
 ﻿using BabyCiao.GlobarVal;
 using BabyCiao.Models;
 using BabyCiao.ViewModel;
+using BCrypt.Net;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -11,23 +12,20 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 
+
 namespace BabyCiao.Controllers
 {
     public class andy_loginController : Controller
     {
         private readonly BabyciaoContext _context;
+               
         
-
-
         public  andy_loginController(BabyciaoContext context)
         {
             _context= context;
         }
 
-        
-
         //Get: andy_login/login
-        
         public IActionResult login()
         {
             
@@ -38,10 +36,11 @@ namespace BabyCiao.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult login([Bind("name,password")] andy_loginViewModel my_account)
         {
-            var accounts=_context.UserAccounts.Where(m=>m.Account== my_account.name && m.Password== my_account.password).FirstOrDefault();
-           
-
-            if (accounts != null)
+            var accounts=_context.UserAccounts.Where(m=>m.Account== my_account.name).FirstOrDefault();
+            
+            bool check = BCrypt.Net.BCrypt.EnhancedVerify(my_account.password,accounts.Password);
+            Console.WriteLine($"密碼驗證結果:{check}");
+            if (accounts != null && check)
             {
                 if (ModelState.IsValid)
                 {
@@ -104,7 +103,6 @@ namespace BabyCiao.Controllers
             return keysOfFunction;
         }
 
-        
         public IActionResult logout()
         {
             string name = HttpContext.User.Identity.Name;
@@ -121,6 +119,7 @@ namespace BabyCiao.Controllers
             
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> andy_register([Bind("name,password,confirmPassword")]andy_registerViewModel avm)
@@ -140,9 +139,12 @@ namespace BabyCiao.Controllers
            
             if (ModelState.IsValid)
             {
+                //將使用者密碼加密
+                string code = BCrypt.Net.BCrypt.EnhancedHashPassword(avm.password,13);
+                Console.WriteLine(code.Length);
                 UserAccount userAccount = new UserAccount();
                 userAccount.Account = avm.name;
-                userAccount.Password = avm.confirmPassword;
+                userAccount.Password = code;
                 _context.Add(userAccount);
                 await _context.SaveChangesAsync();
 
