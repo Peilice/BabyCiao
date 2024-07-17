@@ -223,105 +223,105 @@ namespace BabyCiao.Controllers
                 nannyResume.ProfessionalPortrait = existingResume.ProfessionalPortrait;
             }
 
-            //if (internalPhoto1 != null && internalPhoto1.Length > 0)
-            //{
-            //    if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto1))
-            //    {
-            //        DeletePhoto(existingResume.InternalPhoto1);
-            //    }
+            if (internalPhoto1 != null && internalPhoto1.Length > 0)
+            {
+                //if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto1))
+                //{
+                //    DeletePhoto(existingResume.InternalPhoto1);
+                //}
 
-            //    var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(internalPhoto1.FileName);
-            //    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-            //    using (var fileStream = new FileStream(filePath, FileMode.Create))
-            //    {
-            //        await internalPhoto1.CopyToAsync(fileStream);
-            //    }
-            //    nannyResume.InternalPhoto1 = "/Nannyphoto/" + uniqueFileName;
-            //}
-            //else if (existingResume != null)
-            //{
-            //    nannyResume.InternalPhoto1 = existingResume.InternalPhoto1;
-            //}
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(internalPhoto1.FileName);
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await internalPhoto1.CopyToAsync(fileStream);
+                }
+                //nannyResume.InternalPhoto1 = "/Nannyphoto/" + uniqueFileName;
+            }
+            else if (existingResume != null)
+            {
+                //nannyResume.InternalPhoto1 = existingResume.InternalPhoto1;
+            }
 
-            //if (internalPhoto2 != null && internalPhoto2.Length > 0)
-            //{
-            //    if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto2))
-            //    {
-            //        DeletePhoto(existingResume.InternalPhoto2);
-            //    }
+            if (internalPhoto2 != null && internalPhoto2.Length > 0)
+            {
+                //if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto2))
+                //{
+                //    DeletePhoto(existingResume.InternalPhoto2);
+                //}
 
-            //    var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(internalPhoto2.FileName);
-            //    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-            //    using (var fileStream = new FileStream(filePath, FileMode.Create))
-            //    {
-            //        await internalPhoto2.CopyToAsync(fileStream);
-            //    }
-            //    nannyResume.InternalPhoto2 = "/Nannyphoto/" + uniqueFileName;
-            //}
-            //else if (existingResume != null)
-            //{
-            //    nannyResume.InternalPhoto2 = existingResume.InternalPhoto2;
-            //}
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(internalPhoto2.FileName);
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await internalPhoto2.CopyToAsync(fileStream);
+                }
+                //nannyResume.InternalPhoto2 = "/Nannyphoto/" + uniqueFileName;
+            }
+            else if (existingResume != null)
+            {
+                //nannyResume.InternalPhoto2 = existingResume.InternalPhoto2;
+            }
 
-            //if (internalPhoto3 != null && internalPhoto3.Length > 0)
-            //{
-            //    if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto3))
-            //    {
-            //        DeletePhoto(existingResume.InternalPhoto3);
-            //    }
+            if (internalPhoto3 != null && internalPhoto3.Length > 0)
+            {
+                //if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto3))
+                //{
+                //    DeletePhoto(existingResume.InternalPhoto3);
+                //}
 
-            //    var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(internalPhoto3.FileName);
-            //    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-            //    using (var fileStream = new FileStream(filePath, FileMode.Create))
-            //    {
-            //        await internalPhoto3.CopyToAsync(fileStream);
-            //    }
-            //    nannyResume.InternalPhoto3 = "/Nannyphoto/" + uniqueFileName;
-            //}
-            //else if (existingResume != null)
-            //{
-            //    nannyResume.InternalPhoto3 = existingResume.InternalPhoto3;
-            //}
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(internalPhoto3.FileName);
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await internalPhoto3.CopyToAsync(fileStream);
+                }
+                //nannyResume.InternalPhoto3 = "/Nannyphoto/" + uniqueFileName;
+            }
+            else if (existingResume != null)
+            {
+                //nannyResume.InternalPhoto3 = existingResume.InternalPhoto3;
+            }
 
-            //if (internalPhoto4 != null && internalPhoto4.Length > 0)
-            //{
-            //    if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto4))
-            //    {
-            //        DeletePhoto(existingResume.InternalPhoto4);
-            //    }
+            if (internalPhoto4 != null && internalPhoto4.Length > 0)
+            {
+                //if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto4))
+                //{
+                //    DeletePhoto(existingResume.InternalPhoto4);
+                //}
 
-            //    var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(internalPhoto4.FileName);
-            //    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-            //    using (var fileStream = new FileStream(filePath, FileMode.Create))
-            //    {
-            //        await internalPhoto4.CopyToAsync(fileStream);
-            //    }
-            //    nannyResume.InternalPhoto4 = "/Nannyphoto/" + uniqueFileName;
-            //}
-            //else if (existingResume != null)
-            //{
-            //    nannyResume.InternalPhoto4 = existingResume.InternalPhoto4;
-            //}
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(internalPhoto4.FileName);
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await internalPhoto4.CopyToAsync(fileStream);
+                }
+                //nannyResume.InternalPhoto4 = "/Nannyphoto/" + uniqueFileName;
+            }
+            else if (existingResume != null)
+            {
+                //nannyResume.InternalPhoto4 = existingResume.InternalPhoto4;
+            }
 
-            //if (internalPhoto5 != null && internalPhoto5.Length > 0)
-            //{
-            //    if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto5))
-            //    {
-            //        DeletePhoto(existingResume.InternalPhoto5);
-            //    }
+            if (internalPhoto5 != null && internalPhoto5.Length > 0)
+            {
+                //if (existingResume != null && !string.IsNullOrEmpty(existingResume.InternalPhoto5))
+                //{
+                //    DeletePhoto(existingResume.InternalPhoto5);
+                //}
 
-            //    var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(internalPhoto5.FileName);
-            //    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-            //    using (var fileStream = new FileStream(filePath, FileMode.Create))
-            //    {
-            //        await internalPhoto5.CopyToAsync(fileStream);
-            //    }
-            //    nannyResume.InternalPhoto5 = "/Nannyphoto/" + uniqueFileName;
-            //}
-            //else if (existingResume != null)
-            //{
-            //    nannyResume.InternalPhoto5 = existingResume.InternalPhoto5;
-            //}
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(internalPhoto5.FileName);
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await internalPhoto5.CopyToAsync(fileStream);
+                }
+                //nannyResume.InternalPhoto5 = "/Nannyphoto/" + uniqueFileName;
+            }
+            else if (existingResume != null)
+            {
+                //nannyResume.InternalPhoto5 = existingResume.InternalPhoto5;
+            }
         }
 
         private void DeletePhoto(string photoPath)
