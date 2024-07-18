@@ -29,6 +29,9 @@ public partial class Contract
 
     public bool Display { get; set; }
 
+    public string NannySignatureFile { get; set; }
+    public string UserSignatureFile { get; set; }
+
     public virtual UserAccount AccountUserAccountNavigation { get; set; } = null!;
 
     public virtual UserAccount NannyAccountUserAccountNavigation { get; set; } = null!;

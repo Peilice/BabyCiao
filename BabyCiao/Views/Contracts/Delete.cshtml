@@ -1,0 +1,29 @@
+﻿@model BabyCiao.ViewModel.ContractViewModel
+
+@{
+    ViewData["Title"] = "Return Contract";
+}
+
+<h1>合約退件</h1>
+
+<hr />
+<div>
+    <div>
+        <h5>合約編號: @Model.ContractId</h5>
+        <h5>保母帳號: @Model.NannyAccountUserAccount</h5>
+        <h5>家長帳號: @Model.AccountUserAccount</h5>
+        <h5>合約開始日: @Model.ContractStartTime</h5>
+        <h5>合約結束日: @Model.ContractFinishTime</h5>
+        <h5>狀態: @Model.Statement</h5>
+        <h5>修改時間: @Model.ModifiedTime</h5>
+        <h5>間利時間: @Model.BuiledTime</h5>
+        <h5>顯示: @Model.Display</h5>
+    </div>
+    <form asp-action="DeleteConfirmed">
+        <input type="hidden" asp-for="ContractId" />
+        <input type="submit" value="退件" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">取消</a>
+    </form>
+</div>
+<a href="~/nannnyandperant/合約/合同文件1.pdf">~/nannnyandperant/合約/合同文件1.pdf</a>
+<img src="~/nannnyandperant/保母電子簽名檔/保母電子簽名檔1.png" />

@@ -1,0 +1,176 @@
+﻿@model IEnumerable<BabyCiao.ViewModel.NannyplatformViewModel>
+@inject BabyciaoContext _context
+
+@section Styles {
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
+    <link href="~/ruang-admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" />
+    <link href="~/ruang-admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/test/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/test/lib/lightbox/css/lightbox.min.css" rel="stylesheet" />
+    <link href="~/test/css/style.css" rel="stylesheet" />
+    <link href="~/test/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/ruang-admin/css/ruang-admin.min.css" rel="stylesheet" />
+
+
+    <style>
+        .scroll-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem; /* Increase font size */
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 1;
+            user-select: none;
+        }
+
+        .scroll-left {
+            left: 0;
+        }
+
+        .scroll-right {
+            right: 0;
+        }
+
+        .card-container {
+            width: 100%;
+            display: flex;
+            overflow-x: auto;
+        }
+
+        .card {
+            flex:33%;
+        }
+    </style>
+
+}
+<ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
+    <a asp-controller="Nannyplatform" asp-action="Nannyplatformindex">
+    <div class="sidebar-brand-text mx-3">保母平台管理</div>
+</a>
+<hr class="sidebar-divider">
+<li class="nav-item">
+    <a asp-controller="Nannyplatform" asp-action="NannyIndex" class="nav-link collapsed" data-toggle="collapse" data-target="#collapseForm" aria-expanded="true"
+       aria-controls="collapseForm"><i class="fab fa-fw fa-wpforms"></i>保母委託單管理</a>
+</li>
+    <li class="nav-item">
+<a asp-controller="Nannyplatform" asp-action="babyIndex"  class="nav-link collapsed" data-toggle="collapse" data-target="#collapseForm" aria-expanded="true"
+   aria-controls="collapseForm"><i class="fab fa-fw fa-wpforms"></i>家長託單管理</a>
+</li>
+<li class="nav-item">
+    <a asp-controller="NannyRequirments" asp-action="Index" class="nav-link collapsed" data-toggle="collapse" data-target="#collapsePage" aria-expanded="true"
+       aria-controls="collapsePage"><i class="fas fa-fw fa-columns"></i>保母審核管理</a>
+<li class="nav-item">
+        <a asp-controller="contracts" asp-action="Index" class="nav-link collapsed" data-toggle="collapse" data-target="#collapseTable" aria-expanded="true"
+       aria-controls="collapseTable"><i class="fas fa-fw fa-table"></i>合約管理</a>
+</li>
+<li class="nav-item">
+    <a asp-controller="comment" asp-action="Index" class="nav-link collapsed" data-toggle="collapse" data-target="#collapsePage" aria-expanded="true"
+       aria-controls="collapsePage"> <i class="fas fa-fw fa-chart-area"></i>用戶狀態管理</a>
+</li>
+    </ul>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <section class="col-12">
+            <h1>保母委託單</h1>
+            <h2>目前委託單總數<cache expires-after="@TimeSpan.FromMinutes(30)">@Model.Count()</cache></h2>
+            <div class="position-relative">
+                <div class="scroll-button scroll-left">&lt;</div>
+                <div class="card-container d-flex overflow-hidden" style="scroll-behavior: smooth;">
+                    @foreach (var item in Model)
+                    {
+                        <div class="card" style="flex: 0 0 33.3333%;">
+                            <div class="card-body px-3 py-4">
+                                <a class="stretched-link d-flex align-items-center text-reset" href="@Url.Action("Details", "NannyResumes", new { id = item.NannyResume.id })">
+                                    @if (!string.IsNullOrEmpty(item.NannyResume.ProfessionalPortrait))
+                                    {
+                                        <img class="avatar avatar-lg" src="@item.NannyResume.ProfessionalPortrait" alt="@item.NannyResume.Introduction" style="width: 200px; height: 200px; object-fit: cover;">
+                                    }
+                                    else
+                                    {
+                                        <img class="avatar avatar-lg" src="/img/大頭照.png" alt="Default Image" style="width: 200px; height: 200px; object-fit: cover;">
+                                    }
+                                </a>
+                                <div class="mt-5">
+                                    <p><strong>暱稱:</strong> @(item.UserInformation?.Nickname ?? "N/A")</p>
+                                    <p><strong>托育類型:</strong> @Html.DisplayFor(modelItem => item.NannyResume.TypeOfDaycare)</p>
+                                    <p><strong>服務項目:</strong> @Html.DisplayFor(modelItem => item.NannyResume.ServiceItems)</p>
+                                    <p><strong>語言:</strong> @Html.DisplayFor(modelItem => item.NannyResume.Language)</p>
+                                    <p><strong>托育地點:</strong> @Html.DisplayFor(modelItem => item.NannyResume.ServiceCenter)</p>
+                                    <p><strong>托育地址:</strong> @Html.DisplayFor(modelItem => item.NannyResume.City) @Html.DisplayFor(modelItem => item.NannyResume.District)</p>
+                                    <a asp-controller="NannyResumes" asp-action="Details" asp-route-id="@item.NannyResume.id" class="btn btn-md btn-primary">詳細資訊</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="scroll-button scroll-right">&gt;</div>
+            </div>
+        </section>
+    </div>
+    <div class="row">
+        <section class="col-12">
+            <h1>家長委託單</h1>
+            <h2>目前委託單總數<cache expires-after="@TimeSpan.FromMinutes(30)">@Model.Count()</cache></h2>
+            <div class="position-relative">
+                <div class="scroll-button scroll-left">&lt;</div>
+                <div class="card-container d-flex overflow-hidden" style="scroll-behavior: smooth;">
+                    @foreach (var item in Model)
+                    {
+                        <div class="card" style="flex: 0 0 33.3333%;">
+                            <div class="card-body px-3 py-4">
+                                <a class="stretched-link d-flex align-items-center text-reset" href="@Url.Action("Details", "BabyResumes", new { id = item.NannyResume.id })">
+                                    @if (!string.IsNullOrEmpty(item.NannyResume.ProfessionalPortrait))
+                                    {
+                                        <img class="avatar avatar-lg" src="@item.NannyResume.ProfessionalPortrait" alt="@item.NannyResume.Introduction" style="width: 200px; height: 200px; object-fit: cover;">
+                                    }
+                                    else
+                                    {
+                                        <img class="avatar avatar-lg" src="/img/大頭照.png" alt="Default Image" style="width: 200px; height: 200px; object-fit: cover;">
+                                    }
+                                </a>
+                                <div class="mt-5">
+                                    <p><strong>名字:</strong> @Html.DisplayFor(modelItem => item.BabyResume.FirstName)</p>
+                                    <p><strong>托育類型:</strong> @Html.DisplayFor(modelItem => item.BabyResume.TypeOfDaycare)</p>
+                                    <p><strong>年齡:</strong> @Html.DisplayFor(modelItem => item.BabyResume.Babyage)</p>
+                                    <p><strong>申請時間:</strong> @Html.DisplayFor(modelItem => item.BabyResume.ApplyDate)</p>
+                                    <p><strong>需求時間:</strong> @Html.DisplayFor(modelItem => item.BabyResume.RequireDate)</p>
+                                    <p><strong>托育地址:</strong> @Html.DisplayFor(modelItem => item.BabyResume.City) @Html.DisplayFor(modelItem => item.BabyResume.District)</p>
+                                    <a asp-controller="BabyResumes" asp-action="Details" asp-route-id="@item.BabyResume.Id" class="btn btn-md btn-primary">詳細資訊</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="scroll-button scroll-right">&gt;</div>
+            </div>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            var cardWidth = $('.card').outerWidth(true); // get width of a single card including margin
+
+            $('.scroll-left').on('click', function () {
+                var container = $(this).siblings('.card-container');
+                container.animate({ scrollLeft: '-=' + cardWidth * 3 }, 200); // scroll 3 cards width left
+            });
+
+            $('.scroll-right').on('click', function () {
+                var container = $(this).siblings('.card-container');
+                container.animate({ scrollLeft: '+=' + cardWidth * 3 }, 200); // scroll 3 cards width right
+            });
+        });
+    </script>
+}

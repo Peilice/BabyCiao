@@ -1,4 +1,46 @@
-﻿@model BabyCiao.Models.NannyResume
+﻿@model BabyCiao.Models.DTO.NannyResumeDTO
+
+<div>
+    <h2>@Model.NannyAccountUserAccount</h2>
+    <p>@Model.City, @Model.District</p>
+    <p>@Model.Introduction</p>
+    <!-- 显示其他属性 -->
+    <p>@Model.TypeOfDaycare</p>
+    <p>@Model.ServiceItems</p>
+    <p>Childcare Available Under 2: @Model.ChildcareAvailableUnder2</p>
+    <p>Childcare Available Over 2: @Model.ChildcareAvailableOver2</p>
+    <p>@Model.Language</p>
+    <p>@Model.ServiceCenter</p>
+    <p>@Model.ProfessionalPortrait</p>
+    <p>@Model.DisplayControl</p>
+
+    @foreach (var photo in Model.PhotoName)
+    {
+        <img src="/uploads/@photo" width="100" />
+    }
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* @model BabyCiao.Models.NannyResume
 
 <div class="container-fluid">
     <div class="row">
@@ -125,3 +167,4 @@
         </div>
     </div>
 </div>
+ 

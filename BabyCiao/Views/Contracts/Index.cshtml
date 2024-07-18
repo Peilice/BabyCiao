@@ -1,0 +1,42 @@
+﻿@model IEnumerable<BabyCiao.ViewModel.ContractViewModel>
+
+@{
+    ViewData["Title"] = "Contracts";
+}
+
+<h1>合約管理</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>合約編號</th>
+            <th>保母帳號</th>
+            <th>家長帳號</th>
+            <th>合約開始日</th>
+            <th>合約結束日</th>
+            <th>狀態</th>
+            <th>修改時間</th>
+            <th>建立時間</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ContractId</td>
+                <td>@item.NannyAccountUserAccount</td>
+                <td>@item.AccountUserAccount</td>
+                <td>@item.ContractStartTime</td>
+                <td>@item.ContractFinishTime</td>
+                <td>@item.Statement</td>
+                <td>@item.ModifiedTime</td>
+                <td>@item.BuiledTime</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ContractId">詳細資訊</a>                 
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

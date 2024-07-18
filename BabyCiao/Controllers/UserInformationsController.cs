@@ -27,7 +27,7 @@ namespace BabyCiao.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var babyCiaoContext = _context.UserInformations.Include(u => u.AccountUserNavigation);
+            var babyCiaoContext = _context.UserInformation.Include(u => u.AccountUserNavigation);
             ViewBag.GenderDictionary = GenderDictionary;
             return View(await babyCiaoContext.ToListAsync());
         }
@@ -41,7 +41,7 @@ namespace BabyCiao.Controllers
                 return NotFound();
             }
 
-            var userInformation = await _context.UserInformations
+            var userInformation = await _context.UserInformation
                 .Include(u => u.AccountUserNavigation)
                 .FirstOrDefaultAsync(m => m.UserinfoId == UserinfoID);
             if (userInformation == null)
@@ -86,7 +86,7 @@ namespace BabyCiao.Controllers
                 return NotFound();
             }
 
-            var userInformation = await _context.UserInformations.FindAsync(UserinfoID);
+            var userInformation = await _context.UserInformation.FindAsync(UserinfoID);
             if (userInformation == null)
             {
                 return NotFound();
@@ -138,7 +138,7 @@ namespace BabyCiao.Controllers
                 return NotFound();
             }
 
-            var userInformation = await _context.UserInformations
+            var userInformation = await _context.UserInformation
                 .Include(u => u.AccountUserNavigation)
                 .FirstOrDefaultAsync(m => m.UserinfoId == UserinfoID);
             if (userInformation == null)
@@ -154,10 +154,10 @@ namespace BabyCiao.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int UserinfoID)
         {
-            var userInformation = await _context.UserInformations.FindAsync(UserinfoID);
+            var userInformation = await _context.UserInformation.FindAsync(UserinfoID);
             if (userInformation != null)
             {
-                _context.UserInformations.Remove(userInformation);
+                _context.UserInformation.Remove(userInformation);
             }
 
             await _context.SaveChangesAsync();
@@ -166,7 +166,7 @@ namespace BabyCiao.Controllers
 
         private bool UserInformationExists(int UserinfoID)
         {
-            return _context.UserInformations.Any(e => e.UserinfoId == UserinfoID);
+            return _context.UserInformation.Any(e => e.UserinfoId == UserinfoID);
         }
     }
 }

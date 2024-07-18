@@ -3,79 +3,130 @@
     var StatementDictionary = ViewBag.StatementDictionary as Dictionary<int, string>;
 }
 
+@section Styles {
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
+    <link href="~/ruang-admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" />
+    <link href="~/ruang-admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/test/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/test/lib/lightbox/css/lightbox.min.css" rel="stylesheet" />
+    <link href="~/test/css/style.css" rel="stylesheet" />
+    <link href="~/test/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/ruang-admin/css/ruang-admin.min.css" rel="stylesheet" />
+}
+
 <h1>保母審核</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                審核
-            </th>
-            <th>
-                審核時間</br>
-                狀態
-            </th>
-            <th>
-                申請時間</br>
-                申請帳號</br>
-                申請地址
-            </th>
-            <th>
-                良民證
-            </th>
-            <th>
-                保母證
-            </th>
-            <th>
-                身分證
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-                <td>
-                    <a asp-controller="NannyRequirments" asp-action="Edit" asp-route-Id="@item.Id">審核</a><br />
-                    <a asp-controller="NannyRequirments" asp-action="Delete" asp-route-Id="@item.Id">退件</a>
-                </td>
-                <td>
-                @Html.DisplayFor(modelItem => item.ValidPeriodsOfCertificates)<br />
-
-                    @switch (item.Statement)
+<div class="container-fuild">
+    <div class="row">
+        <div class="col-4" height="auto">
+            <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
+                <a asp-controller="Nannyplatform" asp-action="Nannyplatformindex">
+                    <div class="sidebar-brand-text mx-3 ">保母平台管理</div>
+                </a>
+                <hr class="sidebar-divider">
+                <li class="nav-item">
+                    <a asp-controller="Nannyplatform" asp-action="NannyIndex" class="nav-link collapsed" data-toggle="collapse" data-target="#collapseForm" aria-expanded="true"
+                       aria-controls="collapseForm"><i class="fab fa-fw fa-wpforms"></i>保母委託單管理</a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Nannyplatform" asp-action="babyIndex" class="nav-link collapsed" data-toggle="collapse" data-target="#collapseForm" aria-expanded="true"
+                       aria-controls="collapseForm"><i class="fab fa-fw fa-wpforms"></i>家長託單管理</a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="NannyRequirments" asp-action="Index" class="nav-link collapsed" data-toggle="collapse" data-target="#collapsePage" aria-expanded="true"
+                       aria-controls="collapsePage"><i class="fas fa-fw fa-columns"></i>保母審核管理</a>
+                <li class="nav-item">
+                    <a asp-controller="contracts" asp-action="Index" class="nav-link collapsed" data-toggle="collapse" data-target="#collapseTable" aria-expanded="true"
+                       aria-controls="collapseTable"><i class="fas fa-fw fa-table"></i>合約管理</a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="comment" asp-action="Index" class="nav-link collapsed" data-toggle="collapse" data-target="#collapsePage" aria-expanded="true"
+                       aria-controls="collapsePage"> <i class="fas fa-fw fa-chart-area"></i>用戶狀態管理</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-8">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            審核
+                        </th>
+                        <th>
+                            審核時間</br>
+                            狀態
+                        </th>
+                        <th>
+                            申請時間</br>
+                            申請帳號</br>
+                            申請地址
+                        </th>
+                        <th>
+                            良民證
+                        </th>
+                        <th>
+                            保母證
+                        </th>
+                        <th>
+                            身分證
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
                     {
-                        case 1:
-                            <text>成功</text>
-                            break;
-                        case 2:
-                            <text>未讀</text>
-                            break;
-                        case 3:
-                            <text>退件</text>
-                            break;
-                        default:
-                            <text></text>
-                            break;
-                    }
-                @* @StatementDictionary[item.Statement] *@
-                </td>
-                 <td>
-                @Html.DisplayFor(modelItem => item.RequirementDate)<br />
-                @Html.DisplayFor(modelItem => item.NannyAccountUserAccount)<br />
-                @Html.DisplayFor(modelItem => item.AddressesOfAgencies)
-                </td>
-                <td>
-                    <img src="img/保母證照/@item.photoA" width="100" />
-                </td>
-                <td>
-                    <img src="img/保母證照/@item.photoB" width="100" />
-                </td>
-                <td>
-                    <img src="img/保母證照/@item.photoC" width="100" />
-                </td>
+                        <tr>
+                            <td>
+                                <a asp-controller="NannyRequirments" asp-action="Edit" asp-route-Id="@item.Id">審核</a><br />
+                                <a asp-controller="NannyRequirments" asp-action="Delete" asp-route-Id="@item.Id">退件</a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ValidPeriodsOfCertificates)<br />
 
-       </tr>}
-  </tbody>
-</table>
+                                @switch (item.Statement)
+                                {
+                                    case 1:
+                                        <text>成功</text>
+                                        break;
+                                    case 2:
+                                        <text>未讀</text>
+                                        break;
+                                    case 3:
+                                        <text>退件</text>
+                                        break;
+                                    default:
+                                        <text></text>
+                                        break;
+                                }
+                                @* @StatementDictionary[item.Statement] *@
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RequirementDate)<br />
+                                @Html.DisplayFor(modelItem => item.NannyAccountUserAccount)<br />
+                                @Html.DisplayFor(modelItem => item.AddressesOfAgencies)
+                            </td>
+                            <td>
+                                <img src="img/NannnyAndPerant/良民證/@item.photoA" width="100" />
+                            </td>
+                            <td>
+                                <img src="img//NannnyAndPerant/保母證/@item.photoB" width="100" />
+                            </td>
+                            <td>
+                                <img src="img/NannnyAndPerant/身分證/@item.photoC" width="100" />
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 @functions {
     private string GetImageHtml(string fileName, string 保母證照)
     {
