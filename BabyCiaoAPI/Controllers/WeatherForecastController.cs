@@ -1,4 +1,6 @@
+using BabyCiaoAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BabyCiaoAPI.Controllers
 {
@@ -29,5 +31,6 @@ namespace BabyCiaoAPI.Controllers
             })
             .ToArray();
         }
-    }
+        
+	}
 }

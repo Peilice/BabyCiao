@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BabyCiao.Controllers
 {
-    [Authorize(Roles = "公告編輯")]
+    [Authorize(Roles = "公告管理")]
     public class AnnouncementsController : Controller
     {
         private readonly BabyciaoContext _context;
