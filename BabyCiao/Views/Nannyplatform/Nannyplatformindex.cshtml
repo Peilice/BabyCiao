@@ -72,8 +72,8 @@
        aria-controls="collapseTable"><i class="fas fa-fw fa-table"></i>合約管理</a>
 </li>
 <li class="nav-item">
-    <a asp-controller="comment" asp-action="Index" class="nav-link collapsed" data-toggle="collapse" data-target="#collapsePage" aria-expanded="true"
-       aria-controls="collapsePage"> <i class="fas fa-fw fa-chart-area"></i>用戶狀態管理</a>
+        <a asp-controller="Evaluates" asp-action="Index" class="nav-link collapsed" data-toggle="collapse" data-target="#collapsePage" aria-expanded="true"
+       aria-controls="collapsePage"> <i class="fas fa-fw fa-chart-area"></i>用戶評價管理</a>
 </li>
     </ul>
 
@@ -81,8 +81,8 @@
 <div class="container-fluid">
     <div class="row">
         <section class="col-12">
-            <h1>保母委託單</h1>
-            <h2>目前委託單總數<cache expires-after="@TimeSpan.FromMinutes(30)">@Model.Count()</cache></h2>
+            <h3>保母委託單</h3>
+            <h4>目前委託單總數<cache expires-after="@TimeSpan.FromMinutes(30)">@Model.Count()</cache></h4>
             <div class="position-relative">
                 <div class="scroll-button scroll-left">&lt;</div>
                 <div class="card-container d-flex overflow-hidden" style="scroll-behavior: smooth;">
@@ -93,11 +93,11 @@
                                 <a class="stretched-link d-flex align-items-center text-reset" href="@Url.Action("Details", "NannyResumes", new { id = item.NannyResume.id })">
                                     @if (!string.IsNullOrEmpty(item.NannyResume.ProfessionalPortrait))
                                     {
-                                        <img class="avatar avatar-lg" src="@item.NannyResume.ProfessionalPortrait" alt="@item.NannyResume.Introduction" style="width: 200px; height: 200px; object-fit: cover;">
+                                        <img class="avatar avatar-lg" src="~/nannnyandperant/使用者大頭照/@item.NannyResume.ProfessionalPortrait" alt="@item.NannyResume.Introduction" style="width: 200px; height: 200px; object-fit: cover;">
                                     }
                                     else
                                     {
-                                        <img class="avatar avatar-lg" src="/img/大頭照.png" alt="Default Image" style="width: 200px; height: 200px; object-fit: cover;">
+                                        <img class="avatar avatar-lg" src="~/nannnyandperant/使用者大頭照/大頭照.png" alt="Default Image" style="width: 200px; height: 200px; object-fit: cover;">
                                     }
                                 </a>
                                 <div class="mt-5">
@@ -119,8 +119,8 @@
     </div>
     <div class="row">
         <section class="col-12">
-            <h1>家長委託單</h1>
-            <h2>目前委託單總數<cache expires-after="@TimeSpan.FromMinutes(30)">@Model.Count()</cache></h2>
+            <h3>家長委託單</h3>
+            <h4>目前委託單總數<cache expires-after="@TimeSpan.FromMinutes(30)">@Model.Count()</cache></h4>
             <div class="position-relative">
                 <div class="scroll-button scroll-left">&lt;</div>
                 <div class="card-container d-flex overflow-hidden" style="scroll-behavior: smooth;">
@@ -129,13 +129,13 @@
                         <div class="card" style="flex: 0 0 33.3333%;">
                             <div class="card-body px-3 py-4">
                                 <a class="stretched-link d-flex align-items-center text-reset" href="@Url.Action("Details", "BabyResumes", new { id = item.NannyResume.id })">
-                                    @if (!string.IsNullOrEmpty(item.NannyResume.ProfessionalPortrait))
+                                    @if (!string.IsNullOrEmpty(item.BabyResume.Photo))
                                     {
-                                        <img class="avatar avatar-lg" src="@item.NannyResume.ProfessionalPortrait" alt="@item.NannyResume.Introduction" style="width: 200px; height: 200px; object-fit: cover;">
+                                        <img class="avatar avatar-lg" src="~/nannnyandperant/使用者大頭照/@item.BabyResume.Photo" alt="@item.NannyResume.Introduction" style="width: 200px; height: 200px; object-fit: cover;">
                                     }
                                     else
                                     {
-                                        <img class="avatar avatar-lg" src="/img/大頭照.png" alt="Default Image" style="width: 200px; height: 200px; object-fit: cover;">
+                                        <img class="avatar avatar-lg" src="~/nannnyandperant/使用者大頭照/大頭照.png" alt="Default Image" style="width: 200px; height: 200px; object-fit: cover;">
                                     }
                                 </a>
                                 <div class="mt-5">

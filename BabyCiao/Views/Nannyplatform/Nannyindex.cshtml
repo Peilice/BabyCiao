@@ -53,11 +53,15 @@
     </style>
 }
 <h1>保母委託單</h1>
-<h2>目前委託單總數<cache expires-after="@TimeSpan.FromMinutes(30)">@Model.Count()</cache></h2>
+<h2>目前委託單總數 : <cache expires-after="@TimeSpan.FromMinutes(30)">@Model.Count()</cache></h2>
+
+<div class="container-fuild">
+    <div class="row">
+       <div class="col-4">
 
 <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
     <a asp-controller="Nannyplatform" asp-action="Nannyplatformindex">
-        <div class="sidebar-brand-text mx-3">保母平台管理</div>
+        <div class="sidebar-brand-text">保母平台管理</div>
     </a>
     <hr class="sidebar-divider">
     <li class="nav-item">
@@ -76,21 +80,27 @@
            aria-controls="collapseTable"><i class="fas fa-fw fa-table"></i>合約管理</a>
     </li>
     <li class="nav-item">
-        <a asp-controller="comment" asp-action="Index" class="nav-link collapsed" data-toggle="collapse" data-target="#collapsePage" aria-expanded="true"
-           aria-controls="collapsePage"> <i class="fas fa-fw fa-chart-area"></i>用戶狀態管理</a>
+        <a asp-controller="Evaluates" asp-action="Index" class="nav-link collapsed" data-toggle="collapse" data-target="#collapsePage" aria-expanded="true"
+           aria-controls="collapsePage"> <i class="fas fa-fw fa-chart-area"></i>用戶評價管理</a>
     </li>
 </ul>
+</div>
+        <div class="col-8">
+            <div class="d-flex mb-3">
+                <input type="text" id="searchInput" class="form-control" placeholder="搜尋...">
+                <select id="sortOrder" class="form-control ml-2">
+                    <option value="newest">最新</option>
+                    <option value="oldest">最早</option>
+                </select>
+            </div>
+        </div>
+</div>
+</div>
+
 
 <div class="container-fluid">
     <section class="col-12">
         <!-- Search and Sort functionality -->
-        <div class="d-flex mb-3">
-            <input type="text" id="searchInput" class="form-control" placeholder="搜尋...">
-            <select id="sortOrder" class="form-control ml-2">
-                <option value="newest">最新</option>
-                <option value="oldest">最早</option>
-            </select>
-        </div>
 
         <div class="position-relative">
             <div class="scroll-button scroll-left">&lt;</div>
@@ -102,12 +112,12 @@
                             <a class="stretched-link d-flex align-items-center text-reset" href="@Url.Action("Details", "NannyResumes", new { id = item.NannyResume.id })">
                                 @if (!string.IsNullOrEmpty(item.NannyResume.ProfessionalPortrait))
                                 {
-                                    <img class="avatar avatar-lg" src="@item.NannyResume.ProfessionalPortrait" alt="@item.NannyResume.Introduction" style="width: 200px; height: 200px; object-fit: cover;">
-                                }
-                                else
-                                {
-                                    <img class="avatar avatar-lg" src="/img/大頭照.png" alt="Default Image" style="width: 200px; height: 200px; object-fit: cover;">
-                                }
+                                        <img class="avatar avatar-lg" src="~/nannnyandperant/使用者大頭照/@item.NannyResume.ProfessionalPortrait" alt="@item.NannyResume.Introduction" style="width: 200px; height: 200px; object-fit: cover;">
+                                    }
+                                            else
+                                    {
+                                        <img class="avatar avatar-lg" src="~/nannnyandperant/使用者大頭照/大頭照.png" alt="Default Image" style="width: 200px; height: 200px; object-fit: cover;">
+                                    }
                             </a>
                             <div class="mt-5">
                                 <p><strong>暱稱:</strong> @(item.UserInformation?.Nickname ?? "N/A")</p>

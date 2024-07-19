@@ -61,19 +61,15 @@
                             狀態
                         </th>
                         <th>
-                            申請時間</br>
-                            申請帳號</br>
+                            申請帳號
+                        </th>
+                        <th>
+                            申請時間
+                        </th>
+                        <th>
                             申請地址
                         </th>
-                        <th>
-                            良民證
-                        </th>
-                        <th>
-                            保母證
-                        </th>
-                        <th>
-                            身分證
-                        </th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -105,20 +101,14 @@
                                 @* @StatementDictionary[item.Statement] *@
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.RequirementDate)<br />
-                                @Html.DisplayFor(modelItem => item.NannyAccountUserAccount)<br />
+                                @Html.DisplayFor(modelItem => item.NannyAccountUserAccount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RequirementDate)
+                            </td>
+                            <td>
                                 @Html.DisplayFor(modelItem => item.AddressesOfAgencies)
                             </td>
-                            <td>
-                                <img src="img/NannnyAndPerant/良民證/@item.photoA" width="100" />
-                            </td>
-                            <td>
-                                <img src="img//NannnyAndPerant/保母證/@item.photoB" width="100" />
-                            </td>
-                            <td>
-                                <img src="img/NannnyAndPerant/身分證/@item.photoC" width="100" />
-                            </td>
-
                         </tr>
                     }
                 </tbody>
@@ -127,11 +117,3 @@
     </div>
 </div>
 
-@functions {
-    private string GetImageHtml(string fileName, string 保母證照)
-    {
-        return !string.IsNullOrEmpty(fileName)
-            ? $"<img src=\"/保母證照/{fileName}\" width=\"100\" />"
-            : "<img src=\"/img/noImage.jpg\" width=\"100\" />";
-    }
-}

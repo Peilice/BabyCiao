@@ -10,14 +10,14 @@
                         <div class="card">
                             <div class="card-body px-3 py-4">
                                 <a class="stretched-link d-flex align-items-center text-reset" href="@Url.Action("Details", "BabyResumes", new { id = item.Id })">
-                                    @if (!string.IsNullOrEmpty(item.Photo))
-                                    {
-                                        <img class="avatar avatar-lg" src="@item.Photo" alt="@item.FirstName" style="width: 100px; height: 100px; object-fit: cover;">
-                                    }
-                                    else
-                                    {
-                                        <img class="avatar avatar-lg" src="/img/大頭照.png" alt="Default Image" style="width: 100px; height: 100px; object-fit: cover;">
-                                    }
+                                @if (!string.IsNullOrEmpty(item.Photo))
+                                {
+                                    <img class="avatar avatar-lg" src="~/nannnyandperant/使用者大頭照/@item.Photo"  style="width: 200px; height: 200px; object-fit: cover;">
+                                }
+                                else
+                                {
+                                    <img class="avatar avatar-lg" src="~/nannnyandperant/使用者大頭照/大頭照.png" alt="Default Image" style="width: 200px; height: 200px; object-fit: cover;">
+                                }
                                     <div class="ms-3 overflow-hidden">
                                         <h5 class="card-text mb-0">@Html.DisplayFor(modelItem => item.FirstName)</h5>
                                         <p class="card-text text-uppercase text-muted text-sm">@Html.DisplayFor(modelItem => item.City)</p>

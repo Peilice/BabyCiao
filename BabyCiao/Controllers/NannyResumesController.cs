@@ -46,7 +46,7 @@ namespace BabyCiao.Controllers
                                    ServiceCenter = nn.ServiceCenter,
                                    ProfessionalPortrait = nn.ProfessionalPortrait,
                                    DisplayControl = nn.DisplayControl,
-                                   PhotoUrl = nn.ProfessionalPortrait != null ? $"/uploads/     {nn.ProfessionalPortrait}" : "/img/noImage.jpg",
+                                   PhotoUrl = nn.ProfessionalPortrait != null ? $"/uploads/{nn.ProfessionalPortrait}" : "/img/noImage.jpg",
                                    Nickname = ui.Nickname 
                                };
 

@@ -1,11 +1,56 @@
 ﻿@model IEnumerable<BabyCiao.ViewModel.ContractViewModel>
 
 @{
-    ViewData["Title"] = "Contracts";
+    var ContractStatementDictionary = ViewBag.ContractStatementDictionary as Dictionary<int, string>;
 }
-
+@section Styles {
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
+    <link href="~/ruang-admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" />
+    <link href="~/ruang-admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/test/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/test/lib/lightbox/css/lightbox.min.css" rel="stylesheet" />
+    <link href="~/test/css/style.css" rel="stylesheet" />
+    <link href="~/test/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/ruang-admin/css/ruang-admin.min.css" rel="stylesheet" />
+}
 <h1>合約管理</h1>
+<div class="container-fuild">
+    <div class="row">
+        <div class="col-4" height="auto">
+            <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
+                <a asp-controller="Nannyplatform" asp-action="Nannyplatformindex">
+                    <div class="sidebar-brand-text mx-3 ">保母平台管理</div>
+                </a>
+                <hr class="sidebar-divider">
+                <li class="nav-item">
+                    <a asp-controller="Nannyplatform" asp-action="NannyIndex" class="nav-link collapsed" data-toggle="collapse" data-target="#collapseForm" aria-expanded="true"
+                       aria-controls="collapseForm"><i class="fab fa-fw fa-wpforms"></i>保母委託單管理</a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Nannyplatform" asp-action="babyIndex" class="nav-link collapsed" data-toggle="collapse" data-target="#collapseForm" aria-expanded="true"
+                       aria-controls="collapseForm"><i class="fab fa-fw fa-wpforms"></i>家長託單管理</a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="NannyRequirments" asp-action="Index" class="nav-link collapsed" data-toggle="collapse" data-target="#collapsePage" aria-expanded="true"
+                       aria-controls="collapsePage"><i class="fas fa-fw fa-columns"></i>保母審核管理</a>
+                <li class="nav-item">
+                    <a asp-controller="contracts" asp-action="Index" class="nav-link collapsed" data-toggle="collapse" data-target="#collapseTable" aria-expanded="true"
+                       aria-controls="collapseTable"><i class="fas fa-fw fa-table"></i>合約管理</a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Evaluates" asp-action="Index" class="nav-link collapsed" data-toggle="collapse" data-target="#collapsePage" aria-expanded="true"
+                       aria-controls="collapsePage"> <i class="fas fa-fw fa-chart-area"></i>用戶狀態管理</a>
+                </li>
+            </ul>
+        </div>
 
+
+<div class="col-8">
 
 <table class="table">
     <thead>
@@ -16,8 +61,6 @@
             <th>合約開始日</th>
             <th>合約結束日</th>
             <th>狀態</th>
-            <th>修改時間</th>
-            <th>建立時間</th>
             <th></th>
         </tr>
     </thead>
@@ -31,8 +74,6 @@
                 <td>@item.ContractStartTime</td>
                 <td>@item.ContractFinishTime</td>
                 <td>@item.Statement</td>
-                <td>@item.ModifiedTime</td>
-                <td>@item.BuiledTime</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.ContractId">詳細資訊</a>                 
                 </td>
@@ -40,3 +81,4 @@
         }
     </tbody>
 </table>
+</div>

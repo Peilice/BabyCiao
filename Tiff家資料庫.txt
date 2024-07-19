@@ -1,5 +1,0 @@
-ALTER TABLE [dbo].[Contract]
-ADD [NannySignatureFile] NVARCHAR(500),
-    [UserSignatureFile] NVARCHAR(500);
-
-ALTER TABLE [dbo].[Comment]

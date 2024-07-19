@@ -22,9 +22,17 @@ namespace BabyCiao.Controllers
                 _context = context;
                 _webHostEnvironment = webHostEnvironment;
             }
+        private static readonly Dictionary<int, string> ContractStatementDictionary = new Dictionary<int, string>
+          {
+            { 0, "審核中" },
+            { 1, "審核成功" },
+            { 2, "待補件" },
+            { 3, "取消合約" },
+            { 4, "終止合約"}
+           };
 
-            // GET: Contracts
-            public async Task<IActionResult> Index()
+        // GET: Contracts
+        public async Task<IActionResult> Index()
         {
             var contracts = await _context.Contracts
                 .Select(c => new ContractViewModel
