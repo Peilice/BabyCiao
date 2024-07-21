@@ -115,7 +115,7 @@ public class NannyRequirmentsController : Controller
         if (model.NannyAccountUserAccount != null && model.ChildCareCertificate != null && model.NationalIdentificationCard != null)
         {
             //這裡處理檔案寫入資料庫的處理
-            var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "保母證照");// upload file path here
+            var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "/Nannnyandperant/良民證/");// upload file path here
             if (!Directory.Exists(uploadPath))
             {
                 Directory.CreateDirectory(uploadPath);// check folder exist
@@ -126,13 +126,23 @@ public class NannyRequirmentsController : Controller
             {
                 await model.photo1.CopyToAsync(fileStream);// write file into fileStream
             }
-            var filePath2 = Path.Combine(uploadPath, model.photo2.FileName);
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            var uploadPath2 = Path.Combine(_webHostEnvironment.WebRootPath, "/Nannnyandperant/保母證/");// upload file path here
+            if (!Directory.Exists(uploadPath2))
+            {
+                Directory.CreateDirectory(uploadPath2);// check folder exist
+            }
+            var filePath2 = Path.Combine(uploadPath2, model.photo2.FileName);
+            using (var fileStream = new FileStream(filePath2, FileMode.Create))
             {
                 await model.photo2.CopyToAsync(fileStream);// write file into fileStream
             }
-            var filePath3 = Path.Combine(uploadPath, model.photo3.FileName);
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            var uploadPath3 = Path.Combine(_webHostEnvironment.WebRootPath, "/Nannnyandperant/身分證/");// upload file path here
+            if (!Directory.Exists(uploadPath3))
+            {
+                Directory.CreateDirectory(uploadPath3);// check folder exist
+            }
+            var filePath3 = Path.Combine(uploadPath3, model.photo3.FileName);
+            using (var fileStream = new FileStream(filePath3, FileMode.Create))
             {
                 await model.photo3.CopyToAsync(fileStream);// write file into fileStream
             }
@@ -143,8 +153,8 @@ public class NannyRequirmentsController : Controller
             _context.Add(Requirment);
 
             Requirment.PoliceCriminalRecordCertificate = model.photoA;
-            Requirment.ChildCareCertificate=model.photoB;
-            Requirment.NationalIdentificationCard=model.photoC;
+            Requirment.ChildCareCertificate = model.photoB;
+            Requirment.NationalIdentificationCard = model.photoC;
 
             await _context.SaveChangesAsync();
         }
@@ -214,7 +224,7 @@ public class NannyRequirmentsController : Controller
         if (model.photoA != null && model.photoB != null && model.photoC != null)
         {
             //這裡處理檔案寫入資料庫的處理ˋ
-            var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "保母證照");// upload file path here
+            var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "/Nannnyandperant/良民證");// upload file path here
             if (!Directory.Exists(uploadPath))
             {
                 Directory.CreateDirectory(uploadPath);// check folder exist
@@ -226,13 +236,24 @@ public class NannyRequirmentsController : Controller
                 await model.photo1.CopyToAsync(fileStream);// write file into fileStream
               
             }
-            var filePath2 = Path.Combine(uploadPath, model.photo2.FileName);
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            var uploadPath2 = Path.Combine(_webHostEnvironment.WebRootPath, "/Nannnyandperant/保母證");// upload file path here
+            if (!Directory.Exists(uploadPath2))
+            {
+                Directory.CreateDirectory(uploadPath2);// check folder exist
+            }
+            var filePath2 = Path.Combine(uploadPath2, model.photo2.FileName);
+            using (var fileStream = new FileStream(filePath2, FileMode.Create))
             {
                 await model.photo2.CopyToAsync(fileStream);// write file into fileStream
             }
-            var filePath3 = Path.Combine(uploadPath, model.photo3.FileName);
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+
+            var uploadPath3 = Path.Combine(_webHostEnvironment.WebRootPath, "/Nannnyandperant/身分證");// upload file path here
+            if (!Directory.Exists(uploadPath3))
+            {
+                Directory.CreateDirectory(uploadPath3);// check folder exist
+            }
+            var filePath3 = Path.Combine(uploadPath3, model.photo3.FileName);
+            using (var fileStream = new FileStream(filePath3, FileMode.Create))
             {
                 await model.photo3.CopyToAsync(fileStream);// write file into fileStream
             }
