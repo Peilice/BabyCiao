@@ -4,6 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
+
 <h1>投票活動管理</h1>
 
 <a type="button" class="btn btn-outline-secondary mb-4" asp-action="Create">創建新活動</a>
@@ -46,9 +47,9 @@
                      @Html.DisplayFor(modelItem => item.Statement)
                      </td>
                      <td>
-                       <a asp-action="Edit" asp-route-id="@item.Id">編輯</a> |
-                       <a asp-action="Details" asp-route-id="@item.Id">詳細資料</a>   |
-                      <a asp-action="Delete" asp-route-id="@item.Id">刪除</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square fs-3"></i></a> |
+                            <a asp-action="Details" asp-route-id="@item.Id"><i class="bi bi-text-center fs-3"></i></a>   |
+                            <a asp-action="Delete" asp-route-id="@item.Id"><i class="bi bi-trash fs-3"></i></a>
                      </td>
                   </tr>
               }
