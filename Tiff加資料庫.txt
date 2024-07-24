@@ -1,0 +1,28 @@
+TABLE NannyRequirment 
+ChildCareCertificateNumber NVARCHAR(100),
+
+
+ALTER TABLE [dbo].[Contract]
+ADD [NannySignatureFile] NVARCHAR(500),
+    [UserSignatureFile] NVARCHAR(500),
+    
+
+
+
+=================增加Table================
+ADD TABLE [dbo].[NannyOtherCertificate]   其他證照
+OtherCertificate
+OtherCertificateNumber
+CreateddDate
+ModiifiedDate
+
+Add Table inquire  詢問次數
+UserAccountresponse
+UserAccountinquire
+times
+
+
+
+
+
+

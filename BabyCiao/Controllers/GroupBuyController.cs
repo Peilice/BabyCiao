@@ -444,7 +444,7 @@ namespace BabyCiao.Controllers
 
 			var order = (from gbd in _context.GroupBuyingDetails
 						 join gb in _context.GroupBuyings on gbd.GroupBuyingId equals gb.Id
-						 join uf in _context.UserInformations on gbd.AccountUserAccount equals uf.AccountUser
+						 join uf in _context.UserInformation on gbd.AccountUserAccount equals uf.AccountUser
 						 where gbd.Id == id
 						 select new GroupBuyDTO
 						 {
@@ -478,7 +478,7 @@ namespace BabyCiao.Controllers
 			}
 			var groupBuyDetail = await _context.GroupBuyingDetails.Where(o=>o.Id==JoinId).FirstAsync();//訂單明細
 			var gb = await _context.GroupBuyings.Where(d => d.Id == groupBuyDetail.GroupBuyingId).FirstAsync();//商品
-			var user=await _context.UserInformations.Where(u=>u.AccountUser==groupBuyDetail.AccountUserAccount&&groupBuyDetail.Id==JoinId).FirstAsync();//訂購人
+			var user=await _context.UserInformation.Where(u=>u.AccountUser==groupBuyDetail.AccountUserAccount&&groupBuyDetail.Id==JoinId).FirstAsync();//訂購人
 			var sb = new StringBuilder();
 			sb.AppendLine($"訂單編號: {groupBuyDetail.Id}");
 			sb.AppendLine($"產品明: {gb.ProductName}");
@@ -506,7 +506,7 @@ namespace BabyCiao.Controllers
 
 			var order = (from gbd in _context.GroupBuyingDetails
 						 join gb in _context.GroupBuyings on gbd.GroupBuyingId equals gb.Id
-						 join uf in _context.UserInformations on gbd.AccountUserAccount equals uf.AccountUser
+						 join uf in _context.UserInformation on gbd.AccountUserAccount equals uf.AccountUser
 						 where gbd.Id == id
 						 select new GroupBuyDTO
 						 {

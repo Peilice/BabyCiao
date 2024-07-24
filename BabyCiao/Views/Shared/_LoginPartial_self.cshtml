@@ -12,13 +12,17 @@
             <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">@name 你好</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="andy_login" asp-action="logout">登出</a>
+           @*  <a class="nav-link text-dark" asp-area="" asp-controller="andy_login" asp-action="logout">登出</a> *@
+
+            <form id="logoutForm" action="/andy_login/logout" method="post" class="nav-item">
+                <div type="submit" id="signOut" class="nav-link text-dark">登出</div>
+            </form>
         </li>
     }
     else
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="andy_login" asp-action="login">登錄</a>
+            <a class="nav-link text-dark" asp-area="" asp-controller="andy_login" asp-action="login">登入</a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="andy_login" asp-action="andy_register">註冊</a>

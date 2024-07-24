@@ -41,7 +41,7 @@ builder.Services.AddScoped<UserInfoServer>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
 {
-    option.LoginPath = new PathString("/Home/NoLogin");
+    option.LoginPath = new PathString("/andy_login/login");
     option.AccessDeniedPath = new PathString("/Home/NoRole");
 });
 

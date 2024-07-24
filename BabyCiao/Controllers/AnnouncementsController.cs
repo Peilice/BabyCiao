@@ -9,6 +9,8 @@ using BabyCiao.Models;
 using BabyCiao.ViewModel;
 using NuGet.Protocol;
 using Microsoft.AspNetCore.Authorization;
+using System.Drawing;
+using System.Security.Cryptography;
 
 namespace BabyCiao.Controllers
 {
@@ -16,6 +18,7 @@ namespace BabyCiao.Controllers
     public class AnnouncementsController : Controller
     {
         private readonly BabyciaoContext _context;
+        private string image_dir = "wwwroot\\images\\";
 
         public AnnouncementsController(BabyciaoContext context)
         {
@@ -60,7 +63,7 @@ namespace BabyCiao.Controllers
         //        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AccountUserAccount,Tittle,Article,ReferenceName,ReferenceRoute,Type,Display")] andy_announcementViewModel my_vm)
+        public async Task<IActionResult> Create([Bind("AccountUserAccount,Tittle,Article,ReferenceName,ReferenceRoute,Type,Display,Picture")] andy_announcementViewModel my_vm)
         {
             Announcement announcement = new Announcement()
             {
@@ -72,30 +75,52 @@ namespace BabyCiao.Controllers
                 Type = my_vm.Type,
                 Display = my_vm.Display
             };
-            
-            
 
             if (ModelState.IsValid)
             {
                 _context.Add(announcement);
                 await _context.SaveChangesAsync();
 
-                ////先取得新公告的ID
-                //var newAnnouncement = await _context.Announcements.FindAsync(my_vm.Tittle);
-                ////新增公告照片
-                //AnnouncementPhoto announcementPhoto = new AnnouncementPhoto()
-                //{
-                //    PhotoName = my_vm.Picture,
-                //    IdAnnouncement= newAnnouncement.Id
-                //};
-                //_context.Add(announcementPhoto);
-
+                //先取得新公告的ID
+                var newAnnouncement = _context.Announcements.Where(a => a.Tittle == my_vm.Tittle).FirstOrDefault();
+                //新增公告照片
+                string URL= CopyPictureAndGetURL(Request.Form.Files["Picture"]);
+                AnnouncementPhoto announcementPhoto = new AnnouncementPhoto()
+                {
+                    PhotoName = URL,
+                    IdAnnouncement = newAnnouncement.Id
+                };
+                _context.Add(announcementPhoto);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", announcement);
             return View(announcement);
         }
+        
+        private string CopyPictureAndGetURL(IFormFile file)
+        {
+            if (file != null)
+            {
+                string fileExtension = Path.GetExtension(file.FileName).ToLower();
+                Random r = new Random();
+                string updateFileName = DateTime.Now.ToString("yyMMddHHmmss") + r.Next(1000, 10000).ToString() + fileExtension;
+                string fullFileName = image_dir + "\\" + updateFileName;
 
+                long size = file.Length;
+                if (size > 0)
+                {
+                    using (var stream = System.IO.File.Create(fullFileName))
+                    {
+                        file.CopyToAsync(stream);
+                        return fullFileName;
+                    }
+                }
+                return null;
+            }
+            return null;
+        }
+        
         //        // GET: Announcements/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -221,6 +246,8 @@ namespace BabyCiao.Controllers
             return PartialView("Index", babyCiaoContext);
         }
 
+
+
         //private void ReadUploadImage(AnnouncementPhoto announcementPhoto)
         //{
         //    using (BinaryReader br = new BinaryReader(Request.Form.Files["Picture"].OpenReadStream()))
@@ -236,6 +263,6 @@ namespace BabyCiao.Controllers
         //    byte[] picture = announcementPhoto?.PhotoName;
         //    return File(picture, "image/jpeg");
         //}
-       
+
     }
 }

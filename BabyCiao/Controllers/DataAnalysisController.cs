@@ -24,7 +24,7 @@ namespace BabyCiao.Controllers
                 .CountAsync();
 
             // 抓取保母的總筆數
-            var nannyTotalCount = await _context.NannyResumes
+            var nannyTotalCount = await _context.NannyResume
                 .CountAsync();
 
             // 準備數據發送到視圖
