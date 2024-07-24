@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@inject UserInfoServer userInfoServer
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -50,9 +51,27 @@
                             </ul>
                         </li> *@
                         @* 公告管理 *@
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Announcements" asp-action="Index">公告管理</a>
-                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole("公告編輯"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Announcements" asp-action="Index">公告管理</a>
+                                </li>
+                            }
+                           
+                        }
+                        @* 電子聯絡簿 *@
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole("電子聯絡簿"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="https://localhost:7231">電子聯絡簿</a>
+                                </li>
+                            }
+
+                        }
                         @* 社群管理 *@
                         <li class="nav-item dropdown">
                             <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">社群管理</a>
@@ -104,6 +123,7 @@
     <script src="~/js/demo.js"> </script>
     <script src="~/js/charts-home.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <!-- Notifications  -->
     <!-- Toast-->
 
