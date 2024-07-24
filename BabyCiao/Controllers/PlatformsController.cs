@@ -74,37 +74,25 @@ namespace BabyCiao.Controllers
         }
 
         // POST: Platforms/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AccountUserAccount,ModifiedTime,Title,Content,Type,Display")] PlatformsDTO platformDTO)
+        public async Task<IActionResult> Create([FromForm] PlatformsDTO platformDTO)
         {
-
-            //if (ModelState.IsValid)
-            //{
-            //    _context.Add(platform);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
-
-            if (ModelState.IsValid != true)
+            if(platformDTO == null)
             {
-                if (platformDTO.PlatformAccountUserAccount == null)
-                {
-                    ViewData["AccountUserAccount"] = platformDTO.PlatformAccountUserAccount;
-                    _context.Add(platformDTO);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
+                return NotFound();
             }
-            else
+
+            var newPlatform = new Models.Platform
             {
-                _context.Add(platformDTO);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", platformDTO.PlatformAccountUserAccount);
+                AccountUserAccount = platformDTO.PlatformAccountUserAccount,
+                Title = platformDTO.PlatformTitle,
+                Content = platformDTO.PlatformContent,
+                Type = platformDTO.PlatformType,
+            };
+            _context.Add(newPlatform);
+            await _context.SaveChangesAsync();
+            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account");
             return View(platformDTO);
         }
 
@@ -149,17 +137,24 @@ namespace BabyCiao.Controllers
         }
 
         // POST: Platforms/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("Id,AccountUserAccount,ModifiedTime,Title,Content,Type,Display")] PlatformsDTO platformDTO)
-        public async Task<IActionResult> Edit(int id, [Bind("PlatformId,PlatformAccountUserAccount,PlatformModifiedTime,PlatformTitle,PlatformContent,PlatformType,PlatformDisplay")] PlatformsDTO platformDTO)
+        public async Task<IActionResult> Edit(int id, [FromForm] PlatformsDTO platformDTO)
         {
-            if (id != platformDTO.PlatformId)
+            if (platformDTO == null)
             {
                 return NotFound();
             }
+
+            var editPlarform = await (from p in _context.Platforms
+                                      join r in _context.PlatformResponses on p.Id equals r.IdPlatform
+                                      where p.Id == id
+                                      select new PlatformsDTO
+                                      {
+                                          PlatformType= p.Type,
+                                          PlatformDisplay=p.Display,
+
+                                      }).FirstOrDefaultAsync();
 
             if (ModelState.IsValid)
             {
@@ -177,14 +172,14 @@ namespace BabyCiao.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PlatformExists(platformDTO.PlatformId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //if (!PlatformExists(platformDTO.PlatformId))
+                    //{
+                    //    return NotFound();
+                    //}
+                    //else
+                    //{
+                    //    throw;
+                    //}
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -226,80 +221,9 @@ namespace BabyCiao.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PlatformExists(int id)
-        {
-            return _context.Platforms.Any(e => e.Id == id);
-        }
-
-        // GET: Platforms/ResponseEdit/{id}
-        //public async Task<IActionResult> ResponseEdit(int? id)
+        //private bool PlatformExists(int id)
         //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-
-        //    //var responseDTO = await (from pr in _context.PlatformResponses
-        //    //       where pr.Id == id
-        //    //       select new PlatformsDTO.Response
-        //    //       {
-        //    //           ResponseId = pr.Id,
-        //    //           ResponseModifiedTime = pr.ModifiedTime,
-        //    //           ResponseContent = pr.Content,
-        //    //           ResponseDisplay = pr.Display,
-        //    //           ResponseAccountUserAccount = pr.AccountUserAccount
-        //    //       }).FirstOrDefaultAsync();
-
-        //    //var platform = await _context.Platforms.FindAsync(id);
-        //    if (responseDTO == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", responseDTO.Responses);
-        //    var responses = responseDTO.Responses;
-        //    return View(responseDTO);
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> ResponseEdit(int id, [Bind("ResponseDisplay")] PlatformsDTO.Response responseDTO)
-        //{
-        //    if (id != responseDTO.ResponseId)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            var response = await _context.PlatformResponses.FindAsync(id);
-        //            if (response == null)
-        //            {
-        //                return NotFound();
-        //            }
-        //            response.UpdateEntity(responseDTO);
-
-        //            _context.Update(response);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!PlatformExists(responseDTO.ResponseId))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", responseDTO.ResponseContent);
-        //    return View(responseDTO);
-
+        //    return _context.Platforms.Any(e => e.Id == id);
         //}
     }
 }

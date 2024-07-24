@@ -5,7 +5,7 @@ VisualStudioVersion = 17.10.35004.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BabyCiao", "BabyCiao\BabyCiao.csproj", "{5E151EFC-0F2C-41D8-85D6-7265BCF1F48A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BabyCiaoAPI", "BabyCiaoAPI\BabyCiaoAPI.csproj", "{4BE3DE55-7E59-4185-9177-466DABE8C59E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BabyCiaoAPI", "BabyCiaoAPI\BabyCiaoAPI.csproj", "{4BE3DE55-7E59-4185-9177-466DABE8C59E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
