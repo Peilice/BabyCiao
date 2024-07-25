@@ -1,39 +1,19 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - EBook_Client</title>
+    <title>@ViewData["Title"] - BabyCiao_Client</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BabyCiao_Client.styles.css" asp-append-version="true" />
-    @*=========================以下新增的==========================*@
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="css/styles.css">
-    <!-- Popperjs -->
-    <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.11.6/dist/umd/popper.min.js"
-            crossorigin="anonymous"></script>
-    <!-- Tempus Dominus JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/@@eonasdan/tempus-dominus@6.9.4/dist/js/tempus-dominus.min.js"
-            crossorigin="anonymous"></script>
-    <!-- Tempus Dominus Styles -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/@@eonasdan/tempus-dominus@6.9.4/dist/css/tempus-dominus.min.css"
-          crossorigin="anonymous">
-    @*=========================以上新增的==========================*@
-    @await RenderSectionAsync("Styles", required: false)
-    
-    <style>
-        body {
-            background-image: url('/images/giftly.png');
-        }
-    </style>
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="andy_ebook" asp-controller="Home" asp-action="Index">電子聯絡簿</a>
+            <div class="container-fluid" id="app00">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BabyCiao</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -41,49 +21,95 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">首頁</a>
+                            <a class="nav-link text-dark" href="@Utility.SD.localHost_Backstage/Home/Index">後臺程式入口</a>
                         </li>
-                        
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="andy_ebook" asp-controller="Home" asp-action="Index">電子聯絡簿</a>
+                        </li>
                     </ul>
                     <partial name="_LoginPartial_self" />
                 </div>
             </div>
         </nav>
     </header>
-    
-    <div class="container-fluid py-5">
-        <div class="row">
-            <div class="col-12 col-md-3">
-                <div class="list-group">
-                    <h3 class="fs-3 fw-bold ps-3">功能選單</h3>
-                    <a asp-controller="Home" asp-action="book_record" class="list-group-item list-group-item-action">最新交接事項</a>
-                    <a asp-controller="Home" asp-action="book_infos" class="list-group-item list-group-item-action">寶寶基本資料</a>
-                    <a asp-controller="Home" asp-action="book_historySearch" class="list-group-item list-group-item-action">歷史紀錄查詢</a>
-                    <a asp-controller="Home" asp-action="book_activityDaily" class="list-group-item list-group-item-action">活動日記</a>
-                </div>
-            </div>
-            <div class="col-12 col-md-9 rounded">
+    <div class="container">
+        <main role="main" class="pb-3">
             @RenderBody()
-            </div>
-        </div>
+        </main>
     </div>
-    
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - BabyCiao - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - test2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @*=========================以下新增的==========================*@
-    <script src="/js/datetimepicker_linked.js"></script>
-    <script src="/js/datetimepicker_simple.js"></script>
+    <script src="https://unpkg.com/vue@3.4.31/dist/vue.global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        let username = sessionStorage.getItem("username");
+        if (username == null) { 
+            window.location.href = `@Utility.SD.localHost_Client/Home/Login`
+        }
+        var vueApp = {
+            data() {
+                return {
+                    u_name: "",
+                    islogin: false,
+                };
+            },
+            mounted: function () {
+                let _this = this;
+                _this.reflesh();
+            },
+            methods: {
+                reflesh: function () {
+                    let _this = this;
+                    if (username != null) {
+                        _this.islogin = true;
+                        _this.u_name = username;
+                    }
+                },
+            },
+           
+        }
+        var app = Vue.createApp(vueApp).mount('#loginApp')
 
+        $(function () {
+            $('#logoutForm').on('click', function (e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: "提示!",
+                    text: "您確定的要登出?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "是的,確定登出!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: "登出成功!",
+                            text: "歡迎再次蒞臨!",
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then((result) => {
+                            sessionStorage.removeItem("username");
+                            localStorage.removeItem("username");
+                            window.location.href = `@Utility.SD.localHost_Client/Home/Index`
+                        });
+                    }
+                });
 
-    @*=========================以上新增的==========================*@
+            })
+        })
+        
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
-
 </body>
 </html>
+

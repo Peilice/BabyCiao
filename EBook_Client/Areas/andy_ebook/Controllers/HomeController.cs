@@ -1,4 +1,5 @@
 using BabyCiao_Client.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -13,7 +14,8 @@ namespace BabyCiao_Client.Areas.andy_ebook.Controllers
         {
             _logger = logger;
         }
-
+        
+        
         public IActionResult Index()
         {
             return View();

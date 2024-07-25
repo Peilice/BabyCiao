@@ -12,7 +12,7 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
+            <div class="container-fluid" id="app00">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BabyCiao</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -46,6 +46,67 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://unpkg.com/vue@3.4.31/dist/vue.global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        let username = sessionStorage.getItem("username");
+        var vueApp = {
+            data() {
+                return {
+                    u_name: "",
+                    islogin: false,
+                };
+            },
+            mounted: function () {
+                let _this = this;
+                _this.reflesh();
+            },
+            methods: {
+                reflesh: function () {
+                    let _this = this;
+                    if (username != null) {
+                        _this.islogin = true;
+                    }
+                    _this.u_name = username;
+                },
+            },
+           
+        }
+        var app = Vue.createApp(vueApp).mount('#loginApp')
+
+        $(function () {
+            $('#logoutForm').on('click', function (e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: "提示!",
+                    text: "您確定的要登出?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "是的,確定登出!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: "登出成功!",
+                            text: "歡迎再次蒞臨!",
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then((result) => {
+                            sessionStorage.removeItem("username");
+                            localStorage.removeItem("token");
+                            window.location.href = `@Utility.SD.localHost_Client/Home/Index`
+                        });
+                    }
+                });
+
+            })
+        })
+        
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
