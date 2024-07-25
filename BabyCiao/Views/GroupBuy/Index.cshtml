@@ -33,6 +33,7 @@
 		<tr>
 			<th>編號</th>
 			<th>商品</th>
+			<th>分類</th>
 			<th>商品圖片</th>
 			<th>訂購數</th>
 			<th>成團數</th>
@@ -48,6 +49,7 @@
 		{
 			<tr>
 				<td>@item.ProductName</td>
+				<td>@item.ProductType</td>
 				<td>@item.photoUrl</td>
 				<td>@item.JoinQuantity</td>
 				<td>@item.TargetCount</td>
@@ -88,6 +90,7 @@
 
 					{ "data": "id" },
 					{ "data": "productName" },
+					{ "data": "productType" },
 					{ "data": "photoUrl" },
 					{ "data": "joinQuantity" },
 					{ "data": "targetCount" },

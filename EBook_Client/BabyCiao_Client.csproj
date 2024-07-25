@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\anan\**" />
+    <Content Remove="Areas\anan\**" />
+    <EmbeddedResource Remove="Areas\anan\**" />
+    <None Remove="Areas\anan\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.7" />
@@ -20,12 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\anan\Controllers\" />
-    <Folder Include="Areas\anan\Data\" />
-    <Folder Include="Areas\anan\Models\" />
-    <Folder Include="Areas\anan\Views\" />
     <Folder Include="Areas\andy_ebook\Data\" />
     <Folder Include="Areas\andy_ebook\Models\" />
+    <Folder Include="Areas\LilyArea\Data\" />
+    <Folder Include="Areas\LilyArea\Models\" />
   </ItemGroup>
 
   <ItemGroup>
