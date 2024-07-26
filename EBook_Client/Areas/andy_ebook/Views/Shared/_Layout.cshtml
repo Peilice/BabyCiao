@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BabyCiao_Client.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+    <style>
+        body {
+            background-image: url('/images/giftly.png');
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -20,9 +26,6 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="@Utility.SD.localHost_Backstage/Home/Index">後臺程式入口</a>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="andy_ebook" asp-controller="Home" asp-action="Index">電子聯絡簿</a>
                         </li>
@@ -51,6 +54,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         let username = sessionStorage.getItem("username");
+        sessionStorage.removeItem('target');
         if (username == null) { 
             window.location.href = `@Utility.SD.localHost_Client/Home/Login`
         }

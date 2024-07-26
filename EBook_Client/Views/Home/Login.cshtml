@@ -71,7 +71,12 @@
                                 const data2 = { Name: username };
                                 sessionStorage.setItem("username", data2.Name);
                                 // $('#username').text(`${result.data} ,你好!`);//實驗
-                                window.location.href = `${_this.baseAddress_client}/Home/Index`;
+                                var target = sessionStorage.getItem("target");
+                                if (target != null) {
+                                    window.location.href = `${target}`;
+                                } else {
+                                    window.location.href = `${_this.baseAddress_client}/Home/Index`;
+                                }
                             }).catch(err => {
                                 alert(err);
                             })

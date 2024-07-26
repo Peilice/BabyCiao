@@ -2,8 +2,252 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">歡迎使用電子聯絡簿!</h1>
+@section Styles{
     
-    <img src="~/images/背景2.png" />
+}
+<div class="container" id="ebook_Index">
+    @* 電子聯絡簿選擇 *@
+    <div class="text-center">
+        <h1 class="display-4">歡迎使用電子聯絡簿!</h1>
+        <button id="createEbook" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ebook_form" v-on:click="createEbook">新增聯絡簿</button>
+        <div class="container mt-3">
+            <div class="row">
+                <div class="">
+                    <h3>目前聯絡簿狀況:</h3>
+                    <div class="row">
+                    <div class="col-md-4" v-for="item in ebooks">
+                        <div class="card h-100">
+                            <img class="card-img-top" src="~/images/背景2.png" v-bind:title="item.babyName" />
+                            
+                            <div class="card-body">
+                                <h5 class="card-title">寶寶姓名</h5>
+                                <p class="card-text">{{item.babyName}}</p>
+                                
+                            @* <div class="mb-3">
+                                <button class="btn btn-warning" @@click="update(item)">更新</button>
+                                <button class="btn btn-warning" @@click="cancel(item.categoryId)">取消</button> *@
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    @* 新增電子聯絡簿的表單 *@
+    <div class="modal fade " data-bs-backdrop="static" id="ebook_form" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body ">
+                    <form id="form" class="needs-validation" novalidate>
+                        <div class="mb-3 has-validation">
+                            <label class="form-label">家長帳號</label>
+                            <input type="text" class="form-control" id="userAccount" v-model="username" disabled>
+                        </div>
+                        <div class="mb-3 has-validation">
+                            <label for="babyName" class="form-label">寶寶姓名</label>
+                            <input v-model="babyName" type="text" class="form-control" id="babyName" aria-describedby="babyNameHelp" required>
+                            <div id="babyNameHelp" class="form-text">請填寫真實姓名</div>
+                            <div class="invalid-feedback">
+                                此欄位必填!
+                            </div>
+                        </div>
+                        <div class="mb-3 has-validation">
+                            <label for="babyGender" class="form-label">寶寶性別</label>
+                            <select v-model="babyGender" class="form-select" required>
+                                <option selected disabled value="">請選擇</option>
+                                <option value="1">男</option>
+                                <option value="0">女</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                此欄位必填!
+                            </div>
+                        </div>
+                        <div class="mb-3 has-validation">
+                            <label for="babyBirth" class="form-label" >寶寶生日</label>
+                            <input type="text" class="form-control" id="babyBirth" autocomplete="off" required>
+                            <div class="invalid-feedback">
+                                此欄位必填!
+                            </div>
+                        </div>
+                        <div class="mb-3 has-validation">
+                            <label for="babyBloodType" class="form-label">寶寶血型</label>
+                            <select  v-model="babyBloodType" class="form-select" required>
+                                <option selected disabled value="">請選擇</option>
+                                <option value="UnKnow">不知道</option>
+                                <option value="O">O型</option>
+                                <option value="A">A型</option>
+                                <option value="B">B型</option>
+                                <option value="AB">AB型</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                此欄位必填!
+                            </div>
+                        </div>
+                        <div class="mb-3 has-validation">
+                            <label for="EmergencyContact" class="form-label">緊急聯絡人</label>
+                            <input v-model="EmergencyContact" type="text" class="form-control" id="EmergencyContact" aria-describedby="EmergencyContactHelp" required>
+                            <div id="EmergencyContactHelp" class="form-text">請填寫真實姓名</div>
+                            <div class="invalid-feedback">
+                                此欄位必填!
+                            </div>
+                        </div>
+                        <div class="mb-3 has-validation">
+                            <label for="EmergencyContactPhone" class="form-label">緊急聯絡人電話</label>
+                            <input v-model="EmergencyContactPhone" type="text" class="form-control" id="EmergencyContactPhone" aria-describedby="EmergencyContactPhoneHelp" required>
+                            <div class="invalid-feedback">
+                                此欄位必填!
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="submit" class="btn btn-primary" v-on:click="checkForm">新增</button>
+                            <div class="invalid-feedback">
+                                此欄位必填!
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts{
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/gijgo@1.9.14/js/messages/messages.zh-tw.js" type="text/javascript"></script>
+    <script>
+        const useToken = localStorage.getItem("token");
+        const headers = {
+            'Authorization': `Bearer ${useToken}`,
+        };
+        
+        var vueApp = {
+            data() {
+                return {
+                    username:"",
+                    ebooks:[],
+                    babyName:"",
+                    babyGender: "請選擇",
+                    babyBirth:"",
+                    babyBloodType: "請選擇",
+                    EmergencyContact: "",
+                    EmergencyContactPhone:"",
+                };
+            },
+            methods: {
+                createEbook: function () {
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetUserName_Ebook`, { headers }).then(result => {
+                        // alert(result.data)
+                        this.username = result.data;
+                    }).catch(err=>{
+                        alert(err)
+                    });
+                },
+                create:function(e){
+                    e.preventDefault();
+                    let _this = this;
+                    var request = {};
+                    var Birthday = $('#babyBirth').val();
+                    // alert("create")
+                    request.parentsIdUserAccount = _this.username;
+                    request.babyName = _this.babyName;
+                    request.gender = Number(_this.babyGender);
+                    request.birthday = Birthday;
+                    request.bloodType = _this.babyBloodType;
+                    request.emergencyContact = _this.EmergencyContact;
+                    request.emergencyContactPhone1 = _this.EmergencyContactPhone;
+                    
+                    axios.post(`@Utility.SD.localHost_API/api/Ebook/createEbook`, request, { headers }).then(result => {
+                        // alert(result.data)
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "新增成功",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(result=>{
+                            _this.getEbooks();
+                            $('#ebook_form').modal('hide');
+                        })
+                    }).catch(err => {
+                        alert(err);
+                    })
+                },
+                checkForm: function () {
+                    let _this = this;
+                    let forms = document.querySelectorAll('.needs-validation')
+                    //alert(forms)
+                    Array.prototype.slice.call(forms)
+                        .forEach(function (form) {
+                            form.addEventListener('submit', function (event) {
+                                if (!form.checkValidity()) {
+                                    event.preventDefault()
+                                    event.stopPropagation()
+                                } else {
+                                    _this.create(event);
+                                }
+                                 form.classList.add('was-validated')
+                            }, false)
+                        })
+                    
+                },
+                getEbooks: function () {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetEBooks`, {
+                        headers
+                    }).then(result => {
+                        // alert(result.data)
+                        _this.ebooks = result.data;
+                        for (var i = 0; i < _this.length;i++){
+                            babyName = _this.ebooks[i].BabyName;
+                            babyGender = _this.ebooks[i].Gender
+                            babyBirth = _this.ebooks[i].Birthday
+                        }
+                    }).catch(err => {
+                        alert(err)
+                    });
+                }
+            },
+            mounted: function () {
+                let _this = this;
+                _this.getEbooks();
+            }
+        };
+        var app = Vue.createApp(vueApp).mount('#ebook_Index');
+        
+        // $(function () {
+        //     var forms = document.querySelectorAll('.needs-validation')
+        //     Array.prototype.slice.call(forms)
+        //         .forEach(function (form) {
+        //             form.addEventListener('submit', function (event) {
+        //                 if (!form.checkValidity()) {
+        //                     event.preventDefault()
+        //                     event.stopPropagation()
+        //                 }
+
+        //                 form.classList.add('was-validated')
+
+        //             }, false)
+        //         })
+        // })
+        
+        $('#babyBirth').datepicker({
+            uiLibrary: 'bootstrap5',
+            locale: "zh-tw",
+            format: 'yyyy-mm-dd'
+        });
+        
+    </script>
+}

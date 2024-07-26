@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BabyCiao_Client.styles.css" asp-append-version="true" />
+    
 </head>
 <body>
     <header>
@@ -24,7 +25,7 @@
                             <a class="nav-link text-dark" href="@Utility.SD.localHost_Backstage/Home/Index">後臺程式入口</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="andy_ebook" asp-controller="Home" asp-action="Index">電子聯絡簿</a>
+                            <a id="e_book" class="nav-link text-dark" asp-area="andy_ebook" asp-controller="Home" asp-action="Index">電子聯絡簿</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial_self" />
@@ -51,6 +52,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         let username = sessionStorage.getItem("username");
+        
         var vueApp = {
             data() {
                 return {
@@ -76,6 +78,7 @@
         var app = Vue.createApp(vueApp).mount('#loginApp')
 
         $(function () {
+            //登出動畫與操作
             $('#logoutForm').on('click', function (e) {
                 e.preventDefault();
                 Swal.fire({
@@ -102,6 +105,15 @@
                     }
                 });
 
+            })
+            $('#e_book').on("click", function (e) {
+                if (username != null) {
+                    
+                } else {
+                    e.preventDefault();
+                    sessionStorage.setItem("target", "@Utility.SD.localHost_Client/andy_ebook/Home/Index")
+                    window.location.href = "@Utility.SD.localHost_Client/Home/Login";
+                }
             })
         })
         

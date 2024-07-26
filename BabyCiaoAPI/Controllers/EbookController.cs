@@ -1,86 +1,92 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BCrypt.Net;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using BabyCiaoAPI.Models;
 using BabyCiaoAPI.DTO;
-using System.Reflection;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
 
 namespace BabyCiaoAPI.Controllers
 {
+    [EnableCors("andy")]
     [Route("api/[controller]")]
     [ApiController]
     public class EbookController : ControllerBase
     {
         private readonly BabyciaoContext _context;
+        private readonly IHttpContextAccessor _contextAccessor;
+        //private readonly ContactBook _contactBook;
 
-        private readonly ContactBook _contactBook;
-
-        public EbookController (BabyciaoContext context, ContactBook contactBook)
+        public EbookController (BabyciaoContext context, IHttpContextAccessor contextAccessor)
         {
             _context = context;
-            _contactBook = contactBook;
+            //_contactBook = contactBook;
+            _contextAccessor= contextAccessor;
         }
 
+        [HttpGet("GetUserName_Ebook")]
+        public async Task<ActionResult<string>> GetUserName_Ebook()
+        {
+            var username = _contextAccessor.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Name);
+            if (username != null)
+            {
+                return  username;
+            }
+            return null;
+        }
 
         // GET: api/<EbookController>
-        [HttpGet]
-        public async Task<EBook_DTO> Get()
+        [HttpGet("GetEBooks")]
+        public async Task<IEnumerable<EBook_DTO>> GetEBooks()
         {
-            string username = HttpContext.User.Identity.Name;
-            int userId = 0;
-            var s =_context.UserAccounts.Where(u=>u.Account==username).FirstOrDefault();
-            if (s != null)
+            string username = _contextAccessor.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Name);
+            
+            bool check = _context.ContactBooks.Where(c => c.ParentsIdUserAccount == username).Any();
+            
+            if (check)
             {
-                userId = s.UserId;
-                var b=_context.ContactBooks.Where(c=>c.ParentsIdUserAccount==username).FirstOrDefault();
-                if (b != null) {
-                    EBook_DTO _DTO = new EBook_DTO()
-                    {
-                        Id = b.Id,
-                        ParentsIdUserAccount = b.ParentsIdUserAccount,
-                        BabyName = b.BabyName,
-                        Gender = b.Gender,
-                        Birthday = b.Birthday,
-                    };
-                    return _DTO;
-                }
-                else
+                var b = _context.ContactBooks.Where(c => c.ParentsIdUserAccount == username).Select(ebook => new EBook_DTO
                 {
-                    return null;
-                }
+                    Id = ebook.Id,
+                    ParentsIdUserAccount = ebook.ParentsIdUserAccount,
+                    BabyName = ebook.BabyName,
+                    Gender = ebook.Gender,
+                    Birthday = ebook.Birthday,
+                });
+                return b;
             }
-            else {
+            else
+            {
                 return null;
             }
         }
-
-        // GET api/<EbookController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpPost("createEbook")]
+        public async Task<string> createEbook([FromBody] EBook_create_DTO DTO)
         {
-            
-            
-            return "value";
-        }
-
-        // POST api/<EbookController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-
-        }
-
-        // PUT api/<EbookController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<EbookController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            ContactBook ebook = new ContactBook()
+            {
+                ParentsIdUserAccount = DTO.ParentsIdUserAccount,
+                BabyName=DTO.BabyName,
+                Gender = DTO.Gender,
+                Birthday = DTO.Birthday,
+                BloodType = DTO.BloodType,
+                EmergencyContact = DTO.EmergencyContact,
+                EmergencyContactPhone1 = DTO.EmergencyContactPhone1,
+            };
+            try
+            {
+                _context.ContactBooks.Add(ebook);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex) { 
+            return ex.ToString();
+            }
+            return "Ok";
         }
     }
 }
