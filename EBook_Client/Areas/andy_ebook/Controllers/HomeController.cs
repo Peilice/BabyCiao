@@ -20,9 +20,12 @@ namespace BabyCiao_Client.Areas.andy_ebook.Controllers
         {
             return View();
         }
-
-        public IActionResult book_record()
+        //GET:andy_ebook/Home/book_record/{ebookId} 
+        [HttpGet]
+        public IActionResult book_record(int id)
         {
+            
+            
             return View();
         }
 
