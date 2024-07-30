@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BabyCiaoAPI.Models;
-using BabyCiaoAPI.Models.DTO;
+using BabyCiaoAPI.DTO;
+using Microsoft.AspNetCore.Cors;
 
 namespace BabyCiaoAPI.Controllers
 {
+    [EnableCors("andy")]
     [Route("api/[controller]")]
     [ApiController]
     public class GroupBuyingController : ControllerBase
@@ -26,12 +28,12 @@ namespace BabyCiaoAPI.Controllers
         public async Task<ActionResult<IEnumerable<GBDTO>>> GetGroupBuyings()
         {
 			var groupBuys = await(from gb in _context.GroupBuyings
-							join gbp in _context.GroupBuyingPhotos on gb.Id equals gbp.IdGroupBuying into pp
+                                  where gb.Display
+                                  join gbp in _context.GroupBuyingPhotos on gb.Id equals gbp.IdGroupBuying into pp
 							from gbp in pp.OrderBy(p => p.PhotoName).Take(1).DefaultIfEmpty()
 							select new GBDTO
 							{
 								Id = gb.Id,
-								UserAccount = gb.AccountUserAccount,
 								ProductName = gb.ProductName,
 								ProductDescription = gb.ProductDescription,
 								TargetCount = gb.TargetCount,
@@ -39,12 +41,12 @@ namespace BabyCiaoAPI.Controllers
 								ModifiedTime = gb.ModifiedTime,
 								ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
 								Display = gb.Display,
-
 								DisplayString = gb.Display ? "☑" : "",
+								//ProductType= gb.ProductType,        <<這裡API請確保更新API的媽斗~~~~~>>
 								JoinQuantity = _context.GroupBuyingDetails.Where(id => id.GroupBuyingId == gb.Id).Sum(q => q.Quantity),
-								photoUrl = gbp.PhotoName != null ? $"<img src=\" /uploads/{gbp.PhotoName}\" width=\"100\" />" : "<img src=\" /img/noImage.jpg\" width=\"100\" />",
-								
-							}).ToListAsync();
+								photoUrl = gbp.PhotoName /*!= null ? $"<img src=\" /uploads/{gbp.PhotoName}\" width=\"100\" />" : "<img src=\" /img/noImage.jpg\" width=\"100\" />"*/,
+
+                            }).ToListAsync();
 			return Ok(groupBuys);
         }
 

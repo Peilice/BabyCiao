@@ -2,9 +2,9 @@ using BabyCiao_Client.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace BabyCiao_Client.Areas.LilyArea.Controllers
+namespace BabyCiao_Client.Areas.LilyGArea.Controllers
 {
-    [Area("LilyArea")]
+    [Area("LilyGArea")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -15,11 +15,6 @@ namespace BabyCiao_Client.Areas.LilyArea.Controllers
         }
 
         public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult book_record()
         {
             return View();
         }

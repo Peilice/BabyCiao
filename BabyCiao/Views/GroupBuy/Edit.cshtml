@@ -75,6 +75,89 @@
 				<input asp-for="ProductDescription" class="form-control" />
 				<span asp-validation-for="ProductDescription" class="text-danger"></span>
 			</div>
+			<div id="productFormats">
+				@if (Model.ProductFormats != null && Model.ProductFormats.Count > 0)
+				{
+					for (int i = 0; i < Model.ProductFormats.Count(); i++)
+					{
+						<div class="form-group product-format d-flex align-items-center">
+							<input type="hidden" asp-for="@Model.ProductFormats[i].Id" />
+							<label asp-for="@Model.ProductFormats[i].FormatType" class="control-label m-1">規格</label>
+							<select asp-for="@Model.ProductFormats[i].FormatType" class="form-control m-1">
+								<option value="尺寸">尺寸</option>
+								<option value="顏色">顏色</option>
+								<option value="其他">其他</option>
+							</select>
+							<input asp-for="@Model.ProductFormats[i].FormatName" class="form-control" />
+							<button type="button" class="btn btn-outline-danger m-1" onclick="removeField(this)">-</button>
+						</div>
+					}
+				}
+				else
+				{
+					<div class="product-format d-flex align-items-center">
+						<label class="control-label m-1">規格</label>
+						<select class="form-control m-1" name="ProductFormats[0].FormatType">
+							<option value="尺寸">尺寸</option>
+							<option value="顏色">顏色</option>
+							<option value="其他">其他</option>
+						</select>
+						<input class="form-control" name="ProductFormats[0].FormatName" />
+					</div>
+				}
+			</div>
+			<button type="button" class="btn btn-outline-secondary mb-3" id="addFormat">新增規格</button>
+
+
+			<div class="form-group">
+				<label class="control-label">商品分類</label>
+				<select asp-for="ProductType" id="productCategory" class="form-control">
+					<option value="">選擇商品分類</option>
+					<!-- 媽咪用品 -->
+					<optgroup label="媽咪用品">
+						<option value="孕婦裝">孕婦裝</option>
+						<option value="托腹帶/束腹帶">托腹帶/束腹帶</option>
+						<option value="孕哺內衣/內褲">孕哺內衣/內褲</option>
+						<option value="產後護理">產後護理</option>
+						<option value="哺乳用品">哺乳用品</option>
+						<option value="媽媽包">媽媽包</option>
+					</optgroup>
+					<!-- 寶寶用品 -->
+					<optgroup label="寶寶用品">
+						<option value="尿布">尿布</option>
+						<option value="奶瓶/奶嘴">奶瓶/奶嘴</option>
+						<option value="濕紙巾">濕紙巾</option>
+						<option value="嬰兒車">嬰兒車</option>
+					</optgroup>
+					<!-- 玩具 -->
+					<optgroup label="玩具">
+						<option value="益智玩具">益智玩具</option>
+						<option value="毛絨玩具">毛絨玩具</option>
+						<option value="積木">積木</option>
+					</optgroup>
+					<!-- 嬰兒服飾 -->
+					<optgroup label="嬰兒服飾">
+						<option value="衣物">衣物</option>
+						<option value="外套">外套</option>
+						<option value="鞋襪">鞋襪</option>
+						<option value="紗布巾/浴巾/口水巾">紗布巾/浴巾/口水巾</option>
+					</optgroup>
+					<!-- 奶粉和食品 -->
+					<optgroup label="奶粉和食品">
+						<option value="奶粉">奶粉</option>
+						<option value="嬰兒輔食">嬰兒輔食</option>
+						<option value="零食">零食</option>
+					</optgroup>
+					<!-- 洗護用品 -->
+					<optgroup label="洗護用品">
+						<option value="洗髮露">洗髮露</option>
+						<option value="沐浴露">沐浴露</option>
+						<option value="護膚品">護膚品</option>
+					</optgroup>
+				</select>
+			</div>
+
+
 			<div class="form-group">
 				<label asp-for="TargetCount" class="control-label"></label>
 				<input asp-for="TargetCount" class="form-control" />
@@ -133,6 +216,66 @@
 		}
 	</script>
 	<script>
+
+
+		document.getElementById('addFormat').addEventListener('click', function () {
+			var fieldCount = document.querySelectorAll('#productFormats .product-format').length;
+			var newFieldHtml = `
+											<div class="form-group product-format d-flex align-items-center">
+									 <label for="ProductFormats_${fieldCount}__FormatType" class="control-label m-1">規格</label>
+																																							<select name="ProductFormats[${fieldCount}].FormatType" class="form-control m-1">
+													<option value="尺寸">尺寸</option>
+													<option value="顏色">顏色</option>
+													<option value="其他">其他</option>
+												</select>
+																														<input type="text" name="ProductFormats[${fieldCount}].FormatName" class="form-control" />
+																							   <button type="button" class="btn btn-outline-danger m-1" onclick="removeField(this)">-</button></div>
+						`;
+			document.getElementById('productFormats').insertAdjacentHTML('beforeend', newFieldHtml);
+		});
+		function removeField(button) {
+			// 找到要刪除的規格項目
+			const fieldToRemove = button.closest('.form-group');
+			fieldToRemove.remove();
+
+			// 重新標記剩餘的規格索引
+			reindexProductFormats();
+		}
+
+		function reindexProductFormats() {
+			// 獲取所有現有的規格元素
+			const productFormatElements = document.querySelectorAll('.product-format');
+
+			// 重新標記每個規格的索引
+			productFormatElements.forEach((element, index) => {
+				const idInput = element.querySelector('input[name$=".Id"]');
+				const formatTypeSelect = element.querySelector('select');
+				const formatNameInput = element.querySelector('input[name$=".FormatName"]');
+
+				if (idInput) {
+					idInput.name = `ProductFormats[${index}].Id`;
+				}
+				if (formatTypeSelect) {
+					formatTypeSelect.name = `ProductFormats[${index}].FormatType`;
+				}
+				if (formatNameInput) {
+					formatNameInput.name = `ProductFormats[${index}].FormatName`;
+				}
+			});
+
+		}
+
+
+		$(document).ready(function () {
+			$('#productCategory').select2({
+				placeholder: '選擇商品分類',
+				width: '100%',
+				allowClear: true
+			});
+		});
+
+
+
 		document.getElementById('fileInput').addEventListener('change', function (event) {
 			var files = event.target.files;
 			var previewContainer = document.getElementById('preview-container');

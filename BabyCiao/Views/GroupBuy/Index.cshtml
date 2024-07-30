@@ -112,7 +112,7 @@
 					"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Chinese-traditional.json"
 				},
 				"createdRow": function (row, data, dataIndex) {
-					var statementCell = $('td', row).eq(8); // 假設 statement 欄位是第九列 (索引為8)
+					var statementCell = $('td', row).eq(9); // 假設 statement 欄位是第十列 (索引為9)
 					if (data.statement === '出貨中') {
 						statementCell.css('background-color', '#d4edda');
 					} else if (data.statement === '進行中') {
