@@ -1,8 +1,104 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <title>保母委託單</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <!-- breadcrumb start -->
+    <div class="px-3 py-2 mb-2">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 bg-transparent p-2 text-dark bg-opacity-10">
+                <li class="breadcrumb-item"><a class="text-decoration-none" href="./MatchIndex.html">首頁</a></li>
+                <li class="breadcrumb-item active" aria-current="page">保母委託單</li>
+            </ol>
+        </nav>
+        <div class="row" style="width:50%;margin-left:auto;margin-right:0">
+            <label class="col-md-4 form-label">篩選關鍵字:</label>
+            <input type="text" class="col-md-8 form-control" placeholder="請輸入篩選關鍵字" v-model="filter" v-on:keyup="filterCategories" />
+        </div>
+    </div>
+    <!-- breadcrumb end -->
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    <div id="app" class="container">
+        <div class="row">
+            <div class="col-4 mb-2" v-for="item in resumes" :key="item.id">
+                <div class="card">
+                    <img :src="getPhotoUrl(item.photoUrl)" class="card-img-top"  style="height: 180px;">
+                    <div class="card-body">
+                        <div class="down-content">
+                            <h5>名字：{{ item.firstName }}</h5>
+                            <h5>寶寶歲數：{{ item.babyage }}</h5>
+                            <h5>地區：{{ item.city }}, {{ item.district }}</h5>
+                            <h5>服務方式：{{ item.typeOfDaycare }}</h5>
+                            <h5>時段：{{ item.timeSlot }}</h5>
+                            <div class="info">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <ul>
+                                            <li><i class="fa fa-star"></i></li>
+                                            <li><i class="fa fa-star"></i></li>
+                                            <li><i class="fa fa-star"></i></li>
+                                            <li><i class="fa fa-star"></i></li>
+                                            <li><i class="fa fa-star"></i></li>
+                                        </ul>
+                                    </div>
+                             <div class="col-6">
+                                  <a class="active nav-link" asp-area="Match" asp-controller="Home" asp-action="Babyinformation" asp-route-Id="Id">
+                                            <button class="btn btn-primary">了解更多</button>
+                                        </a>
+                            </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- axios -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
+            integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        var vueApp = {
+            data() {
+                return {
+                    resumes: [],
+                };
+            },
+            methods: {
+                fetchresumes: function () {
+                    let _this = this;
+
+                    try {
+                        axios.get("https://localhost:7292/api/BabyResumes/Fullinformation")
+                            .then(response => {
+                                _this.resumes = response.data;
+                            })
+                            .catch(err => alert(err))
+                    }
+                    catch (error) {
+                        console.log(error);
+                    }
+                },
+                getPhotoUrl(Photo) {
+                    return Photo != null ? `https://localhost:7000/nannnyandperant/babyreume${Photo}` : `https://localhost:7000/image/noimage.jpg`;
+                }
+
+            },
+            mounted: function () {
+                let _this = this;
+                _this.fetchresumes()
+            }
+        };
+        var app = Vue.createApp(vueApp).mount('#app');
+
+    </script>
+</body>
+</html>

@@ -17,6 +17,7 @@ using System.IO;
 
 namespace BabyCiaoAPI.Controllers
 {
+    [EnableCors("andy")]
     [Route("api/[controller]")]
     [ApiController]
     public class BabyResumesController : ControllerBase
@@ -34,7 +35,7 @@ namespace BabyCiaoAPI.Controllers
 
         // GET: api/Categories
         [HttpGet]
-        public async Task<IEnumerable<BabyResume>> GetBabyResume()
+        public async Task<ActionResult<IEnumerable<BabyResume>>> GetBabyResume()
         {
             return await _context.BabyResumes.Select(c => new BabyResume
             {
@@ -51,24 +52,33 @@ namespace BabyCiaoAPI.Controllers
         [HttpGet("Fullinformation")]
         public async Task<ActionResult<IEnumerable<BabyResumeDTO>>> GetFullinformation()
         {
-            var resumes = await _context.BabyResumes.Select(c => new BabyResumeDTO
+            try
             {
-                Id = c.Id,
-                AccountUserAccount = c.AccountUserAccount,
-                Photo = c.Photo,
-                FirstName = c.FirstName,
-                City = c.City,
-                District = c.District,
-                ApplyDate = c.ApplyDate,
-                RequireDate = c.RequireDate,
-                Babyage = c.Babyage.ToString(),
-                TypeOfDaycare = c.TypeOfDaycare,
-                TimeSlot = c.TimeSlot,
-                Memo = c.Memo,
-                Display = c.Display
-            }).ToListAsync();
+                var resumes = await _context.BabyResumes.Select(c => new BabyResumeDTO
+                {
+                    Id = c.Id,
+                    AccountUserAccount = c.AccountUserAccount,
+                    Photo = c.Photo,
+                    FirstName = c.FirstName,
+                    City = c.City,
+                    District = c.District,
+                    ApplyDate = c.ApplyDate,
+                    RequireDate = c.RequireDate,
+                    Babyage = c.Babyage,
+                    TypeOfDaycare = c.TypeOfDaycare,
+                    TimeSlot = c.TimeSlot,
+                    Memo = c.Memo,
+                    Display = c.Display
+                }).ToListAsync();
 
-            return Ok(resumes);
+                return Ok(resumes);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpGet("Filter")]

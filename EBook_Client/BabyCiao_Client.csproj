@@ -9,9 +9,17 @@
 
   <ItemGroup>
     <Compile Remove="Areas\anan\**" />
+    <Compile Remove="Areas\LilyArea\**" />
+    <Compile Remove="Areas\Match\DTO\**" />
     <Content Remove="Areas\anan\**" />
+    <Content Remove="Areas\LilyArea\**" />
+    <Content Remove="Areas\Match\DTO\**" />
     <EmbeddedResource Remove="Areas\anan\**" />
+    <EmbeddedResource Remove="Areas\LilyArea\**" />
+    <EmbeddedResource Remove="Areas\Match\DTO\**" />
     <None Remove="Areas\anan\**" />
+    <None Remove="Areas\LilyArea\**" />
+    <None Remove="Areas\Match\DTO\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,8 +40,6 @@
   <ItemGroup>
     <Folder Include="Areas\andy_ebook\Data\" />
     <Folder Include="Areas\andy_ebook\Models\" />
-    <Folder Include="Areas\LilyArea\Data\" />
-    <Folder Include="Areas\LilyArea\Models\" />
   </ItemGroup>
 
   <ItemGroup>

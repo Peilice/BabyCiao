@@ -11,7 +11,10 @@
     <link href="~/style/ed/assets/css/templatemo-edu-meeting.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -183,7 +186,7 @@
     </div>
 </section>
 
-<section class="our-courses" id="courses" v-else>
+<section class="our-courses" id="courses">
     <div class="container1">
         <div class="row">
             <div class="col-lg-12">
@@ -191,21 +194,16 @@
                     <h2>家長委託</h2>
                 </div>
             </div>
-            <div class="col-lg-12">
+            <div id="app" class="col-lg-12">
                 <div class="owl-courses-item owl-carousel">
-                    <div class="item" v-for="item in BabyResumes :key="item.id">
-                        <img v-bind:src=`${baseAddress}/api/BabyResumes/GetPicture/${item.BabyResumesid}?rand =${rand}` style="width:320px;height:240px">
+                    <div class="item" v-for="item in resumes" :key="item.id">
+                        <img v-bind:src="getPhotoUrl(item.photo)" style="width:320px;height:240px">
                         <div class="down-content">
-                            <h5>名字</h5>
-                            <p>{{item.FirstName}}</p>
-                            <h5>寶寶歲數</h5>
-                            <p>{{item.babyage}}</p>
-                            <h5>地區</h5>
-                            <p>{{item.city}}{{item.district}}</p>
-                            <h5>服務方式</h5>
-                            <p>{{item.typeOfDaycare}}</p>
-                            <h5>時段</h5>
-                            <p>{{item.timeSlot}}</p>
+                            <h5>名字：{{ item.firstName }}</h5>
+                            <h5>寶寶歲數：{{ item.babyage }}</h5>
+                            <h5>地區：{{ item.city }}, {{ item.district }}</h5>
+                            <h5>服務方式：{{ item.typeOfDaycare }}</h5>
+                            <h5>時段：{{ item.timeSlot }}</h5>
                             <div class="info">
                                 <div class="row">
                                     <div class="col-6">
@@ -225,245 +223,6 @@
                             </div>
                         </div>
                     </div>
-                  @*   <div class="item">
-                        <img src="assets/images/course-02.jpg" alt="Course Two">
-                        <div class="down-content">
-                            <h4>Curabitur molestie dignissim purus vel</h4>
-                            <div class="info">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <ul>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-4">
-                                        <span>$180</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <img src="assets/images/course-03.jpg" alt="">
-                        <div class="down-content">
-                            <h4>Nulla at ipsum a mauris egestas tempor</h4>
-                            <div class="info">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <ul>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-4">
-                                        <span>$140</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <img src="assets/images/course-04.jpg" alt="">
-                        <div class="down-content">
-                            <h4>Aenean molestie quis libero gravida</h4>
-                            <div class="info">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <ul>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-4">
-                                        <span>$120</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <img src="assets/images/course-01.jpg" alt="">
-                        <div class="down-content">
-                            <h4>Lorem ipsum dolor sit amet adipiscing elit</h4>
-                            <div class="info">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <ul>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-4">
-                                        <span>$250</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <img src="assets/images/course-02.jpg" alt="">
-                        <div class="down-content">
-                            <h4>TemplateMo is the best website for Free CSS</h4>
-                            <div class="info">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <ul>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-4">
-                                        <span>$270</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <img src="assets/images/course-03.jpg" alt="">
-                        <div class="down-content">
-                            <h4>Web Design Templates at your finger tips</h4>
-                            <div class="info">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <ul>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-4">
-                                        <span>$340</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <img src="assets/images/course-04.jpg" alt="">
-                        <div class="down-content">
-                            <h4>Please visit our website again</h4>
-                            <div class="info">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <ul>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-4">
-                                        <span>$360</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <img src="assets/images/course-01.jpg" alt="">
-                        <div class="down-content">
-                            <h4>Responsive HTML Templates for you</h4>
-                            <div class="info">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <ul>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-4">
-                                        <span>$400</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <img src="assets/images/course-02.jpg" alt="">
-                        <div class="down-content">
-                            <h4>Download Free CSS Layouts for your business</h4>
-                            <div class="info">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <ul>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-4">
-                                        <span>$430</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <img src="assets/images/course-03.jpg" alt="">
-                        <div class="down-content">
-                            <h4>Morbi in libero blandit lectus cursus</h4>
-                            <div class="info">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <ul>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-4">
-                                        <span>$480</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <img src="assets/images/course-04.jpg" alt="">
-                        <div class="down-content">
-                            <h4>Curabitur molestie dignissim purus</h4>
-                            <div class="info">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <ul>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-4">
-                                        <span>$560</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> *@
                 </div>
             </div>
         </div>
@@ -961,9 +720,8 @@
         </div>
     </section>
 
-
     @section Scripts{
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 @*     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
  *@     <script src="~/style/ed/assets/js/custom.js"></script>
@@ -974,36 +732,51 @@
         <script src="~/style/ed/assets/js/tabs.js"></script>
         <script src="~/style/ed/assets/js/video.js"></script>
         <script src="~/style/ed/vendor/jquery/jquery.min.js"></script>
-    <script src="~/style/ed/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/style/ed/vendor/bootstrap/js/bootstrap.min.js"></script> 
 
-    <script src="https://unpkg.com/vue@3.4.31/dist/vue.global.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+            crossorigin="anonymous"></script>
+    <!-- axios -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
+            integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         var vueApp = {
             data() {
                 return {
-                    baseAddress: "https://localhost:7292",
-                    BabyResumes: [],
-                    rand: Math.random()
-                };
-            },
-            mounted() {
-                this.fetchBabyResumes();
-            },
+                resumes: [],
+            };
+        },
             methods: {
-                async fetchBabyResumes() {
-                    try {
-                        const response = await axios.get(`${this.baseAddress}/api/BabyResumes`);
-                        this.BabyResumes = response.data;
-                    } catch (error) {
-                        console.error("获取数据时出错:", error);
-                    }
-                }
-            }
-        };
-        Vue.createApp(vueApp).mount("#app");
-    </script>
+                fetchresumes: function () {
+                    let _this = this;
 
+                    try {
+                        axios.get("https://localhost:7292/api/BabyResumes/Fullinformation")
+                            .then(response => {
+                                _this.resumes = response.data;
+                            })
+                            .catch(err => alert(err))
+                        }
+                        catch (error) {
+            console.log(error);
+        }
+                    },
+        getPhotoUrl(Photo) {
+                    return Photo != null ? `https://localhost:7000/nannnyandperant/babyreume${Photo}` : `https://localhost:7000/image/noimage.jpg`;
+        }
+
+                },
+        mounted: function () {
+            let _this = this;
+                _this.fetchresumes()
+        }
+            };
+        var app = Vue.createApp(vueApp).mount('#app');
+
+    </script>
     <!-- Font Awesome -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
     <!-- Custom JS -->
@@ -1023,4 +796,4 @@
     </script>
     }
 
-    
+

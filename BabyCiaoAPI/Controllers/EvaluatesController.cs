@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BabyCiaoAPI.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace BabyCiaoAPI.Controllers
 {
+    [EnableCors("andy")]
     [Route("api/[controller]")]
     [ApiController]
     public class EvaluatesController : ControllerBase
@@ -26,26 +28,49 @@ namespace BabyCiaoAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Evaluate>>> GetEvaluates()
         {
-            return await _context.Evaluates.ToListAsync();
+            return await _context.Evaluates.Select(c => new Evaluate
+            {
+                Id=c.Id,
+                AppraiseeUserAccount=c.AppraiseeUserAccount,
+                Score=c.Score,
+                Memo=c.Memo,
+            }).ToListAsync();
         }
+
+
 
         // GET: api/Evaluates/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Evaluate>> GetEvaluate(int id)
+        public async Task<ActionResult<Evaluate>> GetEvaluateinfo(int id)
         {
-            var evaluate = await _context.Evaluates.FindAsync(id);
-
-            if (evaluate == null)
+            try
             {
-                return NotFound();
-            }
+                var evaluate = await _context.Evaluates.Select(c => new EvaluateDTO
+                {
+                    Id = c.Id,
+                    EvaluatorUserAccount = c.EvaluatorUserAccount,
+                    AppraiseeUserAccount = c.AppraiseeUserAccount,
+                    EvaluateTime = c.EvaluateTime,
+                    Score = c.Score,
+                    Memo = c.Memo,
+                    Display = c.Display,
+                }).ToListAsync();
 
-            return evaluate;
+
+                return Ok(evaluate);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Internal server error");
+            }
         }
 
-        // PUT: api/Evaluates/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+
+// PUT: api/Evaluates/5
+// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+[HttpPut("{id}")]
         public async Task<IActionResult> PutEvaluate(int id, Evaluate evaluate)
         {
             if (id != evaluate.Id)
