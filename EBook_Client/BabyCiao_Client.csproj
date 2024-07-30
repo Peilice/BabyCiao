@@ -32,6 +32,8 @@
   <ItemGroup>
     <Folder Include="Areas\andy_ebook\Data\" />
     <Folder Include="Areas\andy_ebook\Models\" />
+    <Folder Include="Areas\LilyArea\Data\" />
+    <Folder Include="Areas\LilyArea\Models\" />
   </ItemGroup>
 
   <ItemGroup>

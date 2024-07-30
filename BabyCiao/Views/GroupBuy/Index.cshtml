@@ -33,6 +33,7 @@
 		<tr>
 			<th>編號</th>
 			<th>商品</th>
+			<th>分類</th>
 			<th>商品圖片</th>
 			<th>訂購數</th>
 			<th>成團數</th>
@@ -48,6 +49,7 @@
 		{
 			<tr>
 				<td>@item.ProductName</td>
+				<td>@item.ProductType</td>
 				<td>@item.photoUrl</td>
 				<td>@item.JoinQuantity</td>
 				<td>@item.TargetCount</td>
@@ -88,6 +90,7 @@
 
 					{ "data": "id" },
 					{ "data": "productName" },
+					{ "data": "productType" },
 					{ "data": "photoUrl" },
 					{ "data": "joinQuantity" },
 					{ "data": "targetCount" },
@@ -109,7 +112,7 @@
 					"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Chinese-traditional.json"
 				},
 				"createdRow": function (row, data, dataIndex) {
-					var statementCell = $('td', row).eq(8); // 假設 statement 欄位是第九列 (索引為8)
+					var statementCell = $('td', row).eq(9); // 假設 statement 欄位是第十列 (索引為9)
 					if (data.statement === '出貨中') {
 						statementCell.css('background-color', '#d4edda');
 					} else if (data.statement === '進行中') {
