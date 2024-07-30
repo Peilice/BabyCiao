@@ -5,6 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using BabyCiao_Client;
 using Microsoft.IdentityModel.Tokens;
 using Utility;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,15 +20,30 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews();
+
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<UserInfoServer>();
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(option =>
 {
-    option.LoginPath = new PathString("/andy_login/login");
-    option.AccessDeniedPath = new PathString("/Home/NoRole");
+    //設定令牌驗證的參數，包括發行者、簽名金鑰等。
+    option.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:key"])),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+    };
 });
+
+//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+//{
+//    option.LoginPath = new PathString("/Home/Login");
+//    option.AccessDeniedPath = new PathString("/Home/NoRole");
+//});
+
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 

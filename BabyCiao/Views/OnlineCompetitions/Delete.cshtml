@@ -18,7 +18,7 @@
 <div>
     @* <h4>OnlineCompetition</h4> *@
     <hr />
-    <dl class="row">
+    <dl class="row" enctype="multipart/form-data">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.CompetitionName)
         </dt>
@@ -60,7 +60,10 @@
         </dt>
         <dd class="col-sm-10">
             <div>
-                <img src="~/uploads/@Html.DisplayFor(model => model.CompetitionPhotoNames)" alt="" class="photos" />
+                <img src="~/uploads/@Html.DisplayFor(model => model.CompetitionPhotoNames)" alt="@Html.DisplayFor(model=>model.CompetitionName)" class="photos" />
+                <form asp-controller="OnlineCompetition" asp-action="DeletePhoto" method="post" onsubmit="return confirmDelete(this);">
+                    <input type="hidden" asp-for="@Model.IdOnlineCompetition" name="IdOnlineCompetition" value="@Model.IdOnlineCompetition" />
+                </form>
             </div>
         </dd>
     </dl>

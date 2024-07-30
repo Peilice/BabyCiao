@@ -1,9 +1,11 @@
 using BabyCiao_Client.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace BabyCiao_Client.Areas.andy_ebook.Controllers
 {
+    
     [Area("andy_ebook")]
     public class HomeController : Controller
     {
@@ -13,14 +15,18 @@ namespace BabyCiao_Client.Areas.andy_ebook.Controllers
         {
             _logger = logger;
         }
-
+        
+        
         public IActionResult Index()
         {
             return View();
         }
-
-        public IActionResult book_record()
+        //GET:andy_ebook/Home/book_record/{ebookId} 
+        [HttpGet]
+        public IActionResult book_record(int id)
         {
+            
+            
             return View();
         }
 

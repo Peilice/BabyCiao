@@ -1,6 +1,4 @@
 ﻿@section Styles{
-    
-
     <style>
         
         .timeLines {
@@ -14,13 +12,14 @@
         }
 
         .MSG_title {
-            position: absolute;
+            /* position: absolute; */
             background-Color: pink;
             font-Size: 16px;
+            margin-bottom:8px;
         }
 
         .MSG {
-            position: absolute;
+            /* position: absolute; */
             background-Color: pink;
             font-Size: 16px;
             height: 100px;
@@ -28,592 +27,485 @@
         }
 
         #context1 {
-            position: relative;
+            /* position: relative; */
         }
     </style>
 }
-
-
+<!-- breadcrmb start -->
+<div class="bg-light px-3">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="index.html">首頁</a></li>
+            <li class="breadcrumb-item active" aria-current="page">電子聯絡簿</li>
+        </ol>
+    </nav>
+</div>
+<!-- breadcrmb end -->
 <!-- list and tabs start -->
-
+<div class="container-fluid py-5" id="app_Ebook_record">
+    <div class="row">
         <!-- list start -->
-        
+        <div class="col-12 col-md-3" style="width:260px">
+            <div class="list-group">
+            <h3 class="fs-3 fw-bold ps-3">功能選單</h3>
+                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_record" class="list-group-item list-group-item-action active">最新交接事項</a>
+                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_infos" class="list-group-item list-group-item-action">寶寶基本資料</a>
+                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_historySearch" class="list-group-item list-group-item-action">歷史紀錄查詢</a>
+                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_activityDaily" class="list-group-item list-group-item-action">活動日記</a>
+            </div>
+        </div>
         <!-- list end -->
-       
-            <!-- tabs start -->
+        <!-- tabs start -->
+        <div class="col-12 col-md-9 rounded">
             <div class="div1 p-2" style="background-color:#fff4ef ;">
-                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="pills-1-tab" data-bs-toggle="pill"
-                                data-bs-target="#pills-1" type="button" role="tab" aria-controls="pills-1"
-                                aria-selected="true">
-                            全部
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-2-tab" data-bs-toggle="pill" data-bs-target="#pills-2"
-                                type="button" role="tab" aria-controls="pills-2" aria-selected="false">
-                            飲食
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-3-tab" data-bs-toggle="pill" data-bs-target="#pills-3"
-                                type="button" role="tab" aria-controls="pills-3" aria-selected="false">
-                            尿布更換
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-4-tab" data-bs-toggle="pill" data-bs-target="#pills-4"
-                                type="button" role="tab" aria-controls="pills-4" aria-selected="false">
-                            睡眠
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-5-tab" data-bs-toggle="pill" data-bs-target="#pills-5"
-                                type="button" role="tab" aria-controls="pills-5" aria-selected="false">
-                            備註
-                        </button>
-                    </li>
-                </ul>
-                <div class="tab-content px-2 h-75 rounded" id="pills-tabContent">
-                    <!-- 全部 start -->
-                    <div class="tab-pane fade show active h-100" id="pills-1" role="tabpanel"
-                         aria-labelledby="pills-1-tab">
-                        <!-- 條件設定區 start -->
-                        <div class="h-25 p-3" style="background-color: #f6dec8;">
-                            <div class="form-group">
-                                <div class="w-100 d-flex align-items-center mb-2" id="htmlTarget">
-                                    <label for="" class="col-form-label">▲ 時間：</label>
-                                    <label for="linkedPickers11Input" class="form-label mb-0 mx-1">從</label>
-                                    <div class="input-group log-event w-25" id="linkedPickers11"
-                                         data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                        <input id="linkedPickers11Input" type="text" class="form-control"
-                                               data-td-target="#linkedPickers11" />
-                                        <span class="input-group-text" data-td-target="#linkedPickers11"
-                                              data-td-toggle="datetimepicker">
-                                            <!-- <span class="fa-solid fa-calendar"></span> -->
-                                            <span class="bi bi-calendar"></span>
-                                        </span>
-                                    </div>
-                                    <label for="linkedPickers12Input" class="form-label mb-0 mx-1">到</label>
-                                    <div class="input-group log-event w-25" id="linkedPickers12"
-                                         data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                        <input id="linkedPickers12Input" type="text" class="form-control"
-                                               data-td-target="#linkedPickers12" />
-                                        <span class="input-group-text" data-td-target="#linkedPickers12"
-                                              data-td-toggle="datetimepicker">
-                                            <!-- <span class="fa-solid fa-calendar"></span> -->
-                                            <span class="bi bi-calendar"></span>
-                                        </span>
-                                    </div>
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pills-1-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-1" type="button" role="tab" aria-controls="pills-1"
+                            aria-selected="true">
+                        全部
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-2-tab" data-bs-toggle="pill" data-bs-target="#pills-2"
+                            type="button" role="tab" aria-controls="pills-2" aria-selected="false">
+                        飲食
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-3-tab" data-bs-toggle="pill" data-bs-target="#pills-3"
+                            type="button" role="tab" aria-controls="pills-3" aria-selected="false">
+                        尿布更換
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-4-tab" data-bs-toggle="pill" data-bs-target="#pills-4"
+                            type="button" role="tab" aria-controls="pills-4" aria-selected="false">
+                        睡眠
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-5-tab" data-bs-toggle="pill" data-bs-target="#pills-5"
+                            type="button" role="tab" aria-controls="pills-5" aria-selected="false">
+                        備註
+                    </button>
+                </li>
+            </ul>
+            <div class="tab-content px-2 h-75 rounded" id="pills-tabContent">
+                <!-- 全部 start -->
+                <div class="tab-pane fade show active h-100" id="pills-1" role="tabpanel"
+                        aria-labelledby="pills-1-tab">
+                    <!-- 條件設定區 start -->
+                    <div class="h-25 p-3" style="background-color: #f6dec8;">
+                        <div class="form-group">
+                            <div class="w-100 d-flex align-items-center mb-2" id="htmlTarget">
+                                <label for="" class="col-form-label">▲ 時間：</label>
+                                <label for="datepiker01" class="form-label mb-0 mx-1">從</label>
+                                <div class="input-group w-25 "  >
+                                    <input type="date" class=" form-control" id="datepiker01" autocomplete="off">
                                 </div>
-                                <div class="w-100 d-flex align-items-center mb-2">
-                                    <label for="" class="col-form-label">▲ 顯示內容：</label>
-                                    <div class="form-check me-2">
-                                        <input class="form-check-input" type="checkbox" value="" id="chk1" checked>
-                                        <label class="form-check-label" for="chk1">
-                                            飲食
-                                        </label>
-                                    </div>
-                                    <div class="form-check me-2">
-                                        <input class="form-check-input" type="checkbox" value="" id="chk2" checked>
-                                        <label class="form-check-label" for="chk2">
-                                            尿布更換
-                                        </label>
-                                    </div>
-                                    <div class="form-check me-2">
-                                        <input class="form-check-input" type="checkbox" value="" id="chk3" checked>
-                                        <label class="form-check-label" for="chk3">
-                                            睡眠
-                                        </label>
-                                    </div>
-                                    <div class="form-check me-2">
-                                        <input class="form-check-input" type="checkbox" value="" id="chk4" checked>
-                                        <label class="form-check-label" for="chk4">
-                                            備註
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- 條件設定區 end -->
-                        <!-- 互動式時間軸 start -->
-                        <div class="container-fluid my-3">
-                            <div class="row">
-                                <div class="col-1" id="timeLine1">
-                                    <div class="timeLines">
-
-                                        <div class="timeLine" data-bs-toggle="popover" title="Popover title"
-                                             data-bs-content="And here's some amazing content. It's very engaging. Right?">
-                                        </div>
-                                        <div class="timeLine" id="test01"></div>
-                                        <div class="timeLine"></div>
-                                        <div class="timeLine"></div>
-                                    </div>
-                                </div>
-                                <div class="col-5">
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-12 " id="context1">
-
-                                                <!-- <div class="MSG" id="time_0_text">
-                                                    測試
-                                                </div> -->
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="col-1 " id="timeLine2">
-                                    <div class="timeLines">
-
-                                        <div class="timeLine"></div>
-                                        <div class="timeLine"></div>
-                                        <div class="timeLine"></div>
-                                        <div class="timeLine"></div>
-                                    </div>
-                                </div>
-                                <div class="col-5" id="context2"></div>
-
-                            </div>
-
-                        </div>
-                        <!-- 互動式時間軸 end -->
-                    </div>
-                    <!-- 全部 end -->
-                    <!-- 飲食 start -->
-                    <div class="tab-pane fade h-100" id="pills-2" role="tabpanel" aria-labelledby="pills-2-tab">
-                        <div class=" p-3" style="background-color: #f6dec8;">
-                            <div class="form-group mb-2 ">
-                                <div class=" d-flex">
-                                    <label for="" class="col-form-label">▲ 時間：</label>
-                                    <div class="input-group log-event w-25" id="datetimepicker1"
-                                         data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                        <input id="datetimepicker1Input" type="text" class="form-control"
-                                               data-td-target="#datetimepicker1" />
-                                        <span class="input-group-text" data-td-target="#datetimepicker2"
-                                              data-td-toggle="datetimepicker">
-                                            <span class="bi bi-calendar"></span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="w-100 d-flex align-items-center mb-2 ">
-                                <label for="" class="col-form-label">▲ 飲食類別：</label>
-                                <div class="form-check me-2">
-                                    <input class="form-check-input" type="radio" name="radio_food" id="radio1"
-                                           value="喝奶">
-                                    <label class="form-check-label" for="radio1">
-                                        喝奶
-                                    </label>
-                                </div>
-                                <div class="form-check me-2">
-                                    <input class="form-check-input" type="radio" name="radio_food" id="radio2"
-                                           value="食物">
-                                    <label class="form-check-label" for="radio2">
-                                        食物
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="basic-addon1">飲食狀況</span>
-                                <input type="text" class="form-control" placeholder="剩餘奶量or挑食等狀況記錄"
-                                       aria-label="Username" aria-describedby="basic-addon1" id="text1">
-                            </div>
-                            <button type="button" class="btn btn-success" id="btn1">新增</button>
-                        </div>
-
-                        <div class="w-50" id="div_food">
-                            <div class="container rounded m-3" style="background-color: pink;">
-                                <div class="row ">
-                                    <!-- <div class="col-10 my-2">
-                                        <h5 class="fw-bolder">6月19日 3點58分</h5>
-                                        <p class="ms-5 mb-0">飲食類別: 喝奶</p>
-                                        <p class="ms-5 mb-0">飲食狀況: 120cc</p>
-                                    </div>
-                                    <div class="col-2 d-flex flex-column text-center justify-content-around">
-                                        <button class="btn btn-primary">編輯</button>
-                                        <button class="btn btn-primary">刪除</button>
-                                    </div> -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 飲食 end -->
-                    <!-- 尿布更換 start -->
-                    <div class="tab-pane fade h-100" id="pills-3" role="tabpanel" aria-labelledby="pills-3-tab">
-                        <div class="p-3 " style="background-color: #f6dec8;">
-                            <div class="form-group mb-2">
-                                <div class=" d-flex">
-                                    <label for="" class="col-form-label">▲ 時間：</label>
-                                    <div class="input-group log-event w-25" id="datetimepicker2"
-                                         data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                        <input id="datetimepicker2Input" type="text" class="form-control"
-                                               data-td-target="#datetimepicker2" />
-                                        <span class="input-group-text" data-td-target="#datetimepicker2"
-                                              data-td-toggle="datetimepicker">
-                                            <span class="bi bi-calendar"></span>
-                                        </span>
-                                    </div>
+                                <label for="datepiker02" class="form-label mb-0 mx-1">到</label>
+                                <div class="input-group w-25 ">
+                                    <input type="date" class=" form-control" id="datepiker02" autocomplete="off">
                                 </div>
                             </div>
                             <div class="w-100 d-flex align-items-center mb-2">
-                                <label for="" class="col-form-label">▲ 內容物：</label>
+                                <label for="" class="col-form-label">▲ 顯示內容：</label>
                                 <div class="form-check me-2">
-                                    <input class="form-check-input" type="radio" name="radio_pu" id="radio3">
-                                    <label class="form-check-label" for="radio3">
-                                        乾爽
+                                    <input class="form-check-input" type="checkbox" value="" id="chk1" checked>
+                                    <label class="form-check-label" for="chk1">
+                                        飲食
                                     </label>
                                 </div>
                                 <div class="form-check me-2">
-                                    <input class="form-check-input" type="radio" name="radio_pu" id="radio4">
-                                    <label class="form-check-label" for="radio4">
-                                        噓噓
+                                    <input class="form-check-input" type="checkbox" value="" id="chk2" checked>
+                                    <label class="form-check-label" for="chk2">
+                                        尿布更換
                                     </label>
                                 </div>
                                 <div class="form-check me-2">
-                                    <input class="form-check-input" type="radio" name="radio_pu" id="radio5">
-                                    <label class="form-check-label" for="radio5">
-                                        便便
+                                    <input class="form-check-input" type="checkbox" value="" id="chk3" checked>
+                                    <label class="form-check-label" for="chk3">
+                                        睡眠
                                     </label>
                                 </div>
                                 <div class="form-check me-2">
-                                    <input class="form-check-input" type="radio" name="radio_pu" id="radio6">
-                                    <label class="form-check-label" for="radio6">
-                                        噓噓+便便
+                                    <input class="form-check-input" type="checkbox" value="" id="chk4" checked>
+                                    <label class="form-check-label" for="chk4">
+                                        備註
                                     </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 條件設定區 end -->
+                    <!-- 互動式時間軸 start -->
+                    <div class="container-fluid my-3">
+                        <div class="row">
+                            <div class="col-1" id="timeLine1">
+                                <div class="timeLines">
+
+                                    <div class="timeLine" data-bs-toggle="popover" title="Popover title"
+                                            data-bs-content="And here's some amazing content. It's very engaging. Right?">
+                                    </div>
+                                    <div class="timeLine" id="test01"></div>
+                                    <div class="timeLine"></div>
+                                    <div class="timeLine"></div>
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12 " id="context1">
+
+                                            @* <div class="MSG" id="time_0_text">
+                                                測試
+                                            </div> *@
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-1 " id="timeLine2">
+                                <div class="timeLines">
+
+                                    <div class="timeLine"></div>
+                                    <div class="timeLine"></div>
+                                    <div class="timeLine"></div>
+                                    <div class="timeLine"></div>
+                                </div>
+                            </div>
+                            <div class="col-5" id="context2"></div>
+
+                        </div>
+
+                    </div>
+                    <!-- 互動式時間軸 end -->
+                </div>
+                <!-- 全部 end -->
+                <!-- 飲食 start -->
+                <div class="tab-pane fade h-100" id="pills-2" role="tabpanel" aria-labelledby="pills-2-tab">
+                    <div class=" p-3" style="background-color: #f6dec8;">
+                        <div class="form-group mb-2 ">
+                            <div class=" d-flex">
+                                    <label for="datetimepicker01" class="col-form-label">▲ 時間：</label>
+                                <div class="input-group " style="width:300px" 
+                                        data-td-target-input="nearest" data-td-target-toggle="nearest">
+                                        <input type="datetime-local" class="form-control" id="datetimepicker01" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-100 d-flex align-items-center mb-2 ">
+                            <label for="" class="col-form-label">▲ 飲食類別：</label>
+                            <div class="form-check me-2">
+                                <input class="form-check-input" type="radio" name="radio_food" id="radio1"
+                                        value="喝奶">
+                                <label class="form-check-label" for="radio1">
+                                    喝奶
+                                </label>
+                            </div>
+                            <div class="form-check me-2">
+                                <input class="form-check-input" type="radio" name="radio_food" id="radio2"
+                                        value="食物">
+                                <label class="form-check-label" for="radio2">
+                                    食物
+                                </label>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">飲食狀況</span>
+                            <input type="text" class="form-control" placeholder="剩餘奶量or挑食等狀況記錄"
+                                    aria-label="Username" aria-describedby="basic-addon1" id="text1">
+                        </div>
+                        <button type="button" class="btn btn-success" id="btn1" v-on:click="">新增</button>
+                    </div>
+
+                    <div class="w-50" id="div_food">
+                        <div class="container rounded m-3" style="background-color: pink;">
+                            <div class="row ">
+                                <!-- <div class="col-10 my-2">
+                                    <h5 class="fw-bolder">6月19日 3點58分</h5>
+                                    <p class="ms-5 mb-0">飲食類別: 喝奶</p>
+                                    <p class="ms-5 mb-0">飲食狀況: 120cc</p>
+                                </div>
+                                <div class="col-2 d-flex flex-column text-center justify-content-around">
+                                    <button class="btn btn-primary">編輯</button>
+                                    <button class="btn btn-primary">刪除</button>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 飲食 end -->
+                <!-- 尿布更換 start -->
+                <div class="tab-pane fade h-100" id="pills-3" role="tabpanel" aria-labelledby="pills-3-tab">
+                    <div class="p-3 " style="background-color: #f6dec8;">
+                        <div class="form-group mb-2">
+                            <div class=" d-flex">
+                                <label for="datetimepicker02" class="col-form-label">▲ 時間：</label>
+                                <div class="input-group " style="width:300px"
+                                        data-td-target-input="nearest" data-td-target-toggle="nearest">
+                                    <input type="datetime-local" class="form-control" id="datetimepicker02">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-100 d-flex align-items-center mb-2">
+                            <label for="" class="col-form-label">▲ 內容物：</label>
+                            <div class="form-check me-2">
+                                <input class="form-check-input" type="radio" name="radio_pu" id="radio3">
+                                <label class="form-check-label" for="radio3">
+                                    乾爽
+                                </label>
+                            </div>
+                            <div class="form-check me-2">
+                                <input class="form-check-input" type="radio" name="radio_pu" id="radio4">
+                                <label class="form-check-label" for="radio4">
+                                    噓噓
+                                </label>
+                            </div>
+                            <div class="form-check me-2">
+                                <input class="form-check-input" type="radio" name="radio_pu" id="radio5">
+                                <label class="form-check-label" for="radio5">
+                                    便便
+                                </label>
+                            </div>
+                            <div class="form-check me-2">
+                                <input class="form-check-input" type="radio" name="radio_pu" id="radio6">
+                                <label class="form-check-label" for="radio6">
+                                    噓噓+便便
+                                </label>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">排泄狀況</span>
+                            <input type="text" class="form-control" placeholder="糞便顏色or軟硬or份量大小等狀況記錄"
+                                    aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                        <button type="button" class="btn btn-success ">新增</button>
+                    </div>
+                    <div class="w-50" id="div_food">
+                        <div class="container rounded m-3" style="background-color: orange">
+                            <div class="row ">
+                                <div class="col-10 my-2">
+                                    <h5 class="fw-bolder">6月19日 3點58分</h5>
+                                    <p class="ms-5 mb-0">內容物: 便便</p>
+                                    <p class="ms-5 mb-0">排泄狀況: 正常</p>
+                                </div>
+                                <div class="col-2 d-flex flex-column text-center justify-content-around">
+                                    <button class="btn btn-primary">編輯</button>
+                                    <button class="btn btn-primary">刪除</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 尿布更換 end -->
+                <!-- 睡眠 start -->
+                <div class="tab-pane fade h-100" id="pills-4" role="tabpanel" aria-labelledby="pills-4-tab">
+                    <div class=" p-3 " style="background-color: #f6dec8;">
+                        <div class="form-group">
+                            <div class="w-100 d-flex align-items-center mb-3" id="htmlTarget">
+                                <label for="" class="col-form-label">▲ 時間：</label>
+                                <label for="datetimepicker03" class="form-label mb-0 mx-1">從</label>
+                                <div class="input-group " style="width:300px"
+                                        data-td-target-input="nearest" data-td-target-toggle="nearest">
+                                    <input type="datetime-local" class="form-control" id="datetimepicker03">
+                                </div>
+                                <label for="datetimepicker04" class="form-label mb-0 mx-1">到</label>
+                                <div class="input-group " style="width:300px"
+                                        data-td-target-input="nearest" data-td-target-toggle="nearest">
+                                    <input type="datetime-local" class="form-control" id="datetimepicker04">
                                 </div>
                             </div>
                             <div class="input-group mb-3">
-                                <span class="input-group-text" id="basic-addon1">排泄狀況</span>
-                                <input type="text" class="form-control" placeholder="糞便顏色or軟硬or份量大小等狀況記錄"
-                                       aria-label="Username" aria-describedby="basic-addon1">
+                                <span class="input-group-text" id="basic-addon1">睡眠狀況</span>
+                                <input type="text" class="form-control" placeholder="安穩or驚醒or咳嗽等狀況記錄"
+                                        aria-label="Username" aria-describedby="basic-addon1">
                             </div>
-                            <button type="button" class="btn btn-success ">新增</button>
+                            <button type="button" class="btn btn-success">新增</button>
                         </div>
-                        <div class="w-50" id="div_food">
-                            <div class="container rounded m-3" style="background-color: orange">
-                                <div class="row ">
-                                    <div class="col-10 my-2">
-                                        <h5 class="fw-bolder">6月19日 3點58分</h5>
-                                        <p class="ms-5 mb-0">內容物: 便便</p>
-                                        <p class="ms-5 mb-0">排泄狀況: 正常</p>
-                                    </div>
-                                    <div class="col-2 d-flex flex-column text-center justify-content-around">
-                                        <button class="btn btn-primary">編輯</button>
-                                        <button class="btn btn-primary">刪除</button>
-                                    </div>
+                    </div>
+                    <div class="w-50" id="div_food">
+                        <div class="container rounded m-3" style="background-color: lightblue">
+                            <div class="row ">
+                                <div class="col-10 my-2">
+                                    <h5 class="fw-bolder">6月19日 3點58分 ~</h5>
+                                    <h5 class="fw-bolder">6月19日 4點58分</h5>
+                                    <p class="ms-5 mb-0">睡眠狀況: 安穩</p>
+                                </div>
+                                <div class="col-2 d-flex flex-column text-center justify-content-around">
+                                    <button class="btn btn-primary">編輯</button>
+                                    <button class="btn btn-primary">刪除</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- 尿布更換 end -->
-                    <!-- 睡眠 start -->
-                    <div class="tab-pane fade h-100" id="pills-4" role="tabpanel" aria-labelledby="pills-4-tab">
-                        <div class=" p-3 " style="background-color: #f6dec8;">
-                            <div class="form-group">
-                                <div class="w-100 d-flex align-items-center mb-3" id="htmlTarget">
-                                    <label for="" class="col-form-label">▲ 時間：</label>
-                                    <label for="linkedPickers21Input" class="form-label mb-0 mx-1">從</label>
-                                    <div class="input-group log-event w-25" id="linkedPickers21"
-                                         data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                        <input id="linkedPickers21Input" type="text" class="form-control"
-                                               data-td-target="#linkedPickers21" />
-                                        <span class="input-group-text" data-td-target="#linkedPickers21"
-                                              data-td-toggle="datetimepicker">
-                                            <!-- <span class="fa-solid fa-calendar"></span> -->
-                                            <span class="bi bi-calendar"></span>
-                                        </span>
-                                    </div>
-                                    <label for="linkedPickers22Input" class="form-label mb-0 mx-1">到</label>
-                                    <div class="input-group log-event w-25" id="linkedPickers22"
-                                         data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                        <input id="linkedPickers22Input" type="text" class="form-control"
-                                               data-td-target="#linkedPickers22" />
-                                        <span class="input-group-text" data-td-target="#linkedPickers22"
-                                              data-td-toggle="datetimepicker">
-                                            <!-- <span class="fa-solid fa-calendar"></span> -->
-                                            <span class="bi bi-calendar"></span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text" id="basic-addon1">睡眠狀況</span>
-                                    <input type="text" class="form-control" placeholder="安穩or驚醒or咳嗽等狀況記錄"
-                                           aria-label="Username" aria-describedby="basic-addon1">
-                                </div>
-                                <button type="button" class="btn btn-success">新增</button>
-                            </div>
-                        </div>
-                        <div class="w-50" id="div_food">
-                            <div class="container rounded m-3" style="background-color: lightblue">
-                                <div class="row ">
-                                    <div class="col-10 my-2">
-                                        <h5 class="fw-bolder">6月19日 3點58分 ~</h5>
-                                        <h5 class="fw-bolder">6月19日 4點58分</h5>
-                                        <p class="ms-5 mb-0">睡眠狀況: 安穩</p>
-                                    </div>
-                                    <div class="col-2 d-flex flex-column text-center justify-content-around">
-                                        <button class="btn btn-primary">編輯</button>
-                                        <button class="btn btn-primary">刪除</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 睡眠 end -->
-                    <!-- 備註 start -->
-                    <div class="tab-pane fade h-100" id="pills-5" role="tabpanel" aria-labelledby="pills-5-tab">
-                        <div class=" p-3" style="background-color: #f6dec8;">
-                            <div class="form-group">
-                                <div class="w-100 d-flex align-items-center mb-3" id="htmlTarget">
-                                    <label for="" class="col-form-label">▲ 時間：</label>
-                                    <label for="linkedPickers31Input" class="form-label mb-0 mx-1">從</label>
-                                    <div class="input-group log-event w-25" id="linkedPickers31"
-                                         data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                        <input id="linkedPickers31Input" type="text" class="form-control"
-                                               data-td-target="#linkedPickers31" />
-                                        <span class="input-group-text" data-td-target="#linkedPickers31"
-                                              data-td-toggle="datetimepicker">
-                                            <!-- <span class="fa-solid fa-calendar"></span> -->
-                                            <span class="bi bi-calendar"></span>
-                                        </span>
-                                    </div>
-                                    <label for="linkedPickers32Input" class="form-label mb-0 mx-1">到</label>
-                                    <div class="input-group log-event w-25" id="linkedPickers32"
-                                         data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                        <input id="linkedPickers32Input" type="text" class="form-control"
-                                               data-td-target="#linkedPickers32" />
-                                        <span class="input-group-text" data-td-target="#linkedPickers32"
-                                              data-td-toggle="datetimepicker">
-                                            <!-- <span class="fa-solid fa-calendar"></span> -->
-                                            <span class="bi bi-calendar"></span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text">狀況說明</span>
-                                    <textarea class="form-control" aria-label="With textarea"
-                                              placeholder="其他特殊狀況記錄"></textarea>
-                                </div>
-                                <button type="button" class="btn btn-success">新增</button>
-                            </div>
-                        </div>
-                        <div class="w-50" id="div_food">
-                            <div class="container rounded m-3" style="background-color: lightgreen">
-                                <div class="row ">
-                                    <div class="col-10 my-2">
-                                        <h5 class="fw-bolder">6月19日 3點58分 ~</h5>
-                                        <h5 class="fw-bolder">6月19日 4點58分</h5>
-                                        <p class="ms-5 mb-0">狀況說明: 發燒</p>
-                                    </div>
-                                    <div class="col-2 d-flex flex-column text-center justify-content-around">
-                                        <button class="btn btn-primary">編輯</button>
-                                        <button class="btn btn-primary">刪除</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 備註 end -->
                 </div>
-
+                <!-- 睡眠 end -->
+                <!-- 備註 start -->
+                <div class="tab-pane fade h-100" id="pills-5" role="tabpanel" aria-labelledby="pills-5-tab">
+                    <div class=" p-3" style="background-color: #f6dec8;">
+                        <div class="form-group">
+                            <div class="w-100 d-flex align-items-center mb-3" id="htmlTarget">
+                                <label for="" class="col-form-label">▲ 時間：</label>
+                                <label for="datetimepicker03" class="form-label mb-0 mx-1">從</label>
+                                <div class="input-group " style="width:300px"
+                                        data-td-target-input="nearest" data-td-target-toggle="nearest">
+                                    <input type="datetime-local" class="form-control" id="datetimepicker03">
+                                </div>
+                                <label for="datetimepicker04" class="form-label mb-0 mx-1">到</label>
+                                <div class="input-group " style="width:300px"
+                                        data-td-target-input="nearest" data-td-target-toggle="nearest">
+                                    <input type="datetime-local" class="form-control" id="datetimepicker04">
+                                </div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">睡眠狀況</span>
+                                <input type="text" class="form-control" placeholder="安穩or驚醒or咳嗽等狀況記錄"
+                                        aria-label="Username" aria-describedby="basic-addon1">
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">狀況說明</span>
+                                <textarea class="form-control" aria-label="With textarea"
+                                            placeholder="其他特殊狀況記錄"></textarea>
+                            </div>
+                            <button type="button" class="btn btn-success">新增</button>
+                        </div>
+                    </div>
+                    <div class="w-50" id="div_food">
+                        <div class="container rounded m-3" style="background-color: lightgreen">
+                            <div class="row ">
+                                <div class="col-10 my-2">
+                                    <h5 class="fw-bolder">6月19日 3點58分 ~</h5>
+                                    <h5 class="fw-bolder">6月19日 4點58分</h5>
+                                    <p class="ms-5 mb-0">狀況說明: 發燒</p>
+                                </div>
+                                <div class="col-2 d-flex flex-column text-center justify-content-around">
+                                    <button class="btn btn-primary">編輯</button>
+                                    <button class="btn btn-primary">刪除</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 備註 end -->
             </div>
-            <!-- tabs end -->
+        </div>
+        </div>
+        <!-- tabs end -->
+    </div>
+</div>
 <!-- list and tabs end -->
 
 @section Scripts{
-
     <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.10.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
             crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-            integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-
     
     <script>
-        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-            return new bootstrap.Popover(popoverTriggerEl)
-        })
-        creatTimeLine("timeLine1");
-        creatTimeLine("timeLine2");
+        const useToken = localStorage.getItem("token");
+        const headers = {
+            'Authorization': `Bearer ${useToken}`,
+        };
+        let Ebook_user = sessionStorage.getItem("username");
+        let IdContactBook = sessionStorage.getItem("IdContactBook");
+        // let List_Datas = new Array();
 
-        dateTimeRebuild("06/19/2024 3:39 上午");
-        //測試用數據(=====================================================================)
-        let List_Eatting = new Array();
-        // let List_Eatting = new Array();
-        // let List_Eatting = new Array();
-        // let List_Eatting = new Array();
-        let context12 = document.getElementById('div_food');
-        let context1 = document.getElementById('context1');
-        let dtp1 = document.getElementById('datetimepicker1Input');
-        let btn1 = document.getElementById('btn1');
-        let pill_all = document.getElementById('pills-1-tab');
-        //點選"全部"頁籤後更新時間軸
-        pill_all.addEventListener("click", function () {
-
-            updateTimeLine();
-        })
-
-        // 新增飲食狀況
-        btn1.addEventListener('click', function () {
-            var item = new Object();
-            item.my_name = '飲食'
-            item.my_time = dateTimeRebuild(dtp1.value);
-            item.my_catetory;
-            if (radio1.checked == true) {
-                item.my_catetory = radio1.value;
-            } else if (radio2.checked == true) {
-                item.my_catetory = radio2.value;
-            }
-            item.my_text = text1.value;
-            addList_Eatting(item);
-            showList(List_Eatting);
-
-        })
-
-        // 飲食專用函式:
-        function addList_Eatting(item) {
-            List_Eatting.push(item);
-        }
-        function showList(list) {
-            context12.innerHTML = "";
-            list.forEach(function (item, index) {
-                var newdiv = document.createElement('div');
-                newdiv.innerHTML = `<div class="container rounded m-3" style="background-color: pink;">
-                                            <div class="row ">
-                                                <div class="col-10 my-2">
-                                                    <h5 class="fw-bolder">${item.my_time.getMonth()}月${item.my_time.getDate()}日 ${item.my_time.getHours()}點${item.my_time.getMinutes()}分</h5>
-                                                    <p class="ms-5 mb-0">飲食類別: ${item.my_catetory}</p>
-                                                    <p class="ms-5 mb-0">飲食狀況: ${item.my_text}</p>
-                                                </div>
-                                                <div class="col-2 d-flex flex-column text-center justify-content-around">
-                                                    <button class="btn btn-primary">編輯</button>
-                                                    <button class="btn btn-primary">刪除</button>
-                                                </div>
-                                            </div>
-                                        </div>`;
-                context12.appendChild(newdiv);
-            });
-        }
-
-        // 更新時間軸
-        function updateTimeLine() {
-
-            List_Eatting.forEach(function (item, index) {
-                var div_ID = findIDByTime(item.my_time.getHours(), item.my_time.getMinutes());
-                setDivByID(div_ID);
-                var context_ID = addContextByTime(item.my_time.getHours(), item.my_time.getMinutes(), item.my_name);
-                if (context_ID != null) {
-                    addshowContext(div_ID, context_ID);
+        var vueApp = {
+            data() {
+                return {
+                    username:"",
+                    DiaperDetail:[],
+                    DietDetail:[],
+                    HealthInfos:[],
+                    Memo:[],
+                    SleepDetail:[],
                 }
-            })
-        }
-        // 透過時間獲得生成位置
-        function getPositionByTime(hour, minute) {
-            if (hour > 12) {
-                hour -= 12;
-            }
-            var p = ((hour * 6 - 1) + Math.floor((minute / 10))) * 10
-            return p;
-        }
-        // 透過時間添加狀態到內容區並回傳context_ID
-        function addContextByTime(hour, minute, name) {
-            var ID = "";
-            var a = (hour * 6 - 1) + Math.floor((minute / 10));
-            var b = 5;
-            ID = `timeDetial${a}_${b}`;
-            var check_ID = document.getElementById(ID);
-            if (check_ID == null) {
-                var div = document.createElement('div');
-                div.id = ID;
-                div.innerHTML = `${name}`;
-                var position = getPositionByTime(hour, minute);
-                div.className = 'w-100 MSG_title';
-                div.style.top = `${position}px`;
-                // div.style.position = 'absolute';
-                // div.style.backgroundColor = 'pink';
-                // div.style.fontSize = '16px';
-                context1.appendChild(div);
-                return ID;
-            } else {
-                return null;
-            }
+            },
+            mounted: function () {
+                let _this = this;
+                alert(IdContactBook);
+                _this.getDietDetailData(IdContactBook);
+                //_this.getDiaperDetailData(IdContactBook);
+                //_this.getHealthInfosData(IdContactBook);
+                //_this.getMemoData(IdContactBook);
+                //_this.getSleepDetailData(IdContactBook);
+            },
+            methods: {
+                //取得資料區
+                getDiaperDetailData: function (IdContactBook) {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDiaperDetail/${IdContactBook}`, { 
+                        headers })
+                        .then(result => { 
+                            // alert(result) 
+                        })
+                        .catch(err => { alert(err) });
+                    
+                },
+                getDietDetailData: function (IdContactBook) {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDietDetail/${IdContactBook}`, {
+                        headers })
+                        .then(result => {
+                            // alert(result.data)
+                            result.data.forEach(function (item, index) {
+                                _this.addContext("飲食", item);
+                            })
+                        }).catch(err => { alert(err) });
+                },
+                getHealthInfosData: function (IdContactBook) {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetHealthInfos/${IdContactBook}`, { 
+                        headers })
+                        .then(result => { alert(result) })
+                        .catch(err => { alert(err) });
+                },
+                getMemoData: function (IdContactBook) {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetMemo/${IdContactBook}`, { 
+                        headers })
+                        .then(result => { alert(result) })
+                        .catch(err => { alert(err) });
+                },
+                getSleepDetailData: function (IdContactBook) {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetSleepDetail/${IdContactBook}`, { 
+                        headers })
+                        .then(result => { alert(result) })
+                        .catch(err => { alert(err) });
+                },
+                //加入資訊區塊
+                addContext: function (detail_type, detail) {
+                    let context1 = document.getElementById('context1');
+                    var div = document.createElement('div');
+                    var contextID = `context${detail_type}_${detail}`;
+                    var detail_time = new Date(detail.recodeTime);
+                    div.id = contextID;
+                    div.innerHTML = `${detail_time.getHours()}點${detail_time.getMinutes()}分 : ${detail_type} \n ${detail.type}`;
+                    div.className = 'w-100 MSG_title';
+                    // div.style.position = 'absolute';
+                    // div.style.backgroundColor = 'pink';
+                    // div.style.fontSize = '16px';
+                    context1.appendChild(div);
+                },
+                //新增資料區
+                createHealthInfos: function () {
+                    axios.post(url, request, {headers
+                    }).then(result=>{
 
-        }
-        // 透過時間尋找區塊ID
-        function findIDByTime(hour, minute) {
-            var ID = "";//timeDetial${a}_${b}
-            if (hour > 12) {
-                hour -= 12;
-            }
-            var a = (hour * 6 - 1) + Math.floor((minute / 10));
-            var b = 2;
-            ID = `timeDetial${a}_${b}`;
-            return ID;
-        }
-        // 透過ID附加事件與樣式到div
-        function setDivByID(div_ID) {
-            var target = document.getElementById(div_ID);
-            if (target != null) {
-                target.className = 'btn btn-danger';
-            }
-        }
-
-        // 時間字串整理
-        function dateTimeRebuild(dateTimeString) {
-            var itemParts = dateTimeString.split(" ");
-            var dateParts = itemParts[0].split("/");
-            var year = dateParts[2];
-            var month = dateParts[0];
-            var day = dateParts[1];
-            var timeParts = itemParts[1].split(":");
-            var session = itemParts[2];
-            var hour = timeParts[0];
-            if (session == "下午") {
-                hour += 12;
-            }
-            var minute = timeParts[1];
-            var date = new Date(year, month, day, hour, minute);
-            return date;
-
-        }
-
-        // 生成時間軸
-        function creatTimeLine(timeLine_num) {
-            let timeLines = document.getElementById(timeLine_num)
-            for (let i = 1; i <= 72; i++) {
-                let div1 = document.createElement('div');
-                div1.className = 'timeLines';
-                div1.id = `time${i}`;
-                for (let j = 1; j <= 4; j++) {
-                    let div2 = document.createElement('div');
-                    div2.className = 'timeLine';
-                    div2.id = `timeDetial${i}_${j}`;
-                    div1.appendChild(div2);
+                    }).catch(err => {alert(err) });
                 }
-                timeLines.appendChild(div1);
+
             }
         }
-        // 加入互動式內容顯示(時間軸專用)
-        function addshowContext(div_ID, text_ID) {
 
-            let text = document.getElementById(text_ID);
-            let target = document.getElementById(div_ID);
-            console.log(text.className);
-            target.addEventListener('click', function () {
-                if (text.className == 'w-100 MSG_title') {
-                    text.className = 'w-100 MSG';
-                } else {
-                    text.className = 'w-100 MSG_title';
-                }
-                console.log('click')
-            })
-        }
+        var app_Ebook_record = Vue.createApp(vueApp).mount('#app_Ebook_record');
+
+
+
+        
     </script>
 }

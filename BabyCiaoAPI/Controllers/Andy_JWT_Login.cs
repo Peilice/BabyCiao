@@ -31,8 +31,6 @@ namespace BabyCiaoAPI.Controllers
         public async Task<ActionResult<string>> GetUserName()
         {
             var user = _httpcontextAccessor.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Name);
-
-
             return user;
         }
 
@@ -59,7 +57,7 @@ namespace BabyCiaoAPI.Controllers
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
             var jwt = new JwtSecurityToken(
                 claims: varClaims,
-                expires: DateTime.Now.AddMinutes(5),
+                expires: DateTime.Now.AddMinutes(60),
                 signingCredentials: creds
                 );
             var token = new JwtSecurityTokenHandler().WriteToken(jwt);
