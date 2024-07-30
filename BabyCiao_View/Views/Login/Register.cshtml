@@ -1,0 +1,218 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "註冊";
+}
+
+<div class="register-container">
+    <div class="register-left">
+        <h1>貝比巧遇</h1>
+        <p>最好的 · 最專業的保母等著您</p>
+    </div>
+    <div class="register-right">
+        <form id="registerForm" method="post" asp-action="Register">
+            <h2>註冊</h2>
+            <div class="input-group">
+                <label for="account">帳號</label>
+                <input type="text" id="account" name="account" required />
+            </div>
+            <div class="input-group">
+                <label for="password">密碼</label>
+                <input type="password" id="password" name="password" required />
+            </div>
+            <div class="radio-group">
+                <input type="radio" id="parent" value="1" name="role" required>
+                <label for="parent" class="radio-label">家長</label>
+                <input type="radio" id="nanny" value="2" name="role" required>
+                <label for="nanny" class="radio-label">保母</label>
+            </div>
+            <button type="submit" class="btn-register">註冊</button>
+            <div class="register-footer">
+                <a asp-action="Login">已經有帳戶？登入</a>
+            </div>
+        </form>
+        <div id="successMessage" class="success-message"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const account = document.getElementById('account').value;
+            const password = document.getElementById('password').value;
+            const role = document.querySelector('input[name="role"]:checked').value;
+            const successMessageDiv = document.getElementById('successMessage');
+
+            try {
+                const response = await fetch('https://localhost:7292/api/UserAccount/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ account, password, permissions: parseInt(role) })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    successMessageDiv.textContent = '註冊成功';
+                    successMessageDiv.className = 'success-message success';
+                    setTimeout(() => {
+                        window.location.href = '@Url.Action("Login", "Login")';
+                    }, 2000);
+                } else {
+                    successMessageDiv.textContent = data.message || '註冊失敗';
+                    successMessageDiv.className = 'success-message error';
+                }
+            } catch (error) {
+                successMessageDiv.textContent = '註冊失敗，請稍後再試';
+                successMessageDiv.className = 'success-message error';
+            }
+        });
+    </script>
+}
+
+<style>
+    .register-container {
+        display: flex;
+        height: 100vh;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .register-left {
+        flex: 1;
+        background-color: rgba(240, 98, 146, 0.85);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+        .register-left h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .register-left p {
+            font-size: 18px;
+        }
+
+    .register-right {
+        flex: 1;
+        background-color: rgba(46, 46, 46, 0.85);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+        .register-right form {
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .register-right h2 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+    .input-group {
+        margin-bottom: 15px;
+    }
+
+        .input-group label {
+            color: white;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4b4b4b;
+            color: white;
+        }
+
+    .radio-group {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .radio-label {
+        padding: 15px 30px;
+        background-color: #f06292;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+        text-align: center;
+        flex: 1;
+        margin: 0 10px;
+        transition: background-color 0.3s ease;
+    }
+
+        .radio-label:hover {
+            background-color: #ec407a;
+        }
+
+    .radio-group input[type="radio"] {
+        display: none;
+    }
+
+        .radio-group input[type="radio"]:checked + .radio-label {
+            background-color: #590339;
+        }
+
+    .btn-register {
+        width: 100%;
+        padding: 15px;
+        background-color: #f06292;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .register-footer {
+        margin-top: 15px;
+        display: flex;
+        justify-content: center;
+        color: white;
+    }
+
+        .register-footer a {
+            color: #f06292;
+            text-decoration: none;
+        }
+
+            .register-footer a:hover {
+                text-decoration: underline;
+            }
+
+    .success-message {
+        margin-top: 20px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 18px;
+        text-align: center;
+    }
+
+        .success-message.success {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .success-message.error {
+            background-color: #f44336;
+            color: white;
+        }
+</style>

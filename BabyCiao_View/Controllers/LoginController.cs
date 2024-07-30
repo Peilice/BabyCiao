@@ -1,0 +1,27 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGeneration.CommandLine;
+
+namespace BabyCiao_View.Controllers
+{
+    
+    public class LoginController : Controller
+    {
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult 登出()
+        {
+            // 添加登出邏輯
+            return RedirectToAction("Index", "Home");
+        }
+    }
+}
