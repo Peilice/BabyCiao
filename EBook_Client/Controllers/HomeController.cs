@@ -17,7 +17,7 @@ namespace BabyCiao_Client.Controllers
             _httpcontextAccessor = httpcontextAccessor;
         }
 
-        public IActionResult Index()
+        public IActionResult Client_Index()
         {
             return View();
         }
