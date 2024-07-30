@@ -13,11 +13,19 @@ namespace BabyCiao_Client.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Client_Index()
         {
             return View();
         }
         public IActionResult Login()
+        {
+            return View();
+        }
+        public IActionResult About()
+        {
+            return View();
+        }
+        public IActionResult Contact()
         {
             return View();
         }
