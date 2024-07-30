@@ -1,13 +1,13 @@
 ﻿@model BabyCiao.Models.Announcement
 
 @{
-    ViewData["Title"] = "詳細內容";
+    ViewData["Title"] = "Details";
 }
 
-<h1>詳細內容</h1>
+<h1>Details</h1>
 
 <div>
-    <h4>公告</h4>
+    <h4>Announcement</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -61,6 +61,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">編輯</a> |
-    <a asp-action="Index">取消新增(返回前頁)</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
 </div>

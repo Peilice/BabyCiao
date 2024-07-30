@@ -1,47 +1,25 @@
 ﻿using Azure;
-using System.ComponentModel.DataAnnotations;
 
 namespace BabyCiao.Models.DTO
 {
     public class PlatformsDTO
     {
         public int PlatformId { get; set; }
-
-        [Display(Name = "發佈者帳號")]
         public string PlatformAccountUserAccount { get; set; }
-
-        [Display(Name = "修改時間")]
         public DateOnly PlatformModifiedTime { get; set; }
-
-        [Display(Name = "文章標題")]
         public string PlatformTitle { get; set; }
-
-        [Display(Name = "內文")]
         public string PlatformContent { get; set; }
-
-        [Display(Name = "文章分類")]
         public string PlatformType { get; set; }
-
-        [Display(Name = "顯示控制")]
         public bool PlatformDisplay { get; set; }
         public IEnumerable<Response>? Responses { get; set; }
 
 
         public class Response
         {
-
             public int ResponseId { get; set; }
-
-            [Display(Name = "留言回應時間")]
             public DateTime ResponseModifiedTime { get; set; }
-
-            [Display(Name = "留言回應")]
             public string ResponseContent { get; set; }
-
-            [Display(Name = "顯示控制")]
             public bool ResponseDisplay { get; set; }
-
-            [Display(Name = "回應人")]
             public string ResponseAccountUserAccount { get; set; }
         }
 

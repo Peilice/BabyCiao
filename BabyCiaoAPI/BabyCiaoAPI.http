@@ -1,6 +1,0 @@
-@BabyCiaoAPI_HostAddress = http://localhost:5148
-
-GET {{BabyCiaoAPI_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

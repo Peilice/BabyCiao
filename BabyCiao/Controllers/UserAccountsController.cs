@@ -88,7 +88,7 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreatePost([Bind("UserId,Account,PasswordEncryption,Permissions,Vip")] UserAccount userAccount)
+        public async Task<IActionResult> CreatePost([Bind("UserId,Account,Password,Permissions,Vip")] UserAccount userAccount)
         {
             if (ModelState.IsValid)
             {
@@ -121,7 +121,7 @@ namespace BabyCiao.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int UserID, [Bind("UserId,Account,PasswordEncryption,Permissions,Vip")] UserAccount userAccount)
+        public async Task<IActionResult> Edit(int UserID, [Bind("UserId,Account,Password,Permissions,Vip")] UserAccount userAccount)
         {
             if (UserID != userAccount.UserId)
             {

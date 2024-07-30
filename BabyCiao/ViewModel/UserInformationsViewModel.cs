@@ -7,8 +7,7 @@ namespace BabyCiao.ViewModel
 {
     public class UserInformationsViewModel
     {
-        public string? UserPhoto { get; set; }
-        public string? Nickname { get; set; }
+
         public int UserId { get; set; }
         [Display(Name = "使用者")]
 

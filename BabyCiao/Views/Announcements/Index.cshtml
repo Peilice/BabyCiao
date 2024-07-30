@@ -1,11 +1,13 @@
 ﻿@model IEnumerable<BabyCiao.Models.Announcement>
 
+@{
+    ViewData["Title"] = "Index";
+}
 
-<h1>公告管理</h1>
+<h1>Index</h1>
 
 <p>
-    <a asp-action="Create">新增公告</a>
-    <a asp-action="Test_aaa">test</a>
+    <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -15,6 +17,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Tittle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Article)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ReferenceName)
@@ -28,7 +33,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Display)
             </th>
-            
+            <th>
+                @Html.DisplayNameFor(model => model.AccountUserAccountNavigation)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -42,6 +49,9 @@
                 @Html.DisplayFor(modelItem => item.Tittle)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Article)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.ReferenceName)
             </td>
             <td>
@@ -51,35 +61,17 @@
                 @Html.DisplayFor(modelItem => item.Type)
             </td>
             <td>
-                <partial name="_Index" model="@item"/> 
-                <label for="@Html.DisplayFor(modelItem => item.Id)">顯示</label>
+                @Html.DisplayFor(modelItem => item.Display)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">編輯</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">詳細內容</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">刪除</a>
+                @Html.DisplayFor(modelItem => item.AccountUserAccountNavigation.Account)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
-
-@section Scripts {
-    <script>
-        
-        $(function () {
-            $(':checkbox').on('click', function () {
-                var Id = this.id;
-                $.ajax({
-                    type:"post",
-                    url: `/Announcements/Index/${Id}`,
-                
-                }).done(function (result) {
-                    // alert(Id);
-                }).fail(function (e) { 
-                    alert('變更失敗');
-                });
-            })
-        })
-    </script>
-}

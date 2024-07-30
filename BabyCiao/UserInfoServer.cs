@@ -13,13 +13,5 @@
             var varClaim = _HttpContextAccessor.HttpContext.User.Identity.Name;
             return varClaim;
         }
-        public bool Islogin() { 
-            if(_HttpContextAccessor.HttpContext.User.Identity.Name!=null) {
-                return true; 
-            }else 
-            {
-                return false; 
-            }
-        }
     }
 }
