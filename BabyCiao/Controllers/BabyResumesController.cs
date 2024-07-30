@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BabyCiao.Models;
 using Microsoft.AspNetCore.Hosting;
+using PagedList;
 
 namespace BabyCiao.Controllers
 {
@@ -22,6 +23,16 @@ namespace BabyCiao.Controllers
             _imagePath = Path.Combine(webHostEnvironment.WebRootPath, "uploads");
         }
 
+        // GET: BabyResumes
+
+
+        public IActionResult Index(int? page)
+        {
+            int pageSize = 15;
+            int pageNumber = (page ?? 1);
+            var resumes = _context.BabyResumes.Include(b => b.AccountUserAccountNavigation).ToList();
+            return View(resumes.ToPagedList(pageNumber, pageSize));
+        }
 
         // GET: BabyResumes/Details/5
         public async Task<IActionResult> Details(int? id)

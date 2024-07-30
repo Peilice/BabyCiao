@@ -14,12 +14,10 @@ namespace BabyCiaoAPI.Controllers
     public class EvaluatesController : ControllerBase
     {
         private readonly BabyciaoContext _context;
-        private readonly Evaluate _evaluate;
 
-        public EvaluatesController(BabyciaoContext context, Evaluate evaluate)
+        public EvaluatesController(BabyciaoContext context)
         {
             _context = context;
-            _evaluate = evaluate;
         }
 
         // GET: api/Evaluates

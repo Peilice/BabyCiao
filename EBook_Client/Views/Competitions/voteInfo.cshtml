@@ -106,7 +106,7 @@
                 }
             },
             getPhotoUrl(CompetitionPhotos) {
-                return CompetitionPhotos != "" ? `https://localhost:7000/uploads/${CompetitionPhotos}` : `https://localhost:7000/image/noimage.jpg`;
+                return CompetitionPhotos != null ? `https://localhost:7000/uploads/${CompetitionPhotos}` : `https://localhost:7000/image/noimage.jpg`;
             }
 
         },
