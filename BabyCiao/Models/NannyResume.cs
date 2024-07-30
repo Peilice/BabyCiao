@@ -5,7 +5,7 @@ namespace BabyCiao.Models;
 
 public partial class NannyResume
 {
-    public int Id { get; set; }
+    public int id { get; set; }
 
     public string NannyAccountUserAccount { get; set; } = null!;
 

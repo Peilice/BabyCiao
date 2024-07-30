@@ -1,4 +1,5 @@
 ﻿using BabyCiao.Models;
+using System.Drawing;
 
 namespace BabyCiao.ViewModel
 {
@@ -19,6 +20,8 @@ namespace BabyCiao.ViewModel
 
         public bool Display { get; set; }
 
-        public string? Picture { get; set; }
+        //public byte[]? Picture { get; set; }
+
+        public byte[]? Picture { get; set; }
     }
 }

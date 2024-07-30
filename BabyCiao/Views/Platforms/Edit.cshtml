@@ -65,12 +65,33 @@
             </div>
             <h4 class="mb-3">留言回應</h4>
             <div class="col-12">
-                <div class="form-group">
-                    <label asp-for="Responses.ResponseModifiedTime" class="control-label"></label>
-                    <input asp-for="" class="form-control" readonly />
-                    <span asp-validation-for="" class="text-danger"></span>
+                <div class="row">
+                    @for (int i = 0; i < Model.Responses.Count(); i++)
+                    {
+                        <input type="hidden" asp-for="Responses[i].ResponseId" />
+                        <div class="form-group col-3">
+                            <label asp-for="Responses[i].ResponseModifiedTime" class="control-label"></label>
+                            <input asp-for="Responses[i].ResponseModifiedTime" class="form-control" readonly />
+                            <span asp-validation-for="Responses[i].ResponseModifiedTime" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-6">
+                            <label asp-for="Responses[i].ResponseContent" class="control-label"></label>
+                            <textarea asp-for="Responses[i].ResponseContent" class="form-control" rows="5" readonly></textarea>
+                            <span asp-validation-for="Responses[i].ResponseContent" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-2">
+                            <label asp-for="Responses[i].ResponseAccountUserAccount" class="control-label"></label>
+                            <input asp-for="Responses[i].ResponseAccountUserAccount" class="form-control" asp-items="ViewBag.AccountUserAccount" readonly />
+                            <span asp-validation-for="Responses[i].ResponseAccountUserAccount" class="text-danger"></span>
+                        </div>
+                        <div class="form-group form-check col-1">
+                            <input class="form-check-input" asp-for="Responses[i].ResponseDisplay" />
+                            <label class="form-check-label" asp-for="Responses[i].ResponseDisplay"></label>
+                            <span asp-validation-for="Responses[i].ResponseDisplay" class="text-danger"></span>
+                        </div>
+                    }
                 </div>
-
+                 
             </div>
             <div class="form-group">
                 <input type="submit" value="儲存" class="btn btn-primary" />

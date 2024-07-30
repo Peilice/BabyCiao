@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@inject UserInfoServer userInfoServer
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -34,21 +35,44 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" asp-area="" asp-controller="UserAccounts" asp-action="Index">帳戶管理</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-controller="UserInformations" asp-action="Index">會員資料管理</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="NannyRequirments" asp-action="Index">保母審核</a></li>
+            
                             </ul>
                         </li>
                         @* 委託單管理 *@
-                        <li class="nav-item dropdown">
-                            <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">委託單管理</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="NannyResumes" asp-action="Index">保母委託單</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="BabyResumes" asp-action="Index">家長委託單</a></li>
-                            </ul>
-                        </li>
-                        @* 公告管理 *@
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Announcements" asp-action="Index">公告管理</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Nannyplatform" asp-action="Nannyplatformindex">媒合平台管理</a>
                         </li>
+  @*                       <li class="nav-item dropdown">
+                            <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">媒合平台管理</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="NannyRequirments" asp-action="Index">保母審核管理</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Nannyplatform" asp-action="Nannyplatformindex">委託單管理</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="contracts" asp-action="Index">合約管理</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="comment" asp-action="Index">用戶狀態管理</a></li>
+                            </ul>
+                        </li> *@
+                        @* 公告管理 *@
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole("公告編輯"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Announcements" asp-action="Index">公告管理</a>
+                                </li>
+                            }
+                           
+                        }
+                        @* 電子聯絡簿 *@
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole("電子聯絡簿"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="https://localhost:7231">電子聯絡簿</a>
+                                </li>
+                            }
+
+                        }
                         @* 社群管理 *@
                         <li class="nav-item dropdown">
                             <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">社群管理</a>
@@ -74,11 +98,7 @@
         </nav>
     </header>
         <div class="page-content p-4">
-            <!-- Page Header-->
-            @* <div class="bg-dash-dark-2 py-4">
-                <div class="container-fluid">
-                </div>
-            </div> *@
+
             @RenderBody()
 
 
@@ -100,6 +120,7 @@
     <script src="~/js/demo.js"> </script>
     <script src="~/js/charts-home.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <!-- Notifications  -->
     <!-- Toast-->
 

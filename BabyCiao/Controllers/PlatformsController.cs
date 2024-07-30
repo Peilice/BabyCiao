@@ -93,7 +93,7 @@ namespace BabyCiao.Controllers
             _context.Add(newPlatform);
             await _context.SaveChangesAsync();
             ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account");
-            return View(platformDTO);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Platforms/Edit/5
@@ -141,50 +141,38 @@ namespace BabyCiao.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [FromForm] PlatformsDTO platformDTO)
         {
-            if (platformDTO == null)
+            if (id == 0)
             {
                 return NotFound();
             }
 
-            var editPlarform = await (from p in _context.Platforms
-                                      join r in _context.PlatformResponses on p.Id equals r.IdPlatform
-                                      where p.Id == id
-                                      select new PlatformsDTO
-                                      {
-                                          PlatformType= p.Type,
-                                          PlatformDisplay=p.Display,
-
-                                      }).FirstOrDefaultAsync();
-
-            if (ModelState.IsValid)
+            var editPlatform = await _context.Platforms.FindAsync(id);
+            if (editPlatform == null)
             {
-                try
-                {
-                    var platform = await _context.Platforms.FindAsync(id);
-                    if (platform == null)
-                    {
-                        return NotFound();
-                    }
-                    platform.UpdateEntity(platformDTO);
-
-                    _context.Update(platform);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    //if (!PlatformExists(platformDTO.PlatformId))
-                    //{
-                    //    return NotFound();
-                    //}
-                    //else
-                    //{
-                    //    throw;
-                    //}
-                }
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
+
+            editPlatform.AccountUserAccount = platformDTO.PlatformAccountUserAccount;
+            editPlatform.ModifiedTime = DateOnly.FromDateTime(DateTime.Now);
+            editPlatform.Title= platformDTO.PlatformTitle;
+            editPlatform.Content=platformDTO.PlatformContent;
+            editPlatform.Type = platformDTO.PlatformType;
+            editPlatform.Display = platformDTO.PlatformDisplay;
+            _context.Update(editPlatform);
+            await _context.SaveChangesAsync();
+
+            //論壇回應修改
+            var editResponse = await _context.PlatformResponses.FirstOrDefaultAsync(x => x.IdPlatform == id);
+            editResponse.ModifiedTime = DateTime.Now;
+            
+            if (editResponse == null)
+            {
+                return NotFound();
+            }
+
+
             ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", platformDTO.PlatformAccountUserAccount);
-            return View(platformDTO);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Platforms/Delete/5
@@ -195,21 +183,41 @@ namespace BabyCiao.Controllers
                 return NotFound();
             }
 
-            var platform = await _context.Platforms
-                .Include(p => p.AccountUserAccountNavigation)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (platform == null)
+            var platformDTO = await (from pf in _context.Platforms
+                                     where pf.Id == id
+                                     select new PlatformsDTO
+                                     {
+                                         PlatformId = pf.Id,
+                                         PlatformAccountUserAccount = pf.AccountUserAccount,
+                                         PlatformModifiedTime = pf.ModifiedTime,
+                                         PlatformTitle = pf.Title,
+                                         PlatformContent = pf.Content,
+                                         PlatformType = pf.Type,
+                                         PlatformDisplay = pf.Display,
+                                         Responses = (from pr in _context.PlatformResponses
+                                                      where pr.IdPlatform == pf.Id
+                                                      select new PlatformsDTO.Response
+                                                      {
+                                                          ResponseModifiedTime = pr.ModifiedTime,
+                                                          ResponseContent = pr.Content,
+                                                          ResponseDisplay = pr.Display,
+                                                          ResponseAccountUserAccount = pr.AccountUserAccount,
+                                                      }).ToList()
+
+                                     }).FirstOrDefaultAsync();
+
+            if (platformDTO == null)
             {
                 return NotFound();
             }
 
-            return View(platform);
+            return View(platformDTO);
         }
 
         // POST: Platforms/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, [FromForm] PlatformsDTO platformDTO)
         {
             var platform = await _context.Platforms.FindAsync(id);
             if (platform != null)

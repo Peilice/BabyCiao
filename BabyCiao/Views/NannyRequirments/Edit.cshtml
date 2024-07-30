@@ -1,7 +1,6 @@
 ﻿@model BabyCiao.Models.DTO.NannyRequirementDTO
 
 
-
 <h1>審核保母資格</h1>
 
 <h4>申請資料</h4>
@@ -25,20 +24,20 @@
                 <label asp-for="photoA" class="control-label">良民證</label>
 
                 <input type="file" asp-for="photoA" class="control-label" style="display:none;"></input>
-                <img src="@Url.Content("~/img/保母證照/" + Model.photoA)" width="400" />
+                <img src="@Url.Content("~/Nannnyandperant/良民證/"+ Model.photoA)" width="400" />
                 <span asp-validation-for="photoA" class="text-danger" style="display:none;"></span>
             </div>
             <div class="form-group">
                 <label asp-for="photoB" class="control-label">保母證</label>
                 <input type="file" asp-for="photoB" class="control-label" style="display:none;"></input>
-                <img src="@Url.Content("~/img/保母證照/" + Model.photoB)" width="400" />
+                <img src="@Url.Content("~/Nannnyandperant/保母證/"+ Model.photoB)" width="400" />
                 <span asp-validation-for="photoB" class="text-danger" style="display:none;"></span>
             </div>
             <div class="form-group">
                 <label asp-for="photoC" class="control-label">身分證</label>
 
                 <input type="file" asp-for="photoC" class="control-label" style="display:none;"></input>
-                <img src="@Url.Content("~/img/保母證照/" + Model.photoC)" width="400" />
+                <img src="@Url.Content("~/Nannnyandperant/身分證/"+ Model.photoC)" width="400" />
                 <span asp-validation-for="photoC" class="text-danger" style="display:none;"></span>
             </div>
             <div class="form-group">
