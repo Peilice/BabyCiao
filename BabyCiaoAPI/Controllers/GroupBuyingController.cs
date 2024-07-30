@@ -42,7 +42,7 @@ namespace BabyCiaoAPI.Controllers
 								ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
 								Display = gb.Display,
 								DisplayString = gb.Display ? "☑" : "",
-								//ProductType= gb.ProductType,        <<這裡API請確保更新API的媽斗~~~~~>>
+								ProductType= gb.ProductType,
 								JoinQuantity = _context.GroupBuyingDetails.Where(id => id.GroupBuyingId == gb.Id).Sum(q => q.Quantity),
 								photoUrl = gbp.PhotoName /*!= null ? $"<img src=\" /uploads/{gbp.PhotoName}\" width=\"100\" />" : "<img src=\" /img/noImage.jpg\" width=\"100\" />"*/,
 
