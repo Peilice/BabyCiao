@@ -5,6 +5,7 @@ using System.Diagnostics;
 
 namespace BabyCiao_Client.Areas.andy_ebook.Controllers
 {
+    
     [Area("andy_ebook")]
     public class HomeController : Controller
     {

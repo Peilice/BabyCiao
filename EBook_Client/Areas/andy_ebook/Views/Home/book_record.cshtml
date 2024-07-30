@@ -12,13 +12,14 @@
         }
 
         .MSG_title {
-            position: absolute;
+            /* position: absolute; */
             background-Color: pink;
             font-Size: 16px;
+            margin-bottom:8px;
         }
 
         .MSG {
-            position: absolute;
+            /* position: absolute; */
             background-Color: pink;
             font-Size: 16px;
             height: 100px;
@@ -26,7 +27,7 @@
         }
 
         #context1 {
-            position: relative;
+            /* position: relative; */
         }
     </style>
 }
@@ -41,7 +42,7 @@
 </div>
 <!-- breadcrmb end -->
 <!-- list and tabs start -->
-<div class="container-fluid py-5">
+<div class="container-fluid py-5" id="app_Ebook_record">
     <div class="row">
         <!-- list start -->
         <div class="col-12 col-md-3" style="width:260px">
@@ -102,7 +103,6 @@
                                 <label for="datepiker01" class="form-label mb-0 mx-1">從</label>
                                 <div class="input-group w-25 "  >
                                     <input type="date" class=" form-control" id="datepiker01" autocomplete="off">
-                                       
                                 </div>
                                 <label for="datepiker02" class="form-label mb-0 mx-1">到</label>
                                 <div class="input-group w-25 ">
@@ -158,9 +158,9 @@
                                     <div class="row">
                                         <div class="col-12 " id="context1">
 
-                                            <!-- <div class="MSG" id="time_0_text">
+                                            @* <div class="MSG" id="time_0_text">
                                                 測試
-                                            </div> -->
+                                            </div> *@
                                         </div>
 
                                     </div>
@@ -218,7 +218,7 @@
                             <input type="text" class="form-control" placeholder="剩餘奶量or挑食等狀況記錄"
                                     aria-label="Username" aria-describedby="basic-addon1" id="text1">
                         </div>
-                        <button type="button" class="btn btn-success" id="btn1">新增</button>
+                        <button type="button" class="btn btn-success" id="btn1" v-on:click="">新增</button>
                     </div>
 
                     <div class="w-50" id="div_food">
@@ -405,7 +405,107 @@
             crossorigin="anonymous"></script>
     
     <script>
-       
+        const useToken = localStorage.getItem("token");
+        const headers = {
+            'Authorization': `Bearer ${useToken}`,
+        };
+        let Ebook_user = sessionStorage.getItem("username");
+        let IdContactBook = sessionStorage.getItem("IdContactBook");
+        // let List_Datas = new Array();
+
+        var vueApp = {
+            data() {
+                return {
+                    username:"",
+                    DiaperDetail:[],
+                    DietDetail:[],
+                    HealthInfos:[],
+                    Memo:[],
+                    SleepDetail:[],
+                }
+            },
+            mounted: function () {
+                let _this = this;
+                alert(IdContactBook);
+                _this.getDietDetailData(IdContactBook);
+                //_this.getDiaperDetailData(IdContactBook);
+                //_this.getHealthInfosData(IdContactBook);
+                //_this.getMemoData(IdContactBook);
+                //_this.getSleepDetailData(IdContactBook);
+            },
+            methods: {
+                //取得資料區
+                getDiaperDetailData: function (IdContactBook) {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDiaperDetail/${IdContactBook}`, { 
+                        headers })
+                        .then(result => { 
+                            // alert(result) 
+                        })
+                        .catch(err => { alert(err) });
+                    
+                },
+                getDietDetailData: function (IdContactBook) {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDietDetail/${IdContactBook}`, {
+                        headers })
+                        .then(result => {
+                            // alert(result.data)
+                            result.data.forEach(function (item, index) {
+                                _this.addContext("飲食", item);
+                            })
+                        }).catch(err => { alert(err) });
+                },
+                getHealthInfosData: function (IdContactBook) {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetHealthInfos/${IdContactBook}`, { 
+                        headers })
+                        .then(result => { alert(result) })
+                        .catch(err => { alert(err) });
+                },
+                getMemoData: function (IdContactBook) {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetMemo/${IdContactBook}`, { 
+                        headers })
+                        .then(result => { alert(result) })
+                        .catch(err => { alert(err) });
+                },
+                getSleepDetailData: function (IdContactBook) {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetSleepDetail/${IdContactBook}`, { 
+                        headers })
+                        .then(result => { alert(result) })
+                        .catch(err => { alert(err) });
+                },
+                //加入資訊區塊
+                addContext: function (detail_type, detail) {
+                    let context1 = document.getElementById('context1');
+                    var div = document.createElement('div');
+                    var contextID = `context${detail_type}_${detail}`;
+                    var detail_time = new Date(detail.recodeTime);
+                    div.id = contextID;
+                    div.innerHTML = `${detail_time.getHours()}點${detail_time.getMinutes()}分 : ${detail_type} \n ${detail.type}`;
+                    div.className = 'w-100 MSG_title';
+                    // div.style.position = 'absolute';
+                    // div.style.backgroundColor = 'pink';
+                    // div.style.fontSize = '16px';
+                    context1.appendChild(div);
+                },
+                //新增資料區
+                createHealthInfos: function () {
+                    axios.post(url, request, {headers
+                    }).then(result=>{
+
+                    }).catch(err => {alert(err) });
+                }
+
+            }
+        }
+
+        var app_Ebook_record = Vue.createApp(vueApp).mount('#app_Ebook_record');
+
+
+
         
     </script>
 }

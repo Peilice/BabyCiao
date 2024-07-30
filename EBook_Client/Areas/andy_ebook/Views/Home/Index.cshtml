@@ -218,8 +218,10 @@
                     });
                 },
                 enter: function (ebookId) {
+                    sessionStorage.setItem("IdContactBook", ebookId);
                     window.location.href = `@Utility.SD.localHost_Client/andy_ebook/Home/book_record/${ebookId}`
                 },
+                
             },
             mounted: function () {
                 let _this = this;
