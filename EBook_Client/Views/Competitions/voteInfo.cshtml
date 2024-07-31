@@ -9,74 +9,89 @@
     </nav>
 </div>
 
-<div class="container mb-4">
-    <h1 class="text-center mb-3 mt-3 fw-bold">寶貝裝扮大賽</h1>
-</div>
 
-<div class="container">
-    <div class="d-flex justify-content-between">
-        <div class="d-flex">
-            <button class="btn btn-outline-dark me-2" type="submit"><i class="bi bi-heart">收藏此活動</i></button>
-            <div class="dropdown">
-                排序
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                    最新
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="#">最新</a></li>
-                    <li><a class="dropdown-item" href="#">投票數</a></li>
-                </ul>
+
+<div id="app" class="container mb-4">
+        <h1 class="text-center mb-3 mt-3 fw-bold">{{CompetitionName}}</h1>
+    
+        <!-- 比賽內容介紹 -->
+        <div class="col-12 mb-3">
+            <h3>比賽內容介紹</h3>
+            <p> {{Content}} </p>
+            <h3>投票期間</h3>
+            <p>{{StartTime}} ~ {{EndTime}}</p>
+            <h3>比賽進行狀態</h3>
+            <p>{{Statement}}</p>
+        </div>
+    
+    <div class="container" id="app">
+        <div class="d-flex justify-content-between">
+            <div class="d-flex">
+                <button class="btn btn-outline-dark me-2" type="submit"><i class="bi bi-heart">收藏此活動</i></button>
+                <div class="dropdown">
+                    排序
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        最新
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="#">最新</a></li>
+                        <li><a class="dropdown-item" href="#">投票數</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <label for="" class="me-3">參賽者：<span>{{Competitor}}</span></label>
+                @* 待處理 *@
+                <label for="" class="me-3">總票數：<span>584</span></label>
+                @* <label for="" class="me-3">瀏覽人數：<span>675</span></label> *@
             </div>
         </div>
-        <div>
-            <label for="" class="me-3">參選者：<span>57</span></label>
-            <label for="" class="me-3">總票數：<span>584</span></label>
-            <label for="" class="me-3">瀏覽人數：<span>675</span></label>
-        </div>
-    </div>
 
-    <!-- 活動列表 -->
-    <div id="app" class="container">
-        <div class="row mb-4">
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                <div class="col" v-for="item in Competitionsdetail" :key="item.id">
-                    <div class="card h-100">
-                        <img v-bind:src="getPhotoUrl(item.competitionPhotos)" class="card-img-top h-100" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">{{item.accountUserAccount}}</h5>
-                            <span class="me-3">No.1</span>
-                            <span><i class="bi bi-lightning-charge-fill">82</i></span>
+        <!-- 活動列表 -->
+        <div class="container">
+            <div class="row mb-4">
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="col" v-for="item in Competitionsdetail" :key="item.id">
+                        <div class="card h-100">
+                            <img v-bind:src="getPhotoUrl(item.competitionPhotos)" class="card-img-top h-100" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">{{item.accountUserAccount}}</h5>
+                                <span class="me-3">No.1</span>
+                                <span><i class="bi bi-lightning-charge-fill">82</i></span>
+                            </div>
+                            <button class="btn btn-outline-dark me-2 w-100" type="submit">
+                                <i class="bi bi-heart">投票</i>
+                            </button>
                         </div>
-                        <button class="btn btn-outline-dark me-2 w-100" type="submit">
-                            <i class="bi bi-heart">投票</i>
-                        </button>
                     </div>
                 </div>
             </div>
         </div>
+
+
+        <!-- 分頁 -->
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
-
-
-    <!-- 分頁 -->
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
 </div>
+
+
 
 <!-- axios -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
@@ -86,18 +101,29 @@
     var vueApp = {
         data() {
             return {
-                //CompetitionName: "",
+                CompetitionName:"",
+                Content:"",
+                StartTime:"",
+                EndTime:"",
+                Statement:"",
+                Competitor:0,
                 Competitionsdetail: [],
             };
         },
         methods: {
             fetchcompetitions: function () {
                 let _this = this;
-                //var request = {};
                 try {
                     axios.get("https://localhost:7292/api/OnlineCompetitions/2")
                         .then(response => {
                             _this.Competitionsdetail = response.data;
+                            _this.CompetitionName = response.data[0].competitionName;
+                            _this.Content = response.data[0].content;
+                            _this.StartTime = response.data[0].startTime;
+                            _this.EndTime = response.data[0].endTime;
+                            _this.Statement = response.data[0].statement;
+                            _this.Competitor = response.data.length;
+
                         })
                         .catch(err => alert(err))
                 }
@@ -116,5 +142,4 @@
         }
     };
     var app = Vue.createApp(vueApp).mount('#app');
-
 </script>

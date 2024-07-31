@@ -43,7 +43,7 @@ namespace BabyCiaoAPI.Controllers
 
         // GET api/OnlineCompetitions/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<CompetitionDetail>>> voteInfot(int id)
+        public async Task<ActionResult<IEnumerable<CompetitionDetailDTO>>> voteInfo(int id)
         {
             var Competitiondetail = await (from com in _context.OnlineCompetitions
                                            join comd in _context.CompetitionDetails
@@ -63,6 +63,9 @@ namespace BabyCiaoAPI.Controllers
                                            }).ToListAsync();
             return Ok(Competitiondetail);
         }
+
+        //GET 
+
 
         // POST api/<OnlineCompetitionsController>
         [HttpPost]
