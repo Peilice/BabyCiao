@@ -1,134 +1,167 @@
 ﻿@model BabyCiao.Models.DTO.GroupBuyDTO
 
 @{
-    ViewData["Title"] = "團購商品明細";
+	ViewData["Title"] = "團購商品明細";
 }
 @section Styles
 {
-    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
-    <style>
-        .photos, .preview {
-            width: 200px;
-            border: 1px solid #ccc;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            object-fit: cover;
-            margin-right: 10px;
-        }
+	<link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+	<style>
+		.photos, .preview {
+			width: 200px;
+			border: 1px solid #ccc;
+			margin-top: 10px;
+			margin-bottom: 10px;
+			object-fit: cover;
+			margin-right: 10px;
+		}
 
-        .preview-container {
-            display: flex;
-            flex-wrap: wrap;
-        }
-    </style>
+		.preview-container {
+			display: flex;
+			flex-wrap: wrap;
+		}
+	</style>
 }
 <h1>明細</h1>
 
 <div>
-    <h4>團購商品</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProductName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductName)
-        </dt>
-        <dd class="col-sm-10">
-            <div>
-                @if (Model.Photos != null && Model.Photos.Count > 0)
-                {
-                    for (int i = 0; i < Model.Photos.Count(); i++)
-                    {
-                        <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                            <img src="~/uploads/@Model.Photos[i].PhotoName" alt="" class="photos" />
-                            <form asp-controller="GroupBuy" asp-action="DeletePhoto" method="post" onsubmit="return confirmDelete(this);">
-                                <input type="hidden" asp-for="@Model.Photos[i].Id" name="id" value="@Model.Photos[i].Id" />
-                               
-                            </form>
-                        </div>
-                    }
-                }
-                else
-                {
-                    <img src="~/img/noimage.jpg" class="photos" />
-                }
-            </div>
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductDescription)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProductDescription)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TargetCount)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TargetCount)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Statement)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Statement)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedTimeView)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedTimeView)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Display)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Display)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount)
-        </dd>
-    </dl>
+	<h4>團購商品</h4>
+	<hr />
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.ProductName)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.ProductName)
+		</dd>
+		<dt class="col-sm-2">
+			商品照片
+		</dt>
+		<dd class="col-sm-10">
+			<div>
+				@if (Model.Photos != null && Model.Photos.Count > 0)
+				{
+					for (int i = 0; i < Model.Photos.Count(); i++)
+					{
+						<div style="display: flex; align-items: center; margin-bottom: 10px;">
+							<img src="~/uploads/@Model.Photos[i].PhotoName" alt="" class="photos" />
+							<form asp-controller="GroupBuy" asp-action="DeletePhoto" method="post" onsubmit="return confirmDelete(this);">
+								<input type="hidden" asp-for="@Model.Photos[i].Id" name="id" value="@Model.Photos[i].Id" />
+
+							</form>
+						</div>
+					}
+				}
+				else
+				{
+					<img src="~/img/noimage.jpg" class="photos" />
+				}
+			</div>
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.ProductDescription)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.ProductDescription)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.TargetCount)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.TargetCount)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Price)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Price)
+		</dd>
+		<dt class="col-sm-2">
+			商品規格
+		</dt>
+		<dd class="col-sm-10">
+			<div id="productFormats">
+				@if (Model.ProductFormats != null && Model.ProductFormats.Count > 0)
+				{
+					<ul>
+						@foreach (var p in Model.ProductFormats)
+						{
+							<li>@p.FormatType - @p.FormatName</li>
+						}
+					</ul>
+
+				}
+				else
+				{
+					<p>此產品尚未設定規格。</p>
+				}
+
+			</div>
+		</dd>
+
+
+
+
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.ProductType)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.ProductType)
+		</dd>
+
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Statement)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Statement)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.ModifiedTimeView)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.ModifiedTimeView)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Display)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Display)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.UserAccount)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.UserAccount)
+		</dd>
+	</dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary"><i class="fa-solid fa-pen-to-square"></i> 編輯</a> 
-    <a asp-controller="GroupBuy" asp-action="Index" class="btn btn-outline-secondary"><i class="fa-solid fa-rotate-left"></i>返回列表</a>
+	<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary"><i class="fa-solid fa-pen-to-square"></i> 編輯</a>
+	<a asp-controller="GroupBuy" asp-action="Index" class="btn btn-outline-secondary"><i class="fa-solid fa-rotate-left"></i>返回列表</a>
 </div>
 @section Scripts {
-    
-    <script>
-        document.getElementById('fileInput').addEventListener('change', function (event) {
-            var files = event.target.files;
-            var previewContainer = document.getElementById('preview-container');
-            previewContainer.innerHTML = ''; // 清空現有預覽
 
-            for (var i = 0; i < files.length; i++) {
-                var file = files[i];
-                if (file) {
-                    var reader = new FileReader();
-                    reader.onload = (function (file) {
-                        return function (e) {
-                            var img = document.createElement('img');
-                            img.src = e.target.result;
-                            img.className = 'preview';
-                            previewContainer.appendChild(img);
-                        };
-                    })(file);
-                    reader.readAsDataURL(file);
-                }
-            }
-        });
-    </script>
+	<script>
+		document.getElementById('fileInput').addEventListener('change', function (event) {
+			var files = event.target.files;
+			var previewContainer = document.getElementById('preview-container');
+			previewContainer.innerHTML = ''; // 清空現有預覽
+
+			for (var i = 0; i < files.length; i++) {
+				var file = files[i];
+				if (file) {
+					var reader = new FileReader();
+					reader.onload = (function (file) {
+						return function (e) {
+							var img = document.createElement('img');
+							img.src = e.target.result;
+							img.className = 'preview';
+							previewContainer.appendChild(img);
+						};
+					})(file);
+					reader.readAsDataURL(file);
+				}
+			}
+		});
+	</script>
 }

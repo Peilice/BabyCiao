@@ -48,8 +48,8 @@
 
                     axios.post(`${_this.baseAddress_API}/api/Andy_JWT_Login`, request).then(response => {
                         const token = response.data;
-                        const data = { Token: token };
-                        localStorage.setItem("token", data.Token);
+                        const data1 = { Token: token };
+                        localStorage.setItem("token", data1.Token);
 
                         Swal.fire({
                             position: "center",
@@ -61,14 +61,22 @@
                             const useToken = localStorage.getItem("token");
                             const headers = {
                                 'Authorization': `Bearer ${useToken}`,
-                                
                             };
 
                             axios.get(`${_this.baseAddress_API}/api/Andy_JWT_Login`, {
                                 headers
                             }).then(result => {
                                 // alert(result.data)
-                                $('#username').text(`${result.data} ,你好!`);//實驗
+                                const username = result.data;
+                                const data2 = { Name: username };
+                                sessionStorage.setItem("username", data2.Name);
+                                // $('#username').text(`${result.data} ,你好!`);//實驗
+                                var target = sessionStorage.getItem("target");
+                                if (target != null) {
+                                    window.location.href = `${target}`;
+                                } else {
+                                    window.location.href = `${_this.baseAddress_client}/Home/Index`;
+                                }
                             }).catch(err => {
                                 alert(err);
                             })
@@ -77,11 +85,7 @@
                     }).catch(err => {
                         alert(err);
                     })
-
-                    
                 },
-                
-                
             }
         };
         var app01 = Vue.createApp(vueApp).mount("#app");
