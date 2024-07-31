@@ -11,22 +11,23 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
+    <div id="app" class="container">
     <!-- breadcrumb start -->
     <div class="px-3 py-2 mb-2">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 bg-transparent p-2 text-dark bg-opacity-10">
-                <li class="breadcrumb-item"><a class="text-decoration-none" href="./index.html">首頁</a></li>
+                <li class="breadcrumb-item"><a class="text-decoration-none" href="https://localhost:7231/">首頁</a></li>
                 <li class="breadcrumb-item active" aria-current="page">團購</li>
             </ol>
         </nav>
         <div class="row" style="width:50%;margin-left:auto;margin-right:0">
             <label class="col-md-4 form-label">篩選關鍵字:</label>
-            <input type="text" class="col-md-8 form-control" placeholder="請輸入篩選關鍵字" v-model="filter" v-on:keyup="filterCategories" />
+            <input type="text" class="col-md-8 form-control" placeholder="請輸入篩選關鍵字" v-model="filter" v-on:keyup="filterProducts" />
         </div>
     </div>
     <!-- breadcrumb end -->
 
-    <div id="app" class="container">
+    
         <div class="row">
             <div class="col-4 mb-2" v-for="item in groupBuyings" :key="item.id">
                 <div class="card">
@@ -45,8 +46,8 @@
         new Vue({
             el: '#app',
             data: {
-                groupBuyings: [],
-                filter: ''
+                groupBuyings: [], 
+                filter: ""
             },
             created() {
                 this.fetchGroupBuyings();
@@ -64,11 +65,22 @@
                 getPhotoUrl(photoUrl) {
                     return photoUrl != null ? `https://localhost:7000/uploads/${photoUrl}` : 'https://localhost:7000/img/noImage.jpg';
                 },
-                filterCategories() {
-                    // 這裡可以實現過濾邏輯，根據 filter 值過濾 groupBuyings
-                }
+                filterProducts() {
+                    let _this = this;
+                    var request = {};
+                    request.id = isNaN(Number(_this.filter)) ? -1 : Number(_this.filter)
+                    request.productName = request.productDescription = _this.filter;
+                    axios.post('https://localhost:7292/api/GroupBuying/Filter', request)
+                        .then(response => {
+                            _this.groupBuyings = response.data;
+                        })
+                        .catch(err => {
+                            console.error("Error filtering data:", err);
+                        });
+                },
             }
         });
+
     </script>
 </body>
 </html>

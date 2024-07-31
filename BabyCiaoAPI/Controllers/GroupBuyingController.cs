@@ -50,6 +50,32 @@ namespace BabyCiaoAPI.Controllers
 			return Ok(groupBuys);
         }
 
+        //POST:api/GroupBuying/Filter
+        [HttpPost("Filter")]
+        public async Task<IEnumerable<GBFilterDTO>> FilterProducts([FromBody] GBFilterDTO model)
+       {
+            Console.WriteLine($"Filter request received with: Id={model.Id}, ProductName={model.ProductName}, ProductDescription={model.ProductDescription}");
+
+            var groupBuys = await (from gb in _context.GroupBuyings
+                           where 
+                               (model.Id == 0 || gb.Id == model.Id) ||
+                               (string.IsNullOrEmpty(model.ProductName) || gb.ProductName.Contains(model.ProductName)) ||
+                               (string.IsNullOrEmpty(model.ProductDescription) || gb.ProductDescription.Contains(model.ProductDescription)) &&
+                               gb.Display
+                           join gbp in _context.GroupBuyingPhotos on gb.Id equals gbp.IdGroupBuying into pp
+                           from gbp in pp.OrderBy(p => p.PhotoName).Take(1).DefaultIfEmpty()
+                           select new GBFilterDTO
+                           {
+                               Id = gb.Id,
+                               ProductName = gb.ProductName,
+                               ProductDescription = gb.ProductDescription,
+                               photoUrl = gbp.PhotoName
+                           }).ToListAsync();
+
+    return groupBuys;
+        }
+
+
         // GET: api/GroupBuying/5
         [HttpGet("{id}")]
         public async Task<ActionResult<GroupBuying>> GetGroupBuying(int id)

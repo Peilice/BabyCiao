@@ -8,10 +8,14 @@ namespace BabyCiaoAPI.DTO
         [Display(Name = "商品編號")]
         public int Id { get; set; }
 
+        [Display(Name = "編輯者")]
+        public string UserAccount { get; set; } = null!;//發布者(管理員) AccountUserAccount
 
         [Display(Name = "商品名稱")]
         public string ProductName { get; set; } = null!;
 
+        [Display(Name = "商品種類")]
+        public string? ProductType { get; set; }
         [Display(Name = "商品描述")]
         public string ProductDescription { get; set; } = null!;
 
@@ -21,10 +25,7 @@ namespace BabyCiaoAPI.DTO
         [Display(Name = "成團狀態")]
         public string Statement { get; set; } = null!;//階段
 
-		[Display(Name = "類型")]
-		public string? ProductType { get; set; }
-
-		[Display(Name = "建立時間")]
+        [Display(Name = "建立時間")]
         public DateTime ModifiedTime { get; set; }//建立時間
         [Display(Name = "建立日期")]
         public string ModifiedTimeView { get; set; }//建立時間
@@ -42,25 +43,26 @@ namespace BabyCiaoAPI.DTO
         public List<GroupBuyPhotoDTO>? Photos { get; set; }
 
         [Display(Name = "商品照片")]
-        public List<IFormFile> PhotoFiles { get; set; }
-
-		public List<GroupBuyFormateDTO>? ProductFormates { get; set; }
-
-	}
-	public partial class GroupBuyFormateDTO
-	{
-		[Display(Name = "規格編號")]
-		public int Id { get; set; }
-		[Display(Name = "商品編號")]
-		public int IdGroupBuying { get; set; }
-		[Display(Name = "規格名稱")]
-		public string FormatType { get; set; } = null!;
-		[Display(Name = "規格項目")]
-		public string FormatName { get; set; } = null!;
+        public List<IFormFile>? PhotoFiles { get; set; }
+    }
 
 
-	}
-	public class GroupBuyPhotoDTO
+    public class GBFilterDTO
+    {
+
+        [Display(Name = "商品編號")]
+        public int Id { get; set; }
+
+        [Display(Name = "商品名稱")]
+        public string ProductName { get; set; } = null!;
+
+        [Display(Name = "商品描述")]
+        public string ProductDescription { get; set; } = null!;
+
+        public string? photoUrl { get; set; }
+
+    }
+    public class GroupBuyPhotoDTO
     {
         [Display(Name = "照片編號")]
         public int Id { get; set; }
