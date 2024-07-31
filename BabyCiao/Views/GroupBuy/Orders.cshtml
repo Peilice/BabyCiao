@@ -1,0 +1,111 @@
+﻿
+@{
+    ViewData["Title"] = "團購訂單管理";
+}
+
+@section Styles {
+    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <style>
+        thead {
+            background-color: #FF9797;
+            color: white;
+        }
+    </style>
+}
+
+<h1>團購訂單</h1>
+<div class="py-2">
+    <a asp-controller="GroupBuy" asp-action="Index" class="end btn btn-outline-secondary"><i class="fa-solid fa-rotate-left"></i>返回團購管理</a>
+</div>
+
+
+<table id="ordersTable" class="table py-2">
+    <thead>
+        <tr>
+            <th>訂單編號</th>
+            <th>參團商品</th>
+            <th>用戶</th>
+            <th>訂購數</th>
+            <th>商品單價</th>
+            <th>訂單價格</th>
+            <th>建立日期</th>
+            <th>訂單狀態</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.JoinId</td>
+                <td>@item.JoinGroupId</td>
+                <td>@item.JoinUserAccount</td>
+                <td>@item.Quantity</td>
+                <td>@item.Price</td>
+                <td>@item.OrderPrice</td>
+                <td>@item.ViewJoinModifiedTime</td>
+                <td>@item.Statement</td>
+                <td>
+
+                    <a href="/GroupBuy/Edit/@item.Id" class="btn btn-outline-secondary"><i class="fa-solid fa-pen-to-square"></i> 編輯</a>
+                    <a href="/GroupBuy/Details/@item.Id" class="btn btn-outline-secondary"><i class="fa-solid fa-file-lines"></i> 明細</a>
+                    <a href="/GroupBuy/Delete/@item.Id" class="btn btn-outline-danger"><i class="fa-regular fa-trash-can"></i> 刪除</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#ordersTable').DataTable({
+                "paging": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "processing": true,
+                "serverSide": false,
+                "ajax": {
+                    "url": "/GroupBuy/OrdersJson",
+                    "type": "GET",
+                    "dataSrc": ""
+                },
+                "columns": [
+                    { "data": "joinId" },
+                    { "data": "joinGroupId" },
+                    { "data": "joinUserAccount" },
+                    { "data": "quantity" },
+                    { "data": "price" },
+                    { "data": "orderPrice" },
+                    { "data": "viewJoinModifiedTime" },
+                    { "data": "statement" },
+                    {
+                        "render": function (data, type, row) {
+                            return '<div class="btn-group" role="group">' + '<a href="/GroupBuy/Ship/' + row.joinId + '" class="btn btn-outline-secondary"><i class="fa-solid fa-pen-to-square"></i> 出貨</a>  ' +
+                                '<a href="/GroupBuy/Cancel/' + row.joinId + '" class="btn btn-outline-danger"><i class="fa-regular fa-trash-can"></i> 取消</a>' +
+                                '</div>';
+                        }
+                    }
+                ],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Chinese-traditional.json"
+                },
+                "createdRow": function (row, data, dataIndex) {
+                    var statementCell = $('td', row).eq(7); 
+                    if (data.statement === '已出貨') {
+                        statementCell.css('background-color', '#d4edda');
+                    } else if (data.statement === '已參加') {
+                        statementCell.css('background-color', '#fff3cd');
+                    } else if (data.statement === '已取消') {
+                        statementCell.css('background-color', '#f8d7da');
+                    }
+                }
+            });
+        });
+    </script>
+}

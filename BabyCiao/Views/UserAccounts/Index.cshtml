@@ -1,0 +1,86 @@
+﻿@model IEnumerable<UserAccount>
+@inject BabyciaoContext _context
+
+
+@{
+    ViewBag.Title = "User Accounts";
+    var userIds = ViewBag.UserIds as List<int>;
+    var accounts = ViewBag.Accounts as List<string>;
+    var passwords = ViewBag.Passwords as List<string>;
+    var permissionsList = ViewBag.PermissionsList as List<int>;
+    var vips = ViewBag.Vips as List<bool>;
+    var permissionsDictionary = ViewBag.PermissionsDictionary as Dictionary<int, string>;
+}
+
+
+@{
+<style>
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="css/ruang-admin.min.css" rel="stylesheet">
+    </style> 
+   }
+
+<body>
+<h1>帳戶管理</h1>
+    </br> </br>
+<h2>目前會員總數<cache expires-after="@TimeSpan.FromMinutes(30)">@_context.UserAccounts.Count()</cache></h2>
+<p>
+    <a asp-action="Create">新增會員</a>
+</p>
+    <form method="get" asp-action="Index">
+        <div class="form-group">
+            <label for="permissionsFilter">權限：</label>
+            <select id="permissionsFilter" name="selectedPermission" class="form-control" asp-items="ViewBag.Permissions">
+                <option value="">全部</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">篩選</button>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>使用者ID</th>
+                <th>帳號</th>
+                <th>密碼</th>
+                <th>權限</th>
+                <th>Vip</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < userIds.Count; i++)
+            {
+                <tr>
+                    <td>@userIds[i]</td>
+                    <td>@accounts[i]</td>
+                    <td>@passwords[i]</td>
+                    <td>@(permissionsDictionary.ContainsKey(permissionsList[i]) ? permissionsDictionary[permissionsList[i]] : "未知")</td>
+                    <td>@vips[i]</td>
+                    <td>
+                        <a asp-controller="UserAccounts" asp-action="Edit" asp-route-userId="@userIds[i]">編輯</a> |
+                        <a asp-controller="UserAccounts" asp-action="Details" asp-route-userId="@userIds[i]">詳細資訊</a> 
+@*                         <a asp-controller="UserAccounts" asp-action="Delete" asp-route-userId="@userIds[i]" type="">Delete</a>
+ *@                    </td>
+                </tr>
+            }
+                  </tbody>
+           </table>
+        </div>
+        <div class="card-footer"></div>
+
+     </body>
+@section Scripts
+{
+    <script src="~/lib/jquery/dist/jquery.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery/dist/jquery.freezeheader.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            $("#UserAccountTable").freezeHeader({ 
+                'height': '600px',
+                'width': '100%'
+            });
+        });
+    </script>
+} 
+

@@ -920,10 +920,10 @@ public partial class BabyciaoContext : DbContext
             entity.Property(e => e.Account)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.CreateddDate)  // 更正拼寫錯誤
+            entity.Property(e => e.CreateddDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
-            entity.Property(e => e.ModiifiedDate) // 更正拼寫錯誤
+            entity.Property(e => e.ModiifiedDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.Password)
@@ -932,7 +932,6 @@ public partial class BabyciaoContext : DbContext
             entity.Property(e => e.Permissions).HasDefaultValue(1);
             entity.Property(e => e.Vip).HasColumnName("VIP");
         });
-
 
         modelBuilder.Entity<UserInformation>(entity =>
         {

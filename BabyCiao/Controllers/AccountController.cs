@@ -8,9 +8,9 @@ namespace BabyCiao.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly BabyCiaoContext _context;
+        private readonly BabyciaoContext _context;
 
-        public AccountController(BabyCiaoContext context)
+        public AccountController(BabyciaoContext context)
         {
             _context = context;
         }
@@ -80,5 +80,7 @@ namespace BabyCiao.Controllers
 
             return View(model);
         }
+
+        
     }
 }

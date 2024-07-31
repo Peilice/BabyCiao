@@ -1,0 +1,83 @@
+﻿@model BabyCiao.Models.DTO.OnlineCompetitionsDTO
+
+@{
+    ViewData["Title"] = "Edit";
+}
+@section Styles {
+    <style>
+        img {
+            width: 200px;
+            height: 200px
+        }
+    </style>
+}
+
+<h1>投票活動管理</h1>
+
+<h4>編輯活動資訊</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="CompetitionName" class="control-label"></label>
+                <input asp-for="CompetitionName" class="form-control" />
+                <span asp-validation-for="CompetitionName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AccountUserAccount" class="control-label"></label>
+                <input asp-for="AccountUserAccount" class="form-control" asp-items="ViewBag.AccountUserAccount" readonly></input>
+                <span asp-validation-for="AccountUserAccount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartTime" class="control-label"></label>
+                <input asp-for="StartTime" class="form-control" />
+                <span asp-validation-for="StartTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndTime" class="control-label"></label>
+                <input asp-for="EndTime" class="form-control" />
+                <span asp-validation-for="EndTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <input asp-for="Content" class="form-control" />
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModifiedTime" class="control-label"></label>
+                <input asp-for="ModifiedTime" class="form-control" />
+                <span asp-validation-for="ModifiedTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Statement" class="control-label"></label>
+                <input asp-for="Statement" class="form-control" />
+                <span asp-validation-for="Statement" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompetitionPhotoName" class="control-label"></label>
+                <input type="file" asp-for="CompetitionPhotoName" class="form-control" />
+                <span asp-validation-for="CompetitionPhotoName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div>
+                    <img src="~/uploads/@Html.DisplayFor(model => model.CompetitionPhotoNames)" alt="" class="photos" />
+                    <form asp-controller="OnlineCompetition" asp-action="DeletePhoto" method="post" onsubmit="return confirmDelete(this);">
+                        <input type="hidden" asp-for="@Model.IdOnlineCompetition" name="IdOnlineCompetition" value="@Model.IdOnlineCompetition" />
+                    </form>
+                </div>
+                <input type="submit" value="儲存" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">回到活動列表</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

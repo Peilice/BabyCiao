@@ -11,7 +11,7 @@ public partial class DietDetail
 
     public DateTime RecodeTime { get; set; }
 
-    public string? Type { get; set; }
+    public string Type { get; set; } = null!;
 
     public int Amount { get; set; }
 

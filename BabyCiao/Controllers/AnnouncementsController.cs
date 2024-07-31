@@ -9,15 +9,18 @@ using BabyCiao.Models;
 using BabyCiao.ViewModel;
 using NuGet.Protocol;
 using Microsoft.AspNetCore.Authorization;
+using System.Drawing;
+using System.Security.Cryptography;
 
 namespace BabyCiao.Controllers
 {
-    [Authorize(Roles ="公告編輯")]
+    [Authorize(Roles = "公告編輯")]
     public class AnnouncementsController : Controller
     {
-        private readonly BabyCiaoContext _context;
+        private readonly BabyciaoContext _context;
+        private string image_dir = "wwwroot\\images\\";
 
-        public AnnouncementsController(BabyCiaoContext context)
+        public AnnouncementsController(BabyciaoContext context)
         {
             _context = context;
         }
@@ -55,12 +58,12 @@ namespace BabyCiao.Controllers
             return View();
         }
 
-        // POST: Announcements/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //        // POST: Announcements/Create
+        //        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        //        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AccountUserAccount,Tittle,Article,ReferenceName,ReferenceRoute,Type,Display")] andy_announcementViewModel my_vm)
+        public async Task<IActionResult> Create([Bind("AccountUserAccount,Tittle,Article,ReferenceName,ReferenceRoute,Type,Display,Picture")] andy_announcementViewModel my_vm)
         {
             Announcement announcement = new Announcement()
             {
@@ -71,20 +74,54 @@ namespace BabyCiao.Controllers
                 ReferenceRoute = my_vm.ReferenceRoute,
                 Type = my_vm.Type,
                 Display = my_vm.Display
-
             };
 
             if (ModelState.IsValid)
             {
                 _context.Add(announcement);
                 await _context.SaveChangesAsync();
+
+                //先取得新公告的ID
+                var newAnnouncement = _context.Announcements.Where(a => a.Tittle == my_vm.Tittle).FirstOrDefault();
+                //新增公告照片
+                string URL= CopyPictureAndGetURL(Request.Form.Files["Picture"]);
+                AnnouncementPhoto announcementPhoto = new AnnouncementPhoto()
+                {
+                    PhotoName = URL,
+                    IdAnnouncement = newAnnouncement.Id
+                };
+                _context.Add(announcementPhoto);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", announcement);
             return View(announcement);
         }
+        
+        private string CopyPictureAndGetURL(IFormFile file)
+        {
+            if (file != null)
+            {
+                string fileExtension = Path.GetExtension(file.FileName).ToLower();
+                Random r = new Random();
+                string updateFileName = DateTime.Now.ToString("yyMMddHHmmss") + r.Next(1000, 10000).ToString() + fileExtension;
+                string fullFileName = image_dir + "\\" + updateFileName;
 
-        // GET: Announcements/Edit/5
+                long size = file.Length;
+                if (size > 0)
+                {
+                    using (var stream = System.IO.File.Create(fullFileName))
+                    {
+                        file.CopyToAsync(stream);
+                        return fullFileName;
+                    }
+                }
+                return null;
+            }
+            return null;
+        }
+        
+        //        // GET: Announcements/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -103,9 +140,9 @@ namespace BabyCiao.Controllers
             return View(announcement);
         }
 
-        // POST: Announcements/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //        // POST: Announcements/Edit/5
+        //        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        //        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,AccountUserAccount,PublishTime,Tittle,Article,ReferenceName,ReferenceRoute,Type,Display")] andy_announcementViewModel my_announcement)
@@ -116,7 +153,7 @@ namespace BabyCiao.Controllers
             {
                 return NotFound();
             }
-            
+
             announcement.AccountUserAccount = my_announcement.AccountUserAccount;
             announcement.Tittle = my_announcement.Tittle;
             announcement.Article = my_announcement.Article;
@@ -149,7 +186,8 @@ namespace BabyCiao.Controllers
             return View(my_announcement);
         }
 
-        // GET: Announcements/Delete/5
+        
+        //        // GET: Announcements/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -168,7 +206,7 @@ namespace BabyCiao.Controllers
             return View(announcement);
         }
 
-        // POST: Announcements/Delete/5
+        //        // POST: Announcements/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -187,5 +225,44 @@ namespace BabyCiao.Controllers
         {
             return _context.Announcements.Any(e => e.Id == id);
         }
+        
+        [HttpPost]
+        public async Task<IActionResult> Index(int id)
+        {
+            var babyCiaoContext = _context.Announcements.Include(a => a.AccountUserAccountNavigation);
+            var announcement = await _context.Announcements.FindAsync(id);
+            if (announcement != null)
+            {
+                if (announcement.Display) {
+                    announcement.Display=false;
+                }
+                else
+                {
+                    announcement.Display = true;
+                }
+                _context.Announcements.Update(announcement);
+                await _context.SaveChangesAsync();
+            }
+            return PartialView("Index", babyCiaoContext);
+        }
+
+
+
+        //private void ReadUploadImage(AnnouncementPhoto announcementPhoto)
+        //{
+        //    using (BinaryReader br = new BinaryReader(Request.Form.Files["Picture"].OpenReadStream()))
+        //    {
+        //        announcementPhoto.PhotoName = br.ReadBytes((int)Request.Form.Files["Picture"].Length);
+        //    }
+        //}
+
+        // GET: Categories/GetPicture/{id}
+        //public async Task<FileResult> GetPicture(int id)
+        //{
+        //    AnnouncementPhoto announcementPhoto = await _context.AnnouncementPhotos.FindAsync(id);
+        //    byte[] picture = announcementPhoto?.PhotoName;
+        //    return File(picture, "image/jpeg");
+        //}
+
     }
 }

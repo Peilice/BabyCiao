@@ -23,5 +23,14 @@ namespace BabyCiao_View.Controllers
             // 添加登出邏輯
             return RedirectToAction("Index", "Home");
         }
+        public IActionResult resetpassword()
+        {
+            return View();
+        }
+
+        public IActionResult sendVerificationEmail()
+        {
+            return View();
+        }
     }
 }

@@ -14,17 +14,17 @@ namespace BabyCiao.Controllers
 {
     public class BabyResumesController : Controller
     {
-        private readonly BabyCiaoContext _context;
+        private readonly BabyciaoContext _context;
         private readonly string _imagePath;
 
-        public BabyResumesController(BabyCiaoContext context, IWebHostEnvironment webHostEnvironment)
+        public BabyResumesController(BabyciaoContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _imagePath = Path.Combine(webHostEnvironment.WebRootPath, "uploads");
         }
 
         // GET: BabyResumes
-      
+
 
         public IActionResult Index(int? page)
         {

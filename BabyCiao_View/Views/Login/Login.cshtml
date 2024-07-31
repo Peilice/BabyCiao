@@ -21,7 +21,7 @@
             </div>
             <button type="submit" class="btn-login">登入</button>
             <div class="login-footer">
-                <a href="#">忘記密碼？</a>
+                <a asp-action="sendVerificationEmail">忘記密碼？</a>
                 <a asp-action="Register">還沒有帳戶？註冊</a>
             </div>
         </form>
@@ -55,7 +55,7 @@
                     localStorage.setItem('token', data.token); // 保存 token 到 localStorage
                     console.log(data);
                     setTimeout(() => {
-                        window.location.href = '@Url.Action("https://localhost:7272/")';
+                        window.location.href = "https://localhost:7272";
                     }, 3000);
                 } else {
                     messageDiv.textContent = data.message;

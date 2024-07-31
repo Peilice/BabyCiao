@@ -1,0 +1,75 @@
+﻿@model BabyCiao.Models.DTO.AuthDTO
+
+@{
+    ViewData["Title"] = "創建權限群組";
+}
+@section Styles
+{
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <style>
+
+    </style>
+}
+<h1>創建</h1>
+
+<h4>權限群組</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @* <input type="hidden" asp-for="GroupId" /> *@
+            <div class="form-group">
+                <label asp-for="GroupDescription" class="control-label"></label>
+                <input asp-for="GroupDescription" class="form-control" />
+                <span asp-validation-for="GroupDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModifiedPersonUserAccount" class="control-label"></label>
+                <input asp-for="ModifiedPersonUserAccount" class="form-control">@*這裡要寫成帶入登入帳號*@
+                <span asp-validation-for="ModifiedPersonUserAccount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>功能設定</label>
+
+                <div class="form-check">
+
+                    @if (Model.settings != null)
+                    {
+                        @for (int i = 0; i < Model.settings.Count(); i++)
+                        {
+                            <input type="hidden" asp-for="@Model.settings[i].FunctionId" />
+                            <input type="hidden" asp-for="@Model.settings[i].FunctionName" />
+                            <input type="hidden" asp-for="@Model.settings[i].GroupId" />
+
+                            <label>
+
+                                <input type="checkbox" asp-for="@Model.settings[i].IsExsited" />
+                                @Model.settings[i].FunctionId - @Model.settings[i].FunctionName
+                            </label>
+                            <br>
+                        }
+                    }
+
+                   
+                    
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="ModifiedDate" class="control-label">創建日期</label>
+                <input asp-for="@Model.ModifiedDate" class="form-control" value='@Model.ModifiedDate.ToString("yyyy-MM-dd HH:mm")' readonly />
+                <span asp-validation-for="ModifiedDate" class="text-danger"></span>
+
+            </div>
+            <div class="form-group mb-2">
+                <input type="submit" value="儲存" class="btn btn-secondary my-3" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Auth" asp-action="Index" class="btn btn-outline-secondary"><i class="fa-solid fa-rotate-left"></i>返回列表</a>
+</div>
+

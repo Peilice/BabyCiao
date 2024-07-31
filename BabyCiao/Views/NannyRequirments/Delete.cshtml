@@ -1,0 +1,81 @@
+﻿@model BabyCiao.Models.DTO.NannyRequirementDTO
+
+
+
+<h1>刪除</h1>
+
+<div>
+    <h4>保母申請資料</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            申請時間
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.RequirementDate)
+        </dd>
+        <dt class = "col-sm-2">
+           
+        </dt>
+        <div class="form-group">
+            <label asp-for="photoA" class="control-label" >良民證</label>
+            <img src="@Url.Content("~/img/保母證照/" + Model.photoA)" width="400" />
+            <span asp-validation-for="photoA" class="text-danger"></span>
+        </div>
+        <dt class = "col-sm-2">
+           
+        </dt>
+        <div class="form-group">
+            <label asp-for="photoB" class="control-label">保母證</label>
+            <img src="@Url.Content("~/img/保母證照/" + Model.photoB)" width="400" />
+            <span asp-validation-for="photoB" class="text-danger"></span>
+        </div>
+        <dt class = "col-sm-2">
+           
+        </dt>
+        <div class="form-group">
+            <label asp-for="photoC" class="control-label">身分證</label>
+            <img src="@Url.Content("~/img/保母證照/" + Model.photoC)" width="400" />
+            <span asp-validation-for="photoC" class="text-danger"></span>
+        </div>
+        <dt class = "col-sm-2">
+            申請地址
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AddressesOfAgencies)
+        </dd>
+        <dt class = "col-sm-2">
+            證照有效期限
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ValidPeriodsOfCertificates)
+        </dd>
+        <dt class = "col-sm-2">
+            狀態
+        </dt>
+        <dd class = "col-sm-10">
+            @switch (Model.Statement)
+            {
+                case 1:
+                    <text>成功</text>
+                    break;
+                case 2:
+                    <text>未讀</text>
+                    break;
+                case 3:
+                    <text>退件</text>
+                    break;
+                default:
+                    <text></text>
+                    break;
+            }
+        </dd>
+        
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="刪除" class="btn btn-danger" /> |
+        <a asp-action="Index">回到列表</a>
+    </form>
+</div>

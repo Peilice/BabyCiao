@@ -1,115 +1,78 @@
-﻿@model BabyCiao.Models.NannyResume
+﻿@model BabyCiao.Models.DTO.NannyResumeDTO
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="h5 mt-4">新增委託單</h1>
-            <div class="card">
-                <div class="card-body p-3">
-                    <form asp-action="Create" enctype="multipart/form-data">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-                        <div class="form-group mb-2">
-                            <label asp-for="NannyAccountUserAccount" class="form-label">帳號</label>
-                            <select asp-for="NannyAccountUserAccount" class="form-control" asp-items="ViewBag.NannyAccountUserAccount"></select>
-                            <span asp-validation-for="NannyAccountUserAccount" class="text-danger"></span>
-                        </div>
-                        <div class="form-group mb-2">
-                            <label asp-for="City" class="form-label">城市</label>
-                            <input asp-for="City" class="form-control" />
-                            <span asp-validation-for="City" class="text-danger"></span>
-                        </div>
-                        <div class="form-group mb-2">
-                            <label asp-for="District" class="form-label">區域</label>
-                            <input asp-for="District" class="form-control" />
-                            <span asp-validation-for="District" class="text-danger"></span>
-                        </div>
-                        <div class="form-group mb-2">
-                            <label asp-for="Introduction" class="form-label">介紹</label>
-                            <input asp-for="Introduction" class="form-control" />
-                            <span asp-validation-for="Introduction" class="text-danger"></span>
-                        </div>
-                        <div class="form-group mb-2">
-                            <label asp-for="TypeOfDaycare" class="form-label">托育類型</label>
-                            <select asp-for="TypeOfDaycare" class="form-control" asp-items="ViewBag.TypeOfDaycare"></select>
-                            <span asp-validation-for="TypeOfDaycare" class="text-danger"></span>
-                        </div>
-                        <div class="form-group mb-2">
-                            <label asp-for="ServiceItems" class="form-label">服務項目</label>
-                            <input asp-for="ServiceItems" class="form-control" />
-                            <span asp-validation-for="ServiceItems" class="text-danger"></span>
-                        </div>
-                        <div class="form-group form-check mb-2">
-                            <label class="form-check-label">
-                                <input class="form-check-input" asp-for="QuasiPublicChildcare" /> 公共托育
-                            </label>
-                        </div>
-                        <div class="form-group mb-2">
-                            <label asp-for="ChildcareAvailableUnder2" class="form-label">2歲以下托育</label>
-                            <input asp-for="ChildcareAvailableUnder2" class="form-control" />
-                            <span asp-validation-for="ChildcareAvailableUnder2" class="text-danger"></span>
-                        </div>
-                        <div class="form-group mb-2">
-                            <label asp-for="ChildcareAvailableOver2" class="form-label">2歲以上托育</label>
-                            <input asp-for="ChildcareAvailableOver2" class="form-control" />
-                            <span asp-validation-for="ChildcareAvailableOver2" class="text-danger"></span>
-                        </div>
-                        <div class="form-group mb-2">
-                            <label asp-for="Language" class="form-label">語言</label>
-                            <input asp-for="Language" class="form-control" />
-                            <span asp-validation-for="Language" class="text-danger"></span>
-                        </div>
-                        <div class="form-group mb-2">
-                            <label asp-for="ServiceCenter" class="form-label">服務中心</label>
-                            <input asp-for="ServiceCenter" class="form-control" />
-                            <span asp-validation-for="ServiceCenter" class="text-danger"></span>
-                        </div>
-                        <div class="form-group mb-2">
-                            <label asp-for="ProfessionalPortrait" class="form-label">專業照片</label>
-                            <input asp-for="ProfessionalPortrait" type="file" class="form-control" />
-                            <span asp-validation-for="ProfessionalPortrait" class="text-danger"></span>
-                        </div>
-                        <div class="form-group mb-2">
-                            <label asp-for="InternalPhoto1" class="form-label">內部照片1</label>
-                            <input asp-for="InternalPhoto1" type="file" class="form-control" />
-                            <span asp-validation-for="InternalPhoto1" class="text-danger"></span>
-                        </div>
-                        <div class="form-group mb-2">
-                            <label asp-for="InternalPhoto2" class="form-label">內部照片2</label>
-                            <input asp-for="InternalPhoto2" type="file" class="form-control" />
-                            <span asp-validation-for="InternalPhoto2" class="text-danger"></span>
-                        </div>
-                        <div class="form-group mb-2">
-                            <label asp-for="InternalPhoto3" class="form-label">內部照片3</label>
-                            <input asp-for="InternalPhoto3" type="file" class="form-control" />
-                            <span asp-validation-for="InternalPhoto3" class="text-danger"></span>
-                        </div>
-                        <div class="form-group mb-2">
-                            <label asp-for="InternalPhoto4" class="form-label">內部照片4</label>
-                            <input asp-for="InternalPhoto4" type="file" class="form-control" />
-                            <span asp-validation-for="InternalPhoto4" class="text-danger"></span>
-                        </div>
-                        <div class="form-group mb-2">
-                            <label asp-for="InternalPhoto5" class="form-label">內部照片5</label>
-                            <input asp-for="InternalPhoto5" type="file" class="form-control" />
-                            <span asp-validation-for="InternalPhoto5" class="text-danger"></span>
-                        </div>
-                        <div class="form-group form-check mb-2">
-                            <label class="form-check-label">
-                                <input class="form-check-input" asp-for="DisplayControl" /> 顯示控制
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" value="保存" class="btn btn-primary btn-sm" />
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="mt-3">
-                <a asp-action="Index" class="btn btn-secondary btn-sm">返回列表</a>
-            </div>
-        </div>
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div>
+        <label asp-for="NannyAccountUserAccount"></label>
+        <input asp-for="NannyAccountUserAccount" />
+        <span asp-validation-for="NannyAccountUserAccount"></span>
     </div>
-</div>
+    <div>
+        <label asp-for="City"></label>
+        <input asp-for="City" />
+        <span asp-validation-for="City"></span>
+    </div>
+    <div>
+        <label asp-for="District"></label>
+        <input asp-for="District" />
+        <span asp-validation-for="District"></span>
+    </div>
+    <div>
+        <label asp-for="Introduction"></label>
+        <textarea asp-for="Introduction"></textarea>
+        <span asp-validation-for="Introduction"></span>
+    </div>
+    <div>
+        <label asp-for="TypeOfDaycare"></label>
+        <input asp-for="TypeOfDaycare" />
+        <span asp-validation-for="TypeOfDaycare"></span>
+    </div>
+    <div>
+        <label asp-for="ServiceItems"></label>
+        <input asp-for="ServiceItems" />
+        <span asp-validation-for="ServiceItems"></span>
+    </div>
+    <div>
+        <label asp-for="QuasiPublicChildcare"></label>
+        <input asp-for="QuasiPublicChildcare" />
+        <span asp-validation-for="QuasiPublicChildcare"></span>
+    </div>
+    <div>
+        <label asp-for="ChildcareAvailableUnder2"></label>
+        <input asp-for="ChildcareAvailableUnder2" />
+        <span asp-validation-for="ChildcareAvailableUnder2"></span>
+    </div>
+    <div>
+        <label asp-for="ChildcareAvailableOver2"></label>
+        <input asp-for="ChildcareAvailableOver2" />
+        <span asp-validation-for="ChildcareAvailableOver2"></span>
+    </div>
+    <div>
+        <label asp-for="Language"></label>
+        <input asp-for="Language" />
+        <span asp-validation-for="Language"></span>
+    </div>
+    <div>
+        <label asp-for="ServiceCenter"></label>
+        <input asp-for="ServiceCenter" />
+        <span asp-validation-for="ServiceCenter"></span>
+    </div>
+    <div>
+        <label asp-for="ProfessionalPortrait"></label>
+        <input asp-for="ProfessionalPortrait" type="file" />
+        <span asp-validation-for="ProfessionalPortrait"></span>
+    </div>
+    <div>
+        <label asp-for="Photos"></label>
+        <input asp-for="Photos" type="file" multiple />
+        <span asp-validation-for="Photos"></span>
+    </div>
+    <div>
+        <label asp-for="DisplayControl"></label>
+        <input asp-for="DisplayControl" />
+        <span asp-validation-for="DisplayControl"></span>
+    </div>
+    <button type="submit">Create</button>
+</form>
 
 @section Scripts {
     @{

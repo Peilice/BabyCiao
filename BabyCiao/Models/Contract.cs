@@ -21,13 +21,16 @@ public partial class Contract
 
     public string ContractFile { get; set; } = null!;
 
-    public string? Statement { get; set; }
+    public string Statement { get; set; } = null!;
 
     public DateTime ModifiedTime { get; set; }
 
     public DateTime BuiledTime { get; set; }
 
     public bool Display { get; set; }
+
+    public string NannySignatureFile { get; set; }
+    public string UserSignatureFile { get; set; }
 
     public virtual UserAccount AccountUserAccountNavigation { get; set; } = null!;
 

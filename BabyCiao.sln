@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BabyCiao", "BabyCiao\BabyCiao.csproj", "{3A01C68E-A9F3-43B2-8874-0038C319B932}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BabyCiao", "BabyCiao\BabyCiao.csproj", "{3A01C68E-A9F3-43B2-8874-0038C319B932}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BabyCiaoAPI", "BabyCiaoAPI\BabyCiaoAPI.csproj", "{FEB97A06-CD72-4F8E-98CC-B17B52C2511E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BabyCiao_Client", "BabyCiao_View\BabyCiao_Client.csproj", "{C8447F7C-CA31-4FEB-AF48-449F4E489025}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{3A01C68E-A9F3-43B2-8874-0038C319B932}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A01C68E-A9F3-43B2-8874-0038C319B932}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A01C68E-A9F3-43B2-8874-0038C319B932}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEB97A06-CD72-4F8E-98CC-B17B52C2511E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEB97A06-CD72-4F8E-98CC-B17B52C2511E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEB97A06-CD72-4F8E-98CC-B17B52C2511E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEB97A06-CD72-4F8E-98CC-B17B52C2511E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8447F7C-CA31-4FEB-AF48-449F4E489025}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8447F7C-CA31-4FEB-AF48-449F4E489025}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8447F7C-CA31-4FEB-AF48-449F4E489025}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8447F7C-CA31-4FEB-AF48-449F4E489025}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
