@@ -8,6 +8,9 @@ using BabyCiaoAPI.Models;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using BCrypt.Net;
+using System.Net.Mail;
+using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 
 namespace BabyCiaoAPI.Controllers
 {
@@ -23,6 +26,7 @@ namespace BabyCiaoAPI.Controllers
             _context = context;
             _configuration = configuration;
         }
+
         [HttpPost("register")]
         public IActionResult Register([FromBody] LoginDTO registerDTO)
         {
@@ -47,8 +51,6 @@ namespace BabyCiaoAPI.Controllers
             return Ok(new { message = "註冊成功" });
         }
 
-
-
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginDTO loginDTO)
         {
@@ -72,9 +74,9 @@ namespace BabyCiaoAPI.Controllers
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-            new Claim(ClaimTypes.Name, user.UserId.ToString()),
-            new Claim("Permissions", user.Permissions.ToString())  // 添加權限到聲明
-        }),
+                    new Claim(ClaimTypes.Name, user.UserId.ToString()),
+                    new Claim("Permissions", user.Permissions.ToString())  // 添加權限到聲明
+                }),
                 Expires = DateTime.UtcNow.AddMinutes(5),
                 Issuer = _configuration["Jwt:Issuer"],
                 Audience = _configuration["Jwt:Audience"],
@@ -83,7 +85,6 @@ namespace BabyCiaoAPI.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
-
 
         [HttpGet("{id}")]
         [Authorize]
@@ -99,5 +100,134 @@ namespace BabyCiaoAPI.Controllers
 
             return Ok(userAccount);
         }
+
+        [HttpPost("sendVerificationEmail")]
+        public async Task<IActionResult> SendVerificationEmail([FromBody] EmailDTO emailDTO)
+        {
+            var userInformation = _context.UserInformations.FirstOrDefault(u => u.Email == emailDTO.Email);
+
+            if (userInformation == null)
+            {
+                return BadRequest(new { message = "無效的電子郵件地址" });
+            }
+
+            var userAccount = _context.UserAccounts.FirstOrDefault(u => u.Account == userInformation.AccountUser);
+            if (userAccount == null)
+            {
+                return BadRequest(new { message = "無效的帳號" });
+            }
+
+            var token = GenerateVerificationToken(userAccount);
+
+            var verificationLink = $"https://localhost:7272/Login/resetpassword{token}";
+            await SendEmailAsync(emailDTO.Email, "重設密碼驗證", $"請點擊此連結重設您的密碼: <a href=\"{verificationLink}\">點擊這裡</a>");
+
+
+            return Ok(new { message = "已發送" });
+        }
+
+        private string GenerateVerificationToken(UserAccount user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.Name, user.UserId.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(15),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
+
+        private async Task SendEmailAsync(string email, string subject, string htmlMessage)
+        {
+            try
+            {
+                var smtpHost = _configuration["Smtp:Host"];
+                var smtpPort = int.Parse(_configuration["Smtp:Port"]);
+                var smtpUsername = _configuration["Smtp:Username"];
+                var smtpPassword = _configuration["Smtp:Password"];
+                var smtpFrom = _configuration["Smtp:From"];
+
+                if (string.IsNullOrEmpty(smtpHost) || string.IsNullOrEmpty(smtpUsername) || string.IsNullOrEmpty(smtpPassword) || string.IsNullOrEmpty(smtpFrom))
+                {
+                    throw new ArgumentNullException("SMTP 設置不完整");
+                }
+
+                var smtpClient = new SmtpClient(smtpHost)
+                {
+                    Port = smtpPort,
+                    Credentials = new System.Net.NetworkCredential(smtpUsername, smtpPassword),
+                    EnableSsl = true // 確保啟用 SSL/TLS
+                };
+
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress(smtpFrom),
+                    Subject = subject,
+                    Body = htmlMessage,
+                    IsBodyHtml = true,
+                };
+                mailMessage.To.Add(email);
+
+                await smtpClient.SendMailAsync(mailMessage);
+            }
+            catch (Exception ex)
+            {
+                // 記錄錯誤信息
+                Console.WriteLine($"發送郵件失敗: {ex.Message}");
+                throw;
+            }
+        }
+
+
+        [HttpPost("resetPassword")]
+        public IActionResult ResetPassword([FromBody] ResetPasswordDTO resetPasswordDTO)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+
+            try
+            {
+                var claimsPrincipal = tokenHandler.ValidateToken(resetPasswordDTO.Token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+
+                var userIdClaim = claimsPrincipal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name);
+                if (userIdClaim == null)
+                {
+                    return BadRequest(new { message = "無效的令牌" });
+                }
+
+                var userId = int.Parse(userIdClaim.Value);
+                var userAccount = _context.UserAccounts.FirstOrDefault(u => u.UserId == userId);
+                if (userAccount == null)
+                {
+                    return BadRequest(new { message = "無效的令牌" });
+                }
+
+                var hashedPassword = BCrypt.Net.BCrypt.HashPassword(resetPasswordDTO.NewPassword);
+                userAccount.Password = hashedPassword;
+                _context.SaveChanges();
+
+                return Ok(new { message = "密碼已成功重設" });
+            }
+            catch
+            {
+                return BadRequest(new { message = "無效的令牌" });
+            }
+ 
+        }
+
+       
     }
 }
