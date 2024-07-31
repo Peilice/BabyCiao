@@ -49,10 +49,18 @@ namespace BabyCiaoAPI.Controllers
 						: 0,
 					ProductType = gb.ProductType,
 					JoinQuantity = _context.GroupBuyingDetails.Where(id => id.GroupBuyingId == gb.Id).Sum(q => q.Quantity),
-					photoUrl = gbp.PhotoName //gbp != null && gbp.PhotoName != null
-											 //	? $"/uploads/{gbp.PhotoName}"
-											 //	: "/img/noImage.jpg",
-				}
+					photoUrl = gbp.PhotoName,
+                    Photos = (from ph in _context.GroupBuyingPhotos
+                              where ph.IdGroupBuying == gb.Id
+                              select new GroupBuyPhotoDTO
+                              {
+                                  Id = ph.Id,
+                                  IdGroupBuying = ph.IdGroupBuying,
+                                  PhotoName = ph.PhotoName,
+                                  ModifiedTime = ph.ModifiedTime,
+
+                              }).ToList()
+                }
 			).ToListAsync();
 
 			return Ok(groupBuys);
@@ -101,6 +109,9 @@ namespace BabyCiaoAPI.Controllers
                                        Id = gb.Id,
                                        ProductName = gb.ProductName,
                                        ProductDescription = gb.ProductDescription,
+                                       progress = gb.TargetCount > 0
+                                                   ? (decimal)_context.GroupBuyingDetails.Where(id => id.GroupBuyingId == gb.Id).Sum(q => q.Quantity) / gb.TargetCount * 100
+                                                   : 0,
                                        TargetCount = gb.TargetCount,
                                        Statement = gb.Statement,
                                        ModifiedTime = gb.ModifiedTime,
@@ -109,8 +120,19 @@ namespace BabyCiaoAPI.Controllers
                                        DisplayString = gb.Display ? "☑" : "",
                                        ProductType = gb.ProductType,
                                        JoinQuantity = _context.GroupBuyingDetails.Where(id => id.GroupBuyingId == gb.Id).Sum(q => q.Quantity),
-                                       photoUrl = gbp.PhotoName /*!= null ? $"<img src=\" /uploads/{gbp.PhotoName}\" width=\"100\" />" : "<img src=\" /img/noImage.jpg\" width=\"100\" />"*/,
-									   DeadTime = gb.ModifiedTime.AddDays(30).ToString("yyyy-MM-dd") // 計算加上30天的日期
+                                       photoUrl = gbp.PhotoName,
+                                       Photos = (from ph in _context.GroupBuyingPhotos
+                                                 where ph.IdGroupBuying == gb.Id
+                                                 select new GroupBuyPhotoDTO
+                                                 {
+                                                     Id = ph.Id,
+                                                     IdGroupBuying = ph.IdGroupBuying,
+                                                     PhotoName = ph.PhotoName,
+                                                     ModifiedTime = ph.ModifiedTime,
+
+                                                 }).ToList(),
+
+                                       DeadTime = gb.ModifiedTime.AddDays(30).ToString("yyyy-MM-dd") // 計算加上30天的日期
 								   }).FirstAsync();
             if (groupBuying == null)
             {
