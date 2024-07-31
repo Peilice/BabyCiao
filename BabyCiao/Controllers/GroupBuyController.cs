@@ -49,6 +49,7 @@ namespace BabyCiao.Controllers
 								Statement = gb.Statement,
 								ModifiedTime = gb.ModifiedTime,
 								ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
+								DeadTime = gb.ModifiedTime.AddDays(30).ToString("yyyy-MM-dd"),
 								Display = gb.Display,
 
 								DisplayString = gb.Display ? "☑" : "",
@@ -86,6 +87,7 @@ namespace BabyCiao.Controllers
 								Statement = gb.Statement,
 								ModifiedTime = gb.ModifiedTime,
 								ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
+								DeadTime = gb.ModifiedTime.AddDays(30).ToString("yyyy-MM-dd"),
 								Display = gb.Display,
 
 								DisplayString = gb.Display ? "☑" : "",
@@ -160,6 +162,7 @@ namespace BabyCiao.Controllers
 								   ProductType = gb.ProductType,
 								   ModifiedTime = gb.ModifiedTime,
 								   ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
+								   DeadTime = gb.ModifiedTime.AddDays(30).ToString("yyyy-MM-dd"),
 								   Display = gb.Display,
 								   Photos = (from ph in _context.GroupBuyingPhotos
 											 where ph.IdGroupBuying == id

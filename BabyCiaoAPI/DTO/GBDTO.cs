@@ -8,7 +8,9 @@ namespace BabyCiaoAPI.DTO
         [Display(Name = "商品編號")]
         public int Id { get; set; }
 
-        [Display(Name = "編輯者")]
+
+		public decimal progress { get; set; }
+		[Display(Name = "編輯者")]
         public string UserAccount { get; set; } = null!;//發布者(管理員) AccountUserAccount
 
         [Display(Name = "商品名稱")]
@@ -27,7 +29,8 @@ namespace BabyCiaoAPI.DTO
 
         [Display(Name = "建立時間")]
         public DateTime ModifiedTime { get; set; }//建立時間
-        [Display(Name = "建立日期")]
+        public string DeadTime { get; set; }
+		[Display(Name = "建立日期")]
         public string ModifiedTimeView { get; set; }//建立時間
 
         [Display(Name = "顯示")]
@@ -48,9 +51,12 @@ namespace BabyCiaoAPI.DTO
 
 
     public class GBFilterDTO
-    {
+	{
+		public int TargetCount { get; set; }//成團數
 
-        [Display(Name = "商品編號")]
+		public string? ProductType { get; set; }
+		public decimal progress { get; set; }
+		[Display(Name = "商品編號")]
         public int Id { get; set; }
 
         [Display(Name = "商品名稱")]

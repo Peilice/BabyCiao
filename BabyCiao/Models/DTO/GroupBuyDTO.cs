@@ -29,8 +29,8 @@ namespace BabyCiao.Models.DTO
 		public DateTime ModifiedTime { get; set; }//建立時間
         [Display(Name = "建立日期")]
         public string ModifiedTimeView { get; set; }//建立時間
-
-        [Display(Name = "顯示")]
+		public string DeadTime { get; set; }
+		[Display(Name = "顯示")]
 		public bool Display { get; set; }//顯示控制
         [Display(Name = "顯示")]
         public string DisplayString { get; set; }//顯示控制

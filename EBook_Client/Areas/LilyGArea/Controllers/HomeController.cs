@@ -19,7 +19,7 @@ namespace BabyCiao_Client.Areas.LilyGArea.Controllers
             return View();
         }
 
-        public IActionResult book_infos()
+        public IActionResult Detail ()
         {
             return View();
         }
