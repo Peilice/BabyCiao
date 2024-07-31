@@ -119,7 +119,7 @@ namespace BabyCiaoAPI.Controllers
 
             var token = GenerateVerificationToken(userAccount);
 
-            var verificationLink = $"https://localhost:7272/Login/resetpassword{token}";
+            var verificationLink = $"https://localhost:7272/Login/resetpassword?token={token}";
             await SendEmailAsync(emailDTO.Email, "重設密碼驗證", $"請點擊此連結重設您的密碼: <a href=\"{verificationLink}\">點擊這裡</a>");
 
 
