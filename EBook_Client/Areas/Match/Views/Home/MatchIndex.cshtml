@@ -196,8 +196,8 @@
             </div>
             <div id="app" class="col-lg-12">
                 <div class="owl-courses-item owl-carousel">
-                    <div class="item" v-for="item in resumes" :key="item.id">
-                        <img v-bind:src="getPhotoUrl(item.photo)" style="width:320px;height:240px">
+                    <div class="item" v-for="item in BabyResumes :key="item.id">
+                        <img v-bind:src=`${baseAddress}/api/BabyResumes/GetPicture/${item.BabyResumesid}?rand =${rand}` style="width:320px;height:240px">
                         <div class="down-content">
                             <h5>名字：{{ item.firstName }}</h5>
                             <h5>寶寶歲數：{{ item.babyage }}</h5>
@@ -719,6 +719,7 @@
             </div>
         </div>
     </section>
+<img src="c:\users\user\desktop\babyciao-main2\babyciao\wwwroot\nannnyandperant\babyreume\babyreume1.jpg" />
 
     @section Scripts{
      <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -734,48 +735,32 @@
         <script src="~/style/ed/vendor/jquery/jquery.min.js"></script>
     <script src="~/style/ed/vendor/bootstrap/js/bootstrap.min.js"></script> 
 
-    <!-- Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
-            crossorigin="anonymous"></script>
-    <!-- axios -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
-            integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/vue@3.4.31/dist/vue.global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         var vueApp = {
             data() {
                 return {
-                resumes: [],
-            };
-        },
+                    baseAddress: "https://localhost:7292",
+                    BabyResumes: [],
+                    rand: Math.random()
+                };
+            },
+            mounted() {
+                this.fetchBabyResumes();
+            },
             methods: {
-                fetchresumes: function () {
-                    let _this = this;
-
+                async fetchBabyResumes() {
                     try {
-                        axios.get("https://localhost:7292/api/BabyResumes/Fullinformation")
-                            .then(response => {
-                                _this.resumes = response.data;
-                            })
-                            .catch(err => alert(err))
-                        }
-                        catch (error) {
-            console.log(error);
-        }
-                    },
-        getPhotoUrl(Photo) {
-                    return Photo != null ? `https://localhost:7000/nannnyandperant/babyreume${Photo}` : `https://localhost:7000/image/noimage.jpg`;
-        }
-
-                },
-        mounted: function () {
-            let _this = this;
-                _this.fetchresumes()
-        }
-            };
-        var app = Vue.createApp(vueApp).mount('#app');
-
+                        const response = await axios.get(`${this.baseAddress}/api/BabyResumes`);
+                        this.BabyResumes = response.data;
+                    } catch (error) {
+                        console.error("获取数据时出错:", error);
+                    }
+                }
+            }
+        };
+        Vue.createApp(vueApp).mount("#app");
     </script>
     <!-- Font Awesome -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
