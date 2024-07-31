@@ -58,7 +58,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">{{item.accountUserAccount}}</h5>
                                 <span class="me-3">No.1</span>
-                                <span><i class="bi bi-lightning-charge-fill">82</i></span>
+                                <span><i class="bi bi-lightning-charge-fill">{{votenumber}}</i></span>
                             </div>
                             <button class="btn btn-outline-dark me-2 w-100" type="submit">
                                 <i class="bi bi-heart">投票</i>
@@ -107,15 +107,20 @@
                 EndTime:"",
                 Statement:"",
                 Competitor:0,
+                votenumber:0,
                 Competitionsdetail: [],
+                RecordDetail:[],
             };
         },
         methods: {
             fetchcompetitions: function () {
                 let _this = this;
                 try {
-                    axios.get("https://localhost:7292/api/OnlineCompetitions/2")
-                        .then(response => {
+                    axios.all([
+                        axios.get("https://localhost:7292/api/OnlineCompetitions/2"),
+                        axios.get("https://localhost:7292/api/OnlineCompetitions/getRecord")
+                    ])
+                    .then(axios.spread((response, record) => {
                             _this.Competitionsdetail = response.data;
                             _this.CompetitionName = response.data[0].competitionName;
                             _this.Content = response.data[0].content;
@@ -123,9 +128,10 @@
                             _this.EndTime = response.data[0].endTime;
                             _this.Statement = response.data[0].statement;
                             _this.Competitor = response.data.length;
-
-                        })
-                        .catch(err => alert(err))
+                            _this.RecordDetail = record.data;
+                            votenumber = record.data.length;
+                    }))
+                    .catch(error => alert(error))
                 }
                 catch (error) {
                     console.log(error);
@@ -133,8 +139,7 @@
             },
             getPhotoUrl(CompetitionPhotos) {
                 return CompetitionPhotos != null ? `https://localhost:7000/uploads/${CompetitionPhotos}` : `https://localhost:7000/image/noimage.jpg`;
-            }
-
+            },
         },
         mounted: function () {
             let _this = this;

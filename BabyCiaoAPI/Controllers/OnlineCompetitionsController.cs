@@ -64,7 +64,31 @@ namespace BabyCiaoAPI.Controllers
             return Ok(Competitiondetail);
         }
 
-        //GET 
+        //GET api/OnlineCompetitions/getRecord
+        [HttpGet("getRecord")]
+        public async Task<ActionResult<IEnumerable<CompetitionDetailDTO>>> getRecord(int id)
+        {
+            var RecordDetail = await (from com in _context.OnlineCompetitions
+                                           join comd in _context.CompetitionDetails
+                                           on com.Id equals comd.IdOnlineCompetition
+                                           join comr in _context.CompetitionRecords
+                                           on comd.Id equals comr.IdCompetitionDetail
+                                           where comr.IdCompetitionDetail == id
+                                           select new CompetitionDetailDTO
+                                           {
+                                               Id = com.Id,
+                                               CompetitionName = com.CompetitionName,
+                                               StartTime = com.StartTime,
+                                               EndTime = com.EndTime,
+                                               Content = com.Content,
+                                               Statement = com.Statement,
+                                               AccountUserAccount = comd.AccountUserAccount,
+                                               CompetitionPhotos = comd.CompetitionPhoto,
+                                               CompetitionDetailId = comd.IdOnlineCompetition,
+                                           }).ToListAsync();
+            return Ok(RecordDetail);
+
+        }
 
 
         // POST api/<OnlineCompetitionsController>
