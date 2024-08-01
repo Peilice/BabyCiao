@@ -6,18 +6,23 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BabyCiaoAPI.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace BabyCiaoAPI.Controllers
 {
+    [EnableCors("andy")]
     [Route("api/[controller]")]
     [ApiController]
     public class ContractsController : ControllerBase
     {
         private readonly BabyciaoContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ContractsController(BabyciaoContext context)
+
+        public ContractsController(BabyciaoContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: api/Contracts
