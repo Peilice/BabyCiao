@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BabyCiaoAPI.Models;
 using BabyCiaoAPI.DTO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace BabyCiaoAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     [Route("api/[controller]")]
     public class NannyResumesController : ControllerBase
@@ -38,7 +32,7 @@ namespace BabyCiaoAPI.Controllers
             if (!string.IsNullOrEmpty(city))
             {
                 query = query.Where(n => n.City.Contains(city));
-        }
+            }
 
             if (!string.IsNullOrEmpty(district))
             {
@@ -71,7 +65,6 @@ namespace BabyCiaoAPI.Controllers
                 ServiceCenter = n.ServiceCenter,
                 ProfessionalPortrait = n.ProfessionalPortrait,
                 DisplayControl = n.DisplayControl
-
             }).ToListAsync();
 
             return results;
@@ -81,30 +74,27 @@ namespace BabyCiaoAPI.Controllers
         public async Task<ActionResult<NannyResumeDTO>> GetNannyResume(int id)
         {
             var nannyResume = await (from n in _context.NannyResumes
-                                    join u in _context.NannyResumePhotos
-                                    on n.Id equals u.IdNannyResume
-                                    where u.Id == id
-                                    select new NannyResumeDTO
-                                    {
-                                        Id = n.Id,
-                                        NannyAccountUserAccount = n.NannyAccountUserAccount,
-                                        City = n.City,
-                                        District = n.District,
-                                        Introduction = n.Introduction,
-                                        TypeOfDaycare = n.TypeOfDaycare,
-                                        ServiceItems = n.ServiceItems,
-                                        QuasiPublicChildcare = n.QuasiPublicChildcare,
-                                        ChildcareAvailableUnder2 = n.ChildcareAvailableUnder2,
-                                        ChildcareAvailableOver2 = n.ChildcareAvailableOver2,
-                                        Language = n.Language,
-                                        ServiceCenter = n.ServiceCenter,
-                                        ProfessionalPortrait = n.ProfessionalPortrait,
-                                        DisplayControl = n.DisplayControl,
-                                        Photo = u.PhotoName
-                                    }).FirstOrDefaultAsync();
-
-
-
+                                     join u in _context.NannyResumePhotos
+                                     on n.Id equals u.IdNannyResume
+                                     where n.Id == id
+                                     select new NannyResumeDTO
+                                     {
+                                         Id = n.Id,
+                                         NannyAccountUserAccount = n.NannyAccountUserAccount,
+                                         City = n.City,
+                                         District = n.District,
+                                         Introduction = n.Introduction,
+                                         TypeOfDaycare = n.TypeOfDaycare,
+                                         ServiceItems = n.ServiceItems,
+                                         QuasiPublicChildcare = n.QuasiPublicChildcare,
+                                         ChildcareAvailableUnder2 = n.ChildcareAvailableUnder2,
+                                         ChildcareAvailableOver2 = n.ChildcareAvailableOver2,
+                                         Language = n.Language,
+                                         ServiceCenter = n.ServiceCenter,
+                                         ProfessionalPortrait = n.ProfessionalPortrait,
+                                         DisplayControl = n.DisplayControl,
+                                         Photo = u.PhotoName
+                                     }).FirstOrDefaultAsync();
 
             if (nannyResume == null)
             {
@@ -112,7 +102,6 @@ namespace BabyCiaoAPI.Controllers
             }
 
             Console.WriteLine("Photo URL: " + nannyResume.Photo);
-
 
             return nannyResume;
         }
@@ -191,17 +180,6 @@ namespace BabyCiaoAPI.Controllers
             }
 
             return NoContent();
-        }
-
-        // POST: api/NannyResumes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<NannyResume>> PostNannyResume(NannyResume nannyResume)
-        {
-            _context.NannyResumes.Add(nannyResume);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetNannyResume", new { id = nannyResume.Id }, nannyResume);
         }
 
         // DELETE: api/NannyResumes/5

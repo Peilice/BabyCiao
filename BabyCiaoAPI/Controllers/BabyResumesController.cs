@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BabyCiaoAPI.Models;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace BabyCiaoAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Route("api/[controller]")]
     public class BabyResumesController : ControllerBase
     {
         private readonly BabyciaoContext _context;
@@ -34,9 +28,9 @@ namespace BabyCiaoAPI.Controllers
             var query = _context.BabyResumes.AsQueryable();
 
             if (!string.IsNullOrEmpty(city))
-                {
+            {
                 query = query.Where(b => b.City.Contains(city));
-        }
+            }
 
             if (!string.IsNullOrEmpty(district))
             {
@@ -126,7 +120,6 @@ namespace BabyCiaoAPI.Controllers
         }
 
         // PUT: api/BabyResumes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBabyResume(int id, BabyResumeDTO babyResumeDTO)
         {
@@ -174,17 +167,6 @@ namespace BabyCiaoAPI.Controllers
             }
 
             return NoContent();
-        }
-
-        // POST: api/BabyResumes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<BabyResume>> PostBabyResume(BabyResume babyResume)
-        {
-            _context.BabyResumes.Add(babyResume);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetBabyResume", new { id = babyResume.Id }, babyResume);
         }
 
         // DELETE: api/BabyResumes/5

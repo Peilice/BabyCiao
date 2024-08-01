@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
+//using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 using BabyCiaoAPI.Models;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // 加載配置文件
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 // 添加服務到容器
 builder.Services.AddDbContext<BabyciaoContext>(options =>
@@ -89,7 +93,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        //c.SwaggerEndpoint("/swagger/v1/swagger.json", "BabyCiaoAPI v1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "BabyCiaoAPI v1");
         //c.RoutePrefix = string.Empty; // 確保Swagger UI在根路徑運行
     });
 }
