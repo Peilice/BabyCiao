@@ -9,7 +9,7 @@
     @* 電子聯絡簿選擇 *@
     <div class="text-center">
         <h1 class="display-4">歡迎使用電子聯絡簿!</h1>
-        <button id="createEbook" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ebook_form" v-on:click="createEbook">新增聯絡簿</button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ebook_form" v-on:click="getUserName">新增聯絡簿</button>
         <div class="container my-3">
             <div class="row ">
                 <div class="col-12 ">
@@ -137,10 +137,11 @@
                     babyBloodType: "請選擇",
                     EmergencyContact: "",
                     EmergencyContactPhone:"",
+                    isCreate:"false",
                 };
             },
             methods: {
-                createEbook: function () {
+                getUserName: function () {
                     axios.get(`@Utility.SD.localHost_API/api/Ebook/GetUserName_Ebook`, { headers }).then(result => {
                         // alert(result.data)
                         this.username = result.data;
@@ -180,6 +181,7 @@
                 },
                 checkForm: function () {
                     let _this = this;
+                    _this.isCreate = true;
                     let forms = document.querySelectorAll('.needs-validation')
                     //alert(forms)
                     Array.prototype.slice.call(forms)
@@ -189,7 +191,14 @@
                                     event.preventDefault()
                                     event.stopPropagation()
                                 } else {
-                                    _this.create(event);
+                                    if (_this.isCreate) {
+                                        //alert('create!')
+                                        _this.isCreate = false;
+                                        _this.create(event);
+                                    } else {
+                                        event.preventDefault()
+                                        event.stopPropagation()
+                                    }
                                 }
                                  form.classList.add('was-validated')
                             }, false)
@@ -203,7 +212,7 @@
                     }).then(result => {
                         // alert(result.data)
                         _this.ebooks = result.data;
-                        var tempEbooks=_this.ebooks
+                        //var tempEbooks=_this.ebooks
                         for (var i = 0; i < _this.ebooks.length; i++) {
                             _this.ebooks[i].babyName = this.ebooks[i].babyName;
                             if (this.ebooks[i].gender == 0) {

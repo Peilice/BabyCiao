@@ -166,6 +166,7 @@ namespace BabyCiaoAPI.Controllers
         {
             var DTOs = _context.DietDetails.Where(h => h.IdContactBook == id).Select(DietDetail => new Ebook_DietDetail_DTO
             {
+                Category="飲食",
                 Id = DietDetail.Id,
                 IdContactBook = DietDetail.IdContactBook,
                 RecodeTime = DietDetail.RecodeTime,
@@ -276,9 +277,9 @@ namespace BabyCiaoAPI.Controllers
             {
                 IdContactBook = DTO.IdContactBook,
                 SleepTime = DTO.SleepTime,
+                WakeUpTime = DTO.WakeUpTime,
                 Content = DTO.Content,
                 SleepState=DTO.SleepState,
-                WakeUpTime = DTO.WakeUpTime,
                 ModifiedTime = DTO.ModifiedTime,
                 AccountUserAccount = DTO.AccountUserAccount,
             };

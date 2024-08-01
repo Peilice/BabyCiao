@@ -32,7 +32,7 @@
     </style>
 }
 <!-- breadcrmb start -->
-<div class="bg-light px-3">
+<div>
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item"><a href="index.html">首頁</a></li>
@@ -58,7 +58,7 @@
         <!-- tabs start -->
         <div class="col-12 col-md-9 rounded">
             <div class="div1 p-2" style="background-color:#fff4ef ;">
-            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <ul class="nav nav-pills mb-1" id="pills-tab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="pills-1-tab" data-bs-toggle="pill"
                             data-bs-target="#pills-1" type="button" role="tab" aria-controls="pills-1"
@@ -98,7 +98,7 @@
                     <!-- 條件設定區 start -->
                     <div class="h-25 p-3" style="background-color: #f6dec8;">
                         <div class="form-group">
-                            <div class="w-100 d-flex align-items-center mb-2" id="htmlTarget">
+                            <div class="w-100 d-flex align-items-center mb-1" id="htmlTarget">
                                 <label for="" class="col-form-label">▲ 時間：</label>
                                 <label for="datepiker01" class="form-label mb-0 mx-1">從</label>
                                 <div class="input-group w-25 "  >
@@ -109,7 +109,7 @@
                                     <input type="date" class=" form-control" id="datepiker02" autocomplete="off">
                                 </div>
                             </div>
-                            <div class="w-100 d-flex align-items-center mb-2">
+                            <div class="w-100 d-flex align-items-center mb-1">
                                 <label for="" class="col-form-label">▲ 顯示內容：</label>
                                 <div class="form-check me-2">
                                     <input class="form-check-input" type="checkbox" value="" id="chk1" checked>
@@ -187,53 +187,98 @@
                 <!-- 飲食 start -->
                 <div class="tab-pane fade h-100" id="pills-2" role="tabpanel" aria-labelledby="pills-2-tab">
                     <div class=" p-3" style="background-color: #f6dec8;">
-                        <div class="form-group mb-2 ">
+                        <div class="form-group mb-1 ">
                             <div class=" d-flex">
-                                    <label for="datetimepicker01" class="col-form-label">▲ 時間：</label>
+                                <label for="datetimepicker01" class="col-form-label">▲ 時間：</label>
                                 <div class="input-group " style="width:300px" 
                                         data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                        <input type="datetime-local" class="form-control" id="datetimepicker01" >
+                                    <input type="datetime-local" class="form-control" id="datetimepicker01" v-model="recodeTime">
                                 </div>
                             </div>
                         </div>
-                        <div class="w-100 d-flex align-items-center mb-2 ">
+                        <div class="w-100 d-flex align-items-center mb-1 ">
                             <label for="" class="col-form-label">▲ 飲食類別：</label>
                             <div class="form-check me-2">
                                 <input class="form-check-input" type="radio" name="radio_food" id="radio1"
-                                        value="喝奶">
+                                        value="喝奶" v-model="foodType_picker">
                                 <label class="form-check-label" for="radio1">
                                     喝奶
                                 </label>
                             </div>
                             <div class="form-check me-2">
                                 <input class="form-check-input" type="radio" name="radio_food" id="radio2"
-                                        value="食物">
+                                           value="食物" v-model="foodType_picker">
                                 <label class="form-check-label" for="radio2">
                                     食物
                                 </label>
                             </div>
+                            <div class="input-group mb-1 w-25">
+                                <span class="input-group-text">單位</span>
+                                <template v-if="foodType_picker=='喝奶'">
+                                    <select class="form-control" v-model="quantity">
+                                        <option disabled>請選擇</option>
+                                        <option value="1">毫升(cc)</option>
+                                    </select>
+                                </template>
+                                <template v-else-if="foodType_picker=='食物'">
+                                    <select class="form-control" v-model="quantity">
+                                        <option disabled>請選擇</option>
+                                        <option value="1">毫升(cc)</option>
+                                        <option value="2">克(g)</option>
+                                        <option value="3">個數(piece)</option>
+                                        <option value="4">份數</option>
+                                    </select>
+                                </template>
+                                <template v-else>
+                                    <select class="form-control" disabled>
+                                    </select>
+                                </template>
+                            </div>
+                            <div class="form-group mb-1 w-25">
+                                <div class=" d-flex ">
+                                    <span class="input-group-text">數量</span>
+                                    <div class="input-group "
+                                            data-td-target-input="nearest" data-td-target-toggle="nearest">
+                                        <input type="number" class="form-control" v-model="amount" min="0">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">飲食狀況</span>
-                            <input type="text" class="form-control" placeholder="剩餘奶量or挑食等狀況記錄"
-                                    aria-label="Username" aria-describedby="basic-addon1" id="text1">
-                        </div>
-                        <button type="button" class="btn btn-success" id="btn1" v-on:click="">新增</button>
+                        <button type="button" class="btn btn-success" id="btn1" v-on:click="createDietDetail">新增</button>
                     </div>
 
-                    <div class="w-50" id="div_food">
-                        <div class="container rounded m-3" style="background-color: pink;">
-                            <div class="row ">
-                                <!-- <div class="col-10 my-2">
-                                    <h5 class="fw-bolder">6月19日 3點58分</h5>
-                                    <p class="ms-5 mb-0">飲食類別: 喝奶</p>
-                                    <p class="ms-5 mb-0">飲食狀況: 120cc</p>
-                                </div>
-                                <div class="col-2 d-flex flex-column text-center justify-content-around">
-                                    <button class="btn btn-primary">編輯</button>
-                                    <button class="btn btn-primary">刪除</button>
-                                </div> -->
-                            </div>
+                        <div class="container w-100">
+                            <div class="row rounded m-1 w-100" style="background-color: pink;" V-for="item in DietDetail">
+                                <template v-if="item.edit==true">
+                                    <div class="col-3 my-2">
+                                        <h5 class="fw-bolder mb-0">{{item.dateTimeString}}</h5>
+                                        <input type="datetime-local" class="form-control" style="height:24px" v-model="item.dateTimeString" />
+                                    </div>
+                                    <div class="col-5 my-2">
+                                        <p class="ms-5 mb-0">飲食類別: {{item.type}} </p>
+                                        <div class="d-flex flex-row">
+                                            <p class="ms-5 mb-0 me-2">飲食狀況: {{item.amount}}{{item.unit}}</p>
+                                            <input type="text" class="form-control w-25" style="height:24px" v-model="item.amount" />
+                                        </div>
+                                    </div>
+                                    <div class="col-4 d-flex justify-content-center align-items-center">
+                                        <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
+                                        <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="cancel(item.category,item.id)">取消</button>
+                                    </div> 
+                                </template>
+                                <template v-else>
+                                    <div class="col-3 my-2">
+                                        <h5 class="fw-bolder">{{item.dateTimeString}}</h5>
+                                    </div>
+                                    <div class="col-5 my-2">
+                                        <p class="ms-5 mb-0">飲食類別: {{item.type}}</p>
+                                        <p class="ms-5 mb-0">飲食狀況: {{item.amount}}{{item.unit}}</p>
+                                    </div>
+                                    <div class="col-4 d-flex justify-content-center align-items-center">
+                                        <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="edit(item.category,item.id)">編輯</button>
+                                        <button class="m-1 btn btn-danger h-50 d-flex align-items-center" v-on:click="delete(item.category,item.id)">刪除</button>
+                                    </div>
+                                </template>
                         </div>
                     </div>
                 </div>
@@ -241,48 +286,48 @@
                 <!-- 尿布更換 start -->
                 <div class="tab-pane fade h-100" id="pills-3" role="tabpanel" aria-labelledby="pills-3-tab">
                     <div class="p-3 " style="background-color: #f6dec8;">
-                        <div class="form-group mb-2">
+                        <div class="form-group mb-1">
                             <div class=" d-flex">
                                 <label for="datetimepicker02" class="col-form-label">▲ 時間：</label>
                                 <div class="input-group " style="width:300px"
                                         data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                    <input type="datetime-local" class="form-control" id="datetimepicker02">
+                                        <input type="datetime-local" class="form-control" id="datetimepicker02" v-model="recodeTime">
                                 </div>
                             </div>
                         </div>
-                        <div class="w-100 d-flex align-items-center mb-2">
+                        <div class="w-100 d-flex align-items-center mb-1">
                             <label for="" class="col-form-label">▲ 內容物：</label>
                             <div class="form-check me-2">
-                                <input class="form-check-input" type="radio" name="radio_pu" id="radio3">
+                                    <input class="form-check-input" type="radio" name="radio_pu" id="radio3" value="1" v-model="Content_picker">
                                 <label class="form-check-label" for="radio3">
                                     乾爽
                                 </label>
                             </div>
                             <div class="form-check me-2">
-                                <input class="form-check-input" type="radio" name="radio_pu" id="radio4">
+                                    <input class="form-check-input" type="radio" name="radio_pu" id="radio4" value="2" v-model="Content_picker">
                                 <label class="form-check-label" for="radio4">
                                     噓噓
                                 </label>
                             </div>
                             <div class="form-check me-2">
-                                <input class="form-check-input" type="radio" name="radio_pu" id="radio5">
+                                    <input class="form-check-input" type="radio" name="radio_pu" id="radio5" value="3" v-model="Content_picker">
                                 <label class="form-check-label" for="radio5">
                                     便便
                                 </label>
                             </div>
                             <div class="form-check me-2">
-                                <input class="form-check-input" type="radio" name="radio_pu" id="radio6">
+                                    <input class="form-check-input" type="radio" name="radio_pu" id="radio6" value="4" v-model="Content_picker">
                                 <label class="form-check-label" for="radio6">
                                     噓噓+便便
                                 </label>
                             </div>
                         </div>
-                        <div class="input-group mb-3">
+                        <div class="input-group mb-2">
                             <span class="input-group-text" id="basic-addon1">排泄狀況</span>
                             <input type="text" class="form-control" placeholder="糞便顏色or軟硬or份量大小等狀況記錄"
-                                    aria-label="Username" aria-describedby="basic-addon1">
+                                       aria-label="Username" aria-describedby="basic-addon1" v-model="bowelSituation">
                         </div>
-                        <button type="button" class="btn btn-success ">新增</button>
+                            <button type="button" class="btn btn-success " v-on:click="createDiaperDetail">新增</button>
                     </div>
                     <div class="w-50" id="div_food">
                         <div class="container rounded m-3" style="background-color: orange">
@@ -305,25 +350,30 @@
                 <div class="tab-pane fade h-100" id="pills-4" role="tabpanel" aria-labelledby="pills-4-tab">
                     <div class=" p-3 " style="background-color: #f6dec8;">
                         <div class="form-group">
-                            <div class="w-100 d-flex align-items-center mb-3" id="htmlTarget">
+                            <div class="w-100 d-flex align-items-center mb-1" id="htmlTarget">
                                 <label for="" class="col-form-label">▲ 時間：</label>
                                 <label for="datetimepicker03" class="form-label mb-0 mx-1">從</label>
                                 <div class="input-group " style="width:300px"
                                         data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                    <input type="datetime-local" class="form-control" id="datetimepicker03">
+                                        <input type="datetime-local" class="form-control" id="datetimepicker03" v-model="sleep_Time">
                                 </div>
                                 <label for="datetimepicker04" class="form-label mb-0 mx-1">到</label>
                                 <div class="input-group " style="width:300px"
                                         data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                    <input type="datetime-local" class="form-control" id="datetimepicker04">
+                                        <input type="datetime-local" class="form-control" id="datetimepicker04" v-model="wakeUp_Time">
                                 </div>
                             </div>
-                            <div class="input-group mb-3">
+                            <div class="input-group mb-1">
                                 <span class="input-group-text" id="basic-addon1">睡眠狀況</span>
                                 <input type="text" class="form-control" placeholder="安穩or驚醒or咳嗽等狀況記錄"
-                                        aria-label="Username" aria-describedby="basic-addon1">
+                                           aria-label="Username" aria-describedby="basic-addon1" v-model="sleepState">
                             </div>
-                            <button type="button" class="btn btn-success">新增</button>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text" id="basic-addon1">狀況說明</span>
+                                    <input type="text" class="form-control" placeholder="狀況說明"
+                                           aria-label="Username" aria-describedby="basic-addon1" v-model="sleep_content">
+                                </div>
+                                <button type="button" class="btn btn-success" v-on:click="createSleepDetail">新增</button>
                         </div>
                     </div>
                     <div class="w-50" id="div_food">
@@ -347,38 +397,26 @@
                 <div class="tab-pane fade h-100" id="pills-5" role="tabpanel" aria-labelledby="pills-5-tab">
                     <div class=" p-3" style="background-color: #f6dec8;">
                         <div class="form-group">
-                            <div class="w-100 d-flex align-items-center mb-3" id="htmlTarget">
+                            <div class="w-100 d-flex align-items-center mb-1" id="htmlTarget">
                                 <label for="" class="col-form-label">▲ 時間：</label>
-                                <label for="datetimepicker03" class="form-label mb-0 mx-1">從</label>
                                 <div class="input-group " style="width:300px"
                                         data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                    <input type="datetime-local" class="form-control" id="datetimepicker03">
-                                </div>
-                                <label for="datetimepicker04" class="form-label mb-0 mx-1">到</label>
-                                <div class="input-group " style="width:300px"
-                                        data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                    <input type="datetime-local" class="form-control" id="datetimepicker04">
+                                        <input type="datetime-local" class="form-control" id="datetimepicker03" v-model="recodeTime">
                                 </div>
                             </div>
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="basic-addon1">睡眠狀況</span>
-                                <input type="text" class="form-control" placeholder="安穩or驚醒or咳嗽等狀況記錄"
-                                        aria-label="Username" aria-describedby="basic-addon1">
-                            </div>
-                            <div class="input-group mb-3">
+                            <div class="input-group mb-1">
                                 <span class="input-group-text">狀況說明</span>
                                 <textarea class="form-control" aria-label="With textarea"
-                                            placeholder="其他特殊狀況記錄"></textarea>
+                                              placeholder="其他特殊狀況記錄" v-model="memo1"></textarea>
                             </div>
-                            <button type="button" class="btn btn-success">新增</button>
+                                <button type="button" class="btn btn-success" v-on:click="createMemo">新增</button>
                         </div>
                     </div>
-                    <div class="w-50" id="div_food">
-                        <div class="container rounded m-3" style="background-color: lightgreen">
+                    <div class="w-50" >
+                        <div class="container rounded m-2" style="background-color: lightgreen">
                             <div class="row ">
                                 <div class="col-10 my-2">
                                     <h5 class="fw-bolder">6月19日 3點58分 ~</h5>
-                                    <h5 class="fw-bolder">6月19日 4點58分</h5>
                                     <p class="ms-5 mb-0">狀況說明: 發燒</p>
                                 </div>
                                 <div class="col-2 d-flex flex-column text-center justify-content-around">
@@ -411,7 +449,7 @@
         };
         let Ebook_user = sessionStorage.getItem("username");
         let IdContactBook = sessionStorage.getItem("IdContactBook");
-        // let List_Datas = new Array();
+        //let List_Datas = new Array();
 
         var vueApp = {
             data() {
@@ -422,28 +460,49 @@
                     HealthInfos:[],
                     Memo:[],
                     SleepDetail:[],
+                    SleepDetail:[],
+                    List_Datas: [],
+                    unit: "",
+                    //共用參數:
+                    idContactBook: "",
+                    recodeTime:"",
+                    modifiedTime: new Date(),
+                    accountUserAccount: "",
+                    //飲食用的參數:
+                    foodType_picker: "",
+                    amount: "",
+                    quantity: "",
+                    //尿布用的參數:
+                    content_picker: "",
+                    bowelSituation: "",
+                    //睡眠用的參數:
+                    sleep_Time :"",//時間
+                    wakeUp_Time : "",//時間
+                    sleep_content : "",
+                    sleepState:"",
+                    //備註用的參數:
+                    memo1: "",
                 }
             },
             mounted: function () {
                 let _this = this;
-                alert(IdContactBook);
+                // List_Datas = new Array();
+                //alert(IdContactBook);
                 _this.getDietDetailData(IdContactBook);
                 //_this.getDiaperDetailData(IdContactBook);
                 //_this.getHealthInfosData(IdContactBook);
                 //_this.getMemoData(IdContactBook);
                 //_this.getSleepDetailData(IdContactBook);
+                //_this.reflesh();
             },
             methods: {
                 //取得資料區
                 getDiaperDetailData: function (IdContactBook) {
                     let _this = this;
-                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDiaperDetail/${IdContactBook}`, { 
-                        headers })
-                        .then(result => { 
-                            // alert(result) 
-                        })
-                        .catch(err => { alert(err) });
-                    
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDiaperDetail/${IdContactBook}`, { headers 
+                    }).then(result => { 
+                        // alert(result) 
+                    }).catch(err => { alert(err) });
                 },
                 getDietDetailData: function (IdContactBook) {
                     let _this = this;
@@ -451,61 +510,269 @@
                         headers })
                         .then(result => {
                             // alert(result.data)
-                            result.data.forEach(function (item, index) {
-                                _this.addContext("飲食", item);
-                            })
+                            _this.DietDetail = result.data;
+                            for (var i = 0; i < _this.DietDetail.length; i++) {
+                                switch (_this.DietDetail[i].quantity) {
+                                    case 1:
+                                        _this.DietDetail[i].unit = "毫升(cc)";
+                                        break;
+                                    case 2:
+                                        _this.DietDetail[i].unit = "克(g)";
+                                        break;
+                                    case 3:
+                                        _this.DietDetail[i].unit = "個(piece)";
+                                        break;
+                                    case 4:
+                                        _this.DietDetail[i].unit = "份";
+                                        break;
+                                }
+                                var fulltime = new Date(this.DietDetail[i].recodeTime);
+                                var str = `${fulltime.getMonth()+1}月${fulltime.getDate()}日 ${fulltime.getHours()}點${fulltime.getMinutes()}分`;
+                                _this.DietDetail[i].dateTimeString = `${str}`;
+
+                                _this.DietDetail[i].edit = false;
+                            }
+                            context1.innerHTML = "";
+                            _this.reflesh();
                         }).catch(err => { alert(err) });
                 },
                 getHealthInfosData: function (IdContactBook) {
                     let _this = this;
-                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetHealthInfos/${IdContactBook}`, { 
-                        headers })
-                        .then(result => { alert(result) })
-                        .catch(err => { alert(err) });
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetHealthInfos/${IdContactBook}`, { headers 
+                    }).then(result => { 
+                        //alert(result) 
+                    }).catch(err => { alert(err) });
                 },
                 getMemoData: function (IdContactBook) {
                     let _this = this;
-                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetMemo/${IdContactBook}`, { 
-                        headers })
-                        .then(result => { alert(result) })
-                        .catch(err => { alert(err) });
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetMemo/${IdContactBook}`, { headers 
+                    }).then(result => { 
+                        //alert(result) 
+                    }).catch(err => { alert(err) });
                 },
                 getSleepDetailData: function (IdContactBook) {
                     let _this = this;
-                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetSleepDetail/${IdContactBook}`, { 
-                        headers })
-                        .then(result => { alert(result) })
-                        .catch(err => { alert(err) });
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetSleepDetail/${IdContactBook}`, {headers 
+                    }).then(result => { 
+                        //alert(result) 
+                    }).catch(err => { alert(err) });
                 },
-                //加入資訊區塊
+                //新增資料區
+                createDietDetail: function () {
+                    let _this = this;
+                    var request = {};
+                    request.id = 0;
+                    request.idContactBook = Number(IdContactBook);
+                    request.recodeTime = _this.recodeTime;
+                    request.modifiedTime = _this.modifiedTime;
+                    request.accountUserAccount = Ebook_user;
+                    request.type = _this.foodType_picker;
+                    request.amount = Number(_this.amount);
+                    request.quantity = Number(_this.quantity);
+                    axios.post(`@Utility.SD.localHost_API/api/Ebook/CreateDietDetail`, request, {
+                        headers
+                    }).then(result=>{
+                        // alert(result.data);
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "新增成功",
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        _this.getDietDetailData(IdContactBook);
+                    }).catch(err => {alert(err) });
+                },
+                createDiaperDetail: function () {
+                    let _this = this;
+                    var request = {};
+                    request.id = 0;
+                    request.idContactBook = Number(IdContactBook);
+                    request.recodeTime = _this.recodeTime;
+                    request.content = Number(_this.Content_picker);
+                    request.bowelSituation = _this.bowelSituation;
+                    request.modifiedTime = _this.modifiedTime;
+                    request.accountUserAccount = Ebook_user;
+
+                    axios.post(`@Utility.SD.localHost_API/api/Ebook/CreateDiaperDetail`, request, {
+                        headers
+                    }).then(result => {
+                        // alert(result.data);
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "新增成功",
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        _this.getDiaperDetailData(IdContactBook);
+                    }).catch(err => { alert(err) });
+                },
+                createSleepDetail: function () {
+                    let _this = this;
+                    var request = {};
+                    request.id = 0;
+                    request.idContactBook = Number(IdContactBook);
+                    request.modifiedTime = _this.modifiedTime;
+                    request.accountUserAccount = Ebook_user;
+
+                    request.sleepState = _this.sleepState;
+                    request.sleepTime = _this.sleep_Time;
+                    request.wakeUpTime = _this.wakeUp_Time;
+                    request.content = _this.sleep_content;
+                    
+                    axios.post(`@Utility.SD.localHost_API/api/Ebook/CreateSleepDetail`, request, {
+                        headers
+                    }).then(result => {
+                        // alert(result.data);
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "新增成功",
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        _this.getSleepDetailData(IdContactBook);
+                    }).catch(err => { alert(err) });
+                },
+                createMemo: function () {
+                    let _this = this;
+                    var request = {};
+                    request.id = 0;
+                    request.idContactBook = Number(IdContactBook);
+                    request.modifiedTime = _this.modifiedTime;
+                    request.accountUserAccount = Ebook_user;
+                    request.recodeTime = _this.recodeTime;
+
+                    request.memo1 = _this.memo1;
+
+                    axios.post(`@Utility.SD.localHost_API/api/Ebook/CreateMemo`, request, {
+                        headers
+                    }).then(result => {
+                        // alert(result.data);
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "新增成功",
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        _this.getSleepDetailData(IdContactBook);
+                    }).catch(err => { alert(err) });
+                },
+                //共用功能區
                 addContext: function (detail_type, detail) {
                     let context1 = document.getElementById('context1');
+
                     var div = document.createElement('div');
                     var contextID = `context${detail_type}_${detail}`;
                     var detail_time = new Date(detail.recodeTime);
                     div.id = contextID;
-                    div.innerHTML = `${detail_time.getHours()}點${detail_time.getMinutes()}分 : ${detail_type} \n ${detail.type}`;
+                    div.innerHTML = `${detail_time.getMonth() + 1}月${detail_time.getDate()}日 ${detail_time.getHours()}點${detail_time.getMinutes()}分 : ${detail_type} \n ${detail.type}`;
+
+
                     div.className = 'w-100 MSG_title';
-                    // div.style.position = 'absolute';
-                    // div.style.backgroundColor = 'pink';
-                    // div.style.fontSize = '16px';
+
                     context1.appendChild(div);
                 },
-                //新增資料區
-                createHealthInfos: function () {
-                    axios.post(url, request, {headers
-                    }).then(result=>{
-
-                    }).catch(err => {alert(err) });
-                }
-
+                reflesh: function () {
+                    let _this = this;
+                    //依日期升冪資料
+                    _this.DietDetail.sort(function (a, b) {
+                        return new Date(b.recodeTime).getTime() - new Date(a.recodeTime).getTime()
+                    });
+                    //新增div進去
+                    _this.DietDetail.forEach(function (item, index) {
+                        _this.addContext("飲食", item);
+                    })
+                },
+                update: function (item) {
+                    let _this = this;
+                     // alert(`update`);
+                    switch (item.category) {
+                        case "飲食":
+                            var request = {};
+                            request.category = "飲食";
+                            request.id = Number(item.id);
+                            request.idContactBook = Number(IdContactBook);
+                            request.recodeTime = item.dateTimeString;
+                            request.modifiedTime = new Date().toLocaleString();
+                            request.accountUserAccount = Ebook_user;
+                            request.type = item.type;
+                            request.amount = Number(item.amount);
+                            request.quantity = Number(item.quantity);
+                            axios.put(`@Utility.SD.localHost_API/api/Ebook/UpdateDietDetail/${item.id}`, request, { headers
+                            }).then(response => {
+                                //alert(response.data);
+                                _this.getDietDetailData(IdContactBook);
+                            }).catch(err => {
+                                alert(err);
+                            });
+                            break;
+                        case "尿布":
+                            break;
+                        case "睡眠":
+                            break;
+                        case "備註":
+                            break;
+                        default:
+                            break;
+                    }
+                    
+                },
+                cancel: function (category, targetId) {
+                    let _this = this;
+                    switch (category) {
+                        case "飲食":
+                            for (var i = 0; i < _this.DietDetail.length; i++) {
+                                var item = _this.DietDetail[i];
+                                if (_this.DietDetail[i].id == targetId) {
+                                    _this.DietDetail[i].edit = false;
+                                    item.dateTimeString = _this.original_dateTimeString;
+                                    item.amount = _this.original_amount;
+                                }
+                            }
+                            break;
+                        case "尿布":
+                            break;
+                        case "睡眠":
+                            break;
+                        case "備註":
+                            break;
+                        default:
+                            break;
+                    }
+                },
+                edit: function (category, targetId) {
+                    let _this = this;
+                    switch (category) {
+                        case "飲食":
+                            for (var i = 0; i < _this.DietDetail.length; i++) {
+                                var item = _this.DietDetail[i];
+                                if (item.id == targetId) {
+                                    item.edit = true;
+                                    _this.original_dateTimeString = item.dateTimeString;
+                                    _this.original_amount = item.amount;
+                                }
+                            }
+                            break;
+                        case "尿布":
+                            break;
+                        case "睡眠":
+                            break;
+                        case "備註":
+                            break;
+                        default:
+                            break;
+                    }
+                },
+                delete: function (category, targetId) {
+                    let _this = this;
+                },
             }
         }
 
         var app_Ebook_record = Vue.createApp(vueApp).mount('#app_Ebook_record');
-
-
-
         
     </script>
 }
