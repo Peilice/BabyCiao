@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace BabyCiaoAPI.Models;
 
     public class CompetitionDetailDTO
-{
+    {
         public int Id { get; set; }
         [Display(Name = "活動名稱")]
         public string CompetitionName { get; set; }
@@ -31,4 +31,12 @@ namespace BabyCiaoAPI.Models;
         public IFormFile CompetitionPhoto { get; set; }
         public int CompetitionDetailId { get; set; }
 
+    //投票數
+        //public List<Response>Number { get; set; }
+        public int number {  get; set; }
+
+        public class Response
+        {
+        }
+    
     }
