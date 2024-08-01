@@ -11,36 +11,52 @@
     @* <h4>Platform</h4> *@
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">最後更新時間
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PlatformModifiedTime)
-        </dd>
-        <dt class = "col-sm-2">標題
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PlatformTitle)
-        </dd>
-        <dt class = "col-sm-2">內文
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PlatformContent)
-        </dd>
-        <dt class = "col-sm-2">分類
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PlatformType)
-        </dd>
-        @* <dt class = "col-sm-2">顯示控制
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PlatformDisplay)
-        </dd> *@
-        <dt class = "col-sm-2">發布者帳號
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PlatformAccountUserAccount)
-        </dd>
+        @* 左半邊 *@
+        <div class="col-sm-6">
+            <div class="row">
+                <dt class="col-sm-12">
+                    最後更新時間
+                </dt>
+                <dd class="col-sm-12">
+                    @Html.DisplayFor(model => model.PlatformModifiedTime)
+                </dd>
+                <dt class="col-sm-12">
+                    標題
+                </dt>
+                <dd class="col-sm-12">
+                    @Html.DisplayFor(model => model.PlatformTitle)
+                </dd>
+                <dt class="col-sm-12">
+                    發布者帳號
+                </dt>
+                <dd class="col-sm-12">
+                    @Html.DisplayFor(model => model.PlatformAccountUserAccount)
+                </dd>
+                <dt class="col-sm-12">
+                    分類
+                </dt>
+                <dd class="col-sm-12">
+                    @Html.DisplayFor(model => model.PlatformType)
+                </dd>
+                @* <dt class="col-sm-12">
+                    顯示控制
+                </dt>
+                <dd class="col-sm-12">
+                    @Html.DisplayFor(model => model.PlatformDisplay)
+                </dd> *@
+            </div>
+        </div>
+        @* 右半邊 *@
+        <div class="col-sm-6">
+            <div class="row">
+                <dt class="col-sm-12">
+                    內文
+                </dt>
+                <dd class="col-sm-12">
+                    @Html.DisplayFor(model => model.PlatformContent)
+                </dd>
+            </div>
+        </div>       
     </dl>
     <h4 class="mb-3">留言回應</h4>
     <table class="table">

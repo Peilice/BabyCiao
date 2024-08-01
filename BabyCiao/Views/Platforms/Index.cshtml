@@ -13,19 +13,17 @@
     <thead>
         <tr>
             <th>
-                更新時間
+                @Html.DisplayNameFor(Model=>Model.ModifiedTime)
             </th>
             <th>
-                標題
+                @Html.DisplayNameFor(Model=>Model.Title)
             </th>
             <th>
-                類別
+                @Html.DisplayNameFor(Model => Model.Title)
             </th>
             <th>
-                發布者帳號
+                @Html.DisplayNameFor(Model => Model.AccountUserAccount)
             </th>
-            @* <th>顯示控制
-            </th> *@
             <th></th>
         </tr>
     </thead>
@@ -45,16 +43,13 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.AccountUserAccount)
                 </td>
-                @* <td>
-                    @Html.DisplayFor(modelItem => item.Display)
-                </td> *@
             @* <td>
             @Html.DisplayFor(modelItem => item.AccountUserAccountNavigation.Account)
             </td> *@
                 <td>
-                    <p><a asp-action="Edit" asp-route-id="@item.Id">編輯</a></p>
-                    <p><a asp-action="Details" asp-route-id="@item.Id">詳細資訊</a></p>
-                    <p><a asp-action="Delete" asp-route-id="@item.Id">刪除</a></p>
+                    <a asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square fs-3"></i></a>
+                    <a asp-action="Details" asp-route-id="@item.Id"><i class="bi bi-text-center fs-3"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id"><i class="bi bi-trash fs-3"></i></a>
                 </td>
             </tr>
         }

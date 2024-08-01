@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BabyCiaoAPI.Models;
 using BabyCiaoAPI.DTO;
@@ -8,6 +13,7 @@ using System.Collections.Generic;
 
 namespace BabyCiaoAPI.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
     [Route("api/[controller]")]
     public class NannyResumesController : ControllerBase
@@ -19,6 +25,7 @@ namespace BabyCiaoAPI.Controllers
             _context = context;
         }
 
+        // GET: api/NannyResumes
         [HttpGet]
         public async Task<ActionResult<IEnumerable<NannyResumeDTO>>> GetNannyResumes(
             [FromQuery] string city = null,
@@ -31,7 +38,7 @@ namespace BabyCiaoAPI.Controllers
             if (!string.IsNullOrEmpty(city))
             {
                 query = query.Where(n => n.City.Contains(city));
-            }
+        }
 
             if (!string.IsNullOrEmpty(district))
             {
@@ -186,6 +193,18 @@ namespace BabyCiaoAPI.Controllers
             return NoContent();
         }
 
+        // POST: api/NannyResumes
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<NannyResume>> PostNannyResume(NannyResume nannyResume)
+        {
+            _context.NannyResumes.Add(nannyResume);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetNannyResume", new { id = nannyResume.Id }, nannyResume);
+        }
+
+        // DELETE: api/NannyResumes/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteNannyResume(int id)
         {

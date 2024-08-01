@@ -29,6 +29,21 @@
 			@Html.DisplayFor(model => model.JoinUserAccount)
 		</dd>
 		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.OrderFormat)
+		</dt>
+		<dd class="col-sm-10">
+
+			@if (Model.OrderFormat != null && Model.OrderFormat.Count > 0)
+			{
+
+				@foreach (var OrderFormat in Model.OrderFormat)
+				{
+					<li>@OrderFormat.FormatType - @OrderFormat.FormatName</li>
+				}
+			}
+
+		</dd>
+		<dt class="col-sm-2">
 			@Html.DisplayNameFor(model => model.Quantity)
 		</dt>
 		<dd class="col-sm-10">

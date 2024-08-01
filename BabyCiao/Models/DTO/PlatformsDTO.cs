@@ -24,7 +24,7 @@ namespace BabyCiao.Models.DTO
 
         [Display(Name = "顯示控制")]
         public bool PlatformDisplay { get; set; }
-        public IEnumerable<Response>? Responses { get; set; }
+        public List<Response>? Responses { get; set; }
 
 
         public class Response
