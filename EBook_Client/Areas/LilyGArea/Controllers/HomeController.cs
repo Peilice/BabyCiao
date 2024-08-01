@@ -18,6 +18,10 @@ namespace BabyCiao_Client.Areas.LilyGArea.Controllers
         {
             return View();
         }
+        public IActionResult Order()
+        {
+            return View();
+        }
 
         public IActionResult Detail ()
         {

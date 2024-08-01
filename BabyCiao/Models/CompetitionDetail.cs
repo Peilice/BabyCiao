@@ -11,7 +11,7 @@ public partial class CompetitionDetail
 
     public string AccountUserAccount { get; set; } = null!;
 
-    public string CompetitionPhoto { get; set; } = null!;
+    public string? CompetitionPhoto { get; set; }
 
     public string Content { get; set; } = null!;
 

@@ -16,6 +16,9 @@ namespace BabyCiaoAPI.DTO
         [Display(Name = "商品名稱")]
         public string ProductName { get; set; } = null!;
 
+        [Display(Name = "商品價錢")]
+        public int Price { get; set; }//$$
+
         [Display(Name = "商品種類")]
         public string? ProductType { get; set; }
         [Display(Name = "商品描述")]
@@ -44,11 +47,26 @@ namespace BabyCiaoAPI.DTO
 
         public string? photoUrl { get; set; }
         public List<GroupBuyPhotoDTO>? Photos { get; set; }
+        [Display(Name = "商品規格")]
+        public List<GroupBuyFormateDTO>? ProductFormats { get; set; }
 
         [Display(Name = "商品照片")]
         public List<IFormFile>? PhotoFiles { get; set; }
     }
+    public partial class GroupBuyFormateDTO
+    {
+        [Display(Name = "規格編號")]
+        public int Id { get; set; }
+        [Display(Name = "商品編號")]
+        public int IdGroupBuying { get; set; }
+        [Display(Name = "規格名稱")]
+        public string FormatType { get; set; } = null!;
 
+        [Display(Name = "規格項目")]
+        public string FormatName { get; set; } = null!;
+
+
+    }
 
     public class GBFilterDTO
 	{
@@ -64,6 +82,9 @@ namespace BabyCiaoAPI.DTO
 
         [Display(Name = "商品描述")]
         public string ProductDescription { get; set; } = null!;
+
+        [Display(Name = "商品價錢")]
+        public int Price { get; set; }//$$
 
         public string? photoUrl { get; set; }
 

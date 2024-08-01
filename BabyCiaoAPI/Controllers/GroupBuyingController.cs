@@ -9,6 +9,7 @@ using BabyCiaoAPI.Models;
 using BabyCiaoAPI.DTO;
 using Microsoft.AspNetCore.Cors;
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace BabyCiaoAPI.Controllers
 {
@@ -19,129 +20,287 @@ namespace BabyCiaoAPI.Controllers
     {
         private readonly BabyciaoContext _context;
 
-        public GroupBuyingController(BabyciaoContext context)
+        private readonly ILogger<GroupBuyingController> _logger;
+        public GroupBuyingController(BabyciaoContext context,ILogger<GroupBuyingController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
-		// GET: api/GroupBuying
-		[HttpGet]
-		public async Task<ActionResult<IEnumerable<GBDTO>>> GetGroupBuyings()
-		{
-			var groupBuys = await (
-				from gb in _context.GroupBuyings
-				where gb.Display
-				join gbp in _context.GroupBuyingPhotos on gb.Id equals gbp.IdGroupBuying into pp
-				from gbp in pp.OrderBy(p => p.PhotoName).Take(1).DefaultIfEmpty()
-				select new GBDTO
-				{
-					Id = gb.Id,
-					ProductName = gb.ProductName,
-					ProductDescription = gb.ProductDescription,
-					TargetCount = gb.TargetCount,
-					Statement = gb.Statement,
-					ModifiedTime = gb.ModifiedTime,
-					ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
-					Display = gb.Display,
-					DisplayString = gb.Display ? "☑" : "",
-					progress = gb.TargetCount > 0
-						? (decimal)_context.GroupBuyingDetails.Where(id => id.GroupBuyingId == gb.Id).Sum(q => q.Quantity) / gb.TargetCount * 100
-						: 0,
-					ProductType = gb.ProductType,
-					JoinQuantity = _context.GroupBuyingDetails.Where(id => id.GroupBuyingId == gb.Id).Sum(q => q.Quantity),
-					photoUrl = gbp.PhotoName,
-                    Photos = (from ph in _context.GroupBuyingPhotos
-                              where ph.IdGroupBuying == gb.Id
-                              select new GroupBuyPhotoDTO
-                              {
-                                  Id = ph.Id,
-                                  IdGroupBuying = ph.IdGroupBuying,
-                                  PhotoName = ph.PhotoName,
-                                  ModifiedTime = ph.ModifiedTime,
+        
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<GBDTO>>> GetGroupBuyings()
+        {
+            try
+            {
+                var groupBuys = await _context.GroupBuyings
+                    .Where(gb => gb.Display)
+                    .ToListAsync();
 
-                              }).ToList()
+                var groupBuyIds = groupBuys.Select(gb => gb.Id).ToList();
+
+                var groupBuyingDetails = await _context.GroupBuyingDetails
+                    .Where(gbd => groupBuyIds.Contains(gbd.GroupBuyingId))
+                    .ToListAsync();
+
+                var groupBuyingDetailFormats = await _context.GroupBuyingDetailFormats
+                    .Where(gbdf => groupBuyingDetails.Select(gbd => gbd.Id).Contains(gbdf.GroupBuyingDetailId))
+                    .ToListAsync();
+
+                var groupBuyingPhotos = await _context.GroupBuyingPhotos
+                    .Where(gbp => groupBuyIds.Contains(gbp.IdGroupBuying))
+                    .ToListAsync();
+
+                var result = groupBuys.Select(gb => new GBDTO
+                {
+                    Id = gb.Id,
+                    ProductName = gb.ProductName,
+                    ProductDescription = gb.ProductDescription,
+                    TargetCount = gb.TargetCount,
+                    Price = gb.Price,
+                    Statement = gb.Statement,
+                    ModifiedTime = gb.ModifiedTime,
+                    ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
+                    Display = gb.Display,
+                    DisplayString = gb.Display ? "☑" : "",
+                    ProductType = gb.ProductType,
+                    JoinQuantity = groupBuyingDetails
+                        .Where(gbd => gbd.GroupBuyingId == gb.Id)
+                        .Select(gbd => groupBuyingDetailFormats
+                            .Where(gbdf => gbdf.GroupBuyingDetailId == gbd.Id)
+                            .Select(gbdf => gbdf.Quantity)
+                            .FirstOrDefault())
+                        .Sum(q => q),
+                    progress = gb.TargetCount > 0
+                        ? (decimal)(groupBuyingDetails
+                            .Where(gbd => gbd.GroupBuyingId == gb.Id)
+                            .Select(gbd => groupBuyingDetailFormats
+                                .Where(gbdf => gbdf.GroupBuyingDetailId == gbd.Id)
+                                .Select(gbdf => gbdf.Quantity)
+                                .FirstOrDefault())
+                            .Sum(q => q)) / gb.TargetCount * 100
+                        : 0,
+                    photoUrl = groupBuyingPhotos
+                        .Where(gbp => gbp.IdGroupBuying == gb.Id)
+                        .OrderBy(gbp => gbp.PhotoName)
+                        .Select(gbp => gbp.PhotoName)
+                        .FirstOrDefault(),
+                    Photos = groupBuyingPhotos
+                        .Where(gbp => gbp.IdGroupBuying == gb.Id)
+                        .Select(gbp => new GroupBuyPhotoDTO
+                        {
+                            Id = gbp.Id,
+                            IdGroupBuying = gbp.IdGroupBuying,
+                            PhotoName = gbp.PhotoName,
+                            ModifiedTime = gbp.ModifiedTime,
+                        })
+                        .ToList()
+                }).ToList();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching group buyings");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
+
+        //POST:api/GroupBuying/Filter
+        [HttpPost("Filter")]
+        public async Task<ActionResult<IEnumerable<GBFilterDTO>>> FilterProducts([FromBody] GBFilterDTO model)
+        {
+            try
+            {
+                var query = _context.GroupBuyings
+                    .Where(gb => gb.Display &&
+                                 ((model.Id == 0 || gb.Id == model.Id) ||
+                                  (string.IsNullOrEmpty(model.ProductName) || gb.ProductName.Contains(model.ProductName)) ||
+                                  (string.IsNullOrEmpty(model.ProductDescription) || gb.ProductDescription.Contains(model.ProductDescription))) &&
+                                 (string.IsNullOrEmpty(model.ProductType) || gb.ProductType == model.ProductType));
+
+                var groupBuys = await query
+                    .Select(gb => new GBFilterDTO
+                    {
+                        Id = gb.Id,
+                        Price = gb.Price,
+                        ProductType = gb.ProductType,
+                        TargetCount = gb.TargetCount,
+                        ProductName = gb.ProductName,
+                        ProductDescription = gb.ProductDescription,
+                        photoUrl = _context.GroupBuyingPhotos
+                            .Where(p => p.IdGroupBuying == gb.Id)
+                            .OrderBy(p => p.PhotoName)
+                            .Select(p => p.PhotoName)
+                            .FirstOrDefault()
+                    })
+                    .ToListAsync();
+
+                foreach (var item in groupBuys)
+                {
+                    if (item.TargetCount > 0)
+                    {
+                        var details = await _context.GroupBuyingDetails
+                            .Where(gbd => gbd.GroupBuyingId == item.Id)
+                            .Select(gbd => new
+                            {
+                                gbd.Id,
+                                FirstQuantity = _context.GroupBuyingDetailFormats
+                                    .Where(gbdf => gbdf.GroupBuyingDetailId == gbd.Id)
+                                    .Select(gbdf => gbdf.Quantity)
+                                    .FirstOrDefault()
+                            })
+                            .ToListAsync();
+
+                        var totalQuantity = details.Sum(d => d.FirstQuantity);
+                        item.progress = (decimal)totalQuantity / item.TargetCount * 100;
+                    }
+                    else
+                    {
+                        item.progress = 0;
+                    }
                 }
-			).ToListAsync();
 
-			return Ok(groupBuys);
-		}
+                return Ok(groupBuys);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in FilterProducts");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
 
-		//POST:api/GroupBuying/Filter
-		[HttpPost("Filter")]
-		public async Task<IEnumerable<GBFilterDTO>> FilterProducts([FromBody] GBFilterDTO model)
-		{
-			var groupBuys = await (from gb in _context.GroupBuyings
-								   where gb.Display &&
-										 ((model.Id == 0 || gb.Id == model.Id) ||
-										 (string.IsNullOrEmpty(model.ProductName) || gb.ProductName.Contains(model.ProductName)) ||
-										 (string.IsNullOrEmpty(model.ProductDescription) || gb.ProductDescription.Contains(model.ProductDescription))) &&
-										 (string.IsNullOrEmpty(model.ProductType) || gb.ProductType == model.ProductType)
-								   join gbp in _context.GroupBuyingPhotos on gb.Id equals gbp.IdGroupBuying into pp
-								   from gbp in pp.OrderBy(p => p.PhotoName).Take(1).DefaultIfEmpty()
-								   select new GBFilterDTO
-								   {
-									   Id = gb.Id,
-									   progress = gb.TargetCount > 0
-												   ? (decimal)_context.GroupBuyingDetails.Where(id => id.GroupBuyingId == gb.Id).Sum(q => q.Quantity) / gb.TargetCount * 100
-												   : 0,
-									   ProductType = gb.ProductType,
-									   TargetCount = gb.TargetCount,
-									   ProductName = gb.ProductName,
-									   ProductDescription = gb.ProductDescription,
-									   photoUrl = gbp.PhotoName
-								   }).ToListAsync();
-
-			return groupBuys;
-		}
-
-
-		// GET: api/GroupBuying/5
-		[HttpGet("Detail/{id}")]
+        // GET: api/GroupBuying/5
+        [HttpGet("Detail/{id}")]
         public async Task<ActionResult<GBDTO>> Detail(int id)
         {
-            var groupBuying = await _context.GroupBuyings.FindAsync(id);
-            var groupBuys = await (from gb in _context.GroupBuyings
-                                   where gb.Display&&gb.Id==id
-                                   join gbp in _context.GroupBuyingPhotos on gb.Id equals gbp.IdGroupBuying into pp
-                                   from gbp in pp.OrderBy(p => p.PhotoName).Take(1).DefaultIfEmpty()
-                                   select new GBDTO
-                                   {
-                                       Id = gb.Id,
-                                       ProductName = gb.ProductName,
-                                       ProductDescription = gb.ProductDescription,
-                                       progress = gb.TargetCount > 0
-                                                   ? (decimal)_context.GroupBuyingDetails.Where(id => id.GroupBuyingId == gb.Id).Sum(q => q.Quantity) / gb.TargetCount * 100
-                                                   : 0,
-                                       TargetCount = gb.TargetCount,
-                                       Statement = gb.Statement,
-                                       ModifiedTime = gb.ModifiedTime,
-                                       ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
-                                       Display = gb.Display,
-                                       DisplayString = gb.Display ? "☑" : "",
-                                       ProductType = gb.ProductType,
-                                       JoinQuantity = _context.GroupBuyingDetails.Where(id => id.GroupBuyingId == gb.Id).Sum(q => q.Quantity),
-                                       photoUrl = gbp.PhotoName,
-                                       Photos = (from ph in _context.GroupBuyingPhotos
-                                                 where ph.IdGroupBuying == gb.Id
-                                                 select new GroupBuyPhotoDTO
-                                                 {
-                                                     Id = ph.Id,
-                                                     IdGroupBuying = ph.IdGroupBuying,
-                                                     PhotoName = ph.PhotoName,
-                                                     ModifiedTime = ph.ModifiedTime,
+            try
+            {
+                var groupBuying = await _context.GroupBuyings
+                    .Where(gb => gb.Display && gb.Id == id)
+                    .Select(gb => new GBDTO
+                    {
+                        Id = gb.Id,
+                        ProductName = gb.ProductName,
+                        Price = gb.Price,
+                        ProductDescription = gb.ProductDescription,
+                        TargetCount = gb.TargetCount,
+                        Statement = gb.Statement,
+                        ModifiedTime = gb.ModifiedTime,
+                        ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
+                        Display = gb.Display,
+                        DisplayString = gb.Display ? "☑" : "",
+                        ProductType = gb.ProductType,
+                        photoUrl = _context.GroupBuyingPhotos
+                            .Where(p => p.IdGroupBuying == gb.Id)
+                            .OrderBy(p => p.PhotoName)
+                            .Select(p => p.PhotoName)
+                            .FirstOrDefault(),
+                        Photos = _context.GroupBuyingPhotos
+                            .Where(ph => ph.IdGroupBuying == gb.Id)
+                            .Select(ph => new GroupBuyPhotoDTO
+                            {
+                                Id = ph.Id,
+                                IdGroupBuying = ph.IdGroupBuying,
+                                PhotoName = ph.PhotoName,
+                                ModifiedTime = ph.ModifiedTime,
+                            })
+                            .ToList(),
+                        ProductFormats = _context.ProductFormats
+                            .Where(of => of.IdGroupBuying == id)
+                            .Select(of => new GroupBuyFormateDTO
+                            {
+                                Id = of.Id,
+                                FormatName = of.FormatName,
+                                FormatType = of.FormatType,
+                            })
+                            .ToList(),
+                        DeadTime = gb.ModifiedTime.AddDays(30).ToString("yyyy-MM-dd")
+                    })
+                    .FirstOrDefaultAsync();
 
-                                                 }).ToList(),
+                if (groupBuying == null)
+                {
+                    return NotFound();
+                }
 
-                                       DeadTime = gb.ModifiedTime.AddDays(30).ToString("yyyy-MM-dd") // 計算加上30天的日期
-								   }).FirstAsync();
-            if (groupBuying == null)
+                if (groupBuying.TargetCount > 0)
+                {
+                    var details = await _context.GroupBuyingDetails
+                        .Where(gbd => gbd.GroupBuyingId == id)
+                        .Select(gbd => new
+                        {
+                            gbd.Id,
+                            FirstQuantity = _context.GroupBuyingDetailFormats
+                                .Where(gbdf => gbdf.GroupBuyingDetailId == gbd.Id)
+                                .Select(gbdf => gbdf.Quantity)
+                                .FirstOrDefault()
+                        })
+                        .ToListAsync();
+
+                    var totalQuantity = details.Sum(d => d.FirstQuantity);
+                    groupBuying.progress = (decimal)totalQuantity / groupBuying.TargetCount * 100;
+                    groupBuying.JoinQuantity = totalQuantity;
+                }
+                else
+                {
+                    groupBuying.progress = 0;
+                    groupBuying.JoinQuantity = 0;
+                }
+
+                return Ok(groupBuying);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in Detail method for id: {Id}", id);
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
+
+        // GET: api/GroupBuying/5
+        [HttpGet("Order/{id}")]
+        public async Task<ActionResult<GBDTO>> Order(int id)
+        {
+            if (id == null)
             {
                 return NotFound();
             }
 
-            return Ok(groupBuys);
-        }
+            var order = (from gbd in _context.GroupBuyingDetails
+                         join gb in _context.GroupBuyings on gbd.GroupBuyingId equals gb.Id
+                         join uf in _context.UserInformations on gbd.AccountUserAccount equals uf.AccountUser
+                         where gbd.Id == id
+                         select new GBDTO
+                         {
+                             //OrderFormat = (from of in _context.GroupBuyingDetailFormats
+                             //               join pf in _context.ProductFormats on of.FormatId equals pf.Id
+                             //               where of.GroupBuyingDetailId == id
+                             //               select new GroupBuyOrderFormatDTO
+                             //               {
+                             //                   Id = of.Id,
+                             //                   GroupBuyingDetailId = of.GroupBuyingDetailId,
+                             //                   FormatId = of.FormatId,
+                             //                   FormatType = pf.FormatType,
+                             //                   FormatName = pf.FormatName,
+                             //               }).ToList(),
+                             //JoinId = gbd.Id,
+                             //ProductName = gb.ProductName,
+                             //JoinUserAccount = gbd.AccountUserAccount,
+                             //Quantity = gbd.Quantity,
+                             //OrderPrice = gbd.Quantity * gb.Price,
+                             //JoinModifiedTime = gbd.ModifiedTime,
+                             //ViewJoinModifiedTime = gbd.ModifiedTime.ToString("yyyy-MM-dd"),
+                             //Statement = gbd.Statement,
+                             //Price = gb.Price,
+                             //Address = uf.Address,
+                         }).FirstOrDefault();
+            if (order == null)
+            {
+                return NotFound();
+            }
 
+            return Ok(order);
+        }
         // PUT: api/GroupBuying/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

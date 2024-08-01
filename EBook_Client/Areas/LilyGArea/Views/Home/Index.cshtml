@@ -197,6 +197,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title">{{item.productName}}</h5>
                                     <p class="card-text">{{item.productDescription}}</p>
+                                    <p class="card-text d-flex justify-content-end">${{item.price}}</p>
                                     <!-- 進度條 -->
                                     <div class="progress mb-2" v-if="item.targetCount > 0" style="position: relative; height: 30px;">
                                         <div class="progress-bar"
@@ -245,7 +246,15 @@
                                         <div class="swiper-button-prev"></div>
                                     </div>
                                     <p>{{ productDetails.productDescription }}</p>
+                                    <p class="d-flex justify-content-end">${{productDetails.price}}</p>
                                     <hr>
+
+                                    <div id="productFormats">
+                                            <ul v-for="p in productDetails.productFormats" :key="p.id">
+                                            <li>{{p.formatType}}-{{p.formatName}}</li>
+                                            </ul>
+
+                                    </div>
                                     <p>
                                         成團進度：
                                         <i class="fa-solid fa-fire" :style="{ color: (productDetails.joinQuantity >= productDetails.targetCount ? 'green' : 'orange') }"></i>
@@ -255,8 +264,10 @@
                                     <p>截止日期：{{ productDetails.deadTime }}</p>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-success" v-on:click="checkForm">參加</button>
+                                    @* <a asp-area="LilyGArea" asp-controller="Home" asp-action="Order" asp-route-id="" class="btn btn-success">參加</a> *@
+                                    <button @@click="joinGroupBuy(productDetails.id)" class="btn btn-success">參加</button>
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                                </div>
                                 </div>
                             </div>
                         </div>
@@ -319,6 +330,9 @@
 				getPhotoUrl(photoUrl) {
 					return photoUrl != null ? `https://localhost:7000/uploads/${photoUrl}` : 'https://localhost:7000/img/noImage.jpg';
 				},
+                getProductFormats(x) {
+                    return x != null ? `https://localhost:7000/uploads/${photoUrl}` : 'https://localhost:7000/img/noImage.jpg';
+                },
 				filterProducts() {
 					let _this = this;
 					var request = {};
@@ -375,6 +389,18 @@
                         .catch(error => {
                             console.error("Error fetching product details:", error);
                         });
+                },
+                async joinGroupBuy(productId) {
+                    try {
+                        const response = await axios.post(`/LilyGArea/Home/Order`, {
+                            id: productId
+                        });
+                        if (response.status === 200) {
+                            window.location.href = `/LilyGArea/Home/Order?id=${productId}`;
+                        }
+                    } catch (error) {
+                        console.error('Error joining group buy:', error);
+                    }
                 }
 			}
 		}

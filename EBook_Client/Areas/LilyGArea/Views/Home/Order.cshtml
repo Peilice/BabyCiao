@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訂單詳情</title>
+    <!-- 引入 Vue 3 -->
+    <script src="https://unpkg.com/vue@next"></script>
+    <!-- 引入 Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        .order-details {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .actions {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <order-details :order-id="1"></order-details>
+    </div>
+
+    <script>
+        const OrderDetails = {
+            template: `
+                <div class="order-details">
+                  <h2>填寫訂單</h2>
+
+                  <div class="form-group">
+                    <label for="orderId">參團編號</label>
+                    <input type="text" id="orderId" v-model="order.joinId" class="form-control" readonly>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="productName">商品名稱</label>
+                    <input type="text" id="productName" v-model="order.productName" class="form-control" readonly>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="userAccount">會員帳號</label>
+                    <input type="text" id="userAccount" v-model="order.joinUserAccount" class="form-control" readonly>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="orderFormat">訂單規格</label>
+                    <ul>
+                      <li v-for="format in order.orderFormat" :key="format.id">
+                        {{ format.formatType }} - {{ format.formatName }}
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="quantity">團購數量</label>
+                    <input type="number" id="quantity" v-model="order.quantity" class="form-control">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="price">商品價錢</label>
+                    <input type="text" id="price" v-model="order.price" class="form-control" readonly>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="orderPrice">總價錢</label>
+                    <input type="text" id="orderPrice" v-model="order.orderPrice" class="form-control" readonly>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="address">地址</label>
+                    <textarea id="address" v-model="order.address" class="form-control"></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="joinModifiedTime">下單時間</label>
+                    <input type="text" id="joinModifiedTime" v-model="order.viewJoinModifiedTime" class="form-control" readonly>
+                  </div>
+
+                  <div class="actions">
+                            <button v-on:click="submitOrder" class="btn btn-success">提交訂單</button>
+                    <button v-on:click="goBack" class="btn btn-primary">返回</button>
+                  </div>
+                </div>
+              `,
+            props: {
+                orderId: {
+                    type: Number,
+                    required: true
+                }
+            },
+            data() {
+                return {
+                    order: {
+                        joinId: '',
+                        productName: '',
+                        joinUserAccount: '',
+                        orderFormat: [],
+                        quantity: 0,
+                        price: 0,
+                        orderPrice: 0,
+                        address: '',
+                        viewJoinModifiedTime: ''
+                    }
+                };
+            },
+            mounted() {
+                this.fetchOrderDetails();
+            },
+            methods: {
+                async fetchOrderDetails() {
+                    try {
+                        const response = await axios.get(`/api/orders/${this.orderId}`);
+                        this.order = response.data;
+                    } catch (error) {
+                        console.error('Error fetching order details:', error);
+                    }
+                },
+                async submitOrder() {
+                    try {
+                        await axios.post('/api/orders', this.order);
+                        alert('訂單提交成功！');
+                    } catch (error) {
+                        console.error('Error submitting order:', error);
+                        alert('訂單提交失敗，請稍後再試。');
+                    }
+                },
+                goBack() {
+                    window.history.back();
+                }
+            }
+        };
+
+        Vue.createApp({
+            components: {
+                OrderDetails
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

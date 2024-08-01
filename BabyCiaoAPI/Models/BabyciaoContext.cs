@@ -523,7 +523,7 @@ public partial class BabyciaoContext : DbContext
 
         modelBuilder.Entity<GroupBuyingDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__GroupBuy__3214EC27ED434605");
+            entity.HasKey(e => e.Id).HasName("PK__GroupBuy__3214EC2757BAF4E8");
 
             entity.ToTable("GroupBuyingDetail");
 
@@ -532,26 +532,28 @@ public partial class BabyciaoContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("Account_UserAccount");
+            entity.Property(e => e.Address).HasMaxLength(100);
             entity.Property(e => e.ModifiedTime)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
+            entity.Property(e => e.Note).HasMaxLength(100);
             entity.Property(e => e.Statement).HasMaxLength(20);
 
             entity.HasOne(d => d.AccountUserAccountNavigation).WithMany(p => p.GroupBuyingDetails)
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.AccountUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__GroupBuyi__Accou__4B7734FF");
+                .HasConstraintName("FK__GroupBuyi__Accou__65370702");
 
             entity.HasOne(d => d.GroupBuying).WithMany(p => p.GroupBuyingDetails)
                 .HasForeignKey(d => d.GroupBuyingId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__GroupBuyi__Group__4A8310C6");
+                .HasConstraintName("FK__GroupBuyi__Group__6442E2C9");
         });
 
         modelBuilder.Entity<GroupBuyingDetailFormat>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__GroupBuy__3214EC27A369B553");
+            entity.HasKey(e => e.Id).HasName("PK__GroupBuy__3214EC2703282E25");
 
             entity.ToTable("GroupBuyingDetailFormat");
 
@@ -561,12 +563,12 @@ public partial class BabyciaoContext : DbContext
             entity.HasOne(d => d.Format).WithMany(p => p.GroupBuyingDetailFormats)
                 .HasForeignKey(d => d.FormatId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__GroupBuyi__Forma__503BEA1C");
+                .HasConstraintName("FK__GroupBuyi__Forma__69FBBC1F");
 
             entity.HasOne(d => d.GroupBuyingDetail).WithMany(p => p.GroupBuyingDetailFormats)
                 .HasForeignKey(d => d.GroupBuyingDetailId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__GroupBuyi__Group__4F47C5E3");
+                .HasConstraintName("FK__GroupBuyi__Group__690797E6");
         });
 
         modelBuilder.Entity<GroupBuyingPhoto>(entity =>

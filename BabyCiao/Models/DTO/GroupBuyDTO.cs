@@ -50,17 +50,18 @@ namespace BabyCiao.Models.DTO
 		public string JoinUserAccount { get; set; } = null!;
 
 
-		[Display(Name = "規格")]
-		public List<GroupBuyOrderFormatDTO>? OrderFormat { get; set; }
+		
 
 		[Display(Name = "團購數量")]
 		public int Quantity { get; set; }//加購數量
-		[Display(Name = "訂購數/成團數")]
+        [Display(Name = "訂購總數")]
+        public int TotalQuantity { get; set; }//加購數量
+        [Display(Name = "訂購數/成團數")]
 		public int Percent { get; set; }//加購數量
 
 		[Display(Name = "商品價錢")]
         public int Price { get; set; }//$$
-        [Display(Name = "商品價錢")]
+        [Display(Name = "訂單價錢")]
         public int OrderPrice { get; set; }//訂單價格
         [Display(Name = "下單時間")]
 		public DateTime JoinModifiedTime { get; set; }//下單時間
@@ -73,9 +74,12 @@ namespace BabyCiao.Models.DTO
         public string Address { get; set; } = null!;//參加狀態
         public string? photoUrl { get; set; }
         public List<GroupBuyPhotoDTO>? Photos { get; set; }
-		public List<GroupBuyFormateDTO>? ProductFormats { get; set; }
 
-		[Display(Name = "商品照片")]
+        [Display(Name = "商品規格")]
+        public List<GroupBuyFormateDTO>? ProductFormats { get; set; }
+        [Display(Name = "訂單規格")]
+        public List<GroupBuyOrderFormatDTO>? OrderFormat { get; set; }
+        [Display(Name = "商品照片")]
         public List<IFormFile> PhotoFiles { get; set; }	
 	}
 	public partial class GroupBuyFormateDTO
@@ -86,7 +90,8 @@ namespace BabyCiao.Models.DTO
 		public int IdGroupBuying { get; set; }
 		[Display(Name = "規格名稱")]
 		public string FormatType { get; set; } = null!;
-		[Display(Name = "規格項目")]
+
+        [Display(Name = "規格項目")]
 		public string FormatName { get; set; } = null!;
 
 	
@@ -104,7 +109,10 @@ namespace BabyCiao.Models.DTO
 		
 		[Display(Name = "規格項目")]
 		public string FormatName { get; set; } = null!;
-	}
+
+        [Display(Name = "訂購數量")]
+        public int Quantity { get; set; }//加購數量
+    }
 
 	public class GroupBuyPhotoDTO
 	{
