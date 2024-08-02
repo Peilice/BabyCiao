@@ -11,7 +11,9 @@ public partial class GroupBuyingDetail
 
     public string AccountUserAccount { get; set; } = null!;
 
-    public int Quantity { get; set; }
+    public string Address { get; set; } = null!;
+
+    public string? Note { get; set; }
 
     public DateTime ModifiedTime { get; set; }
 

@@ -49,11 +49,17 @@ namespace BabyCiao.Controllers
 								Statement = gb.Statement,
 								ModifiedTime = gb.ModifiedTime,
 								ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
+								DeadTime = gb.ModifiedTime.AddDays(30).ToString("yyyy-MM-dd"),
 								Display = gb.Display,
 
 								DisplayString = gb.Display ? "☑" : "",
-								JoinQuantity = _context.GroupBuyingDetails.Where(id => id.GroupBuyingId == gb.Id).Sum(q => q.Quantity),
-								photoUrl = gbp.PhotoName != null ? $"<img src=\" /uploads/{gbp.PhotoName}\" width=\"100\" />" : "<img src=\" /img/noImage.jpg\" width=\"100\" />",
+								JoinQuantity = (_context.GroupBuyingDetails
+                    .Where(gbd => gbd.GroupBuyingId == gb.Id)
+                    .SelectMany(gbd => _context.GroupBuyingDetailFormats
+                        .Where(gbdf => gbdf.GroupBuyingDetailId == gbd.Id)
+                        .Select(gbdf => gbdf.Quantity))
+                    .Sum()),
+                                photoUrl = gbp.PhotoName != null ? $"<img src=\" /uploads/{gbp.PhotoName}\" width=\"100\" />" : "<img src=\" /img/noImage.jpg\" width=\"100\" />",
 							};
 			//return View(await groupBuys.ToListAsync());
 			return View(groupBuys);
@@ -86,11 +92,17 @@ namespace BabyCiao.Controllers
 								Statement = gb.Statement,
 								ModifiedTime = gb.ModifiedTime,
 								ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
+								DeadTime = gb.ModifiedTime.AddDays(30).ToString("yyyy-MM-dd"),
 								Display = gb.Display,
 
 								DisplayString = gb.Display ? "☑" : "",
-								JoinQuantity = _context.GroupBuyingDetails.Where(id => id.GroupBuyingId == gb.Id).Sum(q => q.Quantity),
-								photoUrl = gbp.PhotoName != null ? $"<img src=\" /uploads/{gbp.PhotoName}\" width=\"100\" />" : "<img src=\" /img/noImage.jpg\" width=\"100\" />",
+								JoinQuantity = _context.GroupBuyingDetails
+                    .Where(gbd => gbd.GroupBuyingId == gb.Id)
+                    .SelectMany(gbd => _context.GroupBuyingDetailFormats
+                        .Where(gbdf => gbdf.GroupBuyingDetailId == gbd.Id)
+                        .Select(gbdf => gbdf.Quantity))
+                    .Sum(),
+                                photoUrl = gbp.PhotoName != null ? $"<img src=\" /uploads/{gbp.PhotoName}\" width=\"100\" />" : "<img src=\" /img/noImage.jpg\" width=\"100\" />",
 							};
 			return Json(groupBuys);
 		}
@@ -103,12 +115,32 @@ namespace BabyCiao.Controllers
 						 join gb in _context.GroupBuyings on gbd.GroupBuyingId equals gb.Id
 						 select new GroupBuyDTO
 						 {
-							 JoinId = gbd.Id,
+                             OrderFormat= (from d in _context.GroupBuyingDetails
+										   join dt in _context.GroupBuyingDetailFormats on d.Id equals dt.GroupBuyingDetailId
+										   join ft in _context.ProductFormats on dt.FormatId equals ft.Id
+                                           where d.GroupBuyingId == gb.Id
+                                           select new GroupBuyOrderFormatDTO
+                                           {
+											   Id=dt.Id,
+											   GroupBuyingDetailId=d.Id,
+                                               FormatType=ft.FormatType,
+                                               FormatName=ft.FormatName,
+                                               Quantity=dt.Quantity,
+
+                                           }).ToList(),
+
+                             JoinId = gbd.Id,
                              ProductName= gb.ProductName,
                              JoinGroupId = gbd.GroupBuyingId,
 							 JoinUserAccount = gbd.AccountUserAccount,
-							 Quantity = gbd.Quantity,
-							 OrderPrice = gbd.Quantity * gb.Price,
+                             TotalQuantity = (_context.GroupBuyingDetailFormats
+                    .Where(f => f.GroupBuyingDetailId == gbd.Id)
+                        .Select(gbdf => gbdf.Quantity))
+                    .Sum(),
+                             OrderPrice = (_context.GroupBuyingDetailFormats
+                    .Where(f => f.GroupBuyingDetailId == gbd.Id)
+                        .Select(gbdf => gbdf.Quantity))
+                    .Sum() * gb.Price,
 							 JoinModifiedTime = gbd.ModifiedTime,
 							 ViewJoinModifiedTime = gbd.ModifiedTime.ToString("yyyy-MM-dd"),
 							 Statement = gbd.Statement,
@@ -118,23 +150,42 @@ namespace BabyCiao.Controllers
 		}
 		public async Task<IActionResult> Orders()
 		{
-			var orders = from gbd in _context.GroupBuyingDetails
-						 join gb in _context.GroupBuyings on gbd.GroupBuyingId equals gb.Id
-						 select new GroupBuyDTO
-						 {
-							 JoinId = gbd.Id,
+            var orders = from gbd in _context.GroupBuyingDetails
+                         join gb in _context.GroupBuyings on gbd.GroupBuyingId equals gb.Id
+                         select new GroupBuyDTO
+                         {
+                             OrderFormat = (from d in _context.GroupBuyingDetails
+                                            join dt in _context.GroupBuyingDetailFormats on d.Id equals dt.GroupBuyingDetailId
+                                            join ft in _context.ProductFormats on dt.FormatId equals ft.Id
+                                            where d.GroupBuyingId == gb.Id
+                                            select new GroupBuyOrderFormatDTO
+                                            {
+                                                Id = dt.Id,
+                                                GroupBuyingDetailId = d.Id,
+                                                FormatType = ft.FormatType,
+                                                FormatName = ft.FormatName,
+                                                Quantity = dt.Quantity,
+
+                                            }).ToList(),
+
+                             JoinId = gbd.Id,
                              ProductName = gb.ProductName,
                              JoinGroupId = gbd.GroupBuyingId,
-							 JoinUserAccount = gbd.AccountUserAccount,
-							 Quantity = gbd.Quantity,
-							 OrderPrice = gbd.Quantity * gb.Price,
-							 ViewJoinModifiedTime = gbd.ModifiedTime.ToString("yyyy-MM-dd"),
-							 JoinModifiedTime = gbd.ModifiedTime,
-							 Statement = gbd.Statement,
-							 Price = gb.Price,
-						 };
-
-			var ordersList = await orders.ToListAsync();
+                             JoinUserAccount = gbd.AccountUserAccount,
+                             TotalQuantity = (_context.GroupBuyingDetailFormats
+                    .Where(f => f.GroupBuyingDetailId == gbd.Id)
+                        .Select(gbdf => gbdf.Quantity))
+                    .Sum(),
+                             OrderPrice = (_context.GroupBuyingDetailFormats
+                    .Where(f => f.GroupBuyingDetailId == gbd.Id)
+                        .Select(gbdf => gbdf.Quantity))
+                    .Sum() * gb.Price,
+                             JoinModifiedTime = gbd.ModifiedTime,
+                             ViewJoinModifiedTime = gbd.ModifiedTime.ToString("yyyy-MM-dd"),
+                             Statement = gbd.Statement,
+                             Price = gb.Price,
+                         };
+            var ordersList = await orders.ToListAsync();
 			return View(ordersList);
 		}
 
@@ -147,7 +198,7 @@ namespace BabyCiao.Controllers
 				return NotFound();
 			}
 
-			var groupBuying = (from gb in _context.GroupBuyings
+			var groupBuying = await(from gb in _context.GroupBuyings
 							   select new GroupBuyDTO
 							   {
 								   Id = id,
@@ -160,6 +211,7 @@ namespace BabyCiao.Controllers
 								   ProductType = gb.ProductType,
 								   ModifiedTime = gb.ModifiedTime,
 								   ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
+								   DeadTime = gb.ModifiedTime.AddDays(30).ToString("yyyy-MM-dd"),
 								   Display = gb.Display,
 								   Photos = (from ph in _context.GroupBuyingPhotos
 											 where ph.IdGroupBuying == id
@@ -179,7 +231,7 @@ namespace BabyCiao.Controllers
 														  FormatName = of.FormatName,
 														  FormatType = of.FormatType,
 													  }).ToList(),
-							   }).FirstOrDefault();
+							   }).FirstOrDefaultAsync();
 			if (groupBuying == null)
 			{
 				return NotFound();
@@ -587,16 +639,23 @@ namespace BabyCiao.Controllers
 										  {
 											  Id=of.Id,
 											  GroupBuyingDetailId=of.GroupBuyingDetailId,
-											  FormatId=of.FormatId,
+											  FormatId= (int)(of.FormatId==null?0: of.FormatId),//這裡如果他是沒有的話就等於是單一規格
 											  FormatType=pf.FormatType,
 											  FormatName=pf.FormatName,
+											  Quantity=of.Quantity,
 										  }).ToList(),
 							 JoinId = gbd.Id,
 							 ProductName = gb.ProductName,
 							 JoinUserAccount = gbd.AccountUserAccount,
-							 Quantity = gbd.Quantity,
-							 OrderPrice = gbd.Quantity * gb.Price,
-							 JoinModifiedTime = gbd.ModifiedTime,
+                             TotalQuantity = (_context.GroupBuyingDetailFormats
+.Where(f => f.GroupBuyingDetailId == gbd.Id)
+    .Select(gbdf => gbdf.Quantity))
+.Sum(),
+                             OrderPrice = (_context.GroupBuyingDetailFormats
+.Where(f => f.GroupBuyingDetailId == gbd.Id)
+    .Select(gbdf => gbdf.Quantity))
+.Sum() * gb.Price,
+                             JoinModifiedTime = gbd.ModifiedTime,
 							 ViewJoinModifiedTime = gbd.ModifiedTime.ToString("yyyy-MM-dd"),
 							 Statement = gbd.Statement,
 							 Price = gb.Price,
@@ -626,9 +685,9 @@ namespace BabyCiao.Controllers
 			sb.AppendLine($"訂單編號: {groupBuyDetail.Id}");
 			sb.AppendLine($"商品名稱: {gb.ProductName}");
 			sb.AppendLine($"訂購人: {user.UserFirstName}{user.UserLastName}");
-			sb.AppendLine($"訂購數量: {groupBuyDetail.Quantity}");
+			//sb.AppendLine($"訂購數量: {groupBuyDetail.Quantity}");
 			sb.AppendLine($"商品價格: {gb.Price}");
-			sb.AppendLine($"訂單價格: {gb.Price*groupBuyDetail.Quantity}");
+			//sb.AppendLine($"訂單價格: {gb.Price*groupBuyDetail.Quantity}");
 			sb.AppendLine($"地址: {user.Address}");
 			sb.AppendLine($"訂購日: {groupBuyDetail.ModifiedTime}");
 			sb.AppendLine($"出貨日: {DateTime.Now.ToString("yyyy-MM-dd")}");
@@ -656,8 +715,8 @@ namespace BabyCiao.Controllers
 							 JoinId = gbd.Id,
 							 ProductName = gb.ProductName,
 							 JoinUserAccount = gbd.AccountUserAccount,
-							 Quantity = gbd.Quantity,
-							 OrderPrice = gbd.Quantity * gb.Price,
+							// Quantity = gbd.Quantity,
+							// OrderPrice = gbd.Quantity * gb.Price,
 							 JoinModifiedTime = gbd.ModifiedTime,
 							 ViewJoinModifiedTime = gbd.ModifiedTime.ToString("yyyy-MM-dd"),
 							 Statement = gbd.Statement,
