@@ -107,6 +107,7 @@ namespace BabyCiaoAPI.Controllers
             }
         }
 
+        //篩選商品
         //POST:api/GroupBuying/Filter
         [HttpPost("Filter")]
         public async Task<ActionResult<IEnumerable<GBFilterDTO>>> FilterProducts([FromBody] GBFilterDTO model)
@@ -171,6 +172,7 @@ namespace BabyCiaoAPI.Controllers
             }
         }
 
+        //商品詳情
         // GET: api/GroupBuying/5
         [HttpGet("Detail/{id}")]
         public async Task<ActionResult<GBDTO>> Detail(int id)
@@ -258,6 +260,7 @@ namespace BabyCiaoAPI.Controllers
             }
         }
 
+        //訂購頁面
         // GET: api/GroupBuying/5
         [HttpGet("Order/{id}")]
         public async Task<ActionResult<GBDTO>> Order(int id)
@@ -309,50 +312,93 @@ namespace BabyCiaoAPI.Controllers
 
             return Ok(order);
         }
-        // PUT: api/GroupBuying/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutGroupBuying(int id, GroupBuying groupBuying)
+
+		//送出訂單
+		[HttpPost("SubmitOrder")]
+		public async Task<ActionResult<IEnumerable<GBOrderDTO>>> SubmitOrder([FromBody] GBOrderDTO model)
         {
-            if (id != groupBuying.Id)
+            if (model == null)
             {
-                return BadRequest();
+                return NotFound();
             }
-
-            _context.Entry(groupBuying).State = EntityState.Modified;
-
-            try
+            var order = new GroupBuyingDetail
             {
+                Id=model.Id,
+                GroupBuyingId=model.GroupBuyingId,
+                AccountUserAccount = model.UserAccount,
+                Address=model.Address,
+                Note=model.Note!=null? model.Note:"無",
+                ModifiedTime = DateTime.Now,
+                Statement = "已參加",
+            };
+            _context.GroupBuyingDetails.Add(order);
+            await _context.SaveChangesAsync();
+            var newId = order.Id;
+
+            if (model.OrderFormats != null)
+            {
+                foreach (var f in model.OrderFormats)
+                {
+                    var format = new GroupBuyingDetailFormat
+                    {
+                        GroupBuyingDetailId = newId,
+                        FormatId = f.FormatId,
+                        Quantity = f.Quantity,
+                    };
+                    _context.GroupBuyingDetailFormats.Add(format);
+                }
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!GroupBuyingExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+			return Ok(new { groupBuyingDetailId = newId });
+			
 
-            return NoContent();
         }
 
-        // POST: api/GroupBuying
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<GroupBuying>> PostGroupBuying(GroupBuying groupBuying)
-        {
-            _context.GroupBuyings.Add(groupBuying);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetGroupBuying", new { id = groupBuying.Id }, groupBuying);
-        }
+		//// PUT: api/GroupBuying/5
+		//// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+		//[HttpPut("{id}")]
+		//public async Task<IActionResult> PutGroupBuying(int id, GroupBuying groupBuying)
+		//{
+		//    if (id != groupBuying.Id)
+		//    {
+		//        return BadRequest();
+		//    }
 
-        // DELETE: api/GroupBuying/5
-        [HttpDelete("{id}")]
+		//    _context.Entry(groupBuying).State = EntityState.Modified;
+
+		//    try
+		//    {
+		//        await _context.SaveChangesAsync();
+		//    }
+		//    catch (DbUpdateConcurrencyException)
+		//    {
+		//        if (!GroupBuyingExists(id))
+		//        {
+		//            return NotFound();
+		//        }
+		//        else
+		//        {
+		//            throw;
+		//        }
+		//    }
+
+		//    return NoContent();
+		//}
+
+		//// POST: api/GroupBuying
+		//// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+		//[HttpPost]
+		//public async Task<ActionResult<GroupBuying>> PostGroupBuying(GroupBuying groupBuying)
+		//{
+		//    _context.GroupBuyings.Add(groupBuying);
+		//    await _context.SaveChangesAsync();
+
+		//    return CreatedAtAction("GetGroupBuying", new { id = groupBuying.Id }, groupBuying);
+		//}
+
+		// DELETE: api/GroupBuying/5
+		[HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGroupBuying(int id)
         {
             var groupBuying = await _context.GroupBuyings.FindAsync(id);

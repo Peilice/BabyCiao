@@ -55,7 +55,7 @@
 
 			<div class="form-group">
 				<strong for="userAccount">會員帳號</strong>
-				<input type="text" id="userAccount" v-model="orderDetails.userAccount" class="form-control" readonly :value="u_name">
+				<input type="text" id="userAccount"  class="form-control" readonly :value="u_name">
 			</div>
 
 
@@ -67,12 +67,13 @@
 					<div v-for="(formats, formatType) in groupedFormats" :key="formatType">
 						<strong>◆ {{ formatType }}</strong>
 						<div v-for="format in formats" :key="format.id" class="radio-option">
-							<input type="radio" :id="format.id" :value="format.id" v-model="selectedFormat[formatType]">
+							<input type="radio" :id="format.id" :value="format.id" v-model="selectedFormat[formatType]" @@change="updateOrderFormats(formatType, format.id)">
 							<label :for="format.id">{{ format.formatName }}</label>
 						</div>
 					</div>
 				</div>
 				<div v-else>
+					<input type="hidden">
 					單一規格
 				</div>
 			</div>
@@ -80,7 +81,7 @@
 
 			<div class="form-group">
 				<strong for="quantity">訂購數量</strong>
-				<input type="number" id="quantity" v-model="orderDetails.quantity" class="form-control" @@keyup="totalPrice"  @@change="totalPrice">
+				<input type="number" id="quantity" v-model="orderDetails.quantity" class="form-control" @@input="totalPrice" >
 			</div>
 
 			<div class="form-group">
@@ -95,12 +96,17 @@
 
 			<div class="form-group">
 				<strong for="address">地址</strong>
-				<textarea id="address" v-model="orderDetails.address" class="form-control"></textarea>
-			</div>
+				<textarea id="address" v-model="submitOrderModel.address" class="form-control"></textarea>
 
+			</div>
+			<div class="form-group">
+				<strong for="note">備註</strong>
+				<textarea id="note" v-model="submitOrderModel.note" class="form-control"></textarea>
+
+			</div>
 			<div class="form-group">
 				<strong for="joinModifiedTime">下單時間</strong>
-				<input type="text" id="joinModifiedTime" v-model="orderDetails.modifiedTimeView" class="form-control" readonly>
+				<input type="text" id="joinModifiedTime"  class="form-control" :value="orderDetails.modifiedTimeView" readonly>
 			</div>
 
 			<div class="actions d-flex justify-content-end">
@@ -118,7 +124,7 @@
 				data() {
 					return {
 						u_name: "",
-						orderId: new URLSearchParams(window.location.search).get('id'),
+						groupBuyingId: new URLSearchParams(window.location.search).get('id'),
 						orderDetails: {
 							id: '',
 							productName: '',
@@ -126,9 +132,21 @@
 							quantity: 0,
 							price: 0,
 							orderPrice: 0,
-							address: '',
 							modifiedTimeView: '',
 							productFormats: []
+						},
+						submitOrderModel: {
+
+							id: 0,
+							groupBuyingId: 0,
+							userAccount: '',
+							address: '',
+							note: '',
+							joinModifiedTime: '',
+							joinStatement: '',
+							orderFormats: [] // 初始為空數組，動態填充
+							
+
 						},
 						selectedFormat: {}
 					};
@@ -151,10 +169,15 @@
 				methods: {
 					async fetchOrderDetails() {
 						try {
-							const response = await axios.get(`https://localhost:7292/api/GroupBuying/Order/${this.orderId}`);
+							const response = await axios.get(`https://localhost:7292/api/GroupBuying/Order/${this.groupBuyingId}`);
 							this.u_name = username; // 確保 username 變數存在
+							this.submitOrderModel.joinStatement = "已參加";
+							this.submitOrderModel.groupBuyingId = this.groupBuyingId;
+							this.submitOrderModel.userAccount = username;
 							this.orderDetails = response.data;
-							console.log('Fetched order details:', this.orderDetails); // 添加日誌
+
+							this.submitOrderModel.joinModifiedTime = this.orderDetails.modifiedTimeView;
+							//console.log('Fetched order details:', this.orderDetails); 
 
 							// 初始化 selectedFormat
 							if (this.orderDetails.productFormats) {
@@ -167,15 +190,59 @@
 						}
 					},
 					totalPrice() {
+						console.log('偷偷Quantity:', this.orderDetails.quantity, '類別:');
 						this.orderDetails.orderPrice = this.orderDetails.quantity * this.orderDetails.price;
+						this.submitOrderModel.orderFormats.forEach(f => {
+							f.quantity = this.orderDetails.quantity;
+						});
+
 					},
+					updateOrderFormats(formatType, selectedFormatId) {
+						console.log('阿得Quantity:', this.orderDetails.quantity, '類別:', formatType,'規格ID:', selectedFormatId);
+				let format = this.submitOrderModel.orderFormats.find(f => f.formatType === formatType);
+
+				if (format) {
+					// 更新現有的項目
+					format.formatId = selectedFormatId;
+				} else {
+					// 添加新項目
+					this.submitOrderModel.orderFormats.push({
+						orderFormatId: 0, // 或者設定適當的初始值
+						groupBuyingDetailId: 0, // 或者設定適當的初始值
+						formatType: formatType, // 添加 formatType
+						formatId: selectedFormatId,
+								quantity: this.orderDetails.quantity, // 或者設定適當的初始值
+					});
+				}
+			},
 					async submitOrder() {
 						try {
-							await axios.post('/api/orders', this.orderDetails);
-							alert('訂單提交成功！');
+							
+							console.log('Submitting order:', this.submitOrderModel); // 檢查數據結構
+							const response = await axios.post('https://localhost:7292/api/GroupBuying/SubmitOrder', this.submitOrderModel);
+							const groupBuyingDetailId = response.data.groupBuyingDetailId; // 獲取訂單 ID
+
+							// 更新 `orderFormats` 中的 `groupBuyingDetailId`
+							this.submitOrderModel.orderFormats.forEach(format => {
+								format.groupBuyingDetailId = groupBuyingDetailId;
+							});
+
+							Swal.fire({
+								title: '成功',
+								text: '訂單提交成功！',
+								icon: 'success',
+								confirmButtonText: '確定'
+							}).then(() => {
+								window.location.href = 'https://localhost:7231/GroupBuying';
+							});
 						} catch (error) {
-							console.error('Error submitting order:', error);
-							alert('訂單提交失敗，請稍後再試。');
+							console.error('Error submitting order:', error.response ? error.response.data : error.message);
+							Swal.fire({
+								title: '錯誤',
+								text: '訂單提交失敗，請稍後再試。',
+								icon: 'error',
+								confirmButtonText: '確定'
+							});
 						}
 					},
 					goBack() {
