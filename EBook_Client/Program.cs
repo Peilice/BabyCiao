@@ -67,11 +67,11 @@ app.UseRouting();
 app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllerRoute(
-    name: "GroupBuying",
-    pattern: "GroupBuying/{controller=Home}/{action=Index}/{id?}",
-    defaults: new { area = "LilyGArea" } //改LilyGArea的route名稱~
-);
+//app.MapControllerRoute(
+//    name: "GroupBuying",
+//    pattern: "GroupBuying/{controller=Home}/{action=Index}/{id?}",
+//    defaults: new { area = "LilyGArea" } //改LilyGArea的route名稱~
+//);
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
