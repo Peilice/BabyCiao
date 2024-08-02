@@ -2,6 +2,7 @@
 {
     public class Ebook_DietDetail_DTO
     {
+        public string Category { get; set; }
         public int Id { get; set; }
 
         public int IdContactBook { get; set; }
