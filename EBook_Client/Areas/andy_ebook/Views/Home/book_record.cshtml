@@ -18,6 +18,12 @@
             margin-bottom:8px;
         }
 
+        .MSG_title_Diaper {
+            /* position: absolute; */
+            background-Color: yellow;
+            font-Size: 16px;
+            margin-bottom: 8px;
+        }
         .MSG {
             /* position: absolute; */
             background-Color: pink;
@@ -246,39 +252,39 @@
                         </div>
                         <button type="button" class="btn btn-success" id="btn1" v-on:click="createDietDetail">新增</button>
                     </div>
+                    <div class="container w-100">
+                        <div class="row rounded m-1 w-100" style="background-color: pink;" V-for="item in DietDetail">
+                            <template v-if="item.edit==true">
+                                <div class="col-3 my-2">
+                                    <h5 class="fw-bolder mb-0">{{item.dateTimeString}}</h5>
+                                    <input type="datetime-local" class="form-control" style="height:24px" v-model="item.dateTimeString" />
+                                </div>
+                                <div class="col-5 my-2">
+                                    <p class="ms-5 mb-0">飲食類別: {{item.type}} </p>
+                                    <div class="d-flex flex-row">
+                                        <p class="ms-5 mb-0 me-2">飲食狀況: {{item.amount}}{{item.unit}}</p>
+                                        <input type="text" class="form-control w-25" style="height:24px" v-model="item.amount" />
+                                    </div>
+                                </div>
+                                <div class="col-4 d-flex justify-content-center align-items-center">
+                                    <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
+                                    <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="cancel(item.category,item.id)">取消</button>
+                                </div> 
+                            </template>
+                            <template v-else>
+                                <div class="col-3 my-2">
+                                    <h5 class="fw-bolder">{{item.dateTimeString}}</h5>
+                                </div>
+                                <div class="col-5 my-2">
+                                    <p class="ms-5 mb-0">飲食類別: {{item.type}}</p>
+                                    <p class="ms-5 mb-0">飲食狀況: {{item.amount}}{{item.unit}}</p>
+                                </div>
+                                <div class="col-4 d-flex justify-content-center align-items-center">
+                                    <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="edit(item.category,item.id)">編輯</button>
+                                    <button class="m-1 btn btn-danger h-50 d-flex align-items-center" v-on:click="delete(item.category,item.id)">刪除</button>
+                                </div>
+                            </template>
 
-                        <div class="container w-100">
-                            <div class="row rounded m-1 w-100" style="background-color: pink;" V-for="item in DietDetail">
-                                <template v-if="item.edit==true">
-                                    <div class="col-3 my-2">
-                                        <h5 class="fw-bolder mb-0">{{item.dateTimeString}}</h5>
-                                        <input type="datetime-local" class="form-control" style="height:24px" v-model="item.dateTimeString" />
-                                    </div>
-                                    <div class="col-5 my-2">
-                                        <p class="ms-5 mb-0">飲食類別: {{item.type}} </p>
-                                        <div class="d-flex flex-row">
-                                            <p class="ms-5 mb-0 me-2">飲食狀況: {{item.amount}}{{item.unit}}</p>
-                                            <input type="text" class="form-control w-25" style="height:24px" v-model="item.amount" />
-                                        </div>
-                                    </div>
-                                    <div class="col-4 d-flex justify-content-center align-items-center">
-                                        <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
-                                        <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="cancel(item.category,item.id)">取消</button>
-                                    </div> 
-                                </template>
-                                <template v-else>
-                                    <div class="col-3 my-2">
-                                        <h5 class="fw-bolder">{{item.dateTimeString}}</h5>
-                                    </div>
-                                    <div class="col-5 my-2">
-                                        <p class="ms-5 mb-0">飲食類別: {{item.type}}</p>
-                                        <p class="ms-5 mb-0">飲食狀況: {{item.amount}}{{item.unit}}</p>
-                                    </div>
-                                    <div class="col-4 d-flex justify-content-center align-items-center">
-                                        <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="edit(item.category,item.id)">編輯</button>
-                                        <button class="m-1 btn btn-danger h-50 d-flex align-items-center" v-on:click="delete(item.category,item.id)">刪除</button>
-                                    </div>
-                                </template>
                         </div>
                     </div>
                 </div>
@@ -296,7 +302,7 @@
                             </div>
                         </div>
                         <div class="w-100 d-flex align-items-center mb-1">
-                            <label for="" class="col-form-label">▲ 內容物：</label>
+                                <label for="" class="col-form-label">▲ 排泄狀況：</label>
                             <div class="form-check me-2">
                                     <input class="form-check-input" type="radio" name="radio_pu" id="radio3" value="1" v-model="Content_picker">
                                 <label class="form-check-label" for="radio3">
@@ -323,25 +329,45 @@
                             </div>
                         </div>
                         <div class="input-group mb-2">
-                            <span class="input-group-text" id="basic-addon1">排泄狀況</span>
+                                <span class="input-group-text" id="basic-addon1">狀況說明</span>
                             <input type="text" class="form-control" placeholder="糞便顏色or軟硬or份量大小等狀況記錄"
                                        aria-label="Username" aria-describedby="basic-addon1" v-model="bowelSituation">
                         </div>
                             <button type="button" class="btn btn-success " v-on:click="createDiaperDetail">新增</button>
                     </div>
-                    <div class="w-50" id="div_food">
-                        <div class="container rounded m-3" style="background-color: orange">
-                            <div class="row ">
-                                <div class="col-10 my-2">
-                                    <h5 class="fw-bolder">6月19日 3點58分</h5>
-                                    <p class="ms-5 mb-0">內容物: 便便</p>
-                                    <p class="ms-5 mb-0">排泄狀況: 正常</p>
+                    <div class="container w-100">
+                            <div class="row rounded m-1 w-100" style="background-color: orange" V-for="item in DiaperDetail">
+                            <template v-if="item.edit==true">
+                                <div class="col-3 my-2">
+                                    <h5 class="fw-bolder mb-0">{{item.dateTimeString}}</h5>
+                                    <input type="datetime-local" class="form-control" style="height:24px" v-model="item.dateTimeString" />
                                 </div>
-                                <div class="col-2 d-flex flex-column text-center justify-content-around">
-                                    <button class="btn btn-primary">編輯</button>
-                                    <button class="btn btn-primary">刪除</button>
+                                <div class="col-5 my-2">
+                                        <p class="ms-5 mb-0">排泄狀況: {{item.unit}} </p>
+                                    <div class="d-flex flex-row">
+                                            <p class="ms-5 mb-0 me-2">狀況說明: {{item.bowelSituation}}</p>
+                                        <input type="text" class="form-control w-25" style="height:24px" v-model="item.amount" />
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="col-4 d-flex justify-content-center align-items-center">
+                                    <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
+                                    <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="cancel(item.category,item.id)">取消</button>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <div class="col-3 my-2">
+                                    <h5 class="fw-bolder">{{item.dateTimeString}}</h5>
+                                </div>
+                                <div class="col-5 my-2">
+                                        <p class="ms-5 mb-0">排泄狀況: {{item.unit}}</p>
+                                        <p class="ms-5 mb-0">狀況說明: {{item.bowelSituation}}</p>
+                                </div>
+                                <div class="col-4 d-flex justify-content-center align-items-center">
+                                    <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="edit(item.category,item.id)">編輯</button>
+                                    <button class="m-1 btn btn-danger h-50 d-flex align-items-center" v-on:click="delete(item.category,item.id)">刪除</button>
+                                </div>
+                            </template>
+
                         </div>
                     </div>
                 </div>
@@ -374,6 +400,42 @@
                                            aria-label="Username" aria-describedby="basic-addon1" v-model="sleep_content">
                                 </div>
                                 <button type="button" class="btn btn-success" v-on:click="createSleepDetail">新增</button>
+                        </div>
+                    </div>
+                    <div class="container w-100">
+                            <div class="row rounded m-1 w-100" style="background-color: lightblue" V-for="item in SleepDetail">
+                            <template v-if="item.edit==true">
+                                <div class="col-3 my-2">
+                                    <h5 class="fw-bolder mb-0">{{item.dateTimeString}}</h5>
+                                    <input type="datetime-local" class="form-control" style="height:24px" v-model="item.dateTimeString" />
+                                </div>
+                                <div class="col-5 my-2">
+                                        <p class="ms-5 mb-0">睡眠狀況: {{item.unit}} </p>
+                                    <div class="d-flex flex-row">
+                                            <p class="ms-5 mb-0 me-2">狀況說明: {{item.bowelSituation}}</p>
+                                        <input type="text" class="form-control w-25" style="height:24px" v-model="item.amount" />
+                                    </div>
+                                </div>
+                                <div class="col-4 d-flex justify-content-center align-items-center">
+                                    <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
+                                    <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="cancel(item.category,item.id)">取消</button>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <div class="col-3 my-2">
+                                        <h5 class="fw-bolder mb-1">{{item.dateTimeString}}</h5>
+                                        <h5 class="fw-bolder mb-1">{{item.dateTimeString}}</h5>
+                                </div>
+                                <div class="col-5 my-2">
+                                        <p class="ms-5 mb-0">睡眠狀況: {{item.unit}}</p>
+                                    <p class="ms-5 mb-0">狀況說明: {{item.bowelSituation}}</p>
+                                </div>
+                                <div class="col-4 d-flex justify-content-center align-items-center">
+                                    <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="edit(item.category,item.id)">編輯</button>
+                                    <button class="m-1 btn btn-danger h-50 d-flex align-items-center" v-on:click="delete(item.category,item.id)">刪除</button>
+                                </div>
+                            </template>
+
                         </div>
                     </div>
                     <div class="w-50" id="div_food">
@@ -449,7 +511,9 @@
         };
         let Ebook_user = sessionStorage.getItem("username");
         let IdContactBook = sessionStorage.getItem("IdContactBook");
-        //let List_Datas = new Array();
+        let List_Datas = new Array();
+        let Temp_List_Datas = new Array();
+        
 
         var vueApp = {
             data() {
@@ -460,9 +524,7 @@
                     HealthInfos:[],
                     Memo:[],
                     SleepDetail:[],
-                    SleepDetail:[],
-                    List_Datas: [],
-                    unit: "",
+                    //unit: "",
                     //共用參數:
                     idContactBook: "",
                     recodeTime:"",
@@ -486,13 +548,11 @@
             },
             mounted: function () {
                 let _this = this;
-                // List_Datas = new Array();
-                //alert(IdContactBook);
                 _this.getDietDetailData(IdContactBook);
-                //_this.getDiaperDetailData(IdContactBook);
+                _this.getDiaperDetailData(IdContactBook);
                 //_this.getHealthInfosData(IdContactBook);
                 //_this.getMemoData(IdContactBook);
-                //_this.getSleepDetailData(IdContactBook);
+                _this.getSleepDetailData(IdContactBook);
                 //_this.reflesh();
             },
             methods: {
@@ -501,40 +561,73 @@
                     let _this = this;
                     axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDiaperDetail/${IdContactBook}`, { headers 
                     }).then(result => { 
-                        // alert(result) 
+                        // alert(result)
+                        _this.DiaperDetail = result.data;
+                        for (var i = 0; i < _this.DiaperDetail.length; i++) {
+                            switch (_this.DiaperDetail[i].content) {
+                                case 1:
+                                    _this.DiaperDetail[i].unit = "乾爽";
+                                    break;
+                                case 2:
+                                    _this.DiaperDetail[i].unit = "噓噓";
+                                    break;
+                                case 3:
+                                    _this.DiaperDetail[i].unit = "便便";
+                                    break;
+                                case 4:
+                                    _this.DiaperDetail[i].unit = "噓噓+便便";
+                                    break;
+                            }
+                            var fulltime = new Date(this.DiaperDetail[i].recodeTime);
+                            var str = `${fulltime.getMonth() + 1}月${fulltime.getDate()}日 ${fulltime.getHours()}點${fulltime.getMinutes()}分`;
+                            _this.DiaperDetail[i].dateTimeString = `${str}`;
+
+                            _this.DiaperDetail[i].edit = false;
+                        }
+                        
+                        _this.DiaperDetail.forEach(function (item, index) {
+                            //_this.addContext("尿布", item);
+                            List_Datas.push(item);
+                        })
+                        _this.reflesh();
                     }).catch(err => { alert(err) });
                 },
                 getDietDetailData: function (IdContactBook) {
                     let _this = this;
                     axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDietDetail/${IdContactBook}`, {
-                        headers })
-                        .then(result => {
-                            // alert(result.data)
-                            _this.DietDetail = result.data;
-                            for (var i = 0; i < _this.DietDetail.length; i++) {
-                                switch (_this.DietDetail[i].quantity) {
-                                    case 1:
-                                        _this.DietDetail[i].unit = "毫升(cc)";
-                                        break;
-                                    case 2:
-                                        _this.DietDetail[i].unit = "克(g)";
-                                        break;
-                                    case 3:
-                                        _this.DietDetail[i].unit = "個(piece)";
-                                        break;
-                                    case 4:
-                                        _this.DietDetail[i].unit = "份";
-                                        break;
-                                }
-                                var fulltime = new Date(this.DietDetail[i].recodeTime);
-                                var str = `${fulltime.getMonth()+1}月${fulltime.getDate()}日 ${fulltime.getHours()}點${fulltime.getMinutes()}分`;
-                                _this.DietDetail[i].dateTimeString = `${str}`;
-
-                                _this.DietDetail[i].edit = false;
+                        headers 
+                    }).then(result => {
+                        // alert(result.data)
+                        _this.DietDetail = result.data;
+                        for (var i = 0; i < _this.DietDetail.length; i++) {
+                            switch (_this.DietDetail[i].quantity) {
+                                case 1:
+                                    _this.DietDetail[i].unit = "毫升(cc)";
+                                    break;
+                                case 2:
+                                    _this.DietDetail[i].unit = "克(g)";
+                                    break;
+                                case 3:
+                                    _this.DietDetail[i].unit = "個(piece)";
+                                    break;
+                                case 4:
+                                    _this.DietDetail[i].unit = "份";
+                                    break;
                             }
-                            context1.innerHTML = "";
-                            _this.reflesh();
-                        }).catch(err => { alert(err) });
+                            var fulltime = new Date(this.DietDetail[i].recodeTime);
+                            var str = `${fulltime.getMonth()+1}月${fulltime.getDate()}日 ${fulltime.getHours()}點${fulltime.getMinutes()}分`;
+                            _this.DietDetail[i].dateTimeString = `${str}`;
+
+                            _this.DietDetail[i].edit = false;
+                        }
+                        _this.DietDetail.forEach(function (item, index) {
+                            if (List_Datas.some(f => f.id == item.id && f.category=="飲食") != true) {
+                                List_Datas.push(item);
+                            }
+                        })
+                        
+                        _this.reflesh();
+                    }).catch(err => { alert(err) });
                 },
                 getHealthInfosData: function (IdContactBook) {
                     let _this = this;
@@ -553,14 +646,30 @@
                 getSleepDetailData: function (IdContactBook) {
                     let _this = this;
                     axios.get(`@Utility.SD.localHost_API/api/Ebook/GetSleepDetail/${IdContactBook}`, {headers 
-                    }).then(result => { 
-                        //alert(result) 
+                    }).then(result => {
+                        // alert(result.data)
+                        _this.SleepDetail = result.data;
+                        for (var i = 0; i < _this.SleepDetail.length; i++) {
+                            var fulltime = new Date(this.SleepDetail[i].recodeTime);
+                            var str = `${fulltime.getMonth() + 1}月${fulltime.getDate()}日 ${fulltime.getHours()}點${fulltime.getMinutes()}分`;
+                            _this.SleepDetail[i].dateTimeString = `${str}`;
+
+                            _this.SleepDetail[i].edit = false;
+                        }
+                        _this.SleepDetail.forEach(function (item, index) {
+                            if (List_Datas.some(f => f.id == item.id && f.category == "睡眠") != true) {
+                                List_Datas.push(item);
+                            }
+                        })
+
+                        _this.reflesh();
                     }).catch(err => { alert(err) });
                 },
                 //新增資料區
                 createDietDetail: function () {
                     let _this = this;
                     var request = {};
+                    request.category = "飲食";
                     request.id = 0;
                     request.idContactBook = Number(IdContactBook);
                     request.recodeTime = _this.recodeTime;
@@ -586,6 +695,7 @@
                 createDiaperDetail: function () {
                     let _this = this;
                     var request = {};
+                    request.category = "尿布";
                     request.id = 0;
                     request.idContactBook = Number(IdContactBook);
                     request.recodeTime = _this.recodeTime;
@@ -661,37 +771,63 @@
                     }).catch(err => { alert(err) });
                 },
                 //共用功能區
-                addContext: function (detail_type, detail) {
-                    let context1 = document.getElementById('context1');
-
-                    var div = document.createElement('div');
-                    var contextID = `context${detail_type}_${detail}`;
-                    var detail_time = new Date(detail.recodeTime);
-                    div.id = contextID;
-                    div.innerHTML = `${detail_time.getMonth() + 1}月${detail_time.getDate()}日 ${detail_time.getHours()}點${detail_time.getMinutes()}分 : ${detail_type} \n ${detail.type}`;
-
-
-                    div.className = 'w-100 MSG_title';
-
-                    context1.appendChild(div);
+                addContext: function (datas) {
+                    datas.forEach(function (item, index) {
+                        let context1 = document.getElementById('context1');
+                        var div = document.createElement('div');
+                        //var contextID = `context${detail_type}_${detail}`;
+                        //div.id = contextID;
+                        switch (item.category) {
+                            case "飲食":
+                                var datas_time = new Date(item.recodeTime);
+                                div.innerHTML = `${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 : ${item.category} \n ${item.type}`;
+                                div.className = 'w-100 MSG_title';
+                                context1.appendChild(div);
+                                break;
+                            case "尿布":
+                                var datas_time = new Date(item.recodeTime);
+                                div.innerHTML = `${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 : ${item.category} \n ${item.unit}`;
+                                div.className = 'w-100 MSG_title_Diaper';
+                                context1.appendChild(div);
+                                break;
+                            case "睡眠":
+                                break;
+                            case "備註":
+                                break;
+                            default:
+                                break;
+                        }
+                        
+                    
+                    })
                 },
                 reflesh: function () {
                     let _this = this;
+                    let context1 = document.getElementById('context1');
+                    context1.innerHTML = "";
                     //依日期升冪資料
                     _this.DietDetail.sort(function (a, b) {
                         return new Date(b.recodeTime).getTime() - new Date(a.recodeTime).getTime()
                     });
-                    //新增div進去
-                    _this.DietDetail.forEach(function (item, index) {
-                        _this.addContext("飲食", item);
-                    })
+                    _this.DiaperDetail.sort(function (a, b) {
+                        return new Date(b.recodeTime).getTime() - new Date(a.recodeTime).getTime()
+                    });
+                    Temp_List_Datas = List_Datas;
+                    Temp_List_Datas.sort(function (a, b) {
+                        return new Date(b.recodeTime).getTime() - new Date(a.recodeTime).getTime()
+                    });
+                    _this.addContext(Temp_List_Datas)
+                    
                 },
                 update: function (item) {
                     let _this = this;
                      // alert(`update`);
                     switch (item.category) {
                         case "飲食":
+                            let _this = this;
                             var request = {};
+                            var targetId = item.id
+                            var targetItem = item;
                             request.category = "飲食";
                             request.id = Number(item.id);
                             request.idContactBook = Number(IdContactBook);
@@ -704,7 +840,15 @@
                             axios.put(`@Utility.SD.localHost_API/api/Ebook/UpdateDietDetail/${item.id}`, request, { headers
                             }).then(response => {
                                 //alert(response.data);
+
+                                var foundIndex = List_Datas.findIndex(f => f.id == targetId && f.category == "飲食");
+                                alert(foundIndex)
+                                if (foundIndex > -1) {
+                                    List_Datas.splice(foundIndex, 1);
+                                    alert('移除了')
+                                }
                                 _this.getDietDetailData(IdContactBook);
+                                
                             }).catch(err => {
                                 alert(err);
                             });
