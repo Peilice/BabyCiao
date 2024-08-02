@@ -17,7 +17,5 @@ public partial class CompetitionDetail
 
     public DateTime ModifiedTime { get; set; }
 
-    public virtual ICollection<CompetitionRecord> CompetitionRecords { get; set; } = new List<CompetitionRecord>();
-
     public virtual OnlineCompetition IdOnlineCompetitionNavigation { get; set; } = null!;
 }

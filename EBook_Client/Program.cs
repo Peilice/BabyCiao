@@ -68,9 +68,9 @@ app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapAreaControllerRoute(
-	name: "GroupBuyingArea",
-	areaName: "LilyGArea",
-	pattern: "GroupBuying/{controller=Home}/{action=Index}/{id?}"
+    name: "GroupBuyingArea",
+    areaName: "LilyGArea",
+    pattern: "GroupBuying/{controller=Home}/{action=Index}/{id?}"
 );
 app.MapControllerRoute(
     name: "areas",

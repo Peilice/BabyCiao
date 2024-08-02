@@ -1,58 +1,33 @@
-﻿    <div class="container mb-4">
-        <h1 class="text-center mb-3 mt-3 fw-bold">線上投票活動</h1>
-        <div class="d-flex">
-            <div class="dropdown me-4">
-                階段
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                    不限
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="#">不限</a></li>
-                    <li><a class="dropdown-item" href="#">報名中</a></li>
-                    <li><a class="dropdown-item" href="#">進行中</a></li>
-                    <li><a class="dropdown-item" href="#">已結束</a></li>
-                </ul>
-            </div>
-            <div class="dropdown">
-                排序
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                    最新
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="#">最新</a></li>
-                    <li><a class="dropdown-item" href="#">熱門</a></li>
-                    <li><a class="dropdown-item" href="#">投票數</a></li>
-                    <li><a class="dropdown-item" href="#">參選數</a></li>
-                </ul>
-            </div>
+﻿    <div id="app">
+        <div class="container mb-4">
+            <h1 class="text-center mb-3 mt-3 fw-bold">線上投票活動</h1>
         </div>
-    </div>
-    <div id="app" class="container">
-        <!-- 活動列表 -->
-        <div class="row mb-4">
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                <div class="col" v-for="item in OnlineCompetitions" :key="item.id">
-                    <div class="card h-100">
-                    <a asp-controller="Competitions" asp-action="voteInfo"><img v-bind:src="getPhotoUrl(item.competitionPhotoNames)" class="card-img-top w-100" alt="..."></a>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ item.competitionName }}</h5>
-                            <button class="btn btn-outline-dark mb-2" type="submit">
-                                <i class="bi bi-heart">收藏</i>
-                            </button>
-                            <div class="d-flex justify-content-between">
-                                <div class="d-flex">
-                                    <span class="badge bg-light text-dark">{{ item.statement }}</span>
+            <!-- 活動列表 -->
+        <div class="container">
+            <div class="row mb-4">
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="col" v-for="item in OnlineCompetitions" :key="item.id">
+                        <div class="card h-100">
+                            <a v-on:click="check(item.id)"><img v-bind:src="getPhotoUrl(item.competitionPhotoNames)" class="card-img-top w-100" alt="..."></a>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ item.competitionName }}</h5>
+                                <p>活動期間 {{item.startTime}}~ {{item.endTime}}</p>
+                                <div class="d-flex justify-content-between">
+                                    <button class="btn btn-outline-dark mb-2" type="submit">
+                                        <i class="bi bi-heart">收藏</i>
+                                    </button>
+                                    <p class="badge bg-light text-dark">{{ item.statement }}</p>
                                 </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
+    
+
 
     <!-- footer -->
     <footer>
@@ -98,6 +73,10 @@
                 },
                 getPhotoUrl(CompetitionPhotoNames) {
                     return CompetitionPhotoNames != null ? `https://localhost:7000/uploads/${CompetitionPhotoNames}` : `https://localhost:7000/image/noimage.jpg`;
+                },
+                check:function(IdCom){
+                    sessionStorage.setItem("IdCompetition", IdCom);
+                    window.location.href = `https://localhost:7231/Competitions/voteInfo/${IdCom}`;
                 }
 
             },

@@ -2,6 +2,7 @@
 {
     public class EBook_Memo_DTO
     {
+        public string Category { get; set; }
         public int Id { get; set; }
 
         public int IdContactBook { get; set; }

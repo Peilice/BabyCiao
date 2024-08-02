@@ -25,6 +25,8 @@ public partial class BabyciaoContext : DbContext
 
     public virtual DbSet<CompetitionDetail> CompetitionDetails { get; set; }
 
+    public virtual DbSet<CompetitionFavorite> CompetitionFavorites { get; set; }
+
     public virtual DbSet<CompetitionPhoto> CompetitionPhotos { get; set; }
 
     public virtual DbSet<CompetitionRecord> CompetitionRecords { get; set; }
@@ -66,6 +68,8 @@ public partial class BabyciaoContext : DbContext
     public virtual DbSet<OnlineCompetition> OnlineCompetitions { get; set; }
 
     public virtual DbSet<Platform> Platforms { get; set; }
+
+    public virtual DbSet<PlatformFavorite> PlatformFavorites { get; set; }
 
     public virtual DbSet<PlatformPhoto> PlatformPhotos { get; set; }
 
@@ -200,14 +204,16 @@ public partial class BabyciaoContext : DbContext
 
             entity.ToTable("CompetitionDetail");
 
-            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.AccountUserAccount)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("Account_UserAccount");
+            entity.Property(e => e.IdOnlineCompetition).HasColumnName("ID_OnlineCompetition");
             entity.Property(e => e.CompetitionPhoto).HasMaxLength(500);
             entity.Property(e => e.Content).HasMaxLength(100);
-            entity.Property(e => e.IdOnlineCompetition).HasColumnName("ID_OnlineCompetition");
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("ID");
             entity.Property(e => e.ModifiedTime)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
@@ -216,6 +222,25 @@ public partial class BabyciaoContext : DbContext
                 .HasForeignKey(d => d.IdOnlineCompetition)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Competiti__ID_On__236943A5");
+        });
+
+        modelBuilder.Entity<CompetitionFavorite>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Competit__3214EC27BE5D4A4E");
+
+            entity.ToTable("CompetitionFavorite");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.AccountUserAccount)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("Account_UserAccount");
+            entity.Property(e => e.IdOnlineCompetition).HasColumnName("ID_OnlineCompetition");
+
+            entity.HasOne(d => d.IdOnlineCompetitionNavigation).WithMany(p => p.CompetitionFavorites)
+                .HasForeignKey(d => d.IdOnlineCompetition)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Competiti__ID_On__625A9A57");
         });
 
         modelBuilder.Entity<CompetitionPhoto>(entity =>
@@ -246,13 +271,17 @@ public partial class BabyciaoContext : DbContext
             entity.Property(e => e.VoterAccount)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.IdOnlineCompetition).HasColumnName("ID_OnlineCompetition");
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("ID");
             entity.Property(e => e.IdCompetitionDetail).HasColumnName("ID_CompetitionDetail");
             entity.Property(e => e.ModifiedTime)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
 
-            entity.HasOne(d => d.IdCompetitionDetailNavigation).WithMany(p => p.CompetitionRecords)
-                .HasForeignKey(d => d.IdCompetitionDetail)
+            entity.HasOne(d => d.IdOnlineCompetitionNavigation).WithMany(p => p.CompetitionRecords)
+                .HasForeignKey(d => d.IdOnlineCompetition)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Competiti__ID_Co__2739D489");
         });
@@ -873,6 +902,20 @@ public partial class BabyciaoContext : DbContext
                 .HasForeignKey(d => d.IdExchangeOrder)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__SecondHan__ID_Ex__3A4CA8FD");
+        });
+
+        modelBuilder.Entity<SecondHandExchangeOrderDetail>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("SecondHandExchangeOrderDetail");
+
+            entity.Property(e => e.IdExchangeOrder).HasColumnName("ID_ExchangeOrder");
+
+            entity.HasOne(d => d.IdExchangeOrderNavigation).WithMany()
+                .HasForeignKey(d => d.IdExchangeOrder)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__SecondHan__ID_Ex__282DF8C2");
         });
 
         modelBuilder.Entity<SecondHandSupply>(entity =>
