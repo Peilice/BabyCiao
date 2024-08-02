@@ -21,6 +21,8 @@ public partial class GroupBuying
 
     public DateTime ModifiedTime { get; set; }
 
+    public string? ProductType { get; set; }
+
     public bool Display { get; set; }
 
     public virtual UserAccount AccountUserAccountNavigation { get; set; } = null!;
@@ -28,4 +30,6 @@ public partial class GroupBuying
     public virtual ICollection<GroupBuyingDetail> GroupBuyingDetails { get; set; } = new List<GroupBuyingDetail>();
 
     public virtual ICollection<GroupBuyingPhoto> GroupBuyingPhotos { get; set; } = new List<GroupBuyingPhoto>();
+
+    public virtual ICollection<ProductFormat> ProductFormats { get; set; } = new List<ProductFormat>();
 }

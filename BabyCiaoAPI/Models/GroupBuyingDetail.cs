@@ -20,4 +20,6 @@ public partial class GroupBuyingDetail
     public virtual UserAccount AccountUserAccountNavigation { get; set; } = null!;
 
     public virtual GroupBuying GroupBuying { get; set; } = null!;
+
+    public virtual ICollection<GroupBuyingDetailFormat> GroupBuyingDetailFormats { get; set; } = new List<GroupBuyingDetailFormat>();
 }

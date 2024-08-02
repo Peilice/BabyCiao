@@ -25,29 +25,30 @@
             @* 待處理 *@
             <!-- 靜態互動背景 -->
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                報名參加活動
+                報名此比賽
             </button>
-            <button class="btn btn-outline-dark me-2" type="submit"><i class="bi bi-heart">收藏此活動</i></button>
+            <button typeof="button" class="btn btn-outline-dark me-2" type="submit"><i class="bi bi-heart">收藏此活動</i></button>
         </div>
     </div>
     
     <div class="container" id="app">
         <div class="d-flex justify-content-between">    
-                <div class="dropdown">
+              <div class="dropdown">
                     排序
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
                             data-bs-toggle="dropdown" aria-expanded="false">
                         最新
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item" href="#">最新</a></li>
-                        <li><a class="dropdown-item" href="#">投票數</a></li>
-                    </ul>
-                </div>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <li><a class="dropdown-item" href="#">最新</a></li>
+                      <li><a class="dropdown-item" href="#">投票數</a></li>
+                  </ul>
+              </div>
             <div>
                 <label for="" class="me-3">參賽者：<span>{{Competitor}}</span></label>
+                <label for="" class="me-3">總票數：<span>{{allvote}}</span></label>
+
                 @* 待處理 *@
-                @* <label for="" class="me-3">總票數：<span>584</span></label> *@
                 @* <label for="" class="me-3">瀏覽人數：<span>675</span></label> *@
             </div>
         </div>
@@ -62,7 +63,6 @@
                             <div class="card-body">
                                 <h5 class="card-title">{{item.accountUserAccount}}</h5>
                                 <span class="me-3">得票數</span>
-                                @* 待處理 *@
                                 <span><i class="bi bi-lightning-charge-fill">{{item.number}}</i></span>
                             </div>
                             <button class="btn btn-outline-dark me-2 w-100" type="submit">
@@ -82,27 +82,33 @@
                         <h5 class="modal-title" id="staticBackdropLabel">填寫報名資料</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    @* 待處理 *@
-                    <form>
+                    @* 待處理--資料還無法傳回 *@
+                    <form id="form" class="needs-validation" v-on:submit.prevent="create" novalidate>
                         <div class="modal-body">
+                            @* <input type="text" class="form-control" id="IdCompetition" v-model="CompetitionId"> *@
                             <div class="mb-3 has-validation">
                                 <label class="form-label">帳號</label>
-                                <input type="text" class="form-control" id="userAccount">
+                                <input type="text" class="form-control" id="userAccount" v-model="CompetitorAccount">
                             </div>
                             <div class="mb-3 has-validation">
-                                <label class="form-label">自我介紹</label>
-                                <textarea type="text" class="form-control" id="Content" rows="3"></textarea>
+                                <label class="form-label">自我介紹(100字內)</label>
+                                <textarea type="text" class="form-control" id="Content" rows="3" v-model="CompetitorContent"></textarea>
                             </div>
                             <div class="mb-3 has-validation">
                                 <label class="form-label">照片上傳</label>
-                                <input type="file" class="form-control" id="CompetitionPhoto">
+                                <input type="file" class="form-control" id="CompetitionPhoto" v-on:change="onFileChange">
+                                <div id="EmergencyContactHelp" class="form-text">請選擇一張照片</div>
+                                <div class="invalid-feedback">
+                                    此欄位必填!
+                                </div>
                             </div>
+
                         </div>
                     </form>
                     
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary" v-on:click="apply">確認報名</button>
+                        <button type="submit" class="btn btn-primary">確認報名</button>
                     </div>
                 </div>
             </div>
@@ -140,7 +146,7 @@
     var IdCompetitions = sessionStorage.getItem("IdCompetition");
     var CompetitorID = 0;
 
-    console.log(IdCompetitions)
+    //console.log(IdCompetitions)
     var vueApp = {
         data() {
             return {
@@ -153,6 +159,13 @@
                 votenumber:0,
                 Competitionsdetail: [],
                 RecordDetail:[],
+                allvote:0,
+                CompetitionId:0,
+
+                //表單
+                CompetitorAccount:"",
+                CompetitorContent:"",
+                CompetitorPhoto:"noimage.jpg",
             };
         },
         methods: {
@@ -161,16 +174,16 @@
                 try {
                      axios.get(`https://localhost:7292/api/OnlineCompetitions/${IdCompetitions}`)
                     .then(response => {
-                            //alert(response.data)
-                             _this.Competitionsdetail = response.data;
-                             _this.CompetitionName = response.data[0].competitionName;
-                             _this.Content = response.data[0].content;
-                             _this.StartTime = response.data[0].startTime;
-                             _this.EndTime = response.data[0].endTime;
-                             _this.Statement = response.data[0].statement;
-                             _this.Competitor = response.data.length;
-                        CompetitorID = response.data.competitionDetailId;
-                             //_this.votenumber = response.data.nu
+                         _this.Competitionsdetail = response.data;
+                         _this.CompetitionName = response.data[0].competitionName;
+                         _this.Content = response.data[0].content;
+                         _this.StartTime = response.data[0].startTime;
+                         _this.EndTime = response.data[0].endTime;
+                         _this.Statement = response.data[0].statement;
+                         _this.Competitor = response.data.length;
+                         _this.allvote = response.data[0].allnumber;
+                         _this.CompetitionId = response.data[0].Id;
+                         CompetitorID = response.data.competitionDetailId;
                     })
                     .catch(error => alert(error))
                 }
@@ -181,37 +194,55 @@
             getPhotoUrl(CompetitionPhotos) {
                 return CompetitionPhotos != null ? `https://localhost:7000/uploads/${CompetitionPhotos}` : `https://localhost:7000/image/noimage.jpg`;
             },
-            fetchRecord:function(){
-                let _this = this;
-                try {
-                    axios.get(`https://localhost:7292/api/OnlineCompetitions/getRecord/${CompetitorID}`)
-                        .then(record => {
-                            _this.RecordDetail = record.data;
-                            _this.votenumber = record.data.length;
-                        }
-                    )
-                        .catch(error => alert(error))
-                }
-                catch (error) {
-                    console.log(error);
-                }
-            },
             apply:function(){
                 let _this = this;
-                let form = document.querySelectorAll('.form-control');
+                let forms = document.querySelectorAll('.needs-validation');
                 //console.log(form)
-                Array.prototype.slice.call(form)
+                Array.prototype.slice.call(forms)
                     .forEach(function (form) {
                         form.addEventListener('submit', function (event) {
                             if (!form.checkValidity()) {
                                 event.preventDefault()
                                 event.stopPropagation()
-                            } else {
+                            }
+                            else 
+                            {
                                 _this.create(event);
                             }
+
                             form.classList.add('was-validated')
                         }, false)
                     })
+            },
+            create: function (e) {
+                e.preventDefault();
+                let _this = this;
+                var request = new FormData(); //收集表單資訊
+                request.Id = IdCompetitions;
+                request.AccountUserAccount = _this.CompetitorAccount;
+                request.CompetitionPhotos = _this.CompetitorPhoto.name;
+                request.Content = _this.CompetitorContent;
+                //alert(request);
+                axios.post(`https://localhost:7292/api/OnlineCompetitions/apply`, request)
+                .then(result => {
+                    Swal.fire({
+                        position:"center",
+                        icon:"success",
+                        title:"報名成功",
+                        showConfirmButton: false,
+                        timer:1500
+                    })
+                    .then(result => {
+                        _this.fetchcompetitions();
+                    })
+                })
+                .catch(err => {
+                    alert(err);
+                })
+            },
+            //處理照片上傳
+            onFileChange: function (event) {
+                this.CompetitorPhoto = event.target.files[0];
             },
         },
         mounted: function () {
