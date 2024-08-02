@@ -53,7 +53,7 @@
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb mb-0 bg-transparent p-2 text-dark bg-opacity-10">
 					<li class="breadcrumb-item"><a class="text-decoration-none" href="https://localhost:7231/">首頁</a></li>
-					<li class="breadcrumb-item active" aria-current="page">團購</li>
+                    <li class="breadcrumb-item active" aria-current="page">團購</li>
 				</ol>
 			</nav>
 			<div class="row" style="width:50%;margin-left:auto;margin-right:0">
@@ -248,12 +248,16 @@
                                     <p>{{ productDetails.productDescription }}</p>
                                     <p class="d-flex justify-content-end">${{productDetails.price}}</p>
                                     <hr>
-
                                     <div id="productFormats">
-                                            <ul v-for="p in productDetails.productFormats" :key="p.id">
-                                            <li>{{p.formatType}}-{{p.formatName}}</li>
-                                            </ul>
-
+                                        <ul v-if="productDetails.productFormats && productDetails.productFormats.length > 0">
+                                            <li v-for="p in productDetails.productFormats" :key="p.id">
+                                                {{p.formatType}} - {{p.formatName}}
+                                            </li>
+                                        </ul>
+                                        <div v-else>
+											<li>單一規格</li>
+                                            <br>
+                                        </div>
                                     </div>
                                     <p>
                                         成團進度：
@@ -273,21 +277,17 @@
                         </div>
                     </div>
 
-
                 </div>
             </div>
         </div>
-
-
-
-
-		
 
 	</div>
 
 
 
+
 	<script>
+
 		var vueApp = {
 			data() {
 				return {
@@ -321,7 +321,7 @@
 					axios.get('https://localhost:7292/api/GroupBuying')
 						.then(response => {
 							this.groupBuyings = response.data.filter(item => item.display);
-							progress: item.progress ?? 0 // 確保 progress 屬性存在
+							//progress: item.progress ?? 0 // 確保 progress 屬性存在
 						})
 						.catch(error => {
 							console.error("Error fetching data:", error);
@@ -341,7 +341,6 @@
 					axios.post('https://localhost:7292/api/GroupBuying/Filter', request)
 						.then(response => {
 							_this.groupBuyings = response.data;
-							progress: item.progress ?? 0
 						})
 						.catch(err => {
 							console.error("Error filtering data:", err);
@@ -355,7 +354,6 @@
                     axios.post('https://localhost:7292/api/GroupBuying/Filter', request)
                         .then(response => {
                             _this.groupBuyings = response.data;
-                            progress: item.progress ?? 0
                         })
                         .catch(err => {
                             console.error("Error filtering data:", err);
@@ -392,11 +390,11 @@
                 },
                 async joinGroupBuy(productId) {
                     try {
-                        const response = await axios.post(`/LilyGArea/Home/Order`, {
+                        const response = await axios.post(`/GroupBuying/Home/Order`, {
                             id: productId
                         });
                         if (response.status === 200) {
-                            window.location.href = `/LilyGArea/Home/Order?id=${productId}`;
+                            window.location.href = `/GroupBuying/Home/Order?id=${productId}`;
                         }
                     } catch (error) {
                         console.error('Error joining group buy:', error);

@@ -9,11 +9,11 @@ public partial class GroupBuyingDetailFormat
 
     public int GroupBuyingDetailId { get; set; }
 
-    public int FormatId { get; set; }
+    public int? FormatId { get; set; }
 
     public int Quantity { get; set; }
 
-    public virtual ProductFormat Format { get; set; } = null!;
+    public virtual ProductFormat? Format { get; set; }
 
     public virtual GroupBuyingDetail GroupBuyingDetail { get; set; } = null!;
 }

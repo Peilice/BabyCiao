@@ -553,7 +553,7 @@ public partial class BabyciaoContext : DbContext
 
         modelBuilder.Entity<GroupBuyingDetailFormat>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__GroupBuy__3214EC2703282E25");
+            entity.HasKey(e => e.Id).HasName("PK__GroupBuy__3214EC27B3CC8AFD");
 
             entity.ToTable("GroupBuyingDetailFormat");
 
@@ -562,13 +562,12 @@ public partial class BabyciaoContext : DbContext
 
             entity.HasOne(d => d.Format).WithMany(p => p.GroupBuyingDetailFormats)
                 .HasForeignKey(d => d.FormatId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__GroupBuyi__Forma__69FBBC1F");
+                .HasConstraintName("FK__GroupBuyi__Forma__6DCC4D03");
 
             entity.HasOne(d => d.GroupBuyingDetail).WithMany(p => p.GroupBuyingDetailFormats)
                 .HasForeignKey(d => d.GroupBuyingDetailId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__GroupBuyi__Group__690797E6");
+                .HasConstraintName("FK__GroupBuyi__Group__6CD828CA");
         });
 
         modelBuilder.Entity<GroupBuyingPhoto>(entity =>

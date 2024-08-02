@@ -198,7 +198,7 @@ namespace BabyCiao.Controllers
 				return NotFound();
 			}
 
-			var groupBuying = (from gb in _context.GroupBuyings
+			var groupBuying = await(from gb in _context.GroupBuyings
 							   select new GroupBuyDTO
 							   {
 								   Id = id,
@@ -231,7 +231,7 @@ namespace BabyCiao.Controllers
 														  FormatName = of.FormatName,
 														  FormatType = of.FormatType,
 													  }).ToList(),
-							   }).FirstOrDefault();
+							   }).FirstOrDefaultAsync();
 			if (groupBuying == null)
 			{
 				return NotFound();
@@ -639,7 +639,7 @@ namespace BabyCiao.Controllers
 										  {
 											  Id=of.Id,
 											  GroupBuyingDetailId=of.GroupBuyingDetailId,
-											  FormatId=of.FormatId,
+											  FormatId= (int)(of.FormatId==null?0: of.FormatId),//這裡如果他是沒有的話就等於是單一規格
 											  FormatType=pf.FormatType,
 											  FormatName=pf.FormatName,
 											  Quantity=of.Quantity,

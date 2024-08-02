@@ -1,149 +1,191 @@
 ﻿<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>訂單詳情</title>
-    <!-- 引入 Vue 3 -->
-    <script src="https://unpkg.com/vue@next"></script>
-    <!-- 引入 Axios -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <style>
-        .order-details {
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>訂單詳情</title>
+	<style>
+		.order-details {
+			padding: 20px;
+			background-color: #fff;
+			border-radius: 8px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			max-width: 600px;
+			margin: auto;
+		}
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+		.form-group {
+			margin-bottom: 15px;
+		}
 
-        .actions {
-            margin-top: 20px;
-        }
-    </style>
+		.actions {
+			margin-top: 20px;
+		}
+
+		.radio-group {
+			margin-bottom: 15px;
+		}
+
+		.radio-group label {
+				display: block;
+		}
+
+		.radio-option {
+			display: flex;
+			align-items: center;
+			margin-bottom: 5px;
+		}
+
+		.radio-option input[type="radio"] {
+				margin-right: 5px;
+		}
+	</style>
 </head>
 <body>
-    <div id="app">
-        <order-details :order-id="1"></order-details>
-    </div>
+	<div id="order-app">
+		<div class="order-details">
+			<h2>訂單詳情</h2>
 
-    <script>
-        const OrderDetails = {
-            template: `
-                <div class="order-details">
-                  <h2>填寫訂單</h2>
 
-                  <div class="form-group">
-                    <label for="orderId">參團編號</label>
-                    <input type="text" id="orderId" v-model="order.joinId" class="form-control" readonly>
-                  </div>
 
-                  <div class="form-group">
-                    <label for="productName">商品名稱</label>
-                    <input type="text" id="productName" v-model="order.productName" class="form-control" readonly>
-                  </div>
+			<div class="form-group">
+				<strong for="productName">商品名稱</strong>
+				<input type="text" id="productName" v-model="orderDetails.productName" class="form-control" readonly>
+			</div>
 
-                  <div class="form-group">
-                    <label for="userAccount">會員帳號</label>
-                    <input type="text" id="userAccount" v-model="order.joinUserAccount" class="form-control" readonly>
-                  </div>
+			<div class="form-group">
+				<strong for="userAccount">會員帳號</strong>
+				<input type="text" id="userAccount" v-model="orderDetails.userAccount" class="form-control" readonly :value="u_name">
+			</div>
 
-                  <div class="form-group">
-                    <label for="orderFormat">訂單規格</label>
-                    <ul>
-                      <li v-for="format in order.orderFormat" :key="format.id">
-                        {{ format.formatType }} - {{ format.formatName }}
-                      </li>
-                    </ul>
-                  </div>
 
-                  <div class="form-group">
-                    <label for="quantity">團購數量</label>
-                    <input type="number" id="quantity" v-model="order.quantity" class="form-control">
-                  </div>
 
-                  <div class="form-group">
-                    <label for="price">商品價錢</label>
-                    <input type="text" id="price" v-model="order.price" class="form-control" readonly>
-                  </div>
 
-                  <div class="form-group">
-                    <label for="orderPrice">總價錢</label>
-                    <input type="text" id="orderPrice" v-model="order.orderPrice" class="form-control" readonly>
-                  </div>
+			<div class="form-group radio-group">
+				<strong>訂單規格</strong>
+				<div v-if="orderDetails.productFormats && Object.keys(orderDetails.productFormats).length > 0">
+					<div v-for="(formats, formatType) in groupedFormats" :key="formatType">
+						<strong>◆ {{ formatType }}</strong>
+						<div v-for="format in formats" :key="format.id" class="radio-option">
+							<input type="radio" :id="format.id" :value="format.id" v-model="selectedFormat[formatType]">
+							<label :for="format.id">{{ format.formatName }}</label>
+						</div>
+					</div>
+				</div>
+				<div v-else>
+					單一規格
+				</div>
+			</div>
 
-                  <div class="form-group">
-                    <label for="address">地址</label>
-                    <textarea id="address" v-model="order.address" class="form-control"></textarea>
-                  </div>
 
-                  <div class="form-group">
-                    <label for="joinModifiedTime">下單時間</label>
-                    <input type="text" id="joinModifiedTime" v-model="order.viewJoinModifiedTime" class="form-control" readonly>
-                  </div>
+			<div class="form-group">
+				<strong for="quantity">訂購數量</strong>
+				<input type="number" id="quantity" v-model="orderDetails.quantity" class="form-control" @@keyup="totalPrice"  @@change="totalPrice">
+			</div>
 
-                  <div class="actions">
-                            <button v-on:click="submitOrder" class="btn btn-success">提交訂單</button>
-                    <button v-on:click="goBack" class="btn btn-primary">返回</button>
-                  </div>
-                </div>
-              `,
-            props: {
-                orderId: {
-                    type: Number,
-                    required: true
-                }
-            },
-            data() {
-                return {
-                    order: {
-                        joinId: '',
-                        productName: '',
-                        joinUserAccount: '',
-                        orderFormat: [],
-                        quantity: 0,
-                        price: 0,
-                        orderPrice: 0,
-                        address: '',
-                        viewJoinModifiedTime: ''
-                    }
-                };
-            },
-            mounted() {
-                this.fetchOrderDetails();
-            },
-            methods: {
-                async fetchOrderDetails() {
-                    try {
-                        const response = await axios.get(`/api/orders/${this.orderId}`);
-                        this.order = response.data;
-                    } catch (error) {
-                        console.error('Error fetching order details:', error);
-                    }
-                },
-                async submitOrder() {
-                    try {
-                        await axios.post('/api/orders', this.order);
-                        alert('訂單提交成功！');
-                    } catch (error) {
-                        console.error('Error submitting order:', error);
-                        alert('訂單提交失敗，請稍後再試。');
-                    }
-                },
-                goBack() {
-                    window.history.back();
-                }
-            }
-        };
+			<div class="form-group">
+				<strong for="price">商品單價</strong>
+				<input type="text" id="price" v-model="orderDetails.price" class="form-control" readonly >
+			</div>
 
-        Vue.createApp({
-            components: {
-                OrderDetails
-            }
-        }).mount('#app');
-    </script>
+			<div class="form-group">
+				<strong for="orderPrice">總價錢</strong>
+				<input type="text" id="orderPrice" v-model="orderDetails.orderPrice" class="form-control" readonly>
+			</div>
+
+			<div class="form-group">
+				<strong for="address">地址</strong>
+				<textarea id="address" v-model="orderDetails.address" class="form-control"></textarea>
+			</div>
+
+			<div class="form-group">
+				<strong for="joinModifiedTime">下單時間</strong>
+				<input type="text" id="joinModifiedTime" v-model="orderDetails.modifiedTimeView" class="form-control" readonly>
+			</div>
+
+			<div class="actions d-flex justify-content-end">
+				<button @@click="submitOrder" class="btn btn-success mx-2">提交訂單</button>
+				<button @@click="goBack" class="btn btn-outline-secondary">返回</button>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const orderApp = Vue.createApp({
+				data() {
+					return {
+						u_name: "",
+						orderId: new URLSearchParams(window.location.search).get('id'),
+						orderDetails: {
+							id: '',
+							productName: '',
+							userAccount: '',
+							quantity: 0,
+							price: 0,
+							orderPrice: 0,
+							address: '',
+							modifiedTimeView: '',
+							productFormats: []
+						},
+						selectedFormat: {}
+					};
+				},
+				mounted() {
+					this.fetchOrderDetails();
+				},
+				computed: {
+					groupedFormats() {
+						return this.orderDetails.productFormats.reduce((acc, format) => {
+							if (!acc[format.formatType]) {
+								acc[format.formatType] = [];
+							}
+							acc[format.formatType].push(format);
+							return acc;
+						}, {});
+					}
+				},
+
+				methods: {
+					async fetchOrderDetails() {
+						try {
+							const response = await axios.get(`https://localhost:7292/api/GroupBuying/Order/${this.orderId}`);
+							this.u_name = username; // 確保 username 變數存在
+							this.orderDetails = response.data;
+							console.log('Fetched order details:', this.orderDetails); // 添加日誌
+
+							// 初始化 selectedFormat
+							if (this.orderDetails.productFormats) {
+								Object.keys(this.orderDetails.productFormats).forEach(formatType => {
+									this.selectedFormat[formatType] = '';
+								});
+							}
+						} catch (error) {
+							console.error('Error fetching order details:', error);
+						}
+					},
+					totalPrice() {
+						this.orderDetails.orderPrice = this.orderDetails.quantity * this.orderDetails.price;
+					},
+					async submitOrder() {
+						try {
+							await axios.post('/api/orders', this.orderDetails);
+							alert('訂單提交成功！');
+						} catch (error) {
+							console.error('Error submitting order:', error);
+							alert('訂單提交失敗，請稍後再試。');
+						}
+					},
+					goBack() {
+						window.history.back();
+					}
+				}
+			});
+
+			orderApp.mount('#order-app');
+		});
+	</script>
 </body>
 </html>
