@@ -122,7 +122,6 @@ namespace BabyCiaoAPI.Controllers
             return Ok(competitionDetailDTOs);
         }
 
-
         //GET api/OnlineCompetitions/getRecord/{id} (暫時沒用到)
         [HttpGet("getRecord/{id}")]
         public async Task<ActionResult<IEnumerable<CompetitionDetailDTO>>> getRecord(int id)
@@ -149,8 +148,6 @@ namespace BabyCiaoAPI.Controllers
 
         }
 
-
-        //  ******重寫******
         // POST api/OnlineCompetitions/apply (報名比賽)
         [HttpPost("apply")]
         public async Task<string> apply([FromBody] CompetitionDetail_createDTO Detail_createDTO)
@@ -176,7 +173,6 @@ namespace BabyCiaoAPI.Controllers
 
         }
 
-
         // Delete api/OnlineCompetitions/deleteApply (刪除報名)
         [HttpDelete("deleteApply")]
         public async Task<string> deleteApply(int id)
@@ -193,6 +189,8 @@ namespace BabyCiaoAPI.Controllers
                 return "刪除失敗";
             }
         }
+
+
 
         //收藏列表 (讀取、新增、刪除)
         //Get api/OnlineCompetitions/getfavorite (讀取)
@@ -215,18 +213,18 @@ namespace BabyCiaoAPI.Controllers
 
         //Delete api/OnlineCompetitions/DeleteFavorite (刪除)
         [HttpDelete("DeleteFavorite")]
-        public async Task<string> DeleteFavorite(int id)
+        public async Task<IActionResult> DeleteFavorite(int id, string account)
         {
-            var delete = _context.CompetitionFavorites.Find(id);
+            var delete =await _context.CompetitionFavorites.FirstOrDefaultAsync(c=> c.IdOnlineCompetition==id && c.AccountUserAccount==account);
             if (delete != null)
             {
                 _context.CompetitionFavorites.Remove(delete);
                 await _context.SaveChangesAsync();
-                return "刪除成功";
+                return Ok("刪除成功");
             }
             else
             {
-                return "刪除失敗";
+                return NotFound("刪除失敗");
             }
         }
 
@@ -251,46 +249,46 @@ namespace BabyCiaoAPI.Controllers
             return "新增成功";
         }
 
-        //  ******重寫******
+
         //投票 (新增、刪除)
         //Post api/OnlineCompetitions/createVote (新增)
-        //[HttpPost("createVote")]
-        //public async Task<string> createVote([FromBody] CompetitionRecord_createDTO Record_createDTO)
-        //{
-        //    CompetitionRecord record = new CompetitionRecord()
-        //    {
-        //        VoterAccount = Record_createDTO.voterAccount,
-        //        IdCompetitionDetail = Record_createDTO.CompetitorId,
-        //    };
-        //    try
-        //    {
-        //        _context.CompetitionRecords.Add(record);
-        //        await _context.SaveChangesAsync();
-        //        return "投票成功";
-        //    }
-        //    catch
-        //    {
-        //        return "投票失敗";
-        //    }
-        //}
+        [HttpPost("createVote")]
+        public async Task<string> createVote([FromBody] CompetitionRecord_createDTO Record_createDTO)
+        {
+            CompetitionRecord record = new CompetitionRecord()
+            {
+                IdOnlineCompetition=Record_createDTO.CompetitionId,
+                VoterAccount = Record_createDTO.voterAccount,
+                IdCompetitionDetail = Record_createDTO.CompetitorId,
+            };
+            try
+            {
+                _context.CompetitionRecords.Add(record);
+                await _context.SaveChangesAsync();
+                return "投票成功";
+            }
+            catch
+            {
+                return "投票失敗";
+            }
+        }
 
-        //  ******重寫******
         //Delete api/OnlineCompetitions/deleteVote (刪除)
-        //[HttpDelete("deleteVote")]
-        //public async Task<string> deleteVote(int id)
-        //{
-        //    var delete = _context.CompetitionRecords.Find(id);
-        //    if(delete != null)
-        //    {
-        //        _context.CompetitionRecords.Remove(delete);
-        //        await _context.SaveChangesAsync();
-        //        return "刪除成功";
-        //    }
-        //    else
-        //    {
-        //        return "刪除失敗";
-        //    }
-        //}
+        [HttpDelete("deleteVote")]
+        public async Task<IActionResult> deleteVote(int id, string account)
+        {
+            var delete =await _context.CompetitionRecords.FirstOrDefaultAsync(c => c.IdOnlineCompetition == id && c.VoterAccount == account);
+            if (delete != null)
+            {
+                _context.CompetitionRecords.Remove(delete);
+                await _context.SaveChangesAsync();
+                return Ok("刪除成功");
+            }
+            else
+            {
+                return NotFound("刪除失敗");
+            }
+        }
 
     }
 }

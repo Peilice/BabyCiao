@@ -14,6 +14,7 @@ namespace BabyCiaoAPI.Models;
 
 public class CompetitionRecord_createDTO
 {
+    public int CompetitionId { get; set; }
     public string voterAccount { get; set; }
     public int CompetitorId { get; set; }
 
