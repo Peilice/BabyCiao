@@ -4,19 +4,23 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BabyCiaoAPI.Models;
-using BabyCiaoAPI.DTO;
+using Microsoft.AspNetCore.Cors;
 
 namespace BabyCiaoAPI.Controllers
 {
+    [EnableCors("andy")]
+    [Route("api/[controller]")]
     [ApiController]
     [Route("api/[controller]")]
     public class NannyResumesController : ControllerBase
     {
         private readonly BabyciaoContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public NannyResumesController(BabyciaoContext context)
+        public NannyResumesController(BabyciaoContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: api/NannyResumes
@@ -27,83 +31,47 @@ namespace BabyCiaoAPI.Controllers
             [FromQuery] string serviceType = null,
             [FromQuery] string experience = null)
         {
-            var query = _context.NannyResumes.AsQueryable();
-
-            if (!string.IsNullOrEmpty(city))
+            return await _context.NannyResumes.Select(c => new NannyResume
             {
-                query = query.Where(n => n.City.Contains(city));
-            }
-
-            if (!string.IsNullOrEmpty(district))
-            {
-                query = query.Where(n => n.District.Contains(district));
-            }
-
-            if (!string.IsNullOrEmpty(serviceType))
-            {
-                query = query.Where(n => n.TypeOfDaycare == serviceType);
-            }
-
-            if (!string.IsNullOrEmpty(experience))
-            {
-                // Add your experience filtering logic here
-            }
-
-            var results = await query.Select(n => new NannyResumeDTO
-            {
-                Id = n.Id,
-                NannyAccountUserAccount = n.NannyAccountUserAccount,
-                City = n.City,
-                District = n.District,
-                Introduction = n.Introduction,
-                TypeOfDaycare = n.TypeOfDaycare,
-                ServiceItems = n.ServiceItems,
-                QuasiPublicChildcare = n.QuasiPublicChildcare,
-                ChildcareAvailableUnder2 = n.ChildcareAvailableUnder2,
-                ChildcareAvailableOver2 = n.ChildcareAvailableOver2,
-                Language = n.Language,
-                ServiceCenter = n.ServiceCenter,
-                ProfessionalPortrait = n.ProfessionalPortrait,
-                DisplayControl = n.DisplayControl
+                City=c.City,
+                District=c.District,
+                Introduction=c.Introduction,
+                TypeOfDaycare=c.TypeOfDaycare,
+                ServiceItems=c.ServiceItems,
+                QuasiPublicChildcare=c.QuasiPublicChildcare,
+                ChildcareAvailableUnder2=c.ChildcareAvailableUnder2,
+                ChildcareAvailableOver2=c.ChildcareAvailableOver2,
+                Language=c.Language,
+                ProfessionalPortrait=c.ProfessionalPortrait,
+         
             }).ToListAsync();
-
-            return results;
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<NannyResumeDTO>> GetNannyResume(int id)
+        // GET: api/NannyResumes/5
+        [HttpGet("GetNannyResumeinfo")]
+        public async Task<ActionResult<NannyResume>> GetNannyResumeinfo(int id)
         {
-            var nannyResume = await (from n in _context.NannyResumes
-                                     join u in _context.NannyResumePhotos
-                                     on n.Id equals u.IdNannyResume
-                                     where n.Id == id
-                                     select new NannyResumeDTO
-                                     {
-                                         Id = n.Id,
-                                         NannyAccountUserAccount = n.NannyAccountUserAccount,
-                                         City = n.City,
-                                         District = n.District,
-                                         Introduction = n.Introduction,
-                                         TypeOfDaycare = n.TypeOfDaycare,
-                                         ServiceItems = n.ServiceItems,
-                                         QuasiPublicChildcare = n.QuasiPublicChildcare,
-                                         ChildcareAvailableUnder2 = n.ChildcareAvailableUnder2,
-                                         ChildcareAvailableOver2 = n.ChildcareAvailableOver2,
-                                         Language = n.Language,
-                                         ServiceCenter = n.ServiceCenter,
-                                         ProfessionalPortrait = n.ProfessionalPortrait,
-                                         DisplayControl = n.DisplayControl,
-                                         Photo = u.PhotoName
-                                     }).FirstOrDefaultAsync();
-
-            if (nannyResume == null)
+            var resumes = await _context.NannyResumes.Select(c => new NannyResumeDTO
             {
-                return NotFound();
-            }
+                Id = c.Id,
+                NannyAccountUserAccount = c.NannyAccountUserAccount,
+                City = c.City,
+                District = c.District,
+                Introduction = c.Introduction,
+                TypeOfDaycare = c.TypeOfDaycare,
+                ServiceItems = c.ServiceItems,
+                QuasiPublicChildcare = c.QuasiPublicChildcare,
+                ChildcareAvailableUnder2 = c.ChildcareAvailableUnder2,
+                ChildcareAvailableOver2 = c.ChildcareAvailableOver2,
+                Language = c.Language,
+                ServiceCenter = c.ServiceCenter,
+                ProfessionalPortrait = c.ProfessionalPortrait,
+                DisplayControl = c.DisplayControl
+            }).ToListAsync();
 
-            Console.WriteLine("Photo URL: " + nannyResume.Photo);
 
-            return nannyResume;
+            return Ok(resumes);
+
         }
 
         [HttpPost]

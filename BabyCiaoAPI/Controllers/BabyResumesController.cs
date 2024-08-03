@@ -4,120 +4,227 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BabyCiaoAPI.Models;
+using Microsoft.AspNetCore.Cors;
+using BabyCiaoAPI.DTO;
+using System.ComponentModel;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.Globalization;
+using System.Numerics;
+using System.Security.Cryptography;
+using System.IO;
 
 namespace BabyCiaoAPI.Controllers
 {
+    [EnableCors("andy")]
     [Route("api/[controller]")]
     [ApiController]
     public class BabyResumesController : ControllerBase
     {
         private readonly BabyciaoContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly string _targetRootPath = @"C:\users\user\desktop\babyciao-main2\babyciao\wwwroot\nannnyandperant\babyreume";
 
-        public BabyResumesController(BabyciaoContext context)
+        public BabyResumesController(BabyciaoContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment ?? throw new ArgumentNullException(nameof(webHostEnvironment));
         }
+    
 
-        // GET: api/BabyResumes
+        // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BabyResumeDTO>>> GetBabyResumes(
-            [FromQuery] string city = null,
-            [FromQuery] string district = null,
-            [FromQuery] string typeOfDaycare = null)
+        public async Task<ActionResult<IEnumerable<BabyResume>>> GetBabyResume()
         {
-            var query = _context.BabyResumes.AsQueryable();
-
-            if (!string.IsNullOrEmpty(city))
+            return await _context.BabyResumes.Select(c => new BabyResume
             {
-                query = query.Where(b => b.City.Contains(city));
-            }
-
-            if (!string.IsNullOrEmpty(district))
-            {
-                query = query.Where(b => b.District.Contains(district));
-            }
-
-            if (!string.IsNullOrEmpty(typeOfDaycare))
-            {
-                query = query.Where(b => b.TypeOfDaycare == typeOfDaycare);
-            }
-
-            var results = await query.Select(b => new BabyResumeDTO
-            {
-                Id = b.Id,
-                AccountUserAccount = b.AccountUserAccount,
-                Photo = b.Photo,
-                FirstName = b.FirstName,
-                City = b.City,
-                District = b.District,
-                ApplyDate = b.ApplyDate,
-                RequireDate = b.RequireDate,
-                Babyage = b.Babyage,
-                TypeOfDaycare = b.TypeOfDaycare,
-                TimeSlot = b.TimeSlot,
-                Memo = b.Memo,
-                Display = b.Display
+                FirstName = c.FirstName,
+                City = c.City,
+                District = c.District,
+                RequireDate = c.RequireDate,
+                TypeOfDaycare = c.TypeOfDaycare,
+                TimeSlot = c.TimeSlot,
+                Photo = c.Photo,
             }).ToListAsync();
-
-            return results;
         }
 
-        // GET: api/BabyResumes/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<BabyResumeDTO>> GetBabyResume(int id)
+        [HttpGet("Fullinformation")]
+        public async Task<ActionResult<IEnumerable<BabyResumeDTO>>> GetFullinformation()
         {
-            var babyResume = await _context.BabyResumes
-                .Select(b => new BabyResumeDTO
+            try
+            {
+                var resumes = await _context.BabyResumes.Select(c => new BabyResumeDTO
                 {
-                    Id = b.Id,
-                    AccountUserAccount = b.AccountUserAccount,
-                    Photo = b.Photo,
-                    FirstName = b.FirstName,
-                    City = b.City,
-                    District = b.District,
-                    ApplyDate = b.ApplyDate,
-                    RequireDate = b.RequireDate,
-                    Babyage = b.Babyage,
-                    TypeOfDaycare = b.TypeOfDaycare,
-                    TimeSlot = b.TimeSlot,
-                    Memo = b.Memo,
-                    Display = b.Display
-                })
-                .FirstOrDefaultAsync(b => b.Id == id);
+                    Id = c.Id,
+                    AccountUserAccount = c.AccountUserAccount,
+                    Photo = c.Photo,
+                    FirstName = c.FirstName,
+                    City = c.City,
+                    District = c.District,
+                    ApplyDate = c.ApplyDate,
+                    RequireDate = c.RequireDate,
+                    Babyage = c.Babyage,
+                    TypeOfDaycare = c.TypeOfDaycare,
+                    TimeSlot = c.TimeSlot,
+                    Memo = c.Memo,
+                    Display = c.Display
+                }).ToListAsync();
 
-            if (babyResume == null)
+                return Ok(resumes);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("Filter")]
+        public async Task<ActionResult<IEnumerable<BabyResumeDTO>>> GetFilteredResumes(
+            string AccountUserAccount,
+            string FirstName,
+            string City,
+            string District,
+            DateOnly? ApplyDate,
+            DateOnly? RequireDate,
+            int? Babyage,
+            string TimeSlot,
+            string TypeOfDaycare)
+        {
+            try
+            {
+                var query = _context.BabyResumes.AsQueryable();
+
+                // Filtering conditions
+                if (!string.IsNullOrWhiteSpace(AccountUserAccount))
+                {
+                    query = query.Where(a => a.AccountUserAccount == AccountUserAccount);
+                }
+
+                if (!string.IsNullOrWhiteSpace(FirstName))
+                {
+                    query = query.Where(a => a.FirstName.Contains(FirstName));
+                }
+
+                if (!string.IsNullOrWhiteSpace(City))
+                {
+                    query = query.Where(a => a.City.Contains(City));
+                }
+
+                if (!string.IsNullOrWhiteSpace(District))
+                {
+                    query = query.Where(a => a.District.Contains(District));
+                }
+
+                if (Babyage.HasValue && Babyage > 0) // Ensure Babyage is greater than 0
+                {
+                    query = query.Where(a => a.Babyage == Babyage.Value.ToString());
+                }
+
+                if (!string.IsNullOrWhiteSpace(TimeSlot))
+                {
+                    query = query.Where(a => a.TimeSlot.Contains(TimeSlot));
+                }
+
+                if (!string.IsNullOrWhiteSpace(TypeOfDaycare))
+                {
+                    query = query.Where(a => a.TypeOfDaycare.Contains(TypeOfDaycare));
+                }
+
+                if (ApplyDate.HasValue)
+                {
+                    query = query.Where(a => a.ApplyDate == ApplyDate.Value);
+                }
+
+                if (RequireDate.HasValue)
+                {
+                    query = query.Where(a => a.RequireDate == RequireDate.Value);
+                }
+
+                // Execute the query and convert to DTO
+                var resumes = await query.Select(a => new BabyResumeDTO
+                {
+                    Id = a.Id,
+                    AccountUserAccount = a.AccountUserAccount,
+                    Photo = a.Photo,
+                    FirstName = a.FirstName,
+                    City = a.City,
+                    District = a.District,
+                    ApplyDate = a.ApplyDate,
+                    RequireDate = a.RequireDate,
+                    Babyage = a.Babyage.ToString(),
+                    TypeOfDaycare = a.TypeOfDaycare,
+                    TimeSlot = a.TimeSlot,
+                    Memo = a.Memo,
+                    Display = a.Display
+                }).ToListAsync();
+
+                return Ok(resumes);
+            }
+            catch (Exception ex)
+            {
+                // Return error message
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
+        // GET: api/BabyResumes/GetPicture/5
+        [HttpGet("GetPicture/{id}")]
+        public async Task<IActionResult> GetPicture(int id)
+        {
+            var babyResume = await _context.BabyResumes.FindAsync(id);
+            if (babyResume == null || string.IsNullOrEmpty(babyResume.Photo))
             {
                 return NotFound();
             }
 
-            return babyResume;
-        }
-
-        // POST: api/BabyResumes
-        [HttpPost]
-        public async Task<ActionResult<BabyResumeDTO>> PostBabyResume(BabyResumeDTO babyResumeDTO)
-        {
-            var babyResume = new BabyResume
+            // 使用絕對路徑
+            var imagePath = Path.Combine(_targetRootPath, babyResume.Photo);
+            if (!System.IO.File.Exists(imagePath))
             {
-                AccountUserAccount = babyResumeDTO.AccountUserAccount,
-                Photo = babyResumeDTO.Photo,
-                FirstName = babyResumeDTO.FirstName,
-                City = babyResumeDTO.City,
-                District = babyResumeDTO.District,
-                ApplyDate = babyResumeDTO.ApplyDate,
-                RequireDate = babyResumeDTO.RequireDate,
-                Babyage = babyResumeDTO.Babyage,
-                TypeOfDaycare = babyResumeDTO.TypeOfDaycare,
-                TimeSlot = babyResumeDTO.TimeSlot,
-                Memo = babyResumeDTO.Memo,
-                Display = babyResumeDTO.Display
-            };
+                return NotFound();
+            }
 
-            _context.BabyResumes.Add(babyResume);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetBabyResume), new { id = babyResume.Id }, babyResumeDTO);
+            var imageContent = await System.IO.File.ReadAllBytesAsync(imagePath);
+            return File(imageContent, "image/jpeg");
         }
+
+        [HttpPost("Upload")]
+        public async Task<IActionResult> UploadFiles(List<IFormFile> files)
+        {
+            if (files == null || files.Count == 0)
+            {
+                return BadRequest("No files were uploaded.");
+            }
+
+            // 使用絕對路徑
+            if (!Directory.Exists(_targetRootPath))
+            {
+                Directory.CreateDirectory(_targetRootPath);
+            }
+
+            var uploadedFiles = new List<string>();
+            foreach (var file in files)
+            {
+                if (file.Length > 0)
+                {
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    var filePath = Path.Combine(_targetRootPath, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    uploadedFiles.Add(fileName);
+                }
+            }
+
+            return Ok(new { UploadedFiles = uploadedFiles });
+        }
+
+
 
         // PUT: api/BabyResumes/5
         [HttpPut("{id}")]
@@ -167,6 +274,22 @@ namespace BabyCiaoAPI.Controllers
             }
 
             return NoContent();
+        }
+
+        // POST: api/BabyResumes
+        [HttpPost]
+        public async Task<ActionResult<BabyResume>> PostBabyResume(BabyResume babyResume)
+        {
+            try
+            {
+                _context.BabyResumes.Add(babyResume);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction("GetBabyResume", new { id = babyResume.Id }, babyResume);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         // DELETE: api/BabyResumes/5
