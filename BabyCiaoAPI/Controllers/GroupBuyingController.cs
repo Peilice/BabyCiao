@@ -10,6 +10,7 @@ using BabyCiaoAPI.DTO;
 using Microsoft.AspNetCore.Cors;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using Microsoft.SqlServer.Server;
 
 namespace BabyCiaoAPI.Controllers
 {
@@ -349,6 +350,18 @@ namespace BabyCiaoAPI.Controllers
                 }
                 await _context.SaveChangesAsync();
             }
+            else
+            {
+                var singleFormat=new GroupBuyingDetailFormat
+				{
+					GroupBuyingDetailId = newId,
+					FormatId = 0,
+					Quantity = 0,
+				};
+				_context.GroupBuyingDetailFormats.Add(singleFormat);
+			await _context.SaveChangesAsync();
+			}
+		
 			return Ok(new { groupBuyingDetailId = newId });
 			
 
