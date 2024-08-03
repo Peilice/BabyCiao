@@ -336,7 +336,7 @@ namespace BabyCiaoAPI.Controllers
             await _context.SaveChangesAsync();
             var newId = order.Id;
 
-            if (model.OrderFormats != null)
+            if (model.OrderFormats != null&& model.OrderFormats[0].FormatId!=0  )
             {
                 foreach (var f in model.OrderFormats)
                 {
@@ -355,8 +355,8 @@ namespace BabyCiaoAPI.Controllers
                 var singleFormat=new GroupBuyingDetailFormat
 				{
 					GroupBuyingDetailId = newId,
-					FormatId = 0,
-					Quantity = 0,
+					FormatId = null,
+					Quantity = model.OrderFormats[0].Quantity,
 				};
 				_context.GroupBuyingDetailFormats.Add(singleFormat);
 			await _context.SaveChangesAsync();

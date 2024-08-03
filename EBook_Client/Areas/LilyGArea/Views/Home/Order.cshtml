@@ -127,9 +127,7 @@
 			<div class="form-group">
 				<label for="joinModifiedTime"><strong>下單時間</strong></label>
 				<input type="text" id="joinModifiedTime" class="form-control" :value="orderDetails.modifiedTimeView" readonly required>
-				<div class="invalid-feedback" v-if="!orderDetails.modifiedTimeView">
-					此欄位必填!
-				</div>
+				
 			</div>
 
 			<div class="actions d-flex justify-content-end">
@@ -210,9 +208,21 @@
 					},
 					totalPrice() {
 						this.orderDetails.orderPrice = this.orderDetails.quantity * this.orderDetails.price;
-						this.submitOrderModel.orderFormats.forEach(f => {
-							f.quantity = this.orderDetails.quantity;
-						});
+						if (this.orderDetails.productFormats && Object.keys(this.orderDetails.productFormats).length > 0) {
+							console.log('aaa',this.submitOrderModel.orderFormats);
+							this.submitOrderModel.orderFormats.forEach(f => {
+								f.quantity = this.orderDetails.quantity;
+							});
+						} else {
+							console.log('ccc');
+							this.submitOrderModel.orderFormats.push({
+								orderFormatId: 0, // 或者設定適當的初始值
+								groupBuyingDetailId: 0, // 或者設定適當的初始值
+								formatId: 0,
+								quantity: this.orderDetails.quantity, // 或者設定適當的數量
+							});
+						}
+						
 					},
 					updateOrderFormats(formatType, selectedFormatId) {
 						let format = this.submitOrderModel.orderFormats.find(f => f.formatType === formatType);

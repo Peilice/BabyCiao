@@ -84,12 +84,12 @@
                                         <label class="form-label" for="">帳號</label>
                                         <input class="form-control" type="text" @@keyup="enable" v-model="username">
                                     </div>
-                                    <div class="mb-3">
+                                    <div class="mb-5">
                                         <label class="form-label" for="">密碼</label>
                                         <input class="form-control" type="password" @@keyup="enable" v-model="password">
                                     </div>
-                                    <div class="mb-3">
-                                        <button class="btn btn-primary" :disabled="disableCheck" @@click="submit">登入</button>
+                                    <div class="mb-3 d-flex justify-content-end">
+                                        <button class="btn btn-success" :disabled="disableCheck" @@click="submit">登入</button>
                                     </div>
                                 </div>
                             </div>
