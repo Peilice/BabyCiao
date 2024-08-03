@@ -9,7 +9,7 @@
 
         public DateTime SleepTime { get; set; }
 
-        public DateTime WakeUpTime { get; set; }
+        public DateTime RecodeTime { get; set; }//wakeUpTime
 
         public string SleepState { get; set; } //= null!;
 

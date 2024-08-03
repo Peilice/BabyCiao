@@ -195,7 +195,7 @@ namespace BabyCiaoAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-        [HttpDelete("CreateDietDetail")]
+        [HttpDelete("DeleteDietDetail/{id}")]
         public async Task<string> DeleteDietDetail(int id)
         {
             var target=_context.DietDetails.Find(id);
@@ -257,7 +257,7 @@ namespace BabyCiaoAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-        [HttpDelete("DeleteDiaperDetail")]
+        [HttpDelete("DeleteDiaperDetail/{id}")]
         public async Task<string> DeleteDiaperDetail(int id)
         {
             var target = _context.DiaperDetails.Find(id);
@@ -278,7 +278,7 @@ namespace BabyCiaoAPI.Controllers
             {
                 IdContactBook = DTO.IdContactBook,
                 SleepTime = DTO.SleepTime,
-                WakeUpTime = DTO.WakeUpTime,
+                WakeUpTime = DTO.RecodeTime,
                 Content = DTO.Content,
                 SleepState=DTO.SleepState,
                 ModifiedTime = DTO.ModifiedTime,
@@ -299,7 +299,7 @@ namespace BabyCiaoAPI.Controllers
                 SleepTime = dto.SleepTime,
                 Content = dto.Content,
                 SleepState = dto.SleepState,
-                WakeUpTime = dto.WakeUpTime,
+                RecodeTime = dto.WakeUpTime,
                 ModifiedTime = dto.ModifiedTime,
                 AccountUserAccount = dto.AccountUserAccount,
             });
@@ -314,7 +314,7 @@ namespace BabyCiaoAPI.Controllers
             s.SleepTime = DTO.SleepTime;
             s.Content = DTO.Content;
             s.SleepState = DTO.SleepState;
-            s.WakeUpTime = DTO.WakeUpTime;
+            s.WakeUpTime = DTO.RecodeTime;
             s.ModifiedTime = DTO.ModifiedTime;
             s.AccountUserAccount = DTO.AccountUserAccount;
 
@@ -322,7 +322,7 @@ namespace BabyCiaoAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-        [HttpDelete("DeleteSleepDetail")]
+        [HttpDelete("DeleteSleepDetail/{id}")]
         public async Task<string> DeleteSleepDetail(int id)
         {
             var target = _context.SleepDetails.Find(id);
@@ -357,7 +357,7 @@ namespace BabyCiaoAPI.Controllers
             
             var DTOs = _context.Memos.Where(h => h.IdContactBook == id).Select(dto => new EBook_Memo_DTO
             {
-                Category = "飲食",
+                Category = "備註",
                 Id = dto.Id,
                 IdContactBook = dto.IdContactBook,
                 Memo1 = dto.Memo1,
@@ -382,7 +382,7 @@ namespace BabyCiaoAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-        [HttpDelete("DeleteMemo")]
+        [HttpDelete("DeleteMemo/{id}")]
         public async Task<string> DeleteMemo(int id)
         {
             var target = _context.Memos.Find(id);
