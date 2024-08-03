@@ -166,6 +166,7 @@ namespace BabyCiaoAPI.Controllers
         {
             var DTOs = _context.DietDetails.Where(h => h.IdContactBook == id).Select(DietDetail => new Ebook_DietDetail_DTO
             {
+                Category="飲食",
                 Id = DietDetail.Id,
                 IdContactBook = DietDetail.IdContactBook,
                 RecodeTime = DietDetail.RecodeTime,
@@ -229,6 +230,7 @@ namespace BabyCiaoAPI.Controllers
         {
             var DTOs = _context.DiaperDetails.Where(h => h.IdContactBook == id).Select(dto => new EBook_DiaperDetail_DTO
             {
+                Category = "尿布",
                 Id = dto.Id,
                 IdContactBook = dto.IdContactBook,
                 RecodeTime = dto.RecodeTime,
@@ -276,9 +278,9 @@ namespace BabyCiaoAPI.Controllers
             {
                 IdContactBook = DTO.IdContactBook,
                 SleepTime = DTO.SleepTime,
+                WakeUpTime = DTO.WakeUpTime,
                 Content = DTO.Content,
                 SleepState=DTO.SleepState,
-                WakeUpTime = DTO.WakeUpTime,
                 ModifiedTime = DTO.ModifiedTime,
                 AccountUserAccount = DTO.AccountUserAccount,
             };
@@ -291,6 +293,7 @@ namespace BabyCiaoAPI.Controllers
         {
             var DTOs = _context.SleepDetails.Where(h => h.IdContactBook == id).Select(dto => new EBook_SleepDetail_DTO
             {
+                Category= "睡眠",
                 Id = dto.Id,
                 IdContactBook = dto.IdContactBook,
                 SleepTime = dto.SleepTime,
@@ -351,8 +354,10 @@ namespace BabyCiaoAPI.Controllers
         [HttpGet("GetMemo/{id}")]
         public async Task<IEnumerable<EBook_Memo_DTO>> GetMemo(int id)
         {
+            
             var DTOs = _context.Memos.Where(h => h.IdContactBook == id).Select(dto => new EBook_Memo_DTO
             {
+                Category = "飲食",
                 Id = dto.Id,
                 IdContactBook = dto.IdContactBook,
                 Memo1 = dto.Memo1,

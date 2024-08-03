@@ -1,32 +1,22 @@
-﻿@using BabyCiao_Client
-@inject UserInfoServer userInfoServer
-
-<ul class="navbar-nav">
-    @{
-        string name = userInfoServer.GetUserName();
-    }
-    @if (name!=null)
-    {
+﻿<ul class="navbar-nav" id="loginApp">
+    <template v-if="islogin==true">
         <li class="nav-item">
-           
-            <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">@name 你好</a>
+            <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">{{u_name}},您好!!! </a>
         </li>
         <li class="nav-item">
-           @*  <a class="nav-link text-dark" asp-area="" asp-controller="andy_login" asp-action="logout">登出</a> *@
-
-            <form id="logoutForm" action="/andy_login/logout" method="post" class="nav-item">
+            @* <form id="logoutForm" action="/andy_login/logout" method="post" class="nav-item">
                 <div type="submit" id="signOut" class="nav-link text-dark">登出</div>
-            </form>
+            </form> *@
+            <a id="logoutForm" class="nav-link text-dark" asp-area="" asp-controller="" asp-action="" >登出</a>
         </li>
-    }
-    else
-    {
+    </template>
+    <template v-else>
         <li class="nav-item">
             <a id="username" class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">登入</a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="andy_register">註冊</a>
         </li>
-    }
+    </template>
 </ul>
 

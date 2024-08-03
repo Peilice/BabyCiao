@@ -25,5 +25,9 @@ public partial class OnlineCompetition
 
     public virtual ICollection<CompetitionDetail> CompetitionDetails { get; set; } = new List<CompetitionDetail>();
 
+    public virtual ICollection<CompetitionFavorite> CompetitionFavorites { get; set; } = new List<CompetitionFavorite>();
+
     public virtual ICollection<CompetitionPhoto> CompetitionPhotos { get; set; } = new List<CompetitionPhoto>();
+
+    public virtual ICollection<CompetitionRecord> CompetitionRecords { get; set; } = new List<CompetitionRecord>();
 }

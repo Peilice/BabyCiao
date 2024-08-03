@@ -23,7 +23,9 @@ public partial class SecondHandSupply
 
     public virtual UserAccount AccountUserAccountNavigation { get; set; } = null!;
 
-    public virtual ICollection<ExchangeOrderDetail> ExchangeOrderDetails { get; set; } = new List<ExchangeOrderDetail>();
+    public virtual ICollection<SecondHandExchangeOrder> SecondHandExchangeOrderWantGets { get; set; } = new List<SecondHandExchangeOrder>();
+
+    public virtual ICollection<SecondHandExchangeOrder> SecondHandExchangeOrderWantGives { get; set; } = new List<SecondHandExchangeOrder>();
 
     public virtual ICollection<SuppliesPhoto> SuppliesPhotos { get; set; } = new List<SuppliesPhoto>();
 }

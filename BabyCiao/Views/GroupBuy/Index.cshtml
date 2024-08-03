@@ -38,7 +38,7 @@
 			<th>訂購數</th>
 			<th>成團數</th>
 			<th>價錢</th>
-			<th>建立日期</th>
+			<th>截止日期</th>
 			<th>顯示</th>
 			<th>狀態</th>
 			<th>操作</th>
@@ -54,7 +54,7 @@
 				<td>@item.JoinQuantity</td>
 				<td>@item.TargetCount</td>
 				<td>@item.Price</td>
-				<td>@item.ModifiedTimeView</td>
+				<td>@item.DeadTime</td>
 				<td>@item.Display</td>
 				<td>@item.Statement</td>
 				<td>
@@ -95,7 +95,7 @@
 					{ "data": "joinQuantity" },
 					{ "data": "targetCount" },
 					{ "data": "price" },
-					{ "data": "modifiedTimeView" },
+					{ "data": "deadTime" },
 					{ "data": "displayString" },
 					{ "data": "statement" },
 					{
@@ -112,7 +112,24 @@
 					"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Chinese-traditional.json"
 				},
 				"createdRow": function (row, data, dataIndex) {
+					// 獲取欄位
 					var statementCell = $('td', row).eq(9); // 假設 statement 欄位是第十列 (索引為9)
+					var deadlineCell = $('td', row).eq(7);  // 假設截止日期欄位是第八列 (索引為7)
+
+					// 獲取截止日期和當前日期
+					var currentDate = new Date();
+					var deadlineDate = new Date(data.deadTime); // 確保 data.deadTime 是正確的日期格式
+
+					// 根據截止日期設置背景顏色
+					if (deadlineDate < currentDate) {
+						// 截止日期已過
+						deadlineCell.css('background-color', '#f8d7da'); // 紅色
+					} else {
+						// 截止日期未過
+						deadlineCell.css('background-color', '#d4edda'); // 淡綠色
+					}
+
+					// 根據 statement 設置背景顏色
 					if (data.statement === '出貨中') {
 						statementCell.css('background-color', '#d4edda');
 					} else if (data.statement === '進行中') {
