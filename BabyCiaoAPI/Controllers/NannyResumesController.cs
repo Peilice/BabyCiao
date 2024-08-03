@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BabyCiaoAPI.Models;
 using Microsoft.AspNetCore.Cors;
+using BabyCiaoAPI.DTO;
 
 namespace BabyCiaoAPI.Controllers
 {
     [EnableCors("andy")]
     [Route("api/[controller]")]
     [ApiController]
-    [Route("api/[controller]")]
     public class NannyResumesController : ControllerBase
     {
         private readonly BabyciaoContext _context;
@@ -31,27 +31,26 @@ namespace BabyCiaoAPI.Controllers
             [FromQuery] string serviceType = null,
             [FromQuery] string experience = null)
         {
-            return await _context.NannyResumes.Select(c => new NannyResume
+            return await _context.NannyResumes.Select(c => new NannyResumeDTO
             {
-                City=c.City,
-                District=c.District,
-                Introduction=c.Introduction,
-                TypeOfDaycare=c.TypeOfDaycare,
-                ServiceItems=c.ServiceItems,
-                QuasiPublicChildcare=c.QuasiPublicChildcare,
-                ChildcareAvailableUnder2=c.ChildcareAvailableUnder2,
-                ChildcareAvailableOver2=c.ChildcareAvailableOver2,
-                Language=c.Language,
-                ProfessionalPortrait=c.ProfessionalPortrait,
-         
+                City = c.City,
+                District = c.District,
+                Introduction = c.Introduction,
+                TypeOfDaycare = c.TypeOfDaycare,
+                ServiceItems = c.ServiceItems,
+                QuasiPublicChildcare = c.QuasiPublicChildcare,
+                ChildcareAvailableUnder2 = c.ChildcareAvailableUnder2,
+                ChildcareAvailableOver2 = c.ChildcareAvailableOver2,
+                Language = c.Language,
+                ProfessionalPortrait = c.ProfessionalPortrait,
             }).ToListAsync();
         }
 
         // GET: api/NannyResumes/5
-        [HttpGet("GetNannyResumeinfo")]
-        public async Task<ActionResult<NannyResume>> GetNannyResumeinfo(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<NannyResumeDTO>> GetNannyResumeinfo(int id)
         {
-            var resumes = await _context.NannyResumes.Select(c => new NannyResumeDTO
+            var resume = await _context.NannyResumes.Select(c => new NannyResumeDTO
             {
                 Id = c.Id,
                 NannyAccountUserAccount = c.NannyAccountUserAccount,
@@ -67,11 +66,14 @@ namespace BabyCiaoAPI.Controllers
                 ServiceCenter = c.ServiceCenter,
                 ProfessionalPortrait = c.ProfessionalPortrait,
                 DisplayControl = c.DisplayControl
-            }).ToListAsync();
+            }).FirstOrDefaultAsync(c => c.Id == id);
 
+            if (resume == null)
+            {
+                return NotFound();
+            }
 
-            return Ok(resumes);
-
+            return Ok(resume);
         }
 
         [HttpPost]
@@ -97,7 +99,7 @@ namespace BabyCiaoAPI.Controllers
             _context.NannyResumes.Add(nannyResume);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetNannyResume), new { id = nannyResume.Id }, nannyResumeDTO);
+            return CreatedAtAction(nameof(GetNannyResumeinfo), new { id = nannyResume.Id }, nannyResumeDTO);
         }
 
         [HttpPut("{id}")]

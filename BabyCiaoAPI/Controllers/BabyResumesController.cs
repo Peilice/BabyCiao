@@ -29,7 +29,7 @@ namespace BabyCiaoAPI.Controllers
             _context = context;
             _webHostEnvironment = webHostEnvironment ?? throw new ArgumentNullException(nameof(webHostEnvironment));
         }
-    
+
 
         // GET: api/Categories
         [HttpGet]
@@ -81,15 +81,15 @@ namespace BabyCiaoAPI.Controllers
 
         [HttpGet("Filter")]
         public async Task<ActionResult<IEnumerable<BabyResumeDTO>>> GetFilteredResumes(
-            string AccountUserAccount,
-            string FirstName,
-            string City,
-            string District,
-            DateOnly? ApplyDate,
-            DateOnly? RequireDate,
-            int? Babyage,
-            string TimeSlot,
-            string TypeOfDaycare)
+    string AccountUserAccount,
+    string FirstName,
+    string City,
+    string District,
+    DateOnly? ApplyDate,
+    DateOnly? RequireDate,
+    int? Babyage,
+    string TimeSlot,
+    string TypeOfDaycare)
         {
             try
             {
@@ -152,7 +152,7 @@ namespace BabyCiaoAPI.Controllers
                     District = a.District,
                     ApplyDate = a.ApplyDate,
                     RequireDate = a.RequireDate,
-                    Babyage = a.Babyage.ToString(),
+                    Babyage = a.Babyage,
                     TypeOfDaycare = a.TypeOfDaycare,
                     TimeSlot = a.TimeSlot,
                     Memo = a.Memo,
@@ -169,6 +169,7 @@ namespace BabyCiaoAPI.Controllers
         }
 
 
+
         // GET: api/BabyResumes/GetPicture/5
         [HttpGet("GetPicture/{id}")]
         public async Task<IActionResult> GetPicture(int id)
@@ -179,7 +180,7 @@ namespace BabyCiaoAPI.Controllers
                 return NotFound();
             }
 
-            // 使用絕對路徑
+            // 使用絕對路徎
             var imagePath = Path.Combine(_targetRootPath, babyResume.Photo);
             if (!System.IO.File.Exists(imagePath))
             {
@@ -198,7 +199,7 @@ namespace BabyCiaoAPI.Controllers
                 return BadRequest("No files were uploaded.");
             }
 
-            // 使用絕對路徑
+            // 使用絕對路徎
             if (!Directory.Exists(_targetRootPath))
             {
                 Directory.CreateDirectory(_targetRootPath);
@@ -247,8 +248,8 @@ namespace BabyCiaoAPI.Controllers
             babyResume.FirstName = babyResumeDTO.FirstName;
             babyResume.City = babyResumeDTO.City;
             babyResume.District = babyResumeDTO.District;
-            babyResume.ApplyDate = babyResumeDTO.ApplyDate;
-            babyResume.RequireDate = babyResumeDTO.RequireDate;
+            babyResume.ApplyDate = babyResumeDTO.ApplyDate ?? default(DateOnly); // Handle DateOnly?
+            babyResume.RequireDate = babyResumeDTO.RequireDate ?? default(DateOnly); // Handle DateOnly?
             babyResume.Babyage = babyResumeDTO.Babyage;
             babyResume.TypeOfDaycare = babyResumeDTO.TypeOfDaycare;
             babyResume.TimeSlot = babyResumeDTO.TimeSlot;

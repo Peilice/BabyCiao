@@ -53,6 +53,7 @@
                     messageDiv.textContent = data.message;
                     messageDiv.className = 'message success';
                     localStorage.setItem('token', data.token); // 保存 token 到 localStorage
+                    localStorage.setItem('account', account); // 保存 account 到 localStorage
                     console.log(data);
                     setTimeout(() => {
                         window.location.href = "https://localhost:7231/";
@@ -72,114 +73,114 @@
 }
 
 <style>
-.login-container {
-    display: flex;
-    height: 100vh;
-    /* background-image: url('img/bg.jpg'); */
-    background-size: cover;
-    background-position: center;
-}
+    .login-container {
+        display: flex;
+        height: 100vh;
+        /* background-image: url('img/bg.jpg'); */
+        background-size: cover;
+        background-position: center;
+    }
 
-.login-left {
-    flex: 1;
-    background-color: rgba(240, 98, 146, 0.85);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
+    .login-left {
+        flex: 1;
+        background-color: rgba(240, 98, 146, 0.85);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
 
-.login-left h1 {
-    font-size: 48px;
-    margin-bottom: 10px;
-}
+        .login-left h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
 
-.login-left p {
-    font-size: 18px;
-}
+        .login-left p {
+            font-size: 18px;
+        }
 
-.login-right {
-    flex: 1;
-    background-color: rgba(46, 46, 46, 0.85);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
+    .login-right {
+        flex: 1;
+        background-color: rgba(46, 46, 46, 0.85);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
 
-.login-right form {
-    width: 80%;
-    max-width: 400px;
-}
+        .login-right form {
+            width: 80%;
+            max-width: 400px;
+        }
 
-.login-right h2 {
-    color: white;
-    margin-bottom: 20px;
-}
+        .login-right h2 {
+            color: white;
+            margin-bottom: 20px;
+        }
 
-.input-group {
-    margin-bottom: 15px;
-}
+    .input-group {
+        margin-bottom: 15px;
+    }
 
-.input-group label {
-    color: white;
-    display: block;
-    margin-bottom: 5px;
-}
+        .input-group label {
+            color: white;
+            display: block;
+            margin-bottom: 5px;
+        }
 
-.input-group input {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #4b4b4b;
-    color: white;
-}
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4b4b4b;
+            color: white;
+        }
 
-.btn-login {
-    width: 100%;
-    padding: 10px;
-    background-color: #f06292;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
+    .btn-login {
+        width: 100%;
+        padding: 10px;
+        background-color: #f06292;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
 
-.login-footer {
-    margin-top: 15px;
-    display: flex;
-    justify-content: space-between;
-    color: white;
-}
+    .login-footer {
+        margin-top: 15px;
+        display: flex;
+        justify-content: space-between;
+        color: white;
+    }
 
-.login-footer a {
-    color: #f06292;
-    text-decoration: none;
-}
+        .login-footer a {
+            color: #f06292;
+            text-decoration: none;
+        }
 
-.login-footer a:hover {
-    text-decoration: underline;
-}
+            .login-footer a:hover {
+                text-decoration: underline;
+            }
 
-.message {
-    margin-top: 20px;
-    padding: 10px;
-    border-radius: 5px;
-    text-align: center;
-}
+    .message {
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+    }
 
-.message.success {
-    background-color: #4caf50;
-    color: white;
-}
+        .message.success {
+            background-color: #4caf50;
+            color: white;
+        }
 
-.message.error {
-    background-color: #f44336;
-    color: white;
-}
+        .message.error {
+            background-color: #f44336;
+            color: white;
+        }
 </style>

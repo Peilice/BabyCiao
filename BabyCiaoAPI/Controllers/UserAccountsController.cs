@@ -1,11 +1,12 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using BabyCiaoAPI.DTO;
 using BabyCiaoAPI.Models;
-using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using BCrypt.Net;
 using System.Net.Mail;
@@ -63,7 +64,9 @@ namespace BabyCiaoAPI.Controllers
             }
 
             var token = GenerateJwtToken(userAccount);
-            return Ok(new { message = "登入成功", token });
+            var account = userAccount.Account;
+
+            return Ok(new { message = "登入成功", token, account });
         }
 
         private string GenerateJwtToken(UserAccount user)
@@ -101,6 +104,20 @@ namespace BabyCiaoAPI.Controllers
             return Ok(userAccount);
         }
 
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetAllUsers()
+        {
+            var userAccounts = _context.UserAccounts.Select(u => new
+            {
+                u.UserId,
+                u.Account,
+                u.Permissions
+            }).ToList();
+
+            return Ok(userAccounts);
+        }
+
         [HttpPost("sendVerificationEmail")]
         public async Task<IActionResult> SendVerificationEmail([FromBody] EmailDTO emailDTO)
         {
@@ -121,7 +138,6 @@ namespace BabyCiaoAPI.Controllers
 
             var verificationLink = $"https://localhost:7272/Login/resetpassword?token={token}";
             await SendEmailAsync(emailDTO.Email, "重設密碼驗證", $"請點擊此連結重設您的密碼: <a href=\"{verificationLink}\">點擊這裡</a>");
-
 
             return Ok(new { message = "已發送" });
         }
@@ -184,7 +200,6 @@ namespace BabyCiaoAPI.Controllers
             }
         }
 
-
         [HttpPost("resetPassword")]
         public IActionResult ResetPassword([FromBody] ResetPasswordDTO resetPasswordDTO)
         {
@@ -225,9 +240,6 @@ namespace BabyCiaoAPI.Controllers
             {
                 return BadRequest(new { message = "無效的令牌" });
             }
- 
         }
-
-       
     }
 }

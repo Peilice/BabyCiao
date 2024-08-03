@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -11,13 +10,11 @@
 
     <!-- Vue -->
     <script src="https://unpkg.com/vue@latest"></script>
-    @await RenderSectionAsync("Styles", required: false)
-
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid" id="app00">
+            <div class="container-fluid" id="app">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BabyCiao</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -25,17 +22,6 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="active nav-link" asp-area="" asp-controller="Home" asp-action="About">關於我們</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">媒合平台</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="MatchIndex">一同巧育</a></li>
-                                <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="NannyResume">保母委託單</a></li>
-                                <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="BabyResume">家長委託單</a></li>
-                            </ul>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="@Utility.SD.localHost_Backstage/Home/Index">管理後台</a>
                         </li>
@@ -51,11 +37,16 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Competitions" asp-action="Index">線上投票活動</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contact">聯絡我們</a>
-                        </li>
                     </ul>
-                    <partial name="_LoginPartial_self" />
+                    <div>
+                        <div v-if="isLoggedIn">
+                            <span>{{ account }}</span>/
+                            <a href="#" v-on:click="logout">登出</a>
+                        </div>
+                        <div v-else>
+                            <a href="/Login/Login">登入</a> | <a href="/Login/Register">註冊</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -77,75 +68,32 @@
     <script src="https://unpkg.com/vue@3.4.31/dist/vue.global.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
-        let username = sessionStorage.getItem("username");
-        
-        var vueApp = {
+        const app = Vue.createApp({
             data() {
                 return {
-                    u_name: "",
-                    islogin: false,
+                    account: '',
+                    isLoggedIn: false
                 };
             },
-            mounted: function () {
-                let _this = this;
-                _this.reflesh();
+            mounted() {
+                this.account = localStorage.getItem('account');
+                this.isLoggedIn = !!this.account;
             },
             methods: {
-                reflesh: function () {
-                    let _this = this;
-                    if (username != null) {
-                        _this.islogin = true;
-                    }
-                    _this.u_name = username;
-                },
-            },
-           
-        }
-        var app = Vue.createApp(vueApp).mount('#loginApp')
-
-        $(function () {
-            //登出動畫與操作
-            $('#logoutForm').on('click', function (e) {
-                e.preventDefault();
-                Swal.fire({
-                    title: "提示!",
-                    text: "您確定要登出?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "是的,確定登出!"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire({
-                            title: "登出成功!",
-                            text: "歡迎再次蒞臨!",
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1500
-                        }).then((result) => {
-                            sessionStorage.removeItem("username");
-                            localStorage.removeItem("token");
-                            window.location.href = `@Utility.SD.localHost_Client/Home/Index`
-                        });
-                    }
-                });
-
-            })
-            $('#e_book').on("click", function (e) {
-                if (username != null) {
-                    
-                } else {
-                    e.preventDefault();
-                    sessionStorage.setItem("target", "@Utility.SD.localHost_Client/andy_ebook/Home/Index")
-                    window.location.href = "@Utility.SD.localHost_Client/Home/Login";
+                logout() {
+                    localStorage.removeItem('account');
+                    localStorage.removeItem('token');
+                    this.isLoggedIn = false;
+                    window.location.href = '/';
                 }
-            })
-        })
-        
+            }
+        });
+
+        app.mount('#app');
     </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
