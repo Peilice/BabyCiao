@@ -21,6 +21,8 @@ public partial class Platform
 
     public virtual UserAccount AccountUserAccountNavigation { get; set; } = null!;
 
+    public virtual ICollection<PlatformFavorite> PlatformFavorites { get; set; } = new List<PlatformFavorite>();
+
     public virtual ICollection<PlatformPhoto> PlatformPhotos { get; set; } = new List<PlatformPhoto>();
 
     public virtual ICollection<PlatformResponse> PlatformResponses { get; set; } = new List<PlatformResponse>();

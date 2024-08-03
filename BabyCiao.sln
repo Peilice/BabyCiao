@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BabyCiaoAPI", "BabyCiaoAPI\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BabyCiao_Client", "EBook_Client\BabyCiao_Client.csproj", "{EF455BDB-7C85-439D-A6D9-253C2602DAA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utility", "BabyCiao.Utility\Utility.csproj", "{075A1F9B-B4B7-4E67-95E8-DBE48D8F2015}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utility", "BabyCiao.Utility\Utility.csproj", "{075A1F9B-B4B7-4E67-95E8-DBE48D8F2015}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

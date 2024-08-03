@@ -42,4 +42,29 @@
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\NannnyAndPerant\NannnyAndPerant\合約\合同文件1" />
+    <None Include="wwwroot\NannnyAndPerant\NannnyAndPerant\合約\合同文件1.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\NannnyAndPerant\合約\合同文件10.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\NannnyAndPerant\合約\合同文件2.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\NannnyAndPerant\合約\合同文件3.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\NannnyAndPerant\合約\合同文件4.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\NannnyAndPerant\合約\合同文件5.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\NannnyAndPerant\合約\合同文件6.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\NannnyAndPerant\合約\合同文件7.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\NannnyAndPerant\合約\合同文件8.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\NannnyAndPerant\合約\合同文件9.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\合約\合同文件1" />
+    <None Include="wwwroot\NannnyAndPerant\合約\合同文件1.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\合約\合同文件10.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\合約\合同文件2.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\合約\合同文件3.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\合約\合同文件4.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\合約\合同文件5.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\合約\合同文件6.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\合約\合同文件7.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\合約\合同文件8.pdf" />
+    <None Include="wwwroot\NannnyAndPerant\合約\合同文件9.pdf" />
+  </ItemGroup>
+
 </Project>

@@ -21,7 +21,7 @@
     "https": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": false,//關掉執行時的網頁顯示
+      "launchBrowser": true,//關掉執行時的網頁顯示
       "applicationUrl": "https://localhost:7000;http://localhost:5191",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

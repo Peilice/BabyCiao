@@ -11,7 +11,9 @@ public partial class GroupBuyingDetail
 
     public string AccountUserAccount { get; set; } = null!;
 
-    public int Quantity { get; set; }
+    public string Address { get; set; } = null!;
+
+    public string? Note { get; set; }
 
     public DateTime ModifiedTime { get; set; }
 
@@ -20,4 +22,6 @@ public partial class GroupBuyingDetail
     public virtual UserAccount AccountUserAccountNavigation { get; set; } = null!;
 
     public virtual GroupBuying GroupBuying { get; set; } = null!;
+
+    public virtual ICollection<GroupBuyingDetailFormat> GroupBuyingDetailFormats { get; set; } = new List<GroupBuyingDetailFormat>();
 }

@@ -37,10 +37,6 @@ public partial class UserAccount
 
     public virtual ICollection<Evaluate> EvaluateEvaluatorUserAccountNavigations { get; set; } = new List<Evaluate>();
 
-    public virtual ICollection<ExchangeOrder> ExchangeOrderAccountAUserAccountNavigations { get; set; } = new List<ExchangeOrder>();
-
-    public virtual ICollection<ExchangeOrder> ExchangeOrderAccountBUserAccountNavigations { get; set; } = new List<ExchangeOrder>();
-
     public virtual ICollection<GroupBuyingDetail> GroupBuyingDetails { get; set; } = new List<GroupBuyingDetail>();
 
     public virtual ICollection<GroupBuying> GroupBuyings { get; set; } = new List<GroupBuying>();
@@ -52,6 +48,10 @@ public partial class UserAccount
     public virtual ICollection<OnlineCompetition> OnlineCompetitions { get; set; } = new List<OnlineCompetition>();
 
     public virtual ICollection<Platform> Platforms { get; set; } = new List<Platform>();
+
+    public virtual ICollection<SecondHandExchangeOrder> SecondHandExchangeOrderBuyers { get; set; } = new List<SecondHandExchangeOrder>();
+
+    public virtual ICollection<SecondHandExchangeOrder> SecondHandExchangeOrderSellers { get; set; } = new List<SecondHandExchangeOrder>();
 
     public virtual ICollection<SecondHandSupply> SecondHandSupplies { get; set; } = new List<SecondHandSupply>();
 

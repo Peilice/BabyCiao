@@ -301,15 +301,26 @@ namespace BabyCiao.Controllers
         // POST: OnlineCompetitions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, [FromForm]OnlineCompetitionsDTO competitionDTO)
         {
-            var onlineCompetition = await _context.OnlineCompetitions.FindAsync(id);
-            if (onlineCompetition != null)
+            var deletephoto = await _context.CompetitionPhotos.FirstOrDefaultAsync(cp => cp.IdOnlineCompetition == id);
+            //deletephoto.IdOnlineCompetition=competitionDTO.IdOnlineCompetition;
+
+            if (deletephoto != null)
             {
-                _context.OnlineCompetitions.Remove(onlineCompetition);
+                _context.CompetitionPhotos.Remove(deletephoto);
+                _context.SaveChanges();
             }
 
-            await _context.SaveChangesAsync();
+            var deletecompetition = await _context.OnlineCompetitions.FirstOrDefaultAsync(cop =>cop.Id == id);
+            //deletecompetition.Id=competitionDTO.Id;
+
+            if (deletecompetition != null)
+            {
+                _context.OnlineCompetitions.Remove(deletecompetition);
+                _context.SaveChanges();
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
