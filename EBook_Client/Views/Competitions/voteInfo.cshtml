@@ -30,8 +30,8 @@
             <button typeof="button" class="btn btn-outline-dark me-2" type="submit"><i class="bi bi-heart">收藏此活動</i></button>
         </div>
     </div>
-    
     <div class="container" id="app">
+        @* <img v-bind:src="{{Imageurl}}" /> *@
         <div class="d-flex justify-content-between">    
               <div class="dropdown">
                     排序
@@ -82,13 +82,12 @@
                         <h5 class="modal-title" id="staticBackdropLabel">填寫報名資料</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    @* 待處理--資料還無法傳回 *@
                     <form id="form" class="needs-validation" v-on:submit.prevent="create" novalidate>
                         <div class="modal-body">
                             @* <input type="text" class="form-control" id="IdCompetition" v-model="CompetitionId"> *@
                             <div class="mb-3 has-validation">
                                 <label class="form-label">帳號</label>
-                                <input type="text" class="form-control" id="userAccount" v-model="CompetitorAccount">
+                                <input type="text" class="form-control" id="userAccount" v-model="userAccount">
                             </div>
                             <div class="mb-3 has-validation">
                                 <label class="form-label">自我介紹(100字內)</label>
@@ -108,7 +107,7 @@
                     
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                        <button type="submit" class="btn btn-primary">確認報名</button>
+                        <button type="submit" class="btn btn-primary" v-on:click="create">確認報名</button>
                     </div>
                 </div>
             </div>
@@ -144,6 +143,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     var IdCompetitions = sessionStorage.getItem("IdCompetition");
+    //var userAccount = sessionStorage.getItem("username");
     var CompetitorID = 0;
 
     //console.log(IdCompetitions)
@@ -163,9 +163,12 @@
                 CompetitionId:0,
 
                 //表單
-                CompetitorAccount:"",
+                userAccount: "",
                 CompetitorContent:"",
                 CompetitorPhoto:"noimage.jpg",
+
+                //分隔線
+                Imageurl: "https://localhost:7000/uploads/colorWater.png"
             };
         },
         methods: {
@@ -217,9 +220,9 @@
             create: function (e) {
                 e.preventDefault();
                 let _this = this;
-                var request = new FormData(); //收集表單資訊
-                request.Id = IdCompetitions;
-                request.AccountUserAccount = _this.CompetitorAccount;
+                var request = {}; //收集表單資訊
+                request.CompetitionId = IdCompetitions;
+                request.AccountUserAccount = _this.userAccount;
                 request.CompetitionPhotos = _this.CompetitorPhoto.name;
                 request.Content = _this.CompetitorContent;
                 //alert(request);
@@ -234,6 +237,8 @@
                     })
                     .then(result => {
                         _this.fetchcompetitions();
+                        $('#staticBackdrop').modal('hide');
+
                     })
                 })
                 .catch(err => {
