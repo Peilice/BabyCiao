@@ -192,25 +192,7 @@ namespace BabyCiaoAPI.Controllers
         }
 
 
-        //收藏列表 (讀取、新增、刪除)
-        //Get api/OnlineCompetitions/getfavorite (讀取)
-        [HttpGet("getfavorite")]
-        public async Task<ActionResult<IEnumerable<CompetitionFavoriteDTO>>> getfavorite(string account)
-        {
-            var favorite = await (from com in _context.OnlineCompetitions
-                                  join comf in _context.CompetitionFavorites
-                                  on com.Id equals comf.IdOnlineCompetition
-                                  where comf.AccountUserAccount == account
-                                  select new CompetitionFavoriteDTO
-                                  {
-                                      FavoriteId = comf.Id,
-                                      CompetitionName = com.CompetitionName,
-                                      myAccount = comf.AccountUserAccount,
-                                      CompetitionId = com.Id,
-                                  }).ToListAsync();
-            return Ok(favorite);
-        }
-
+        //收藏列表 (新增、刪除)
         //Delete api/OnlineCompetitions/DeleteFavorite (刪除)
         [HttpDelete("DeleteFavorite")]
         public async Task<IActionResult> DeleteFavorite(int id, string account)
@@ -303,7 +285,7 @@ namespace BabyCiaoAPI.Controllers
                                       where comd.AccountUserAccount == account
                                       select new CompetitionDetailDTO
                                       {
-                                          Id= com.Id,
+                                          Id= comd.Id,
                                           CompetitionDetailId=comd.Id,
                                           CompetitionName = com.CompetitionName,
                                           StartTime=com.StartTime,
@@ -325,11 +307,56 @@ namespace BabyCiaoAPI.Controllers
 
 
         //讀取個人已投票的活動(讀取)
+        //Get api/OnlineCompetitions/MyVote/{account}
+        [HttpGet("MyVote/{account}")]
+        public async Task<ActionResult<IEnumerable<CompetitionRecordDTO>>> myVote (string account)
+        {
+            var vote=await(from comr in _context.CompetitionRecords
+                           join com in _context.OnlineCompetitions
+                           on comr.IdOnlineCompetition equals com.Id
+                           join comd in _context.CompetitionDetails
+                           on comr.IdCompetitionDetail equals comd.Id
+                           where comr.VoterAccount == account
+                           select new CompetitionRecordDTO 
+                           { 
+                           voteId=comr.Id,
+                           voterAccount=comr.VoterAccount,
+                           CompetitorName = comd.AccountUserAccount,
+                           CompetitionName = com.CompetitionName,
+                           Statement= com.Statement,
+                           CompetitorPhoto=comd.CompetitionPhoto,
+                           Content=comd.Content,
+                           }).ToListAsync();
+            return Ok(vote);
+        }
 
 
         //讀取個人收藏的活動(讀取)
         //Get api/OnlineCompetitions/
+        [HttpGet("MyFavorite/{account}")]
+        public async Task<ActionResult<IEnumerable<CompetitionFavoriteDTO>>> myFavorite(string account)
+        {
+            var Favorite = await (from com in _context.OnlineCompetitions
+                                  join comf in _context.CompetitionFavorites
+                                  on com.Id equals comf.IdOnlineCompetition
+                                  join comp in _context.CompetitionPhotos
+                                  on com.Id equals comp.IdOnlineCompetition
+                                  where comf.AccountUserAccount == account
+                                  select new CompetitionFavoriteDTO
+                                  {
+                                      FavoriteId = comf.Id,
+                                      CompetitionName = com.CompetitionName,
+                                      CompetitionContent = com.Content,
+                                      StartTime = com.StartTime,
+                                      EndTime = com.EndTime,
+                                      Statement = com.Statement,
+                                      CompetitionPhoto = comp.PhotoName,
+                                      CompetitionId=com.Id,
 
+                                  }).ToListAsync();
+
+            return Ok(Favorite);
+        }
 
 
     }
