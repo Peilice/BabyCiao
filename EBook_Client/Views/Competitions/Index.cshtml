@@ -1,31 +1,44 @@
-﻿    <div id="app">
-        <div class="container mb-4">
-            <h1 class="text-center mb-3 mt-3 fw-bold">線上投票活動</h1>
-        </div>
-            <!-- 活動列表 -->
-        <div class="container">
-            <div class="row mb-4">
-                <div class="row row-cols-1 row-cols-md-3 g-4">
-                    <div class="col" v-for="item in OnlineCompetitions" :key="item.id">
-                        <div class="card h-100">
-                            <a v-on:click="check(item.id)"><img v-bind:src="getPhotoUrl(item.competitionPhotoNames)" class="card-img-top w-100" alt="..."></a>
-                            <div class="card-body">
-                                <h5 class="card-title">{{ item.competitionName }}</h5>
-                                <p>活動期間 {{item.startTime}}~ {{item.endTime}}</p>
-                                <div class="d-flex justify-content-between">
-                                    <button class="btn btn-outline-dark mb-2" type="submit">
-                                        <i class="bi bi-heart">收藏</i>
-                                    </button>
-                                    <p class="badge bg-light text-dark">{{ item.statement }}</p>
-                                </div>
+﻿
+<div id="app">
+    <!-- Breadcrumb -->
+    <div class="container d-flex justify-content-between">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">社群</a></li>
+                <li class="breadcrumb-item"><a href="https://localhost:7231/Competitions">線上投票活動</a></li>
+            </ol>
+        </nav>
+        <button type="button" class="btn btn-outline-primary" v-on:click="mycompetition(userAccount)">管理我的活動</a></button>
+    </div>
 
+
+    <div class="container mb-4">
+        <h1 class="text-center mb-3 mt-3 fw-bold">線上投票活動</h1>
+    </div>
+            <!-- 活動列表 -->
+    <div class="container">
+        <div class="row mb-4">
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="col" v-for="item in OnlineCompetitions" :key="item.id">
+                    <div class="card h-100">
+                        <a v-on:click="check(item.id)"><img v-bind:src="getPhotoUrl(item.competitionPhotoNames)" class="card-img-top w-100" alt="活動主要照片"></a>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.competitionName }}</h5>
+                            <p>活動期間 {{item.startTime}}~ {{item.endTime}}</p>
+                            <div class="d-flex justify-content-between">
+                                <button class="btn btn-outline-dark mb-2" type="submit">
+                                    <i class="bi bi-heart">收藏</i>
+                                </button>
+                                <p class="badge bg-light text-dark">{{ item.statement }}</p>
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+ </div>
     
 
 
@@ -48,18 +61,16 @@
             integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        //var baseAddress="https://localhost:7292";
         var vueApp = {
             data() {
                 return {
-                    //CompetitionName: "",
                     OnlineCompetitions: [],
+                    userAccount:sessionStorage.getItem("username"),
                 };
             },
             methods: {
                 fetchcompetitions: function () {
                     let _this = this;
-                    //var request = {};
                     try {
                         axios.get('https://localhost:7292/api/OnlineCompetitions')
                         .then(response => {
@@ -77,7 +88,16 @@
                 check:function(IdCom){
                     sessionStorage.setItem("IdCompetition", IdCom);
                     window.location.href = `https://localhost:7231/Competitions/voteInfo/${IdCom}`;
+
+                },
+                mycompetition: function (userAccount) {
+                if (userAccount==null){
+                    alert("請先登入");
+                    //跳轉到登入頁面
                 }
+                else{
+                window.location.href = `https://localhost:7231/Competitions/MyCompetition/${userAccount}`;
+                }},
 
             },
             mounted: function () {

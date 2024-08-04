@@ -1,0 +1,76 @@
+﻿<div id="app">
+    <div class="container d-flex justify-content-between">
+        <!--側欄-->
+        <div class="col-md-2">
+            <div class="d-grid gap-3">
+                <button class="btn btn-info" type="button" v-on:click="getCompetiton">我的比賽</button>
+                <button class="btn btn-info" type="button">我支持的選手</button>
+                <button class="btn btn-info" type="button">我的收藏</button>
+            </div>
+        </div>
+        <!--主要內容-->
+        <div class="col-md-9">
+        <!--我的比賽-->
+            <div>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between" v-for="item in myCompetition" :key="item.id">
+                        <div>
+                            <img src="~/images/line_album_logo提案_240525_1.jpg" style="width:200px;height:150px"/>
+                        </div>
+                        <div>
+                            <h5>{{item.competitionName}}</h5>
+                            <p>活動時間：{{item.startTime}} ~ {{item.endTime}}</p>
+                        </div>
+                        <span>{{item.statement}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- axios -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
+        integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    var userAccount = sessionStorage.getItem("username");
+    var vueApp = {
+        data() {
+            return {
+                myCompetition:[],
+                // CompetitionName:"",
+                // Startime:"",
+                // Endtime:"",
+                // Statement:"",
+                //Competition:false,
+            };
+        },
+        methods:{
+            getCompetiton: function () {
+                let _this = this;
+                //Competition = true;
+                try {
+                    axios.get(`https://localhost:7292/api/OnlineCompetitions/MyCompetition/${userAccount}`)
+                        .then(response => {
+                            _this.myCompetition = response.data;
+                            //_this.CompetitionName = response.data.competitionName;
+                            //_this.Startime = response.data.startTime;
+                            //_this.Endtime = response.data.endTime;
+                            //_this.Statement = response.data.statement;
+                        });
+                    console.log(_this.CompetitionName)
+                }
+                catch (error) {
+                    console.log(error)
+                }
+            }
+        },
+        // mounted: function () {
+        //     let _this = this;
+        //     _this.getCompetiton();
+        // }
+    }
+    var app = Vue.createApp(vueApp).mount("#app");
+
+</script>
