@@ -27,7 +27,7 @@
 		}
 
 		.radio-group label {
-				display: block;
+			display: block;
 		}
 
 		.radio-option {
@@ -37,29 +37,47 @@
 		}
 
 		.radio-option input[type="radio"] {
-				margin-right: 5px;
+			margin-right: 5px;
+		}
+
+		.invalid-feedback {
+			color: red;
+			font-size: 0.875em;
 		}
 	</style>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
 	<div id="order-app">
-		<div class="order-details">
+		<!-- breadcrumb start -->
+		<div class="px-3 py-2 mb-2">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb mb-0 bg-transparent p-2 text-dark bg-opacity-10">
+					<li class="breadcrumb-item"><a class="text-decoration-none" href="https://localhost:7231/">首頁</a></li>
+					<li class="breadcrumb-item" aria-current="page"><a class="text-decoration-none" href="https://localhost:7231/GroupBuying">團購</a></li>
+					<li class="breadcrumb-item active" aria-current="page">訂單</li>
+				</ol>
+			</nav>
+		</div>
+		<!-- breadcrumb end -->
+		<form class="order-details needs-validation" novalidate v-on:submit.prevent="validateAndSubmit">
 			<h2>訂單詳情</h2>
 
-
-
 			<div class="form-group">
-				<strong for="productName">商品名稱</strong>
-				<input type="text" id="productName" v-model="orderDetails.productName" class="form-control" readonly>
+				<label for="productName"><strong>商品名稱</strong></label>
+				<input type="text" id="productName" v-model="orderDetails.productName" class="form-control" readonly required>
+				<div class="invalid-feedback" v-if="!orderDetails.productName">
+					此欄位必填!
+				</div>
 			</div>
 
 			<div class="form-group">
-				<strong for="userAccount">會員帳號</strong>
-				<input type="text" id="userAccount" v-model="orderDetails.userAccount" class="form-control" readonly :value="u_name">
+				<label for="userAccount"><strong>會員帳號</strong></label>
+				<input type="text" id="userAccount" class="form-control" readonly :value="u_name" required>
+				<div class="invalid-feedback" v-if="!u_name">
+					此欄位必填!
+				</div>
 			</div>
-
-
-
 
 			<div class="form-group radio-group">
 				<strong>訂單規格</strong>
@@ -67,8 +85,11 @@
 					<div v-for="(formats, formatType) in groupedFormats" :key="formatType">
 						<strong>◆ {{ formatType }}</strong>
 						<div v-for="format in formats" :key="format.id" class="radio-option">
-							<input type="radio" :id="format.id" :value="format.id" v-model="selectedFormat[formatType]">
+							<input type="radio" :id="format.id" :value="format.id" v-model="selectedFormat[formatType]" @@change="updateOrderFormats(formatType, format.id)" required>
 							<label :for="format.id">{{ format.formatName }}</label>
+						</div>
+						<div class="invalid-feedback" v-if="!selectedFormat[formatType]">
+							請選擇一個{{ formatType }}!
 						</div>
 					</div>
 				</div>
@@ -77,48 +98,67 @@
 				</div>
 			</div>
 
-
 			<div class="form-group">
-				<strong for="quantity">訂購數量</strong>
-				<input type="number" id="quantity" v-model="orderDetails.quantity" class="form-control" @@keyup="totalPrice"  @@change="totalPrice">
+				<label for="quantity"><strong>訂購數量</strong></label>
+				<input type="number" id="quantity" v-model="orderDetails.quantity" class="form-control" @@input="totalPrice" min="1" required>
+				<div class="invalid-feedback" v-if="orderDetails.quantity <= 0">
+					數量必須大於零!
+				</div>
 			</div>
 
 			<div class="form-group">
-				<strong for="price">商品單價</strong>
-				<input type="text" id="price" v-model="orderDetails.price" class="form-control" readonly >
+				<label for="price"><strong>商品單價</strong></label>
+				<input type="text" id="price" v-model="orderDetails.price" class="form-control" readonly required>
+				<div class="invalid-feedback" v-if="!orderDetails.price">
+					此欄位必填!
+				</div>
 			</div>
 
 			<div class="form-group">
-				<strong for="orderPrice">總價錢</strong>
-				<input type="text" id="orderPrice" v-model="orderDetails.orderPrice" class="form-control" readonly>
+				<label for="orderPrice"><strong>總價錢</strong></label>
+				<input type="text" id="orderPrice" v-model="orderDetails.orderPrice" class="form-control" readonly required>
+				<div class="invalid-feedback" v-if="!orderDetails.orderPrice">
+					此欄位必填!
+				</div>
 			</div>
 
 			<div class="form-group">
-				<strong for="address">地址</strong>
-				<textarea id="address" v-model="orderDetails.address" class="form-control"></textarea>
+				<label for="address"><strong>地址</strong></label>
+				<textarea id="address" v-model="submitOrderModel.address" class="form-control" required></textarea>
+				<div class="invalid-feedback" v-if="!submitOrderModel.address">
+					此欄位必填!
+				</div>
 			</div>
 
 			<div class="form-group">
-				<strong for="joinModifiedTime">下單時間</strong>
-				<input type="text" id="joinModifiedTime" v-model="orderDetails.modifiedTimeView" class="form-control" readonly>
+				<label for="note"><strong>備註</strong></label>
+				<textarea id="note" v-model="submitOrderModel.note" class="form-control"></textarea>
+			</div>
+
+			<div class="form-group">
+				<label for="joinModifiedTime"><strong>下單時間</strong></label>
+				<input type="text" id="joinModifiedTime" class="form-control" :value="orderDetails.modifiedTimeView" readonly required>
+				<input type="hidden" :value="orderDetails.modifiedTime" readonly required>
+				
 			</div>
 
 			<div class="actions d-flex justify-content-end">
-				<button @@click="submitOrder" class="btn btn-success mx-2">提交訂單</button>
-				<button @@click="goBack" class="btn btn-outline-secondary">返回</button>
+				<button type="submit" class="btn btn-success mx-2">提交訂單</button>
+				<button type="button" @@click="goBack" class="btn btn-outline-secondary">返回</button>
 			</div>
-		</div>
+		</form>
 	</div>
 
 	<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
 			const orderApp = Vue.createApp({
 				data() {
 					return {
 						u_name: "",
-						orderId: new URLSearchParams(window.location.search).get('id'),
+						groupBuyingId: new URLSearchParams(window.location.search).get('id'),
 						orderDetails: {
 							id: '',
 							productName: '',
@@ -126,9 +166,18 @@
 							quantity: 0,
 							price: 0,
 							orderPrice: 0,
-							address: '',
 							modifiedTimeView: '',
 							productFormats: []
+						},
+						submitOrderModel: {
+							id: 0,
+							groupBuyingId: 0,
+							userAccount: '',
+							address: '',
+							note: '',
+							joinModifiedTime: '',
+							joinStatement: '',
+							orderFormats: [] // 初始為空數組，動態填充
 						},
 						selectedFormat: {}
 					};
@@ -147,14 +196,17 @@
 						}, {});
 					}
 				},
-
 				methods: {
 					async fetchOrderDetails() {
 						try {
-							const response = await axios.get(`https://localhost:7292/api/GroupBuying/Order/${this.orderId}`);
+							const response = await axios.get(`https://localhost:7292/api/GroupBuying/Order/${this.groupBuyingId}`);
 							this.u_name = username; // 確保 username 變數存在
+							this.submitOrderModel.joinStatement = "已參加";
+							this.submitOrderModel.groupBuyingId = this.groupBuyingId;
+							this.submitOrderModel.userAccount = username;
 							this.orderDetails = response.data;
-							console.log('Fetched order details:', this.orderDetails); // 添加日誌
+
+							this.submitOrderModel.joinModifiedTime = this.orderDetails.modifiedTime;
 
 							// 初始化 selectedFormat
 							if (this.orderDetails.productFormats) {
@@ -168,14 +220,69 @@
 					},
 					totalPrice() {
 						this.orderDetails.orderPrice = this.orderDetails.quantity * this.orderDetails.price;
+						if (this.orderDetails.productFormats && Object.keys(this.orderDetails.productFormats).length > 0) {
+							//console.log('aaa',this.submitOrderModel.orderFormats);
+							this.submitOrderModel.orderFormats.forEach(f => {
+								f.quantity = this.orderDetails.quantity;
+							});
+						} else {
+							//console.log('ccc');
+							this.submitOrderModel.orderFormats.push({
+								orderFormatId: 0, // 或者設定適當的初始值
+								groupBuyingDetailId: 0, // 或者設定適當的初始值
+								formatId: 0,
+								quantity: this.orderDetails.quantity, // 或者設定適當的數量
+							});
+						}
+						
+					},
+					updateOrderFormats(formatType, selectedFormatId) {
+						let format = this.submitOrderModel.orderFormats.find(f => f.formatType === formatType);
+						if (format) {
+							// 更新現有的項目
+							format.formatId = selectedFormatId;
+						} else {
+							// 添加新項目
+							this.submitOrderModel.orderFormats.push({
+								orderFormatId: 0, // 或者設定適當的初始值
+								groupBuyingDetailId: 0, // 或者設定適當的初始值
+								formatType: formatType, // 添加 formatType
+								formatId: selectedFormatId,
+								quantity: this.orderDetails.quantity, // 或者設定適當的數量
+							});
+						}
+					},
+					validateAndSubmit() {
+						const form = document.querySelector('.needs-validation');
+						if (form.checkValidity() === false) {
+							form.classList.add('was-validated');
+							Swal.fire({
+								icon: 'error',
+								title: '表單驗證錯誤',
+								text: '請填寫所有必填欄位並確保數據有效。',
+							});
+							return;
+						}
+
+						// 如果表單驗證成功，提交表單
+						this.submitOrder();
 					},
 					async submitOrder() {
 						try {
-							await axios.post('/api/orders', this.orderDetails);
-							alert('訂單提交成功！');
+							const response = await axios.post('https://localhost:7292/api/GroupBuying/SubmitOrder', this.submitOrderModel);
+							Swal.fire({
+								icon: 'success',
+								title: '訂單提交成功',
+								text: '您的訂單已成功提交。',
+							}).then(() => {
+								window.location.href = 'https://localhost:7231/GroupBuying';
+							});
 						} catch (error) {
-							console.error('Error submitting order:', error);
-							alert('訂單提交失敗，請稍後再試。');
+							Swal.fire({
+								icon: 'error',
+								title: '訂單提交失敗',
+								text: '提交訂單時出錯，請稍後再試。',
+							});
 						}
 					},
 					goBack() {
