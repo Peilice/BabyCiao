@@ -40,7 +40,7 @@
                     </ul>
                     <div>
                         <div v-if="isLoggedIn">
-                            <span>{{ account }}</span>/
+                            <a :href="'/UserInformation/UserInformation'" class="nav-link">{{ account }}</a> /
                             <a href="#" v-on:click="logout">登出</a>
                         </div>
                         <div v-else>
@@ -68,6 +68,7 @@
     <script src="https://unpkg.com/vue@3.4.31/dist/vue.global.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
 
     <script>
         const app = Vue.createApp({
@@ -78,10 +79,13 @@
                 };
             },
             mounted() {
-                this.account = localStorage.getItem('account');
-                this.isLoggedIn = !!this.account;
+                this.checkLoginStatus();
             },
             methods: {
+                checkLoginStatus() {
+                    this.account = localStorage.getItem('account');
+                    this.isLoggedIn = !!this.account;
+                },
                 logout() {
                     localStorage.removeItem('account');
                     localStorage.removeItem('token');

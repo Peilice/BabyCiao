@@ -1,20 +1,16 @@
 using BabyCiaoAPI.Models;
+using BabyCiaoAPI.Helpers; // 引入自定義的 JsonConverter 命名空間
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-//using Swashbuckle.AspNetCore.Filters;
 using System.Text;
-using BabyCiaoAPI.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // 加載配置文件
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
@@ -22,7 +18,14 @@ builder.Logging.AddConsole();
 // 添加服務到容器
 builder.Services.AddDbContext<BabyciaoContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BabyCiao")));
-builder.Services.AddControllers();
+
+// 配置 JSON 序列化選項以處理循環參考
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter()); // 添加自定義的 DateOnlyJsonConverter
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
@@ -35,7 +38,7 @@ builder.Services.AddCors(options =>
             builder.AllowAnyOrigin()
                    .AllowAnyMethod()
                    .AllowAnyHeader();
-    });
+        });
 });
 
 // 配置 JWT 驗證
@@ -45,7 +48,7 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
-    {
+{
     options.RequireHttpsMetadata = false;
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
@@ -65,7 +68,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "BabyCiaoAPI", Version = "v1" });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-{
+    {
         Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
         Name = "Authorization",
         In = ParameterLocation.Header,
