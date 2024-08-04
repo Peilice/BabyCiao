@@ -49,6 +49,17 @@
 </head>
 <body>
 	<div id="order-app">
+		<!-- breadcrumb start -->
+		<div class="px-3 py-2 mb-2">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb mb-0 bg-transparent p-2 text-dark bg-opacity-10">
+					<li class="breadcrumb-item"><a class="text-decoration-none" href="https://localhost:7231/">首頁</a></li>
+					<li class="breadcrumb-item" aria-current="page"><a class="text-decoration-none" href="https://localhost:7231/GroupBuying">團購</a></li>
+					<li class="breadcrumb-item active" aria-current="page">訂單</li>
+				</ol>
+			</nav>
+		</div>
+		<!-- breadcrumb end -->
 		<form class="order-details needs-validation" novalidate v-on:submit.prevent="validateAndSubmit">
 			<h2>訂單詳情</h2>
 
@@ -127,6 +138,7 @@
 			<div class="form-group">
 				<label for="joinModifiedTime"><strong>下單時間</strong></label>
 				<input type="text" id="joinModifiedTime" class="form-control" :value="orderDetails.modifiedTimeView" readonly required>
+				<input type="hidden" :value="orderDetails.modifiedTime" readonly required>
 				
 			</div>
 
@@ -194,7 +206,7 @@
 							this.submitOrderModel.userAccount = username;
 							this.orderDetails = response.data;
 
-							this.submitOrderModel.joinModifiedTime = this.orderDetails.modifiedTimeView;
+							this.submitOrderModel.joinModifiedTime = this.orderDetails.modifiedTime;
 
 							// 初始化 selectedFormat
 							if (this.orderDetails.productFormats) {
@@ -209,12 +221,12 @@
 					totalPrice() {
 						this.orderDetails.orderPrice = this.orderDetails.quantity * this.orderDetails.price;
 						if (this.orderDetails.productFormats && Object.keys(this.orderDetails.productFormats).length > 0) {
-							console.log('aaa',this.submitOrderModel.orderFormats);
+							//console.log('aaa',this.submitOrderModel.orderFormats);
 							this.submitOrderModel.orderFormats.forEach(f => {
 								f.quantity = this.orderDetails.quantity;
 							});
 						} else {
-							console.log('ccc');
+							//console.log('ccc');
 							this.submitOrderModel.orderFormats.push({
 								orderFormatId: 0, // 或者設定適當的初始值
 								groupBuyingDetailId: 0, // 或者設定適當的初始值

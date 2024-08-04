@@ -15,6 +15,9 @@
     @await RenderSectionAsync("Styles", required: false)
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/vue@3.4.31/dist/vue.global.js"></script>
+
+    <!-- dataTables  -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
     <style>
         body {
             background-image: url('/images/giftly.png');
@@ -26,9 +29,10 @@
     </script>
 </head>
 <body>
+    <div id="app00">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid" id="app00">
+            <div class="container-fluid" >
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BabyCiao</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -69,7 +73,7 @@
                     <partial name="_LoginPartial_self" />
                 </div>
 
-                <!-- 登入modal -->
+                <!-- 登入modal start-->
                 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -96,18 +100,30 @@
                         </div>
                     </div>
                 </div>
-
+				<!-- 登入modal end -->
+               
             </div>
         </nav>
     </header>
-    <a href="#"
-       class="bg-success bg-opacity-75 text-white position-fixed bottom-0 end-0 p-2 text-decoration-none m-3 border border-1">PAGETOP</a>
+        <!-- 浮在頁面的按鈕 start -->
+    <a 
+           class="bg-success bg-opacity-75 text-white position-fixed bottom-0 end-0 p-2 text-decoration-none m-3 border border-1" onclick="scrollToTop()">PAGETOP</a>
+
     <div class="position-fixed top-10 start-0">
-        <a href="#"
-           class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">我的訂單</a>
-        <a href="#"
-           class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">我的最愛</a>
+            <button @@click="myOrders(loggedInUsername)"
+                class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
+            我的訂單
+        </button>
+            <button @@click="myFav(loggedInUsername)"
+                    class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
+                我的最愛
+            </button>
     </div>
+
+        <!-- 浮在頁面的按鈕 end -->
+    </div>
+
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -120,6 +136,7 @@
     </footer>
     
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -199,11 +216,37 @@
                     this.loggedInUsername = "";
                     // 重新加載頁面以更新狀態
                     location.reload();
-                }
+                },
+                async myOrders(username) {
+                    //console.log('myOrders', username);
+                    try {
+                        //alert('myOrders~', username);
+                        const response = await axios.post(`/GroupBuying/Home/MyOrders`, { user: username });
+                        if (response.status === 200) {
+                            window.location.href = `/GroupBuying/Home/MyOrders/${username}`;
+                        }
+                    } catch (error) {
+                        console.error('Error get my orders:', error);
+                    }
+                },
+                async myFav(username) {
+                    //console.log('myOrders', username);
+                    try {
+                        //alert('myOrders~', username);
+                        const response = await axios.post(`/GroupBuying/Home/MyFavorite`, { user: username });
+                        if (response.status === 200) {
+                            window.location.href = `/GroupBuying/Home/MyFavorite/${username}`;
+                        }
+                    } catch (error) {
+                        console.error('Error get my favorite:', error);
+                    }
+                },
+
             }
         });
 
         app.mount("#app00");
+
         $(function () {
             //登出動畫與操作
             $('#logoutForm').on('click', function (e) {
@@ -243,6 +286,9 @@
                 }
             })
         })
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     </script>
 </body>
 </html>
