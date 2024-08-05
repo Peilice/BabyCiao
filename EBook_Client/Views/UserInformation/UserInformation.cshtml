@@ -84,7 +84,7 @@
                     <div class="form-group row">
                         <label for="birthdate" class="col-sm-2 col-form-label">生日</label>
                         <div class="col-sm-10">
-                            <input type="date" v-model="form.birthday" class="form-control" id="birthdate">
+                            <input type="date" v-model="form.birthday" class="form-control" id="babyBirth_user">
                         </div>
                     </div>
                     <button type="button" v-on:click="saveChanges" class="btn btn-primary">儲存變更</button>
@@ -153,7 +153,8 @@
                                     phone: response.data.phone || '',
                                     address: response.data.address || '',
                                     birthday: response.data.birthday ? moment(response.data.birthday).format('YYYY-MM-DD') : '', // 確保日期格式正確
-                                    userinfoId: response.data.userinfoId || '' // 確保更新時有ID
+                                    userinfoId: response.data.userinfoId || '', // 確保更新時有ID
+                                    createddDate: response.data.createddDate || '' 
                                 };
 
                                 // 設置性別
@@ -168,9 +169,24 @@
                     },
                     saveChanges() {
                         // 確保日期格式為 YYYY-MM-DD
-                        this.form.birthday = moment(this.form.birthday).format('YYYY-MM-DD');
+                        let _this = this;
+                        var request = {};
+                        
+                        request.userinfoId = _this.form.userinfoId;
+                        request.accountUser = _this.account;
+                        request.userFirstName = _this.form.userFirstName;
+                        request.userLastName = _this.form.userLastName;
+                        request.userPhoto = _this.form.userPhoto;
+                        request.phone = _this.form.phone;
+                        request.address = _this.form.address;
+                        request.gender = _this.form.gender;
+                        request.email = _this.form.email;
+                        request.nickname = _this.form.nickname;
+                        request.birthday = _this.form.birthday;
+                        request.createddDate = _this.form.createddDate;
+                        request.modiifiedDate = new Date();
 
-                        axios.put(`https://localhost:7292/api/UserInformation/${this.form.userinfoId}`, this.form, {
+                        axios.put(`https://localhost:7292/api/UserInformation/${this.form.userinfoId}`, request, {
                             headers: { 'Authorization': `Bearer ${this.token}` }
                         })
                             .then(response => {
@@ -181,6 +197,9 @@
                                 alert('無法儲存變更');
                             });
                     }
+                },
+                mounted: function () {
+                    let _this = this;
                 }
             }).mount('#userInfoApp');
         });
