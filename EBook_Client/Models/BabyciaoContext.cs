@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace BabyCiaoAPI.Models;
+namespace BabyCiao_Client.Models;
 
 public partial class BabyciaoContext : DbContext
 {
@@ -759,12 +759,13 @@ public partial class BabyciaoContext : DbContext
 
         modelBuilder.Entity<NannyResume>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__NannyRes__3214EC2739D3FFB0");
+            entity.HasKey(e => e.Id).HasName("PK__NannyRes__3214EC27453888C5");
 
             entity.ToTable("NannyResume");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.City).HasMaxLength(10);
+            entity.Property(e => e.DisplayControl).HasDefaultValue(true);
             entity.Property(e => e.District).HasMaxLength(10);
             entity.Property(e => e.Introduction).HasMaxLength(500);
             entity.Property(e => e.Language)
@@ -779,17 +780,19 @@ public partial class BabyciaoContext : DbContext
                 .HasMaxLength(50)
                 .HasDefaultValue("???");
             entity.Property(e => e.ServiceCenter).HasMaxLength(50);
+            entity.Property(e => e.ServiceItems).HasMaxLength(10);
+            entity.Property(e => e.TypeOfDaycare).HasMaxLength(10);
 
             entity.HasOne(d => d.NannyAccountUserAccountNavigation).WithMany(p => p.NannyResumes)
                 .HasPrincipalKey(p => p.Account)
                 .HasForeignKey(d => d.NannyAccountUserAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__NannyResu__Nanny__52E34C9D");
+                .HasConstraintName("FK__NannyResu__Nanny__73501C2F");
         });
 
         modelBuilder.Entity<NannyResumePhoto>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__NannyRes__3214EC27C01A236B");
+            entity.HasKey(e => e.Id).HasName("PK__NannyRes__3214EC27852C495C");
 
             entity.ToTable("NannyResumePhoto");
 
@@ -803,7 +806,7 @@ public partial class BabyciaoContext : DbContext
             entity.HasOne(d => d.IdNannyResumeNavigation).WithMany(p => p.NannyResumePhotos)
                 .HasForeignKey(d => d.IdNannyResume)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__NannyResu__ID_Na__59904A2C");
+                .HasConstraintName("FK__NannyResu__ID_Na__7AF13DF7");
         });
 
         modelBuilder.Entity<OnlineCompetition>(entity =>

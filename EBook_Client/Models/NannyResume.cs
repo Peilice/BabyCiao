@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BabyCiao.Models;
+namespace BabyCiao_Client.Models;
 
 public partial class NannyResume
 {
