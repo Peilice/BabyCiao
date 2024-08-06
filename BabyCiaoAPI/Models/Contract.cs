@@ -11,9 +11,13 @@ public partial class Contract
 
     public bool NannySignature { get; set; }
 
+    public string NannySignatureFile { get; set; } = null!;
+
     public string AccountUserAccount { get; set; } = null!;
 
     public bool UserSignature { get; set; }
+
+    public string UserSignatureFile { get; set; } = null!;
 
     public DateOnly ContractStartTime { get; set; }
 

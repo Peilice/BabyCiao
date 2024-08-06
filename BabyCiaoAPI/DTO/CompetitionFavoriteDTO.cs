@@ -20,7 +20,6 @@ public class CompetitionFavorite_createDTO
 {
 
     public string myAccount { get; set; }
-
     public int CompetitionId { get; set; }
 
 }

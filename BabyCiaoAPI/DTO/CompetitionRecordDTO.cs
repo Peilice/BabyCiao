@@ -12,6 +12,7 @@ public class CompetitionRecordDTO
     public string Statement { get; set; }
     public string CompetitorPhoto {  get; set; }
     public string Content { get; set; }
+    public int CompetitionID { get; set; }
     
 }
 

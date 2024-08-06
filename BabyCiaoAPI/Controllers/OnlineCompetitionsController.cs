@@ -73,6 +73,7 @@ namespace BabyCiaoAPI.Controllers
                                AccountUserAccount = comd.AccountUserAccount,
                                CompetitionPhotos = comd.CompetitionPhoto,
                                CompetitionDetailId = comd.Id,
+                               CompetitorContent=comd.Content,
                            }).ToListAsync();
 
             var b = await (from comr in _context.CompetitionRecords
@@ -81,8 +82,8 @@ namespace BabyCiaoAPI.Controllers
                            where comr.IdOnlineCompetition == id
                            select comr).CountAsync();
 
-            List<int> allnum = new List<int>();
-            allnum.Add(b);
+            //List<int> allnum = new List<int>();
+            //allnum.Add(b);
 
             List<int> ids = new List<int>();
             List<int> nums = new List<int>();
@@ -111,9 +112,10 @@ namespace BabyCiaoAPI.Controllers
                 dto.Statement = a[i].Statement;
                 dto.StartTime = a[i].StartTime;
                 dto.EndTime = a[i].EndTime;
+                dto.CompetitorContent = a[i].CompetitorContent;
                 dto.number = nums[i];
                 dto.Id = a[i].Id;
-                dto.allnumber = allnum[0];
+                dto.allnumber = b;
 
                 competitionDetailDTOs.Add(dto);
 
@@ -173,12 +175,13 @@ namespace BabyCiaoAPI.Controllers
 
         }
 
-        //*****重寫*****
+
         // Delete api/OnlineCompetitions/deleteApply (刪除報名)
-        [HttpDelete("deleteApply")]
-        public async Task<string> deleteApply(int id)
+        //[HttpDelete("deleteApply/id={id}&account=${account}")]
+        [HttpDelete("deleteApply/{id}/{account}")]
+        public async Task<string> deleteApply(int id, string account)
         {
-            var delete = _context.CompetitionDetails.Find(id);
+            var delete = _context.CompetitionDetails.FirstOrDefault(c => c.IdOnlineCompetition == id && c.AccountUserAccount == account);
             if (delete != null)
             {
                 _context.CompetitionDetails.Remove(delete);
@@ -194,7 +197,7 @@ namespace BabyCiaoAPI.Controllers
 
         //收藏列表 (新增、刪除)
         //Delete api/OnlineCompetitions/DeleteFavorite (刪除)
-        [HttpDelete("DeleteFavorite")]
+        [HttpDelete("deleteFavorite/{id}/{account}")]
         public async Task<IActionResult> DeleteFavorite(int id, string account)
         {
             var delete = await _context.CompetitionFavorites.FirstOrDefaultAsync(c => c.IdOnlineCompetition == id && c.AccountUserAccount == account);
@@ -256,7 +259,7 @@ namespace BabyCiaoAPI.Controllers
         }
 
         //Delete api/OnlineCompetitions/deleteVote (刪除)
-        [HttpDelete("deleteVote")]
+        [HttpDelete("deleteVote/{id}/{account}")]
         public async Task<IActionResult> deleteVote(int id, string account)
         {
             var delete = await _context.CompetitionRecords.FirstOrDefaultAsync(c => c.IdOnlineCompetition == id && c.VoterAccount == account);
@@ -285,13 +288,14 @@ namespace BabyCiaoAPI.Controllers
                                       where comd.AccountUserAccount == account
                                       select new CompetitionDetailDTO
                                       {
-                                          Id= comd.Id,
+                                          Id= com.Id,
                                           CompetitionDetailId=comd.Id,
                                           CompetitionName = com.CompetitionName,
                                           StartTime=com.StartTime,
                                           EndTime=com.EndTime,
                                           Statement = com.Statement,
-                                          CompetitionPhotos=comd.CompetitionPhoto,
+                                          CompetitorPhoto = comd.CompetitionPhoto,
+                                          CompetitorContent = comd.Content,
                                       }).ToListAsync();
             //讀取單一比賽票數(List)
             //var count = await (from comd in _context.CompetitionDetails
@@ -326,6 +330,7 @@ namespace BabyCiaoAPI.Controllers
                            Statement= com.Statement,
                            CompetitorPhoto=comd.CompetitionPhoto,
                            Content=comd.Content,
+                           CompetitionID=com.Id,
                            }).ToListAsync();
             return Ok(vote);
         }

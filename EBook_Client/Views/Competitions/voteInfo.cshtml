@@ -1,16 +1,19 @@
-﻿<!-- Breadcrumb -->
-<div class="container">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">社群</a></li>
-            <li class="breadcrumb-item"><a href="https://localhost:7231/Competitions">線上投票活動</a></li>
-            <li class="breadcrumb-item active" aria-current="page">寶貝裝扮大賽</li>
-        </ol>
-    </nav>
-</div>
+﻿
 
 
 <div id="app" class="container mb-4">
+    <!-- Breadcrumb -->
+    <div class="container d-flex justify-content-between">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">社群</a></li>
+                <li class="breadcrumb-item"><a href="https://localhost:7231/Competitions">線上投票活動</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{CompetitionName}}</li>
+            </ol>
+        </nav>
+        <button type="button" class="btn btn-outline-primary" v-on:click="mycompetition(userAccount)">管理我的活動</a></button>
+    </div>
+
     <h1 class="text-center mb-3 mt-3 fw-bold">{{CompetitionName}}</h1>
     <!-- 比賽內容介紹 -->
     <div class="col-12 mb-3">
@@ -26,7 +29,7 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                 報名此比賽
             </button>
-            <button typeof="button" class="btn btn-outline-dark me-2" type="submit"><i class="bi bi-heart">收藏此活動</i></button>
+            <button class="btn btn-outline-dark me-2" type="submit" v-on:click="newfavorite"><i class="bi bi-bookmark-heart">收藏此活動</i></button>
         </div>
     </div>
     <div class="container" id="app">
@@ -61,11 +64,11 @@
                             <img v-bind:src="getPhotoUrl(item.competitionPhotos)" class="card-img-top h-100" alt="...">
                             <div class="card-body">
                                 <h5 class="card-title">{{item.accountUserAccount}}</h5>
-                                <span class="me-3">得票數</span>
-                                <span><i class="bi bi-lightning-charge-fill">{{item.number}}</i></span>
+                                <p class="me-3">得票數 <span><i class="bi bi-lightning-charge-fill">{{item.number}}</i></span></p>
+                                <p>{{item.competitorContent}}</p>
                             </div>
-                            <button class="btn btn-outline-dark me-2 w-100" type="submit">
-                                <i class="bi bi-heart">投票</i>
+                            <button class="btn btn-outline-dark me-2 w-100" type="submit" v-on:click="newVote(item.id)">
+                                <i class="bi bi-heart" >投票</i>
                             </button>
                         </div>
                     </div>
@@ -86,7 +89,7 @@
                             @* <input type="text" class="form-control" id="IdCompetition" v-model="CompetitionId"> *@
                             <div class="mb-3 has-validation">
                                 <label class="form-label">帳號</label>
-                                <input type="text" class="form-control" id="userAccount" v-model="userAccount">
+                                <input type="text" class="form-control" id="userAccount" v-model="userAccount" readonly>
                             </div>
                             <div class="mb-3 has-validation">
                                 <label class="form-label">自我介紹(100字內)</label>
@@ -142,10 +145,8 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     var IdCompetitions = sessionStorage.getItem("IdCompetition");
-    //var userAccount = sessionStorage.getItem("username");
     var CompetitorID = 0;
 
-    //console.log(IdCompetitions)
     var vueApp = {
         data() {
             return {
@@ -159,15 +160,15 @@
                 Competitionsdetail: [],
                 RecordDetail:[],
                 allvote:0,
-                CompetitionId:0,
+                CompetitionId: 0,
 
                 //表單
-                userAccount: "",
                 CompetitorContent:"",
                 CompetitorPhoto:"noimage.jpg",
 
-                //分隔線
-                Imageurl: "https://localhost:7000/uploads/colorWater.png"
+                //使用者帳號
+                //userAccount:sessionStorage.getItem("username"),
+                userAccount: "user5",
             };
         },
         methods: {
@@ -199,7 +200,6 @@
             apply:function(){
                 let _this = this;
                 let forms = document.querySelectorAll('.needs-validation');
-                //console.log(form)
                 Array.prototype.slice.call(forms)
                     .forEach(function (form) {
                         form.addEventListener('submit', function (event) {
@@ -224,7 +224,7 @@
                 request.AccountUserAccount = _this.userAccount;
                 request.CompetitionPhotos = _this.CompetitorPhoto.name;
                 request.Content = _this.CompetitorContent;
-                //alert(request);
+                
                 axios.post(`https://localhost:7292/api/OnlineCompetitions/apply`, request)
                 .then(result => {
                     Swal.fire({
@@ -247,6 +247,56 @@
             //處理照片上傳
             onFileChange: function (event) {
                 this.CompetitorPhoto = event.target.files[0];
+            },
+            newfavorite: function () {
+                let _this = this;
+                var request = {};
+                if (_this.userAccount == null) {
+                    alert("請先登入");
+                }
+                else{
+                    request.CompetitionId = IdCompetitions;
+                request.myAccount = _this.userAccount;
+                //console.log(request);
+                axios.post(`https://localhost:7292/api/OnlineCompetitions/createFavorite`, request)
+                    .then(result => {
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "收藏成功",
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                            .then(result => {
+                                _this.fetchcompetitions();
+                                //$('#staticBackdrop').modal('hide');
+
+                            })
+                    })
+                };
+
+            },
+            mycompetition: function (userAccount) {
+                if (userAccount == null) {
+                    alert("請先登入");
+                    //跳轉到登入頁面
+                }
+                else {
+                    window.location.href = `https://localhost:7231/Competitions/MyCompetition/${userAccount}`;
+                }
+            },
+            newVote:function(x){
+                let _this = this;
+                var record = {};
+                record.voterAccount = _this.userAccount;
+                record.CompetitionId = IdCompetitions;
+                record.CompetitorId = x;
+                //console.log(record);
+                axios.post(`https://localhost:7292/api/OnlineCompetitions/createVote`, record)
+                    .then(result => {
+                        _this.fetchcompetitions();
+                        alert("投票成功")
+                    })
             },
         },
         mounted: function () {
