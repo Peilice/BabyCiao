@@ -1,23 +1,26 @@
-﻿<!-- breadcrmb start -->
-<div class="bg-light px-3">
+﻿<div class="container-fluid" id=" app_Ebook_historySearch">
+<!-- breadcrmb start -->
+<div>
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="index.html">首頁</a></li>
-            <li class="breadcrumb-item active" aria-current="page">電子聯絡簿</li>
+            <li class="breadcrumb-item"><a href="@Utility.SD.localHost_Client/Home/Index">首頁</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><a href="@Utility.SD.localHost_Client/andy_ebook/Home/Index">電子聯絡簿</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{babyName}}</li>
+
         </ol>
     </nav>
 </div>
 <!-- breadcrmb end -->
 <!-- list and tabs start -->
-<div class="container-fluid py-5">
-    <div class="row">
+
+    <div class="row py-3">
         <!-- list start -->
         <div class="col-12 col-md-3" style="width:260px">
-            <div class="list-group">
                 <h3 class="fs-3 fw-bold ps-3">功能選單</h3>
-                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_record" class="list-group-item list-group-item-action ">最新交接事項</a>
-                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_infos" class="list-group-item list-group-item-action">寶寶基本資料</a>
-                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_historySearch" class="list-group-item list-group-item-action active">歷史紀錄查詢</a>
+            <div class="list-group">
+                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_record" class="list-group-item list-group-item-action ">生活紀錄</a>
+                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_infos" class="list-group-item list-group-item-action">寶寶資訊</a>
+                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_historySearch" class="list-group-item list-group-item-action active">統計圖表</a>
                 <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_activityDaily" class="list-group-item list-group-item-action">活動日記</a>
             </div>
         </div>
@@ -25,10 +28,29 @@
         <div class="col-12 col-md-9 rounded">
             <!-- tabs start -->
             <div class="div1" style="background-color:#fff4ef ;">
-                <h1>歷史紀錄查詢</h1>
+                <h1>統計圖表</h1>
             </div>
             <!-- tabs end -->
         </div>
     </div>
 </div>
 <!-- list and tabs end -->
+@section Scripts {
+    <script>
+        var vueApp = {
+            data() {
+                return {
+
+                };
+            },
+            methods: {
+
+            },
+            mounted: function () {
+
+            }
+        }
+
+        var app_Ebook_historySearch = Vue.createApp(vueApp).mount("app_Ebook_historySearch");
+    </script>
+}
