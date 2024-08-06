@@ -1,0 +1,178 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "個人資訊";
+}
+
+<div id="userInfoApp" class="d-flex">
+    <div class="sidebar bg-light p-3">
+        <h4 class="text-center">BabyCiao</h4>
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action active">會員資訊</a>
+            <a href="#" class="list-group-item list-group-item-action">我的委託單</a>
+            <a href="#" class="list-group-item list-group-item-action">電子聯絡簿</a>
+            <a href="#" class="list-group-item list-group-item-action">購物車</a>
+            <a href="#" class="list-group-item list-group-item-action">歷史訂單</a>
+            <a href="#" class="list-group-item list-group-item-action">我的評論</a>
+            <a href="#" class="list-group-item list-group-item-action">歷史活動</a>
+        </div>
+    </div>
+    <div class="content container">
+        <div class="card mt-4">
+            <div class="card-header">
+                會員資訊
+            </div>
+            <div class="card-body">
+                <form id="userForm">
+                    <div class="form-group row">
+                        <label for="userPhoto" class="col-sm-2 col-form-label">照片</label>
+                        <div class="col-sm-10">
+                            <input type="file" v-on:change="onFileChange" class="form-control" id="userPhoto">
+                            <div v-if="form.userPhoto" class="mt-2">
+                                <img :src="form.userPhoto" alt="Profile Image" class="profile-img">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="userLastName" class="col-sm-2 col-form-label">姓氏</label>
+                        <div class="col-sm-10">
+                            <input type="text" v-model="form.userLastName" class="form-control" id="userLastName" placeholder="姓氏">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="userFirstName" class="col-sm-2 col-form-label">名字</label>
+                        <div class="col-sm-10">
+                            <input type="text" v-model="form.userFirstName" class="form-control" id="userFirstName" placeholder="名字">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="nickname" class="col-sm-2 col-form-label">暱稱</label>
+                        <div class="col-sm-10">
+                            <input type="text" v-model="form.nickname" class="form-control" id="nickname" placeholder="暱稱">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="gender" class="col-sm-2 col-form-label">性別</label>
+                        <div class="col-sm-10">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" v-model="form.gender" id="male" value="1">
+                                <label class="form-check-label" for="male">男</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" v-model="form.gender" id="female" value="2">
+                                <label class="form-check-label" for="female">女</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="email" class="col-sm-2 col-form-label">電子郵件</label>
+                        <div class="col-sm-10">
+                            <input type="email" v-model="form.email" class="form-control" id="email" placeholder="電子郵件">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="phone" class="col-sm-2 col-form-label">電話</label>
+                        <div class="col-sm-10">
+                            <input type="text" v-model="form.phone" class="form-control" id="phone" placeholder="電話">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="address" class="col-sm-2 col-form-label">地址</label>
+                        <div class="col-sm-10">
+                            <input type="text" v-model="form.address" class="form-control" id="address" placeholder="地址">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="birthday" class="col-sm-2 col-form-label">生日</label>
+                        <div class="col-sm-10">
+                            <input type="date" v-model="form.birthday" class="form-control" id="birthday">
+                        </div>
+                    </div>
+                    <button type="button" v-on:click="saveChanges" class="btn btn-primary">儲存變更</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const { createApp } = Vue;
+
+            createApp({
+                data() {
+                    return {
+                        form: {
+                            userPhoto: '',
+                            userLastName: '',
+                            userFirstName: '',
+                            nickname: '',
+                            gender: '',
+                            email: '',
+                            phone: '',
+                            address: '',
+                            birthday: '',
+                        },
+                        token: '',
+                        account: '' // 添加賬戶信息
+                    }
+                },
+                created() {
+                    this.token = localStorage.getItem('token');
+                    this.account = localStorage.getItem('account'); // 從本地存儲獲取賬戶信息
+                    if (!this.token) {
+                        alert('請先登入');
+                        window.location.href = '/login';
+                    }
+                },
+                methods: {
+                    onFileChange(event) {
+                        const file = event.target.files[0];
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this.form.userPhoto = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    },
+                    saveChanges() {
+                        let _this = this;
+                        var request = {
+                            accountUser: _this.account,
+                            userFirstName: _this.form.userFirstName,
+                            userLastName: _this.form.userLastName,
+                            userPhoto: _this.form.userPhoto,
+                            phone: _this.form.phone,
+                            address: _this.form.address,
+                            gender: _this.form.gender,
+                            email: _this.form.email,
+                            nickname: _this.form.nickname,
+                            birthday: _this.form.birthday,
+                        };
+
+                        axios.post(`https://localhost:7292/api/UserInformation`, request, {
+                            headers: { 'Authorization': `Bearer ${this.token}` }
+                        })
+                            .then(response => {
+                                alert('會員資訊已新增');
+                                window.location.href = '/home'; // 根據你的需要跳轉到其他頁面
+                            })
+                            .catch(error => {
+                                console.error(error);
+                                alert('無法新增會員資訊');
+                            });
+                    }
+                }
+            }).mount('#userInfoApp');
+        });
+    </script>
+}
+<style>
+    .form-group {
+        margin-top: 20px;
+    }
+
+    .profile-img {
+        max-width: 150px;
+        max-height: 150px;
+    }
+</style>

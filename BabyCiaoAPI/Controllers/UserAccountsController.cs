@@ -33,7 +33,7 @@ namespace BabyCiaoAPI.Controllers
         {
             if (_context.UserAccounts.Any(u => u.Account == registerDTO.Account))
             {
-                return BadRequest(new { message = "Account already exists." });
+                return BadRequest(new { message = "帳號已重複" });
             }
 
             // 加密密碼
@@ -65,8 +65,9 @@ namespace BabyCiaoAPI.Controllers
 
             var token = GenerateJwtToken(userAccount);
             var account = userAccount.Account;
+            var hasBasicInfo = _context.UserInformations.Any(u => u.AccountUser == userAccount.Account);
 
-            return Ok(new { message = "登入成功", token, account });
+            return Ok(new { message = "登入成功", token, account, hasBasicInfo });
         }
 
         private string GenerateJwtToken(UserAccount user)

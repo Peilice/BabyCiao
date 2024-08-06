@@ -54,10 +54,17 @@
                     messageDiv.className = 'message success';
                     localStorage.setItem('token', data.token); // 保存 token 到 localStorage
                     localStorage.setItem('account', account); // 保存 account 到 localStorage
-                    console.log(data);
-                    setTimeout(() => {
-                        window.location.href = "https://localhost:7231/";
-                    }, 3000);
+
+                    if (data.hasBasicInfo) {
+                        setTimeout(() => {
+                            window.location.href = "https://localhost:7231/";
+                        }, 3000);
+                    } else {
+                        alert('首次登入請先填寫基本資料');
+                        setTimeout(() => {
+                            window.location.href = "https://localhost:7231/Login/information"; // 導向基本資料頁面
+                        }, 3000);
+                    }
                 } else {
                     messageDiv.textContent = data.message;
                     messageDiv.className = 'message error';

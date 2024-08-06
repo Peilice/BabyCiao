@@ -78,5 +78,41 @@ namespace BabyCiaoAPI.Controllers
 
             return NoContent();
         }
+
+        // 新增會員資訊
+        [HttpPost]
+        public async Task<ActionResult<UserInformation>> AddUserInfo([FromBody] UserInformationDTO userInfoDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var userAccount = await _context.UserAccounts.FirstOrDefaultAsync(u => u.Account == userInfoDto.AccountUser);
+            if (userAccount == null)
+            {
+                return BadRequest("無效的帳號");
+            }
+
+            var newUserInfo = new UserInformation
+            {
+                AccountUser = userInfoDto.AccountUser,
+                UserFirstName = userInfoDto.UserFirstName,
+                UserLastName = userInfoDto.UserLastName,
+                UserPhoto = userInfoDto.UserPhoto,
+                Phone = userInfoDto.Phone,
+                Address = userInfoDto.Address,
+                Gender = userInfoDto.Gender,
+                Email = userInfoDto.Email,
+                Nickname = userInfoDto.Nickname,
+                Birthday = userInfoDto.Birthday,
+                ModiifiedDate = DateTime.Now
+            };
+
+            _context.UserInformations.Add(newUserInfo);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetUserInfo), new { account = newUserInfo.AccountUser }, newUserInfo);
+        }
     }
 }

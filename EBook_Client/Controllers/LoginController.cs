@@ -17,6 +17,11 @@ namespace BabyCiao_Client.Controllers
             return View();
         }
 
+        public IActionResult information()
+        {
+            return View();
+        }
+
         [HttpPost]
         public IActionResult 登出()
         {
