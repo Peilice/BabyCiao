@@ -8,14 +8,11 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BabyCiao_Client.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-    <!-- Vue -->
-    <script src="https://unpkg.com/vue@latest"></script>
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid" id="app">
+            <div class="container-fluid" id="navbar-app">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BabyCiao</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +70,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        const app = Vue.createApp({
+        const navbarApp = Vue.createApp({
             data() {
                 return {
                     account: '',
@@ -93,11 +90,44 @@
                     localStorage.removeItem('token');
                     this.isLoggedIn = false;
                     window.location.href = '/';
+                },
+                login() {
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+
+                    axios.post('API_LOGIN_URL', {
+                        username: username,
+                        password: password
+                    })
+                        .then(response => {
+                            const data = response.data;
+                            if (data.account && data.token) {
+                                localStorage.setItem('account', data.account);
+                                localStorage.setItem('token', data.token);
+                                this.isLoggedIn = true;
+                                window.location.href = 'https://localhost:7000';
+                            } else {
+                                // 處理登入失敗
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: '登入失敗',
+                                    text: '帳號或密碼錯誤'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: '登入失敗',
+                                text: '伺服器錯誤，請稍後再試'
+                            });
+                        });
                 }
             }
         });
 
-        app.mount('#app');
+        navbarApp.mount('#navbar-app');
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)

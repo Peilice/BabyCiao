@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BabyCiaoAPI.Controllers
 {
-    [EnableCors("andy")]
+    [EnableCors("AllowAll")]
     [Route("api/[controller]")]
     [ApiController]
     public class GroupBuyingController : ControllerBase

@@ -66,8 +66,9 @@ namespace BabyCiaoAPI.Controllers
             var token = GenerateJwtToken(userAccount);
             var account = userAccount.Account;
             var hasBasicInfo = _context.UserInformations.Any(u => u.AccountUser == userAccount.Account);
-
-            return Ok(new { message = "登入成功", token, account, hasBasicInfo });
+            var permissions = userAccount.Permissions;
+         
+            return Ok(new { message = "登入成功", token, account, hasBasicInfo, permissions });
         }
 
         private string GenerateJwtToken(UserAccount user)

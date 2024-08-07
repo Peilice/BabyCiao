@@ -35,11 +35,13 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll",
         builder =>
         {
-            builder.AllowAnyOrigin()
+            builder.WithOrigins("https://localhost:7231", "https://localhost:7000")
                    .AllowAnyMethod()
-                   .AllowAnyHeader();
+                   .AllowAnyHeader()
+                   .AllowCredentials(); // 允許憑證（Cookie）
         });
 });
+
 
 // 配置 JWT 驗證
 var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]); // 使用配置中的密鑰

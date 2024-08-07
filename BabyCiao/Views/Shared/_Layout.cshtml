@@ -1,5 +1,4 @@
-﻿@inject UserInfoServer userInfoServer
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -9,11 +8,9 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BabyCiao.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
     @await RenderSectionAsync("Styles", required: false)
     <style>
         body {
-            
             background-image: url('/images/giftly.png');
         }
     </style>
@@ -21,7 +18,7 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
+            <div class="container-fluid" id="navbar-admin">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BabyCiao</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -29,51 +26,33 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @* 會員管理 *@
+                        <!-- 會員管理 -->
                         <li class="nav-item dropdown">
                             <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">會員管理</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" asp-area="" asp-controller="UserAccounts" asp-action="Index">帳戶管理</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-controller="UserInformations" asp-action="Index">會員資料管理</a></li>
-            
                             </ul>
                         </li>
-                        @* 委託單管理 *@
+                        <!-- 媒合平台管理 -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Nannyplatform" asp-action="Nannyplatformindex">媒合平台管理</a>
                         </li>
-  @*                       <li class="nav-item dropdown">
-                            <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">媒合平台管理</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="NannyRequirments" asp-action="Index">保母審核管理</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Nannyplatform" asp-action="Nannyplatformindex">委託單管理</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="contracts" asp-action="Index">合約管理</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="comment" asp-action="Index">用戶狀態管理</a></li>
-                            </ul>
-                        </li> *@
-                        @* 公告管理 *@
-                        @if (User.Identity.IsAuthenticated)
+                        <!-- 公告管理 -->
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("公告編輯"))
                         {
-                            @if (User.IsInRole("公告編輯"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Announcements" asp-action="Index">公告管理</a>
-                                </li>
-                            }
-                           
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Announcements" asp-action="Index">公告管理</a>
+                            </li>
                         }
-                        @* 電子聯絡簿 *@
-                        @if (User.Identity.IsAuthenticated)
+                        <!-- 電子聯絡簿 -->
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("電子聯絡簿"))
                         {
-                            @if (User.IsInRole("電子聯絡簿"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" href="https://localhost:7231">電子聯絡簿</a>
-                                </li>
-                            }
-
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="https://localhost:7231">電子聯絡簿</a>
+                            </li>
                         }
-                        @* 社群管理 *@
+                        <!-- 社群管理 -->
                         <li class="nav-item dropdown">
                             <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">社群管理</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -83,58 +62,53 @@
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Platforms" asp-action="Index">論壇文章管理</a></li>
                             </ul>
                         </li>
-                        @* 權限管理 *@
+                        <!-- 權限管理 -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Index">權限群組管理</a>
                         </li>
-                        @* 數據分析 *@
+                        <!-- 數據分析 -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="DataAnalysis" asp-action="Index">數據分析管理</a>
                         </li>
                     </ul>
-                    <partial name="_LoginPartial_self" />
+                    <div>
+                        <div v-if="isLoggedIn">
+                            <a :href="'/UserInformation/UserInformation'" class="nav-link">{{ account }}</a> /
+                            <a href="#" v-on:click="logout"><i class="fas fa-user"></i>登出</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
-        <div class="page-content p-4">
-
-            @RenderBody()
-
-
-            <!-- Page Footer-->
-            <footer class="position-absolute bottom-0 bg-dash-dark-2 text-white text-center py-3 w-100 text-xs" id="footer">
-                <div class="container-fluid text-center">
-                    <p class="mb-0 text-dash-gray">&copy; 貝比巧遇 <a target="_blank" href=""></a></p>
-                </div>
-            </footer>
-        </div>
+    <div class="page-content p-4">
+        @RenderBody()
+        <!-- Page Footer-->
+        <footer class="position-absolute bottom-0 bg-dash-dark-2 text-white text-center py-3 w-100 text-xs" id="footer">
+            <div class="container-fluid text-center">
+                <p class="mb-0 text-dash-gray">&copy; 貝比巧遇 <a target="_blank" href=""></a></p>
+            </div>
+        </footer>
     </div>
-
     <!-- JavaScript files-->
     <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/vendor/just-validate/js/just-validate.min.js"></script>
     <script src="~/vendor/chart.js/Chart.min.js"></script>
     <script src="~/vendor/choices.js/public/assets/scripts/choices.min.js"></script>
-    <script src="~/js/js-cookie.js"> </script>
-    <script src="~/js/demo.js"> </script>
+    <script src="~/js/js-cookie.js"></script>
+    <script src="~/js/demo.js"></script>
     <script src="~/js/charts-home.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
     <!-- Notifications  -->
     <!-- Toast-->
-
-    <script src="~/js/home-premium.js">  </script>
+    <script src="~/js/home-premium.js"></script>
     <!-- Main File-->
     <script src="~/js/front.js"></script>
-    <script>
-        // ------------------------------------------------------- //
-        //   Inject SVG Sprite -
-        //   see more here
-        //   https://css-tricks.com/ajaxing-svg-sprite/
-        // ------------------------------------------------------ //
-        function injectSvgSprite(path) {
+    <script src="https://unpkg.com/vue@3.4.31/dist/vue.global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+    <script>
+        function injectSvgSprite(path) {
             var ajax = new XMLHttpRequest();
             ajax.open("GET", path, true);
             ajax.send();
@@ -145,20 +119,51 @@
                 document.body.insertBefore(div, document.body.childNodes[0]);
             }
         }
-        // this is set to BootstrapTemple website as you cannot
-        // inject local SVG sprite (using only 'icons/orion-svg-sprite.svg' path)
-        // while using file:// protocol
-        // pls don't forget to change to your domain :)
         injectSvgSprite('~/icons/orion-svg-sprite.svg');
-
-
-
-
-
-
     </script>
     <!-- FontAwesome CSS - loading as last, so it doesn't block rendering-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     @RenderSection("scripts", required: false)
+
+    <script>
+        // 讀取Cookies中的值
+        function getCookie(name) {
+            let cookieArr = document.cookie.split(";");
+            for (let i = 0; i < cookieArr.length; i++) {
+                let cookiePair = cookieArr[i].split("=");
+                if (name == cookiePair[0].trim()) {
+                    return decodeURIComponent(cookiePair[1]);
+                }
+            }
+            return null;
+        }
+
+        const navbarApp = Vue.createApp({
+            data() {
+                return {
+                    account: '',
+                    isLoggedIn: false
+                };
+            },
+            mounted() {
+                this.checkLoginStatus();
+            },
+            methods: {
+                checkLoginStatus() {
+                    this.account = getCookie('account');
+                    this.isLoggedIn = !!this.account;
+                },
+                logout() {
+                    document.cookie = 'account=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                    document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                    document.cookie = 'permissions=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                    this.isLoggedIn = false;
+                    window.location.href = 'https://localhost:7231';
+                }
+            }
+        });
+
+        navbarApp.mount('#navbar-admin');
+    </script>
 </body>
 </html>

@@ -44,7 +44,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ account, password })
+                    body: JSON.stringify({ account, password }),
                 });
 
                 const data = await response.json();
@@ -54,10 +54,22 @@
                     messageDiv.className = 'message success';
                     localStorage.setItem('token', data.token); // 保存 token 到 localStorage
                     localStorage.setItem('account', account); // 保存 account 到 localStorage
+                    localStorage.setItem('permissions', data.permissions);
+
+                    document.cookie = `token=${data.token}; path=/; domain=localhost`;
+                    document.cookie = `account=${account}; path=/; domain=localhost`;
+                    document.cookie = `permissions=${data.permissions}; path=/; domain=localhost`;
+
 
                     if (data.hasBasicInfo) {
                         setTimeout(() => {
-                            window.location.href = "https://localhost:7231/";
+                            if (data.permissions >= 5) { // 假設權限值大於等於5的用戶是管理員
+                                // 如果用戶是管理員，跳轉到後台
+                                window.location.href = "https://localhost:7000/";
+                            } else {
+                                // 否則，跳轉到前台主頁
+                                window.location.href = "https://localhost:7231/";
+                            }
                         }, 3000);
                     } else {
                         alert('首次登入請先填寫基本資料');
@@ -83,7 +95,6 @@
     .login-container {
         display: flex;
         height: 100vh;
-        /* background-image: url('img/bg.jpg'); */
         background-size: cover;
         background-position: center;
     }
