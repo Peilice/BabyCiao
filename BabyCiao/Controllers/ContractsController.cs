@@ -658,5 +658,5 @@
         //{
         //    return _context.Contracts.Any(e => e.ContractId == id);
         //}
-    }
+    
 

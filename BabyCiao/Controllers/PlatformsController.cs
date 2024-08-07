@@ -97,9 +97,7 @@ namespace BabyCiao.Controllers
             ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account");
             return RedirectToAction(nameof(Index));
         }
-            ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", platformDTO.PlatformAccountUserAccount);
-            return View(platformDTO);
-        }
+           
 
         // GET: Platforms/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -158,7 +156,6 @@ namespace BabyCiao.Controllers
             {
                 return NotFound();
             }
-                    platform.UpdateEntity(platformDTO);
 
             editPlatform.AccountUserAccount = platformDTO.PlatformAccountUserAccount;
             editPlatform.ModifiedTime = DateOnly.FromDateTime(DateTime.Now);

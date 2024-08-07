@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BabyCiaoAPI.Models;
@@ -25,13 +27,9 @@ namespace BabyCiaoAPI.Controllers
 
         // GET: api/NannyResumes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<NannyResumeDTO>>> GetNannyResumes(
-            [FromQuery] string city = null,
-            [FromQuery] string district = null,
-            [FromQuery] string serviceType = null,
-            [FromQuery] string experience = null)
+        public async Task<ActionResult<IEnumerable<NannyResume>>> GetNannyResumes()
         {
-            return await _context.NannyResumes.Select(c => new NannyResumeDTO
+            return await _context.NannyResumes.Select(c => new NannyResume
             {
                 City = c.City,
                 District = c.District,
@@ -43,14 +41,15 @@ namespace BabyCiaoAPI.Controllers
                 ChildcareAvailableOver2 = c.ChildcareAvailableOver2,
                 Language = c.Language,
                 ProfessionalPortrait = c.ProfessionalPortrait,
+
             }).ToListAsync();
         }
 
         // GET: api/NannyResumes/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<NannyResumeDTO>> GetNannyResumeinfo(int id)
+        [HttpGet("GetNannyResumeinfo")]
+        public async Task<ActionResult<NannyResume>> GetNannyResumeinfo(int id)
         {
-            var resume = await _context.NannyResumes.Select(c => new NannyResumeDTO
+            var resumes = await _context.NannyResumes.Select(c => new NannyResumeDTO
             {
                 Id = c.Id,
                 NannyAccountUserAccount = c.NannyAccountUserAccount,
@@ -68,60 +67,20 @@ namespace BabyCiaoAPI.Controllers
                 //DisplayControl = c.DisplayControl
             }).ToListAsync();
 
-        [HttpPost]
-        public async Task<ActionResult<NannyResumeDTO>> PostNannyResume(NannyResumeDTO nannyResumeDTO)
-        {
-            var nannyResume = new NannyResume
-            {
-                NannyAccountUserAccount = nannyResumeDTO.NannyAccountUserAccount,
-                City = nannyResumeDTO.City,
-                District = nannyResumeDTO.District,
-                Introduction = nannyResumeDTO.Introduction,
-                TypeOfDaycare = nannyResumeDTO.TypeOfDaycare,
-                ServiceItems = nannyResumeDTO.ServiceItems,
-                QuasiPublicChildcare = nannyResumeDTO.QuasiPublicChildcare,
-                ChildcareAvailableUnder2 = nannyResumeDTO.ChildcareAvailableUnder2,
-                ChildcareAvailableOver2 = nannyResumeDTO.ChildcareAvailableOver2,
-                Language = nannyResumeDTO.Language,
-                ServiceCenter = nannyResumeDTO.ServiceCenter,
-                ProfessionalPortrait = nannyResumeDTO.ProfessionalPortrait,
-                DisplayControl = nannyResumeDTO.DisplayControl
-            };
 
-            _context.NannyResumes.Add(nannyResume);
-            await _context.SaveChangesAsync();
+            return Ok(resumes);
 
-            return CreatedAtAction(nameof(GetNannyResumeinfo), new { id = nannyResume.Id }, nannyResumeDTO);
         }
 
+        // PUT: api/NannyResumes/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutNannyResume(int id, NannyResumeDTO nannyResumeDTO)
+        public async Task<IActionResult> PutNannyResume(int id, NannyResume nannyResume)
         {
-            if (id != nannyResumeDTO.Id)
+            if (id != nannyResume.Id)
             {
                 return BadRequest();
             }
-
-            var nannyResume = await _context.NannyResumes.FindAsync(id);
-
-            if (nannyResume == null)
-            {
-                return NotFound();
-            }
-
-            nannyResume.NannyAccountUserAccount = nannyResumeDTO.NannyAccountUserAccount;
-            nannyResume.City = nannyResumeDTO.City;
-            nannyResume.District = nannyResumeDTO.District;
-            nannyResume.Introduction = nannyResumeDTO.Introduction;
-            nannyResume.TypeOfDaycare = nannyResumeDTO.TypeOfDaycare;
-            nannyResume.ServiceItems = nannyResumeDTO.ServiceItems;
-            nannyResume.QuasiPublicChildcare = nannyResumeDTO.QuasiPublicChildcare;
-            nannyResume.ChildcareAvailableUnder2 = nannyResumeDTO.ChildcareAvailableUnder2;
-            nannyResume.ChildcareAvailableOver2 = nannyResumeDTO.ChildcareAvailableOver2;
-            nannyResume.Language = nannyResumeDTO.Language;
-            nannyResume.ServiceCenter = nannyResumeDTO.ServiceCenter;
-            nannyResume.ProfessionalPortrait = nannyResumeDTO.ProfessionalPortrait;
-            nannyResume.DisplayControl = nannyResumeDTO.DisplayControl;
 
             _context.Entry(nannyResume).State = EntityState.Modified;
 
@@ -144,12 +103,22 @@ namespace BabyCiaoAPI.Controllers
             return NoContent();
         }
 
+        // POST: api/NannyResumes
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<NannyResume>> PostNannyResume(NannyResume nannyResume)
+        {
+            _context.NannyResumes.Add(nannyResume);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetNannyResume", new { id = nannyResume.Id }, nannyResume);
+        }
+
         // DELETE: api/NannyResumes/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteNannyResume(int id)
         {
             var nannyResume = await _context.NannyResumes.FindAsync(id);
-
             if (nannyResume == null)
             {
                 return NotFound();
