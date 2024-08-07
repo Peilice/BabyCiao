@@ -210,6 +210,21 @@ namespace BabyCiaoAPI.Controllers
 			await _context.SaveChangesAsync();
 			var newId = product.Id;
 
+			try
+			{
+				var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+				if (!Directory.Exists(uploadPath))
+				{
+					Directory.CreateDirectory(uploadPath);
+				}
+			}
+			catch (Exception ex)
+			{
+				// 記錄錯誤
+				Console.WriteLine($"Error creating directory: {ex.Message}");
+				return StatusCode(500, new { message = "Error creating directory", details = ex.Message });
+			}
+
 			// 儲存照片
 			if (photoFiles != null && photoFiles.Count > 0)
 			{//錯誤尚未解決
