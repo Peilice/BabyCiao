@@ -20,7 +20,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
+                        <li class="nav-item" v-if="permissions >= 4">
                             <a class="nav-link text-dark" href="@Utility.SD.localHost_Backstage/Home/Index">管理後台</a>
                         </li>
                         <li class="nav-item">
@@ -74,6 +74,7 @@
             data() {
                 return {
                     account: '',
+                    permissions: 0,
                     isLoggedIn: false
                 };
             },
@@ -83,11 +84,13 @@
             methods: {
                 checkLoginStatus() {
                     this.account = localStorage.getItem('account');
+                    this.permissions = parseInt(localStorage.getItem('permissions'), 10);
                     this.isLoggedIn = !!this.account;
                 },
                 logout() {
                     localStorage.removeItem('account');
                     localStorage.removeItem('token');
+                    localStorage.removeItem('permissions');
                     this.isLoggedIn = false;
                     window.location.href = '/';
                 },
@@ -104,6 +107,7 @@
                             if (data.account && data.token) {
                                 localStorage.setItem('account', data.account);
                                 localStorage.setItem('token', data.token);
+                                localStorage.setItem('permissions', data.permissions);
                                 this.isLoggedIn = true;
                                 window.location.href = 'https://localhost:7000';
                             } else {

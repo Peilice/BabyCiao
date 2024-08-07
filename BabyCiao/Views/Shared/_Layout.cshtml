@@ -142,6 +142,7 @@
             data() {
                 return {
                     account: '',
+                    permissions: 0,
                     isLoggedIn: false
                 };
             },
@@ -151,7 +152,13 @@
             methods: {
                 checkLoginStatus() {
                     this.account = getCookie('account');
+                    this.permissions = parseInt(getCookie('permissions'), 10);
                     this.isLoggedIn = !!this.account;
+
+                    // 檢查權限值，如果小於4，則自動登出
+                    if (this.permissions < 4) {
+                        this.logout();
+                    }
                 },
                 logout() {
                     document.cookie = 'account=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
