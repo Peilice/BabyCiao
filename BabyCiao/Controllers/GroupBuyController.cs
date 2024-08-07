@@ -252,14 +252,10 @@ namespace BabyCiao.Controllers
 			return View(group);
 		}
 
-		// POST: GroupBuy/Create
-		// To protect from overposting attacks, enable the specific properties you want to bind to.
-		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromForm] GroupBuyDTO model)
         {
-
             if (model == null)
             {
                 return NotFound();
@@ -281,7 +277,6 @@ namespace BabyCiao.Controllers
                 };
                 _context.GroupBuyings.Add(buy);
 
-			_context.Add(buy);
                 await _context.SaveChangesAsync();
                 var newId = buy.Id;
 
@@ -315,7 +310,6 @@ namespace BabyCiao.Controllers
                         {
                             await file.CopyToAsync(fileStream);
                         }
-					// please let GroupBuyPhotoDTO complete
 
                         var groupBuyPhoto = new GroupBuyingPhoto
                         {
@@ -331,8 +325,6 @@ namespace BabyCiao.Controllers
                 }
 
                 return RedirectToAction(nameof(Index));
-
-
             }
             catch (Exception ex)
             {

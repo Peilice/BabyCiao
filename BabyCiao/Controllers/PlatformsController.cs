@@ -74,8 +74,6 @@ namespace BabyCiao.Controllers
         }
 
         // POST: Platforms/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromForm] PlatformsDTO platformDTO)
@@ -97,7 +95,6 @@ namespace BabyCiao.Controllers
             ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account");
             return RedirectToAction(nameof(Index));
         }
-           
 
         // GET: Platforms/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -140,8 +137,6 @@ namespace BabyCiao.Controllers
         }
 
         // POST: Platforms/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [FromForm] PlatformsDTO platformDTO)
@@ -232,11 +227,6 @@ namespace BabyCiao.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool PlatformExists(int id)
-        {
-            return _context.Platforms.Any(e => e.Id == id);
         }
 
         //private bool PlatformExists(int id)

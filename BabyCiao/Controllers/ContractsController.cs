@@ -344,13 +344,6 @@
 //    //        contract.ModifiedTime = DateTime.Now;
 //    //        contract.Display = model.Display;
 
-    //    if (ModelState.IsValid)
-    //    {
-    //        var contract = _context.Contracts.Find(id);
-    //        if (contract == null)
-    //        {
-    //            return NotFound();
-    //        }
 
 //    //        if (model.UploadedContractFile != null)
 //    //        {
@@ -396,15 +389,6 @@
 //            {
 //                return NotFound();
 //            }
-    //        }
-
-    //        // 保存更改
-    //        _context.Update(contract);
-    //        await _context.SaveChangesAsync();
-    //        return RedirectToAction(nameof(Index));
-    //    }
-    //    return View(model);
-    //}
 
 //            // 执行退件逻辑，如更改状态等
 //            contract.Statement = "Returned";  // 假设有个 Status 字段表示合约状态
@@ -416,9 +400,6 @@
 //        }
 //        }
 
-        //    return RedirectToAction(nameof(Index));
-        //}
-        //}
 
 
 
@@ -508,12 +489,6 @@
 //        //    return View(contractViewModel);
 //        //}
 
-        //        _context.Add(contract);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(contractViewModel);
-        //}
 
 
 //        //    // GET: Contracts/Edit/5
@@ -653,10 +628,4 @@
 //        //    return _context.Contracts.Any(e => e.ContractId == id);
 //        //}
 //    }
-
-        //private bool ContractExists(int id)
-        //{
-        //    return _context.Contracts.Any(e => e.ContractId == id);
-        //}
-    
 

@@ -1,112 +1,72 @@
 using BabyCiaoAPI.Models;
-using BabyCiaoAPI.Helpers; // 引入自定義的 JsonConverter 命名空間
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using System.Text;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 加載配置文件
-builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+// Add services to the container.
 
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
+builder.Services.AddDbContext<BabyciaoContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Babyciao")));
 
-// 添加服務到容器
-builder.Services.AddDbContext<BabyciaoContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("BabyCiao")));
-
-// 配置 JSON 序列化選項以處理循環參考
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-    options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter()); // 添加自定義的 DateOnlyJsonConverter
+    options.JsonSerializerOptions.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.Create(System.Text.Unicode.UnicodeRanges.All);
 });
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-// 設置 CORS 政策
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll",
-        builder =>
-        {
-            builder.AllowAnyOrigin()
-                   .AllowAnyMethod()
-                   .AllowAnyHeader();
-        });
+builder.Services.AddHttpContextAccessor();
+var myPolicy = "andy";
+builder.Services.AddCors(o => {
+    o.AddPolicy(name: myPolicy, policy => {
+        policy.WithOrigins("*").WithMethods("*").WithHeaders("*");
+    });
 });
 
-// 配置 JWT 驗證
-var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]); // 使用配置中的密鑰
-builder.Services.AddAuthentication(options =>
+builder.Services.AddSwaggerGen(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters
+    //定義安全方案，使用了OAuth 2.0的Bearer方案。指定標頭中的授權信息，並描述方案的用途。
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
+        Description = "test",
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
+    //操作過濾器，它確保每個端點都需要 “Bearer” 授權。這意味著只有帶有有效 Bearer 標記的請求才能訪問這些端點。
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
+});
+
+//使用JWT Bearer 身份驗證。
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(option =>
+{
+    option.TokenValidationParameters = new TokenValidationParameters
+    {
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(key)
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:key"])),
+        ValidateIssuer = false,
+        ValidateAudience = false,
     };
 });
-
-// 配置 Swagger 以支持 JWT
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "BabyCiaoAPI", Version = "v1" });
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement{
-    {
-        new OpenApiSecurityScheme{
-            Reference = new OpenApiReference{
-                Type = ReferenceType.SecurityScheme,
-                Id = "Bearer"
-            }
-        },
-        new string[]{}
-    }
-    });
-});
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "BabyCiaoAPI v1");
-        //c.RoutePrefix = string.Empty; // 確保Swagger UI在根路徑運行
-    });
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-// 使用 CORS 政策
-app.UseCors("AllowAll");
-
-app.UseAuthentication(); // 添加身份驗證中間件
+app.UseCors();
+app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

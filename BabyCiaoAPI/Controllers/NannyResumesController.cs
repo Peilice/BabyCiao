@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BabyCiaoAPI.Models;
 using Microsoft.AspNetCore.Cors;
-using BabyCiaoAPI.DTO;
 
 namespace BabyCiaoAPI.Controllers
 {
@@ -31,17 +30,17 @@ namespace BabyCiaoAPI.Controllers
         {
             return await _context.NannyResumes.Select(c => new NannyResume
             {
-                City = c.City,
-                District = c.District,
-                Introduction = c.Introduction,
-                TypeOfDaycare = c.TypeOfDaycare,
-                ServiceItems = c.ServiceItems,
-                QuasiPublicChildcare = c.QuasiPublicChildcare,
-                ChildcareAvailableUnder2 = c.ChildcareAvailableUnder2,
-                ChildcareAvailableOver2 = c.ChildcareAvailableOver2,
-                Language = c.Language,
-                ProfessionalPortrait = c.ProfessionalPortrait,
-
+                City=c.City,
+                District=c.District,
+                Introduction=c.Introduction,
+                TypeOfDaycare=c.TypeOfDaycare,
+                ServiceItems=c.ServiceItems,
+                QuasiPublicChildcare=c.QuasiPublicChildcare,
+                ChildcareAvailableUnder2=c.ChildcareAvailableUnder2,
+                ChildcareAvailableOver2=c.ChildcareAvailableOver2,
+                Language=c.Language,
+                ProfessionalPortrait=c.ProfessionalPortrait,
+         
             }).ToListAsync();
         }
 

@@ -1,91 +1,91 @@
-﻿﻿    <div id="app">
-    <div class="container mb-4">
-        <h1 class="text-center mb-3 mt-3 fw-bold">線上投票活動</h1>
-    </div>
-    <!-- 活動列表 -->
-    <div class="container">
-        <div class="row mb-4">
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                <div class="col" v-for="item in OnlineCompetitions" :key="item.id">
-                    <div class="card h-100">
-                        <a v-on:click="check(item.id)"><img v-bind:src="getPhotoUrl(item.competitionPhotoNames)" class="card-img-top w-100" alt="..."></a>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ item.competitionName }}</h5>
-                            <p>活動期間 {{item.startTime}}~ {{item.endTime}}</p>
-                            <div class="d-flex justify-content-between">
-                                <button class="btn btn-outline-dark mb-2" type="submit">
-                                    <i class="bi bi-heart">收藏</i>
-                                </button>
-                                <p class="badge bg-light text-dark">{{ item.statement }}</p>
-                            </div>
+﻿    <div id="app">
+        <div class="container mb-4">
+            <h1 class="text-center mb-3 mt-3 fw-bold">線上投票活動</h1>
+        </div>
+            <!-- 活動列表 -->
+        <div class="container">
+            <div class="row mb-4">
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="col" v-for="item in OnlineCompetitions" :key="item.id">
+                        <div class="card h-100">
+                            <a v-on:click="check(item.id)"><img v-bind:src="getPhotoUrl(item.competitionPhotoNames)" class="card-img-top w-100" alt="..."></a>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ item.competitionName }}</h5>
+                                <p>活動期間 {{item.startTime}}~ {{item.endTime}}</p>
+                                <div class="d-flex justify-content-between">
+                                    <button class="btn btn-outline-dark mb-2" type="submit">
+                                        <i class="bi bi-heart">收藏</i>
+                                    </button>
+                                    <p class="badge bg-light text-dark">{{ item.statement }}</p>
+                                </div>
 
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    
 
 
+    <!-- footer -->
+    <footer>
+        <div class="footer">
+            <p>電話：0945789456 | 地址：高雄市前鎮區中華五路200號</p>
+            <p><small>&copy; 2024 BabyCiao</small></p>
+        </div>
+    </footer>
 
-<!-- footer -->
-<footer>
-    <div class="footer">
-        <p>電話：0945789456 | 地址：高雄市前鎮區中華五路200號</p>
-        <p><small>&copy; 2024 BabyCiao</small></p>
-    </div>
-</footer>
-
-<!-- Bootstrap -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
-        crossorigin="anonymous"></script>
-<!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<!-- axios -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
-        integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script>
-    //var baseAddress="https://localhost:7292";
-    var vueApp = {
-        data() {
-            return {
-                //CompetitionName: "",
-                OnlineCompetitions: [],
-            };
-        },
-        methods: {
-            fetchcompetitions: function () {
-                let _this = this;
-                //var request = {};
-                try {
-                    axios.get('https://localhost:7292/api/OnlineCompetitions')
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+            crossorigin="anonymous"></script>
+    <!-- jquery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- axios -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
+            integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        //var baseAddress="https://localhost:7292";
+        var vueApp = {
+            data() {
+                return {
+                    //CompetitionName: "",
+                    OnlineCompetitions: [],
+                };
+            },
+            methods: {
+                fetchcompetitions: function () {
+                    let _this = this;
+                    //var request = {};
+                    try {
+                        axios.get('https://localhost:7292/api/OnlineCompetitions')
                         .then(response => {
                             _this.OnlineCompetitions = response.data;
                         })
                         .catch(err => alert(err))
+                    } 
+                    catch (error) {
+                        console.log(error);
+                    }
+                },
+                getPhotoUrl(CompetitionPhotoNames) {
+                    return CompetitionPhotoNames != null ? `https://localhost:7000/uploads/${CompetitionPhotoNames}` : `https://localhost:7000/image/noimage.jpg`;
+                },
+                check:function(IdCom){
+                    sessionStorage.setItem("IdCompetition", IdCom);
+                    window.location.href = `https://localhost:7231/Competitions/voteInfo/${IdCom}`;
                 }
-                catch (error) {
-                    console.log(error);
-                }
+
             },
-            getPhotoUrl(CompetitionPhotoNames) {
-                return CompetitionPhotoNames != null ? `https://localhost:7000/uploads/${CompetitionPhotoNames}` : `https://localhost:7000/image/noimage.jpg`;
-            },
-            check: function (IdCom) {
-                sessionStorage.setItem("IdCompetition", IdCom);
-                window.location.href = `https://localhost:7231/Competitions/voteInfo/${IdCom}`;
+            mounted: function () {
+                let _this = this;
+                _this.fetchcompetitions()
             }
 
-        },
-        mounted: function () {
-            let _this = this;
-            _this.fetchcompetitions()
-        }
 
-
-    };
-    var app = Vue.createApp(vueApp).mount('#app');
-</script>
+        };
+        var app = Vue.createApp(vueApp).mount('#app');
+    </script>
