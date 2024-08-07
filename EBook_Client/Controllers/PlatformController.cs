@@ -12,7 +12,7 @@ namespace BabyCiao_Client.Controllers
         }
 
         // GET: PlatformController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Article()
         {
             return View();
         }
