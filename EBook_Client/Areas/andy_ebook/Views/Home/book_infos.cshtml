@@ -6,37 +6,137 @@
     </style>
 }
 
-
+<div class="container-fluid" id="app_Ebook_infos">
 <!-- breadcrmb start -->
-<div class="bg-light px-3">
+<div>
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="index.html">首頁</a></li>
-            <li class="breadcrumb-item active" aria-current="page">電子聯絡簿</li>
+            <li class="breadcrumb-item"><a href="@Utility.SD.localHost_Client/Home/Index">首頁</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><a href="@Utility.SD.localHost_Client/andy_ebook/Home/Index">電子聯絡簿</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{babyName}}</li>
+
         </ol>
     </nav>
 </div>
 <!-- breadcrmb end -->
 <!-- list and tabs start -->
-<div class="container-fluid py-5">
-    <div class="row">
+
+    <div class="row py-3">
         <!-- list start -->
         <div class="col-12 col-md-3" style="width:260px">
-            <div class="list-group">
                 <h3 class="fs-3 fw-bold ps-3">功能選單</h3>
-                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_record" class="list-group-item list-group-item-action">最新交接事項</a>
-            <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_infos" class="list-group-item list-group-item-action active">寶寶基本資料</a>
-            <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_historySearch" class="list-group-item list-group-item-action ">歷史紀錄查詢</a>
+            <div class="list-group ">
+                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_record" class="list-group-item list-group-item-action ">生活紀錄</a>
+                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_infos" class="list-group-item list-group-item-action active">寶寶資訊</a>
+                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_historySearch" class="list-group-item list-group-item-action">統計圖表</a>
                 <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_activityDaily" class="list-group-item list-group-item-action">活動日記</a>
             </div>
         </div>
         <!-- list end -->
         <div class="col-12 col-md-9 rounded">
             <!-- tabs start -->
-        <div class="div1" style="background-color:#fff4ef ;">
-        </div>
+            <div class="div1 container-fluid rounded-3" style="background-color:#fff4ef ;">
+                <div class="row py-3">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-4">
+                                <img class="w-100 rounded-3 mb-1" src="~/images/背景2.png" />
+                                <input class="form-control form-control-sm" id="formFileSm" type="file">
+                            </div>
+                            <div class="col-8">
+                                <div class="border border-3 border-danger rounded p-2">
+                                    <p class="mb-0">緊急聯絡人 : {{emergencyContact}}</p>
+                                    <p class="mb-0">連絡電話1 : {{emergencyContactPhone1}}</p>
+                                    <p class="mb-0">連絡電話2 : {{emergencyContactPhone2}}</p>
+                                </div>
+                                <div class="row mx-1 mt-3">
+                                    <div class="col-4">
+                                        <h5>基本資料:</h5>
+                                        <hr>
+                                        <p class="mb-1 w-100">姓名 : {{babyName}}</p>
+                                        <p class="mb-1">性別 : {{gender}}</p>
+                                        <p class="mb-1">生日 : {{birthday}}</p>
+                                        <p class="mb-1">年齡 : {{age}}</p>
+                                        <p class="mb-1">血型 : {{bloodType}}</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <h5>成長狀態:</h5>
+                                        <hr>
+                                        <p class="mb-1">身高 : {{height}}</p>
+                                        <p class="mb-1">體重 : {{weight}}</p>
+                                        <p class="mb-1">頭圍 : {{headCircumference}}</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <h5>注意事項:</h5>
+                                        <hr>
+                                        <p class="mb-1">疾病史 : {{medicalHistory}}</p>
+                                        <p class="mb-1">過敏史 : {{allergyHistory}}</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <div>編輯時間 : {{modifiedDate}}<button class="btn btn-primary">編輯</button></div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row rounded m-1 w-100" style="background-color: lightyellow;" V-for="item in datas">
+                            <div class="col-4 my-2">
+                                <h5 class="fw-bolder">{{item.dateTimeString}}</h5>
+                            </div>
+                            <div class="col-5 my-2">
+                                <p class="ms-5 mb-0">飲食類別: {{item.type}}</p>
+                                <p class="ms-5 mb-0">飲食狀況: {{item.amount}}{{item.unit}}</p>
+                            </div>
+                            <div class="col-3 d-flex justify-content-center align-items-center">
+                                <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="edit(item.id)">編輯</button>
+                                <button class="m-1 btn btn-danger h-50 d-flex align-items-center" v-on:click="toDelete(item.id)">刪除</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- tabs end -->
         </div>
     </div>
 </div>
 <!-- list and tabs end -->
+@section Scripts{
+    <script>
+        const useToken = localStorage.getItem("token");
+        const headers = {
+            'Authorization': `Bearer ${useToken}`,
+        };
+        let Ebook_user = sessionStorage.getItem("username");
+        let IdContactBook = sessionStorage.getItem("IdContactBook");
+
+        var vueApp = {
+            data() {
+                return{
+                    datas:[],
+
+                };
+            },
+            methods:{
+                edit: function (targetId) {
+                    alert('edit')
+                },
+                toDelete: function (targetId) {
+                    alert('toDelete')
+                },
+                getBabyInfos: function () {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/getBabyInfos/${id}`, { headers 
+                    }).then(result => {
+                        alert(result);
+                    }).catch(err => {alert(err)});
+                }
+            },
+            mounted: function () {
+                let _this = this;
+                alert('start')
+            }
+        }
+
+        var app_Ebook_infos = Vue.createApp(vueApp).mount("app_Ebook_infos");
+    </script>
+}

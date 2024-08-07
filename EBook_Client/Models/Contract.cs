@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BabyCiaoAPI.Models;
+namespace BabyCiao_Client.Models;
 
 public partial class Contract
 {

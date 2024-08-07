@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BabyCiaoAPI.Models;
+namespace BabyCiao_Client.Models;
 
 public partial class ContactBook
 {
@@ -24,8 +24,6 @@ public partial class ContactBook
     public string EmergencyContactPhone1 { get; set; } = null!;
 
     public string? EmergencyContactPhone2 { get; set; }
-
-    public string? BabyPhoto { get; set; }
 
     public virtual ICollection<DiaperDetail> DiaperDetails { get; set; } = new List<DiaperDetail>();
 

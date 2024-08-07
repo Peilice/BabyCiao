@@ -16,6 +16,8 @@
             background-Color: pink;
             font-Size: 16px;
             margin-bottom:8px;
+            padding-inline-start:8px;
+            display:none;
         }
 
         .MSG_title_Diaper {
@@ -23,7 +25,28 @@
             background-Color: yellow;
             font-Size: 16px;
             margin-bottom: 8px;
+            padding-inline-start: 8px;
+            display: none;
         }
+
+        .MSG_title_Memo {
+            /* position: absolute; */
+            background-Color: lightgreen;
+            font-Size: 16px;
+            margin-bottom: 8px;
+            padding-inline-start: 8px;
+            display: none;
+        }
+
+        .MSG_title_SleepState {
+            /* position: absolute; */
+            background-Color: lightblue;
+            font-Size: 16px;
+            margin-bottom: 8px;
+            padding-inline-start: 8px;
+            display: none;
+        }
+        
         .MSG {
             /* position: absolute; */
             background-Color: pink;
@@ -37,26 +60,28 @@
         }
     </style>
 }
+<div class="container-fluid" id="app_Ebook_record">
 <!-- breadcrmb start -->
 <div>
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="index.html">首頁</a></li>
-            <li class="breadcrumb-item active" aria-current="page">電子聯絡簿</li>
+                <li class="breadcrumb-item"><a href="@Utility.SD.localHost_Client/Home/Index">首頁</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="@Utility.SD.localHost_Client/andy_ebook/Home/Index">電子聯絡簿</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{babyName}}</li>
+
         </ol>
     </nav>
 </div>
 <!-- breadcrmb end -->
 <!-- list and tabs start -->
-<div class="container-fluid py-5" id="app_Ebook_record">
-    <div class="row">
+    <div class="row py-3">
         <!-- list start -->
         <div class="col-12 col-md-3" style="width:260px">
-            <div class="list-group">
             <h3 class="fs-3 fw-bold ps-3">功能選單</h3>
-                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_record" class="list-group-item list-group-item-action active">最新交接事項</a>
-                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_infos" class="list-group-item list-group-item-action">寶寶基本資料</a>
-                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_historySearch" class="list-group-item list-group-item-action">歷史紀錄查詢</a>
+            <div class="list-group">
+                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_record" class="list-group-item list-group-item-action active">生活紀錄</a>
+                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_infos" class="list-group-item list-group-item-action">寶寶資訊</a>
+                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_historySearch" class="list-group-item list-group-item-action">統計圖表</a>
                 <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_activityDaily" class="list-group-item list-group-item-action">活動日記</a>
             </div>
         </div>
@@ -64,40 +89,43 @@
         <!-- tabs start -->
         <div class="col-12 col-md-9 rounded">
             <div class="div1 p-2" style="background-color:#fff4ef ;">
-            <ul class="nav nav-pills mb-1" id="pills-tab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="pills-1-tab" data-bs-toggle="pill"
-                            data-bs-target="#pills-1" type="button" role="tab" aria-controls="pills-1"
-                            aria-selected="true">
-                        全部
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-2-tab" data-bs-toggle="pill" data-bs-target="#pills-2"
-                            type="button" role="tab" aria-controls="pills-2" aria-selected="false">
-                        飲食
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-3-tab" data-bs-toggle="pill" data-bs-target="#pills-3"
-                            type="button" role="tab" aria-controls="pills-3" aria-selected="false">
-                        尿布更換
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-4-tab" data-bs-toggle="pill" data-bs-target="#pills-4"
-                            type="button" role="tab" aria-controls="pills-4" aria-selected="false">
-                        睡眠
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-5-tab" data-bs-toggle="pill" data-bs-target="#pills-5"
-                            type="button" role="tab" aria-controls="pills-5" aria-selected="false">
-                        備註
-                    </button>
-                </li>
-            </ul>
-            <div class="tab-content px-2 h-75 rounded" id="pills-tabContent">
+                <div class="d-flex justify-content-between">
+                    <ul class="nav nav-pills mb-1" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation" >
+                            <button class="nav-link active " id="pills-1-tab" data-bs-toggle="pill"
+                                    data-bs-target="#pills-1" type="button" role="tab" aria-controls="pills-1"
+                                    aria-selected="true">
+                                全部
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-2-tab" data-bs-toggle="pill" data-bs-target="#pills-2"
+                                    type="button" role="tab" aria-controls="pills-2" aria-selected="false">
+                                飲食
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-3-tab" data-bs-toggle="pill" data-bs-target="#pills-3"
+                                    type="button" role="tab" aria-controls="pills-3" aria-selected="false">
+                                尿布更換
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-4-tab" data-bs-toggle="pill" data-bs-target="#pills-4"
+                                    type="button" role="tab" aria-controls="pills-4" aria-selected="false">
+                                睡眠
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-5-tab" data-bs-toggle="pill" data-bs-target="#pills-5"
+                                    type="button" role="tab" aria-controls="pills-5" aria-selected="false">
+                                備註
+                            </button>
+                        </li>
+                    </ul>
+                    <button  type="button" class="btn btn-secondary" v-on:click="cleanInput" style="margin-bottom:4px">清空輸入區</button>
+                </div>
+                <div class="tab-content px-2 h-75 rounded" id="pills-tabContent">
                 <!-- 全部 start -->
                 <div class="tab-pane fade show active h-100" id="pills-1" role="tabpanel"
                         aria-labelledby="pills-1-tab">
@@ -108,35 +136,35 @@
                                 <label for="" class="col-form-label">▲ 時間：</label>
                                 <label for="datepiker01" class="form-label mb-0 mx-1">從</label>
                                 <div class="input-group w-25 "  >
-                                    <input type="date" class=" form-control" id="datepiker01" autocomplete="off">
+                                        <input v-model="MinTime" type="date" class=" form-control" id="datepiker01" autocomplete="off" v-on:change="reflesh">
                                 </div>
                                 <label for="datepiker02" class="form-label mb-0 mx-1">到</label>
                                 <div class="input-group w-25 ">
-                                    <input type="date" class=" form-control" id="datepiker02" autocomplete="off">
+                                        <input v-model="MaxTime" type="date" class=" form-control" id="datepiker02" autocomplete="off" v-on:change="reflesh">
                                 </div>
                             </div>
                             <div class="w-100 d-flex align-items-center mb-1">
                                 <label for="" class="col-form-label">▲ 顯示內容：</label>
                                 <div class="form-check me-2">
-                                    <input class="form-check-input" type="checkbox" value="" id="chk1" checked>
+                                        <input v-on:change="reflesh" v-model="type_check" class="form-check-input" type="checkbox" value="飲食" id="chk1" checked>
                                     <label class="form-check-label" for="chk1">
                                         飲食
                                     </label>
                                 </div>
                                 <div class="form-check me-2">
-                                    <input class="form-check-input" type="checkbox" value="" id="chk2" checked>
+                                        <input v-on:change="reflesh" v-model="type_check" class="form-check-input" type="checkbox" value="尿布" id="chk2" checked>
                                     <label class="form-check-label" for="chk2">
                                         尿布更換
                                     </label>
                                 </div>
                                 <div class="form-check me-2">
-                                    <input class="form-check-input" type="checkbox" value="" id="chk3" checked>
+                                        <input v-on:change="reflesh" v-model="type_check" class="form-check-input" type="checkbox" value="睡眠" id="chk3" checked>
                                     <label class="form-check-label" for="chk3">
                                         睡眠
                                     </label>
                                 </div>
                                 <div class="form-check me-2">
-                                    <input class="form-check-input" type="checkbox" value="" id="chk4" checked>
+                                        <input v-on:change="reflesh" v-model="type_check" class="form-check-input" type="checkbox" value="備註" id="chk4" checked>
                                     <label class="form-check-label" for="chk4">
                                         備註
                                     </label>
@@ -148,41 +176,21 @@
                     <!-- 互動式時間軸 start -->
                     <div class="container-fluid my-3">
                         <div class="row">
-                            <div class="col-1" id="timeLine1">
-                                <div class="timeLines">
-
-                                    <div class="timeLine" data-bs-toggle="popover" title="Popover title"
-                                            data-bs-content="And here's some amazing content. It's very engaging. Right?">
-                                    </div>
-                                    <div class="timeLine" id="test01"></div>
-                                    <div class="timeLine"></div>
-                                    <div class="timeLine"></div>
+                            <div class="col-6 ">
+                                <h5>近期狀況(24hr)</h5>
+                                <div id="context1">
                                 </div>
                             </div>
-                            <div class="col-5">
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-12 " id="context1">
-
-                                            @* <div class="MSG" id="time_0_text">
-                                                測試
-                                            </div> *@
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="col-1 " id="timeLine2">
-                                <div class="timeLines">
-
-                                    <div class="timeLine"></div>
-                                    <div class="timeLine"></div>
-                                    <div class="timeLine"></div>
-                                    <div class="timeLine"></div>
+                            <div class="col-6" >
+                                <template v-if="isoneWeek==true">
+                                    <h5>一週狀況</h5>
+                                </template>
+                                <template v-else>
+                                    <h5>自訂義範圍:{{searchRangeDate}}</h5>
+                                </template>
+                                <div id="context2">
                                 </div>
                             </div>
-                            <div class="col-5" id="context2"></div>
 
                         </div>
 
@@ -255,7 +263,7 @@
                     <div class="container w-100">
                         <div class="row rounded m-1 w-100" style="background-color: pink;" V-for="item in DietDetail">
                             <template v-if="item.edit==true">
-                                <div class="col-3 my-2">
+                                <div class="col-4 my-2">
                                     <h5 class="fw-bolder mb-0">{{item.dateTimeString}}</h5>
                                     <input type="datetime-local" class="form-control" style="height:24px" v-model="item.dateTimeString" />
                                 </div>
@@ -266,22 +274,22 @@
                                         <input type="text" class="form-control w-25" style="height:24px" v-model="item.amount" />
                                     </div>
                                 </div>
-                                <div class="col-4 d-flex justify-content-center align-items-center">
+                                <div class="col-3 d-flex justify-content-center align-items-center">
                                     <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
                                     <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="cancel(item.category,item.id)">取消</button>
                                 </div> 
                             </template>
                             <template v-else>
-                                <div class="col-3 my-2">
+                                <div class="col-4 my-2">
                                     <h5 class="fw-bolder">{{item.dateTimeString}}</h5>
                                 </div>
                                 <div class="col-5 my-2">
                                     <p class="ms-5 mb-0">飲食類別: {{item.type}}</p>
                                     <p class="ms-5 mb-0">飲食狀況: {{item.amount}}{{item.unit}}</p>
                                 </div>
-                                <div class="col-4 d-flex justify-content-center align-items-center">
+                                <div class="col-3 d-flex justify-content-center align-items-center">
                                     <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="edit(item.category,item.id)">編輯</button>
-                                    <button class="m-1 btn btn-danger h-50 d-flex align-items-center" v-on:click="delete(item.category,item.id)">刪除</button>
+                                        <button class="m-1 btn btn-danger h-50 d-flex align-items-center" v-on:click="toDelete(item.category,item.id)">刪除</button>
                                 </div>
                             </template>
 
@@ -338,33 +346,33 @@
                     <div class="container w-100">
                             <div class="row rounded m-1 w-100" style="background-color: orange" V-for="item in DiaperDetail">
                             <template v-if="item.edit==true">
-                                <div class="col-3 my-2">
+                                <div class="col-4 my-2">
                                     <h5 class="fw-bolder mb-0">{{item.dateTimeString}}</h5>
                                     <input type="datetime-local" class="form-control" style="height:24px" v-model="item.dateTimeString" />
                                 </div>
                                 <div class="col-5 my-2">
                                         <p class="ms-5 mb-0">排泄狀況: {{item.unit}} </p>
                                     <div class="d-flex flex-row">
-                                            <p class="ms-5 mb-0 me-2">狀況說明: {{item.bowelSituation}}</p>
-                                        <input type="text" class="form-control w-25" style="height:24px" v-model="item.amount" />
+                                        <p class="ms-5 mb-0 me-2">狀況說明: {{item.bowelSituation}}</p>
+                                        <input type="text" class="form-control w-25" style="height:24px" v-model="item.bowelSituation" />
                                     </div>
                                 </div>
-                                <div class="col-4 d-flex justify-content-center align-items-center">
+                                <div class="col-3 d-flex justify-content-center align-items-center">
                                     <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
                                     <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="cancel(item.category,item.id)">取消</button>
                                 </div>
                             </template>
                             <template v-else>
-                                <div class="col-3 my-2">
+                                <div class="col-4 my-2">
                                     <h5 class="fw-bolder">{{item.dateTimeString}}</h5>
                                 </div>
                                 <div class="col-5 my-2">
                                         <p class="ms-5 mb-0">排泄狀況: {{item.unit}}</p>
                                         <p class="ms-5 mb-0">狀況說明: {{item.bowelSituation}}</p>
                                 </div>
-                                <div class="col-4 d-flex justify-content-center align-items-center">
+                                <div class="col-3 d-flex justify-content-center align-items-center">
                                     <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="edit(item.category,item.id)">編輯</button>
-                                    <button class="m-1 btn btn-danger h-50 d-flex align-items-center" v-on:click="delete(item.category,item.id)">刪除</button>
+                                        <button class="m-1 btn btn-danger h-50 d-flex align-items-center" v-on:click="toDelete(item.category,item.id)">刪除</button>
                                 </div>
                             </template>
 
@@ -405,52 +413,38 @@
                     <div class="container w-100">
                             <div class="row rounded m-1 w-100" style="background-color: lightblue" V-for="item in SleepDetail">
                             <template v-if="item.edit==true">
-                                <div class="col-3 my-2">
-                                    <h5 class="fw-bolder mb-0">{{item.dateTimeString}}</h5>
-                                    <input type="datetime-local" class="form-control" style="height:24px" v-model="item.dateTimeString" />
+                                <div class="col-4 my-2">
+                                    <h5 class="fw-bolder mb-0">{{item.dateTimeString1}}</h5>
+                                        <h5 class="fw-bolder mb-0">~{{item.dateTimeString2}}</h5>
+                                        <input type="datetime-local" class="form-control" style="height:24px" v-model="item.dateTimeString1" />
+                                        <input type="datetime-local" class="form-control" style="height:24px" v-model="item.dateTimeString2" />
                                 </div>
                                 <div class="col-5 my-2">
-                                        <p class="ms-5 mb-0">睡眠狀況: {{item.unit}} </p>
-                                    <div class="d-flex flex-row">
-                                            <p class="ms-5 mb-0 me-2">狀況說明: {{item.bowelSituation}}</p>
-                                        <input type="text" class="form-control w-25" style="height:24px" v-model="item.amount" />
-                                    </div>
+                                        <p class="ms-5 mb-0">睡眠狀況: {{item.sleepState}} </p>
+                                        <p class="ms-5 mb-0 me-2">狀況說明: {{item.content}}</p>
+                                        <input type="text" class="ms-5 form-control w-100" style="height:24px" v-model="item.content" />
+                                    
                                 </div>
-                                <div class="col-4 d-flex justify-content-center align-items-center">
+                                <div class="col-3 d-flex justify-content-center align-items-center">
                                     <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
                                     <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="cancel(item.category,item.id)">取消</button>
                                 </div>
                             </template>
                             <template v-else>
-                                <div class="col-3 my-2">
-                                        <h5 class="fw-bolder mb-1">{{item.dateTimeString}}</h5>
-                                        <h5 class="fw-bolder mb-1">{{item.dateTimeString}}</h5>
+                                <div class="col-4 my-2">
+                                        <h5 class="fw-bolder mb-0">~{{item.dateTimeString2}}</h5>
+                                        <h5 class="fw-bolder mb-0">{{item.dateTimeString1}}</h5>
                                 </div>
                                 <div class="col-5 my-2">
-                                        <p class="ms-5 mb-0">睡眠狀況: {{item.unit}}</p>
-                                    <p class="ms-5 mb-0">狀況說明: {{item.bowelSituation}}</p>
+                                    <p class="ms-5 mb-0">睡眠狀況: {{item.sleepState}}</p>
+                                    <p class="ms-5 mb-0">狀況說明: {{item.content}}</p>
                                 </div>
-                                <div class="col-4 d-flex justify-content-center align-items-center">
+                                <div class="col-3 d-flex justify-content-center align-items-center">
                                     <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="edit(item.category,item.id)">編輯</button>
-                                    <button class="m-1 btn btn-danger h-50 d-flex align-items-center" v-on:click="delete(item.category,item.id)">刪除</button>
+                                        <button class="m-1 btn btn-danger h-50 d-flex align-items-center" v-on:click="toDelete(item.category,item.id)">刪除</button>
                                 </div>
                             </template>
 
-                        </div>
-                    </div>
-                    <div class="w-50" id="div_food">
-                        <div class="container rounded m-3" style="background-color: lightblue">
-                            <div class="row ">
-                                <div class="col-10 my-2">
-                                    <h5 class="fw-bolder">6月19日 3點58分 ~</h5>
-                                    <h5 class="fw-bolder">6月19日 4點58分</h5>
-                                    <p class="ms-5 mb-0">睡眠狀況: 安穩</p>
-                                </div>
-                                <div class="col-2 d-flex flex-column text-center justify-content-around">
-                                    <button class="btn btn-primary">編輯</button>
-                                    <button class="btn btn-primary">刪除</button>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -474,24 +468,41 @@
                                 <button type="button" class="btn btn-success" v-on:click="createMemo">新增</button>
                         </div>
                     </div>
-                    <div class="w-50" >
-                        <div class="container rounded m-2" style="background-color: lightgreen">
-                            <div class="row ">
-                                <div class="col-10 my-2">
-                                    <h5 class="fw-bolder">6月19日 3點58分 ~</h5>
-                                    <p class="ms-5 mb-0">狀況說明: 發燒</p>
+                    <div class="container w-100">
+                            <div class="row rounded m-1 w-100" style="background-color: lightgreen" V-for="item in Memo">
+                            <template v-if="item.edit==true">
+                                <div class="col-4 my-2">
+                                    <h5 class="fw-bolder mb-0">{{item.dateTimeString}}</h5>
+                                    <input type="datetime-local" class="form-control" style="height:24px" v-model="item.dateTimeString" />
                                 </div>
-                                <div class="col-2 d-flex flex-column text-center justify-content-around">
-                                    <button class="btn btn-primary">編輯</button>
-                                    <button class="btn btn-primary">刪除</button>
+                                    <div class="col-5 my-2 ">
+                                    <p class="ms-5 mb-0 me-2">狀況說明: {{item.memo1}}</p>
+                                        <textarea type="text" class="ms-5 form-control w-100 h-50" v-model="item.memo1"></textarea>
                                 </div>
-                            </div>
+                                <div class="col-3 d-flex justify-content-center align-items-center">
+                                    <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
+                                    <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="cancel(item.category,item.id)">取消</button>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <div class="col-4 my-2">
+                                    <h5 class="fw-bolder">{{item.dateTimeString}}</h5>
+                                </div>
+                                <div class="col-5 my-2">
+                                    <p class="ms-5 mb-0">狀況說明: {{item.memo1}}</p>
+                                </div>
+                                <div class="col-3 d-flex justify-content-center align-items-center">
+                                    <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="edit(item.category,item.id)">編輯</button>
+                                        <button class="m-1 btn btn-danger h-50 d-flex align-items-center" v-on:click="toDelete(item.category,item.id)">刪除</button>
+                                </div>
+                            </template>
+
                         </div>
                     </div>
                 </div>
                 <!-- 備註 end -->
             </div>
-        </div>
+            </div>
         </div>
         <!-- tabs end -->
     </div>
@@ -513,8 +524,16 @@
         let IdContactBook = sessionStorage.getItem("IdContactBook");
         let List_Datas = new Array();
         let Temp_List_Datas = new Array();
-        
+        const now = new Date();
+        now.setHours(now.getHours() + 8);
+        const today = new Date();
+        today.setHours(24);
+        today.setSeconds(-1);
 
+        const yesterday = new Date(now);
+        yesterday.setDate(now.getDate() - 1);
+        const oneWeek= new Date(today);
+        oneWeek.setDate(today.getDate() - 7);
         var vueApp = {
             data() {
                 return {
@@ -524,7 +543,14 @@
                     HealthInfos:[],
                     Memo:[],
                     SleepDetail:[],
-                    //unit: "",
+                    searchRangeDate:"",
+                    isoneWeek:true,
+                    babyName :"",
+                    //MaxTime: today.toISOString().substr(0,10),
+                    MaxTime:"",
+                    //MinTime: yesterday.toISOString().substr(0, 10),
+                    MinTime: "",
+                    type_check:["飲食","尿布","睡眠","備註"],
                     //共用參數:
                     idContactBook: "",
                     recodeTime:"",
@@ -548,15 +574,26 @@
             },
             mounted: function () {
                 let _this = this;
+                _this.getEbookData(IdContactBook);
                 _this.getDietDetailData(IdContactBook);
                 _this.getDiaperDetailData(IdContactBook);
                 //_this.getHealthInfosData(IdContactBook);
-                //_this.getMemoData(IdContactBook);
+                _this.getMemoData(IdContactBook);
                 _this.getSleepDetailData(IdContactBook);
                 //_this.reflesh();
             },
             methods: {
                 //取得資料區
+                getEbookData: function (IdContactBook) {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetEBookById/${IdContactBook}`, {
+                        headers
+                    }).then(result => {
+                        //alert(result)
+                        let _this=this;
+                        _this.babyName = result.data[0].babyName;
+                    }).catch(err => { alert(err) });
+                },
                 getDiaperDetailData: function (IdContactBook) {
                     let _this = this;
                     axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDiaperDetail/${IdContactBook}`, { headers 
@@ -586,7 +623,6 @@
                         }
                         
                         _this.DiaperDetail.forEach(function (item, index) {
-                            //_this.addContext("尿布", item);
                             List_Datas.push(item);
                         })
                         _this.reflesh();
@@ -639,8 +675,23 @@
                 getMemoData: function (IdContactBook) {
                     let _this = this;
                     axios.get(`@Utility.SD.localHost_API/api/Ebook/GetMemo/${IdContactBook}`, { headers 
-                    }).then(result => { 
-                        //alert(result) 
+                    }).then(result => {
+                        // alert(result.data)
+                        _this.Memo = result.data;
+                        for (var i = 0; i < _this.Memo.length; i++) {
+                            var fulltime = new Date(this.Memo[i].recodeTime);
+                            var str = `${fulltime.getMonth() + 1}月${fulltime.getDate()}日 ${fulltime.getHours()}點${fulltime.getMinutes()}分`;
+                            _this.Memo[i].dateTimeString = `${str}`;
+
+                            _this.Memo[i].edit = false;
+                        }
+                        _this.Memo.forEach(function (item, index) {
+                            if (List_Datas.some(f => f.id == item.id && f.category == "備註") != true) {
+                                List_Datas.push(item);
+                            }
+                        })
+
+                        _this.reflesh();
                     }).catch(err => { alert(err) });
                 },
                 getSleepDetailData: function (IdContactBook) {
@@ -650,9 +701,14 @@
                         // alert(result.data)
                         _this.SleepDetail = result.data;
                         for (var i = 0; i < _this.SleepDetail.length; i++) {
-                            var fulltime = new Date(this.SleepDetail[i].recodeTime);
-                            var str = `${fulltime.getMonth() + 1}月${fulltime.getDate()}日 ${fulltime.getHours()}點${fulltime.getMinutes()}分`;
-                            _this.SleepDetail[i].dateTimeString = `${str}`;
+                            var fulltime = new Date(this.SleepDetail[i].sleepTime);
+                            var str1 = `${fulltime.getMonth() + 1}月${fulltime.getDate()}日 ${fulltime.getHours()}點${fulltime.getMinutes()}分`;
+                            _this.SleepDetail[i].dateTimeString1 = `${str1}`;
+
+                            var fulltime2 = new Date(this.SleepDetail[i].recodeTime);
+                            var str2 = `${fulltime2.getMonth() + 1}月${fulltime2.getDate()}日 ${fulltime2.getHours()}點${fulltime2.getMinutes()}分`;
+                            _this.SleepDetail[i].dateTimeString2 = `${str2}`;
+
 
                             _this.SleepDetail[i].edit = false;
                         }
@@ -690,6 +746,7 @@
                             timer: 1500
                         })
                         _this.getDietDetailData(IdContactBook);
+                        _this.cleanInput();
                     }).catch(err => {alert(err) });
                 },
                 createDiaperDetail: function () {
@@ -716,19 +773,22 @@
                             timer: 1500
                         })
                         _this.getDiaperDetailData(IdContactBook);
+                        _this.cleanInput();
                     }).catch(err => { alert(err) });
                 },
                 createSleepDetail: function () {
                     let _this = this;
+                    
                     var request = {};
+                    request.category = "睡眠";
                     request.id = 0;
                     request.idContactBook = Number(IdContactBook);
                     request.modifiedTime = _this.modifiedTime;
                     request.accountUserAccount = Ebook_user;
 
                     request.sleepState = _this.sleepState;
-                    request.sleepTime = _this.sleep_Time;
-                    request.wakeUpTime = _this.wakeUp_Time;
+                    request.recodeTime = new Date(Math.max(new Date(_this.sleep_Time), new Date(_this.wakeUp_Time)));
+                    request.sleepTime = new Date(Math.min(new Date(_this.sleep_Time), new Date(_this.wakeUp_Time)));
                     request.content = _this.sleep_content;
                     
                     axios.post(`@Utility.SD.localHost_API/api/Ebook/CreateSleepDetail`, request, {
@@ -743,11 +803,13 @@
                             timer: 1500
                         })
                         _this.getSleepDetailData(IdContactBook);
+                        _this.cleanInput();
                     }).catch(err => { alert(err) });
                 },
                 createMemo: function () {
                     let _this = this;
                     var request = {};
+                    request.category = "備註";
                     request.id = 0;
                     request.idContactBook = Number(IdContactBook);
                     request.modifiedTime = _this.modifiedTime;
@@ -767,32 +829,43 @@
                             showConfirmButton: false,
                             timer: 1500
                         })
-                        _this.getSleepDetailData(IdContactBook);
+                        _this.getMemoData(IdContactBook);
+                        _this.cleanInput();
                     }).catch(err => { alert(err) });
                 },
                 //共用功能區
-                addContext: function (datas) {
+                addContext2: function (datas) {
                     datas.forEach(function (item, index) {
-                        let context1 = document.getElementById('context1');
+                        //let context1 = document.getElementById('context1');
+                        let context2 = document.getElementById('context2');
                         var div = document.createElement('div');
                         //var contextID = `context${detail_type}_${detail}`;
                         //div.id = contextID;
                         switch (item.category) {
                             case "飲食":
                                 var datas_time = new Date(item.recodeTime);
-                                div.innerHTML = `${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 : ${item.category} \n ${item.type}`;
+                                div.innerHTML = `${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 -> ${item.category} : ${item.amount} ${item.unit}`
                                 div.className = 'w-100 MSG_title';
-                                context1.appendChild(div);
+                                context2.appendChild(div);
                                 break;
                             case "尿布":
                                 var datas_time = new Date(item.recodeTime);
-                                div.innerHTML = `${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 : ${item.category} \n ${item.unit}`;
+                                div.innerHTML = `${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 -> ${item.category} : ${item.unit}`;
                                 div.className = 'w-100 MSG_title_Diaper';
-                                context1.appendChild(div);
+                                context2.appendChild(div);
                                 break;
                             case "睡眠":
+                                var datas_time = new Date(item.recodeTime);
+                                var datas_time_start = new Date(item.sleepTime);
+                                div.innerHTML = `${datas_time_start.getMonth() + 1}月${datas_time_start.getDate()}日 ${datas_time_start.getHours()}點${datas_time_start.getMinutes()}分~${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 <br>-> ${item.category} : ${item.sleepState}`;
+                                div.className = 'w-100 MSG_title_SleepState';
+                                context2.appendChild(div);
                                 break;
                             case "備註":
+                                var datas_time = new Date(item.recodeTime);
+                                div.innerHTML = `${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 -> ${item.category} : ${item.memo1}`;
+                                div.className = 'w-100 MSG_title_Memo';
+                                context2.appendChild(div);
                                 break;
                             default:
                                 break;
@@ -801,30 +874,136 @@
                     
                     })
                 },
+                addContext1: function (datas) {
+                    datas.forEach(function (item, index) {
+                        let context1 = document.getElementById('context1');
+                        //let context2 = document.getElementById('context2');
+                        var div = document.createElement('div');
+                        //var contextID = `context${detail_type}_${detail}`;
+                        //div.id = contextID;
+                        switch (item.category) {
+                            case "飲食":
+                                var datas_time = new Date(item.recodeTime);
+                                div.innerHTML = `${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 -> ${item.category} : ${item.amount} ${item.unit}`
+                                div.className = 'w-100 MSG_title';
+                                context1.appendChild(div);
+                                break;
+                            case "尿布":
+                                var datas_time = new Date(item.recodeTime);
+                                div.innerHTML = `${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 -> ${item.category} : ${item.unit}`;
+                                div.className = 'w-100 MSG_title_Diaper';
+                                context1.appendChild(div);
+                                break;
+                            case "睡眠":
+                                var datas_time = new Date(item.recodeTime);
+                                var datas_time_start = new Date(item.sleepTime);
+                                div.innerHTML = `${datas_time_start.getMonth() + 1}月${datas_time_start.getDate()}日 ${datas_time_start.getHours()}點${datas_time_start.getMinutes()}分~${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 <br>-> ${item.category} : ${item.sleepState}`;
+                                div.className = 'w-100 MSG_title_SleepState';
+                                context1.appendChild(div);
+                                break;
+                            case "備註":
+                                var datas_time = new Date(item.recodeTime);
+                                div.innerHTML = `${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 -> ${item.category} : ${item.memo1}`;
+                                div.className = 'w-100 MSG_title_Memo';
+                                context1.appendChild(div);
+                                break;
+                            default:
+                                break;
+                        }
+
+
+                    })
+                },
                 reflesh: function () {
                     let _this = this;
                     let context1 = document.getElementById('context1');
+                    let context2 = document.getElementById('context2');
                     context1.innerHTML = "";
-                    //依日期升冪資料
+                    context2.innerHTML = "";
+                    //依日期升冪資料(各資料)
                     _this.DietDetail.sort(function (a, b) {
                         return new Date(b.recodeTime).getTime() - new Date(a.recodeTime).getTime()
                     });
                     _this.DiaperDetail.sort(function (a, b) {
                         return new Date(b.recodeTime).getTime() - new Date(a.recodeTime).getTime()
                     });
-                    Temp_List_Datas = List_Datas;
-                    Temp_List_Datas.sort(function (a, b) {
+                    _this.SleepDetail.sort(function (a, b) {
                         return new Date(b.recodeTime).getTime() - new Date(a.recodeTime).getTime()
                     });
-                    _this.addContext(Temp_List_Datas)
+                    _this.Memo.sort(function (a, b) {
+                        return new Date(b.recodeTime).getTime() - new Date(a.recodeTime).getTime()
+                    });
+                    //整理全部陣列
                     
+                    List_Datas.sort(function (a, b) {
+                        return new Date(b.recodeTime).getTime() - new Date(a.recodeTime).getTime()
+                    });
+
+                    if (_this.MaxTime!="" && _this.MinTime!="") {
+                        //修正時差+8的問題
+                        var real_MaxTime = new Date( Math.max(new Date(_this.MaxTime), new Date(_this.MinTime)));
+                        real_MaxTime.setHours(24);
+                        real_MaxTime.setSeconds(-1);
+                        var real_MinTime = new Date(Math.min(new Date(_this.MaxTime), new Date(_this.MinTime)));
+                        real_MinTime.setHours(0);
+
+                        _this.isoneWeek = false;
+                        var str = `${real_MinTime.getMonth() + 1}月${real_MinTime.getDate()}日~${real_MaxTime.getMonth() + 1}月${real_MaxTime.getDate()}日`
+                        _this.searchRangeDate = `${str}`
+                    }else{
+                        var real_MaxTime = today;
+                        var real_MinTime = oneWeek;
+                    }
+
+                    //一選取日期範圍調整陣列顯示
+                    var StartIndex = List_Datas.findIndex(f => new Date(f.recodeTime).getTime() < new Date(real_MaxTime).getTime())
+                    var EndIndex = List_Datas.findIndex(f => new Date(f.recodeTime).getTime() < new Date(real_MinTime).getTime())
+                    if (EndIndex==-1) {
+                        EndIndex = List_Datas.length;
+                    }
+                    var Start = Math.min(Math.max(StartIndex, 0), Math.max(EndIndex, 0));
+                    var End = Math.max(Math.max(StartIndex, 0), Math.max(EndIndex, 0));
+                    Temp_List_Datas = List_Datas;
+                    Temp_List_Datas = Temp_List_Datas.slice(Start, End);
+                    _this.addContext2(Temp_List_Datas)
+                    //近期狀況(24hr)
+                    var StartIndex_24hr = List_Datas.findIndex(f => new Date(f.recodeTime).getTime() < new Date(now).getTime())
+                    var EndIndex_24hr = List_Datas.findIndex(f => new Date(f.recodeTime).getTime() < new Date(yesterday).getTime())
+                    var Start_24hr = Math.min(Math.max(StartIndex_24hr, 0), Math.max(EndIndex_24hr, 0));
+                    var End_24hr = Math.max(Math.max(StartIndex_24hr, 0), Math.max(EndIndex_24hr, 0));
+                    Temp_List_Datas_24hr = List_Datas;
+                    Temp_List_Datas_24hr = Temp_List_Datas_24hr.slice(Start_24hr, End_24hr);
+                    _this.addContext1(Temp_List_Datas_24hr)
+                    _this.filter();
+                },
+                filter: function () {
+                    let _this=this;
+                    for (var i = 0; i < _this.type_check.length; i++) {
+                        var target =_this.type_check[i]
+                        //alert(target);
+                        switch (target) {
+                            case "飲食":
+                                $(".MSG_title").fadeIn(500);
+                                break;
+                            case "尿布":
+                                $(".MSG_title_Diaper").fadeIn(500);
+                                break;
+                            case "睡眠":
+                                $(".MSG_title_SleepState").fadeIn(500);
+                                break;
+                            case "備註":
+                                $(".MSG_title_Memo").fadeIn(500);
+                                break;
+                        }
+
+                    }
                 },
                 update: function (item) {
                     let _this = this;
                      // alert(`update`);
                     switch (item.category) {
                         case "飲食":
-                            let _this = this;
+                            //let _this = this;
                             var request = {};
                             var targetId = item.id
                             var targetItem = item;
@@ -842,10 +1021,10 @@
                                 //alert(response.data);
 
                                 var foundIndex = List_Datas.findIndex(f => f.id == targetId && f.category == "飲食");
-                                alert(foundIndex)
+                                //alert(foundIndex)
                                 if (foundIndex > -1) {
                                     List_Datas.splice(foundIndex, 1);
-                                    alert('移除了')
+                                    //alert('移除了')
                                 }
                                 _this.getDietDetailData(IdContactBook);
                                 
@@ -854,10 +1033,97 @@
                             });
                             break;
                         case "尿布":
+                            var request1 = {};
+                            var targetId = item.id
+                            var targetItem = item;
+                            request1.category = "尿布";
+                            request1.id = Number(targetItem.id);
+                            request1.idContactBook = Number(IdContactBook);
+                            request1.recodeTime = targetItem.dateTimeString;
+                            request1.modifiedTime = new Date();
+                            request1.accountUserAccount = Ebook_user;
+
+                            request1.content = Number(targetItem.content);
+                            request1.bowelSituation = targetItem.bowelSituation;
+
+                            axios.put(`@Utility.SD.localHost_API/api/Ebook/UpdateDiaperDetail/${targetItem.id}`, request1, {
+                                headers
+                            }).then(response => {
+                                //alert(response.data);
+
+                                var foundIndex = List_Datas.findIndex(f => f.id == targetId && f.category == "尿布");
+                                //alert(foundIndex)
+                                if (foundIndex > -1) {
+                                    List_Datas.splice(foundIndex, 1);
+                                    //alert('移除了')
+                                }
+                                _this.getDiaperDetailData(IdContactBook);
+
+                            }).catch(err => {
+                                alert(err);
+                            });
                             break;
                         case "睡眠":
+                            var request = {};
+                            var targetId = item.id
+                            var targetItem = item;
+                            request.category = "睡眠";
+                            request.id = Number(targetItem.id);
+                            request.idContactBook = Number(IdContactBook);
+                            request.modifiedTime = new Date();
+                            request.accountUserAccount = Ebook_user;
+
+                            request.sleepTime = targetItem.dateTimeString1;
+                            request.recodeTime = targetItem.dateTimeString2;
+                            request.sleepState = targetItem.sleepState;
+                            request.content = targetItem.content;
+
+                            axios.put(`@Utility.SD.localHost_API/api/Ebook/UpdateSleepDetail/${targetItem.id}`, request, {
+                                headers
+                            }).then(response => {
+                                //alert(response.data);
+
+                                var foundIndex = List_Datas.findIndex(f => f.id == targetId && f.category == "睡眠");
+                                //alert(foundIndex)
+                                if (foundIndex > -1) {
+                                    List_Datas.splice(foundIndex, 1);
+                                    //alert('移除了')
+                                }
+                                _this.getSleepDetailData(IdContactBook);
+
+                            }).catch(err => {
+                                alert(err);
+                            });
                             break;
                         case "備註":
+                            var request = {};
+                            var targetId = item.id
+                            var targetItem = item;
+                            request.category = "備註";
+                            request.id = Number(targetItem.id);
+                            request.idContactBook = Number(IdContactBook);
+                            request.recodeTime = targetItem.dateTimeString;
+                            request.modifiedTime = new Date();
+                            request.accountUserAccount = Ebook_user;
+
+                            request.memo1 = targetItem.memo1;
+
+                            axios.put(`@Utility.SD.localHost_API/api/Ebook/UpdateMemo/${targetItem.id}`, request, {
+                                headers
+                            }).then(response => {
+                                //alert(response.data);
+
+                                var foundIndex = List_Datas.findIndex(f => f.id == targetId && f.category == "備註");
+                                //alert(foundIndex)
+                                if (foundIndex > -1) {
+                                    List_Datas.splice(foundIndex, 1);
+                                    //alert('移除了')
+                                }
+                                _this.getMemoData(IdContactBook);
+
+                            }).catch(err => {
+                                alert(err);
+                            });
                             break;
                         default:
                             break;
@@ -878,10 +1144,35 @@
                             }
                             break;
                         case "尿布":
+                            for (var i = 0; i < _this.DiaperDetail.length; i++) {
+                                var item = _this.DiaperDetail[i];
+                                if (_this.DiaperDetail[i].id == targetId) {
+                                    _this.DiaperDetail[i].edit = false;
+                                    item.dateTimeString = _this.original_dateTimeString;
+                                    item.bowelSituation = _this.original_bowelSituation;
+                                }
+                            }
                             break;
                         case "睡眠":
+                            for (var i = 0; i < _this.SleepDetail.length; i++) {
+                                var item = _this.SleepDetail[i];
+                                if (_this.SleepDetail[i].id == targetId) {
+                                    _this.SleepDetail[i].edit = false;
+                                    item.dateTimeString1 = _this.original_dateTimeString1;
+                                    item.dateTimeString2 = _this.original_dateTimeString2;
+                                    item.content = _this.original_content;
+                                }
+                            }
                             break;
                         case "備註":
+                            for (var i = 0; i < _this.Memo.length; i++) {
+                                var item = _this.Memo[i];
+                                if (_this.Memo[i].id == targetId) {
+                                    _this.Memo[i].edit = false;
+                                    item.dateTimeString = _this.original_dateTimeString;
+                                    item.memo1 = _this.original_memo1;
+                                }
+                            }
                             break;
                         default:
                             break;
@@ -896,22 +1187,148 @@
                                 if (item.id == targetId) {
                                     item.edit = true;
                                     _this.original_dateTimeString = item.dateTimeString;
+                                    item.dateTimeString =new Date(item.recodeTime).toISOString().substr(0, 16);
                                     _this.original_amount = item.amount;
                                 }
                             }
                             break;
                         case "尿布":
+                            for (var i = 0; i < _this.DiaperDetail.length; i++) {
+                                var item = _this.DiaperDetail[i];
+                                if (item.id == targetId) {
+                                    item.edit = true;
+                                    _this.original_dateTimeString = item.dateTimeString;
+                                    item.dateTimeString = new Date(item.recodeTime).toISOString().substr(0, 16);
+                                    _this.original_bowelSituation = item.bowelSituation;
+                                }
+                            }
                             break;
                         case "睡眠":
+                            for (var i = 0; i < _this.SleepDetail.length; i++) {
+                                var item = _this.SleepDetail[i];
+                                if (item.id == targetId) {
+                                    item.edit = true;
+                                    _this.original_dateTimeString1 = item.dateTimeString1;
+                                    item.dateTimeString1 = new Date(item.sleepTime).toISOString().substr(0, 16);
+                                    _this.original_dateTimeString2 = item.dateTimeString2;
+                                    item.dateTimeString2 = new Date(item.recodeTime).toISOString().substr(0, 16);
+                                    _this.original_content = item.content;
+                                }
+                            }
                             break;
                         case "備註":
+                            for (var i = 0; i < _this.Memo.length; i++) {
+                                var item = _this.Memo[i];
+                                if (item.id == targetId) {
+                                    item.edit = true;
+                                    _this.original_dateTimeString = item.dateTimeString;
+                                    item.dateTimeString = new Date(item.recodeTime).toISOString().substr(0, 16);
+                                    _this.original_memo1 = item.memo1;
+                                }
+                            }
                             break;
                         default:
                             break;
                     }
                 },
-                delete: function (category, targetId) {
+                toDelete: function (category, targetId) {
                     let _this = this;
+                    Swal.fire({
+                        title: "提示!",
+                        text: "您確定的刪除?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "是的,確定刪除!"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            switch (category) {
+                                case "飲食":
+                                    axios.delete(`@Utility.SD.localHost_API/api/Ebook/DeleteDietDetail/${targetId}`, {
+                                        headers
+                                    }).then(result => {
+                                        var foundIndex = List_Datas.findIndex(f => f.id == targetId && f.category == "飲食");
+                                        //alert(foundIndex)
+                                        if (foundIndex > -1) {
+                                            List_Datas.splice(foundIndex, 1);
+                                            //alert('移除了')
+                                        }
+                                        _this.getDietDetailData(IdContactBook);
+
+                                    }).catch(err => { alert(err) });
+                                    break;
+                                case "尿布":
+                                    axios.delete(`@Utility.SD.localHost_API/api/Ebook/DeleteDiaperDetail/${targetId}`, {
+                                        headers
+                                    }).then(result => {
+                                        var foundIndex = List_Datas.findIndex(f => f.id == targetId && f.category == "尿布");
+                                        //alert(foundIndex)
+                                        if (foundIndex > -1) {
+                                            List_Datas.splice(foundIndex, 1);
+                                            //alert('移除了')
+                                        }
+                                        _this.getDiaperDetailData(IdContactBook);
+                                    }).catch(err => { alert(err) });
+                                    break;
+                                case "睡眠":
+                                    axios.delete(`@Utility.SD.localHost_API/api/Ebook/DeleteSleepDetail/${targetId}`, {
+                                        headers
+                                    }).then(result => {
+                                        var foundIndex = List_Datas.findIndex(f => f.id == targetId && f.category == "睡眠");
+                                        //alert(foundIndex)
+                                        if (foundIndex > -1) {
+                                            List_Datas.splice(foundIndex, 1);
+                                            //alert('移除了')
+                                        }
+                                        _this.getSleepDetailData(IdContactBook);
+                                    }).catch(err => { alert(err) });
+                                    break;
+                                case "備註":
+                                    axios.delete(`@Utility.SD.localHost_API/api/Ebook/DeleteMemo/${targetId}`, {
+                                        headers
+                                    }).then(result => {
+                                        var foundIndex = List_Datas.findIndex(f => f.id == targetId && f.category == "備註");
+                                        //alert(foundIndex)
+                                        if (foundIndex > -1) {
+                                            List_Datas.splice(foundIndex, 1);
+                                            //alert('移除了')
+                                        }
+                                        _this.getMemoData(IdContactBook);
+                                    }).catch(err => { alert(err) });
+                                    break;
+                                default:
+                                    break;
+                            }
+                            Swal.fire({
+                                title: "刪除成功!",
+                                text: "刪除成功!",
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                        }
+                    });
+                },
+                cleanInput: function () {
+                    let _this=this;
+                    _this.MaxTime = "";
+                    _this.MinTime = "";
+                    _this.recodeTime = "";
+                    _this.foodType_picker = "";
+                    _this.amount = "";
+                    _this.quantity = "";
+                    _this.content_picker = "";
+                    _this.bowelSituation = "";
+                    _this.sleep_Time = "";
+                    _this.wakeUp_Time = "";
+                    _this.sleep_content = "";
+                    _this.sleepState = "";
+                    _this.memo1 = "";
+                    if (_this.isoneWeek!=true) {
+                        _this.isoneWeek=true ;
+                    }
+                    _this.reflesh();
                 },
             }
         }

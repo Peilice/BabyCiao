@@ -23,5 +23,7 @@ public partial class HealthInformation
 
     public string Memo { get; set; } = null!;
 
+    public string Age { get; set; } = null!;
+
     public virtual ContactBook IdContactBookNavigation { get; set; } = null!;
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BabyCiao.Models;
+namespace BabyCiao_Client.Models;
 
 public partial class HealthInformation
 {
@@ -22,8 +22,6 @@ public partial class HealthInformation
     public DateTime ModifiedDate { get; set; }
 
     public string Memo { get; set; } = null!;
-
-    public string Age { get; set; } = null!;
 
     public virtual ContactBook IdContactBookNavigation { get; set; } = null!;
 }

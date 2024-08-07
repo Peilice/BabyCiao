@@ -57,24 +57,16 @@ namespace BabyCiaoAPI.Controllers
                 City = c.City,
                 District = c.District,
                 Introduction = c.Introduction,
-                TypeOfDaycare = c.TypeOfDaycare,
-                ServiceItems = c.ServiceItems,
+                //TypeOfDaycare = c.TypeOfDaycare,
+                //ServiceItems = c.ServiceItems,
                 QuasiPublicChildcare = c.QuasiPublicChildcare,
                 ChildcareAvailableUnder2 = c.ChildcareAvailableUnder2,
                 ChildcareAvailableOver2 = c.ChildcareAvailableOver2,
                 Language = c.Language,
                 ServiceCenter = c.ServiceCenter,
                 ProfessionalPortrait = c.ProfessionalPortrait,
-                DisplayControl = c.DisplayControl
-            }).FirstOrDefaultAsync(c => c.Id == id);
-
-            if (resume == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(resume);
-        }
+                //DisplayControl = c.DisplayControl
+            }).ToListAsync();
 
         [HttpPost]
         public async Task<ActionResult<NannyResumeDTO>> PostNannyResume(NannyResumeDTO nannyResumeDTO)

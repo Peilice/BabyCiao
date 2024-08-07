@@ -90,57 +90,87 @@ namespace BabyCiaoAPI.Controllers
             }
             return "Ok";
         }
-
-        //健康資訊的CRUD
-        [HttpPost("CreateHealthInfos")]
-        public async Task<ActionResult<EBook_HealthInfos_DTO>> CreateHealthInfos([FromBody] EBook_HealthInfos_DTO DTO)
+        [HttpGet("GetEBookById/{id}")]
+        public async Task<IEnumerable<EBook_DTO>> GetEBookById(int id)
         {
-            HealthInformation healthInformation = new HealthInformation()
+            string username = _contextAccessor.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Name);
+
+            bool check = _context.ContactBooks.Where(c => c.ParentsIdUserAccount == username).Any();
+
+            if (check)
             {
-                IdContactBook = DTO.IdContactBook,
-                MedicalHistory = DTO.MedicalHistory,
-                AllergyHistory = DTO.AllergyHistory,
-                Height = DTO.Height,
-                Weight = DTO.Weight,
-                HeadCircumference = DTO.HeadCircumference,
-                Memo = DTO.Memo,
-            };
-            _context.HealthInformations.AddAsync(healthInformation);
-            await _context.SaveChangesAsync();
-            return Ok();
-        }
-        [HttpGet("GetHealthInfos/{id}")]
-        public async Task<IEnumerable<EBook_HealthInfos_DTO>> GetHealthInfos(int id)
-        {
-            var DTO = _context.HealthInformations.Where(h => h.IdContactBook == id).Select(healthInfor => new EBook_HealthInfos_DTO
+                var b = _context.ContactBooks.Where(c => c.ParentsIdUserAccount == username && c.Id== id).Select(ebook => new EBook_DTO
+                {
+                    Id = ebook.Id,
+                    ParentsIdUserAccount = ebook.ParentsIdUserAccount,
+                    BabyName = ebook.BabyName,
+                    Gender = ebook.Gender,
+                    Birthday = ebook.Birthday,
+                });
+                return b;
+            }
+            else
             {
-                IdContactBook = healthInfor.IdContactBook,
-                MedicalHistory = healthInfor.MedicalHistory,
-                AllergyHistory = healthInfor.AllergyHistory,
-                Height = healthInfor.Height,
-                Weight = healthInfor.Weight,
-                HeadCircumference = healthInfor.HeadCircumference,
-                Memo = healthInfor.Memo,
-            });
-            return DTO;
+                return null;
+            }
         }
-        [HttpPut("UpdateHealthInfos")]
-        public async Task<ActionResult<EBook_HealthInfos_DTO>> UpdateHealthInfos([FromBody] EBook_HealthInfos_DTO DTO)
-        {
-            var healthInfor = _context.HealthInformations.Where(h => h.Id == DTO.Id).FirstOrDefault();
+        //寶寶基本資訊的CRUD
+        //[HttpPost("CreateBabyInfos")]
+        //public async Task<ActionResult<EBook_GetBabyInfos_DTO>> CreateBabyInfos([FromBody] EBook_GetBabyInfos_DTO DTO)
+        //{
+        //    HealthInformation healthInformation = new HealthInformation()
+        //    {
+        //        IdContactBook = DTO.IdContactBook,
+        //        MedicalHistory = DTO.MedicalHistory,
+        //        AllergyHistory = DTO.AllergyHistory,
+        //        Height = DTO.Height,
+        //        Weight = DTO.Weight,
+        //        HeadCircumference = DTO.HeadCircumference,
+        //        Memo = DTO.Memo,
+        //    };
+        //    _context.HealthInformations.AddAsync(healthInformation);
+        //    await _context.SaveChangesAsync();
+        //    return Ok();
+        //}
+        //[HttpGet("getBabyInfos/{id}")]
+        //public async Task<IEnumerable<EBook_GetBabyInfos_DTO>> getBabyInfos(int id)
+        //{
+        //    var s = _context.HealthInformations.Where(h => h.IdContactBook == id).FirstOrDefault();
+        //    var c = _context.ContactBooks.Where(h => h.Id == id).FirstOrDefault();
 
-            healthInfor.IdContactBook = DTO.IdContactBook;
-            healthInfor.MedicalHistory = DTO.MedicalHistory;
-            healthInfor.AllergyHistory = DTO.AllergyHistory;
-            healthInfor.Height = DTO.Height;
-            healthInfor.Weight = DTO.Weight;
-            healthInfor.HeadCircumference = DTO.HeadCircumference;
-            healthInfor.Memo = DTO.Memo;
+        //    EBook_GetBabyInfos_DTO DTO = new EBook_GetBabyInfos_DTO()
+        //    {
+        //        EbookId=s.Id,
+        //        IdContactBook = s.IdContactBook,
+        //        MedicalHistory = s.MedicalHistory,
+        //        AllergyHistory = s.AllergyHistory,
+        //        Height = s.Height,
+        //        Weight = s.Weight,
+        //        HeadCircumference = s.HeadCircumference,
+        //        ModifiedDate=s.ModifiedDate,
+        //        Memo = s.Memo,
+        //    };
 
-            _context.Update(healthInfor);
-            await _context.SaveChangesAsync();
-            return Ok();
-        }
+
+        //    return null;
+        //}
+        //[HttpPut("UpdateBabyInfos")]
+        //public async Task<ActionResult<EBook_GetBabyInfos_DTO>> UpdateBabyInfos([FromBody] EBook_GetBabyInfos_DTO DTO)
+        //{
+        //    var healthInfor = _context.HealthInformations.Where(h => h.Id == DTO.Id).FirstOrDefault();
+
+        //    healthInfor.IdContactBook = DTO.IdContactBook;
+        //    healthInfor.MedicalHistory = DTO.MedicalHistory;
+        //    healthInfor.AllergyHistory = DTO.AllergyHistory;
+        //    healthInfor.Height = DTO.Height;
+        //    healthInfor.Weight = DTO.Weight;
+        //    healthInfor.HeadCircumference = DTO.HeadCircumference;
+        //    healthInfor.Memo = DTO.Memo;
+
+        //    _context.Update(healthInfor);
+        //    await _context.SaveChangesAsync();
+        //    return Ok();
+        //}
 
 
         //餵食狀況的CRUD
@@ -195,7 +225,7 @@ namespace BabyCiaoAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-        [HttpDelete("CreateDietDetail")]
+        [HttpDelete("DeleteDietDetail/{id}")]
         public async Task<string> DeleteDietDetail(int id)
         {
             var target=_context.DietDetails.Find(id);
@@ -257,7 +287,7 @@ namespace BabyCiaoAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-        [HttpDelete("DeleteDiaperDetail")]
+        [HttpDelete("DeleteDiaperDetail/{id}")]
         public async Task<string> DeleteDiaperDetail(int id)
         {
             var target = _context.DiaperDetails.Find(id);
@@ -278,7 +308,7 @@ namespace BabyCiaoAPI.Controllers
             {
                 IdContactBook = DTO.IdContactBook,
                 SleepTime = DTO.SleepTime,
-                WakeUpTime = DTO.WakeUpTime,
+                WakeUpTime = DTO.RecodeTime,
                 Content = DTO.Content,
                 SleepState=DTO.SleepState,
                 ModifiedTime = DTO.ModifiedTime,
@@ -299,7 +329,7 @@ namespace BabyCiaoAPI.Controllers
                 SleepTime = dto.SleepTime,
                 Content = dto.Content,
                 SleepState = dto.SleepState,
-                WakeUpTime = dto.WakeUpTime,
+                RecodeTime = dto.WakeUpTime,
                 ModifiedTime = dto.ModifiedTime,
                 AccountUserAccount = dto.AccountUserAccount,
             });
@@ -314,7 +344,7 @@ namespace BabyCiaoAPI.Controllers
             s.SleepTime = DTO.SleepTime;
             s.Content = DTO.Content;
             s.SleepState = DTO.SleepState;
-            s.WakeUpTime = DTO.WakeUpTime;
+            s.WakeUpTime = DTO.RecodeTime;
             s.ModifiedTime = DTO.ModifiedTime;
             s.AccountUserAccount = DTO.AccountUserAccount;
 
@@ -322,7 +352,7 @@ namespace BabyCiaoAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-        [HttpDelete("DeleteSleepDetail")]
+        [HttpDelete("DeleteSleepDetail/{id}")]
         public async Task<string> DeleteSleepDetail(int id)
         {
             var target = _context.SleepDetails.Find(id);
@@ -357,7 +387,7 @@ namespace BabyCiaoAPI.Controllers
             
             var DTOs = _context.Memos.Where(h => h.IdContactBook == id).Select(dto => new EBook_Memo_DTO
             {
-                Category = "飲食",
+                Category = "備註",
                 Id = dto.Id,
                 IdContactBook = dto.IdContactBook,
                 Memo1 = dto.Memo1,
@@ -382,7 +412,7 @@ namespace BabyCiaoAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-        [HttpDelete("DeleteMemo")]
+        [HttpDelete("DeleteMemo/{id}")]
         public async Task<string> DeleteMemo(int id)
         {
             var target = _context.Memos.Find(id);
