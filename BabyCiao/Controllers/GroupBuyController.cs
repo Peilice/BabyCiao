@@ -570,7 +570,8 @@ namespace BabyCiao.Controllers
 								   Display = gb.Display,
 								   ModifiedTimeView = gb.ModifiedTime.ToString("yyyy-MM-dd"),
 							   }).FirstOrDefault();
-			var hasPendingOrders = _context.GroupBuyingDetails.Any(o => o.GroupBuyingId == id);
+			var statment = "已參加";
+			var hasPendingOrders = _context.GroupBuyingDetails.Any(o => o.GroupBuyingId == id&&o.Statement==statment);
 
 			if (hasPendingOrders)
 			{
@@ -731,8 +732,8 @@ namespace BabyCiao.Controllers
 			//sb.AppendLine($"訂單價格: {gb.Price*groupBuyDetail.Quantity}");
 			sb.AppendLine($"地址: {groupBuyDetail.Address}");
 			sb.AppendLine($"備註: {groupBuyDetail.Note}");
-			sb.AppendLine($"訂購日: {groupBuyDetail.ModifiedTime}");
-			sb.AppendLine($"出貨日: {DateTime.Now.ToString("yyyy-MM-dd")}");
+			sb.AppendLine($"訂購日: {groupBuyDetail.ModifiedTime.ToString("yyyy-MM-dd HH:mm")}");
+			sb.AppendLine($"出貨日: {DateTime.Now.ToString("yyyy-MM-dd HH:mm")}");
 
 			var byteArray = Encoding.UTF8.GetBytes(sb.ToString());
 			var stream = new MemoryStream(byteArray);
@@ -747,30 +748,53 @@ namespace BabyCiao.Controllers
 			{
 				return NotFound();
 			}
+            var order = from gbd in _context.GroupBuyingDetails
+                        join gb in _context.GroupBuyings on gbd.GroupBuyingId equals gb.Id
+                        where gbd.Id == id
+                        select new GroupBuyDTO
+                        {
+                            OrderFormat = (from dt in _context.GroupBuyingDetailFormats
+                                           join ft in _context.ProductFormats
+                                           on dt.FormatId equals ft.Id into formatsGroup
+                                           from ft in formatsGroup.DefaultIfEmpty()
+                                           where dt.GroupBuyingDetailId == id
+                                           select new GroupBuyOrderFormatDTO
+                                           {
+                                               Id = dt.Id,
+                                               FormatId = ft.Id,
+                                               GroupBuyingDetailId = gbd.Id,
+                                               FormatType = ft.FormatType,
+                                               FormatName = ft.FormatName,
+                                               Quantity = dt.Quantity,
 
-			var order = (from gbd in _context.GroupBuyingDetails
-						 join gb in _context.GroupBuyings on gbd.GroupBuyingId equals gb.Id
-						 join uf in _context.UserInformations on gbd.AccountUserAccount equals uf.AccountUser
-						 where gbd.Id == id
-						 select new GroupBuyDTO
-						 {
-							 JoinId = gbd.Id,
-							 ProductName = gb.ProductName,
-							 JoinUserAccount = gbd.AccountUserAccount,
-							 // Quantity = gbd.Quantity,
-							 // OrderPrice = gbd.Quantity * gb.Price,
-							 JoinModifiedTime = gbd.ModifiedTime,
-							 ViewJoinModifiedTime = gbd.ModifiedTime.ToString("yyyy-MM-dd"),
-							 Statement = gbd.Statement,
-							 Price = gb.Price,
-							 Address = uf.Address,
-						 }).FirstOrDefault();
-			if (order == null)
+                                           }).ToList(),
+                            JoinId = gbd.Id,
+                            ProductName = gb.ProductName,
+                            JoinUserAccount = gbd.AccountUserAccount,
+                            TotalQuantity = (_context.GroupBuyingDetailFormats
+.Where(f => f.GroupBuyingDetailId == gbd.Id)
+   .Select(gbdf => gbdf.Quantity))
+.Sum(),
+                            OrderPrice = (_context.GroupBuyingDetailFormats
+.Where(f => f.GroupBuyingDetailId == gbd.Id).Take(1)
+   .Select(gbdf => gbdf.Quantity))
+.Sum() * gb.Price,
+                            JoinModifiedTime = gbd.ModifiedTime,
+                            ViewJoinModifiedTime = gbd.ModifiedTime.ToString("yyyy-MM-dd"),
+                            Statement = gbd.Statement,
+                            Price = gb.Price,
+                            Address = gbd.Address,
+                            Note = gbd.Note,
+                        };
+
+            var orderList = await order.FirstOrDefaultAsync();
+           
+            if (orderList == null)
 			{
 				return NotFound();
 			}
 
-			return View(order);
+			return View(orderList);
 		}
 		[HttpPost]
 		[ValidateAntiForgeryToken]

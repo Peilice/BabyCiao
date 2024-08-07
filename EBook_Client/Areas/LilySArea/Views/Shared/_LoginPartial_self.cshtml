@@ -1,0 +1,18 @@
+﻿<ul class="navbar-nav">
+    <template v-if="isLoggedIn">
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="#">{{loggedInUsername}}, 您好!!!</a>
+        </li>
+        <li class="nav-item">
+            <a id="logoutForm" class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">登出</a>
+        </li>
+    </template>
+    <template v-else>
+        <li class="nav-item">
+            <a id="loginButton" class="nav-link text-dark" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">登入</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="andy_register">註冊</a>
+        </li>
+    </template>
+</ul>

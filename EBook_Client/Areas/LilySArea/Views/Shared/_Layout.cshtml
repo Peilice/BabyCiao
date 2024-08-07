@@ -110,9 +110,13 @@
            class="bg-success bg-opacity-75 text-white position-fixed bottom-0 end-0 p-2 text-decoration-none m-3 border border-1" onclick="scrollToTop()">PAGETOP</a>
 
     <div class="position-fixed top-10 start-0">
+            <button @@click="myProducts(loggedInUsername)"
+                    class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
+                我的商品
+            </button>
             <button @@click="myOrders(loggedInUsername)"
                 class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
-            我的訂單
+            交易訂單
         </button>
             <button @@click="myFav(loggedInUsername)"
                     class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
@@ -217,13 +221,29 @@
                     // 重新加載頁面以更新狀態
                     location.reload();
                 },
+
+                async myProducts(username) {
+                    //console.log('myOrders', username);
+                    try {
+                        //alert('myOrders~', username);
+                        const response = await axios.post(`/SecondHand/Home/MyProducts`, { user: username });
+                        if (response.status === 200) {
+                            window.location.href = `/SecondHand/Home/MyProducts/${username}`;
+                        }
+                    } catch (error) {
+                        console.error('Error get my orders:', error);
+                    }
+                },
+
+
+
                 async myOrders(username) {
                     //console.log('myOrders', username);
                     try {
                         //alert('myOrders~', username);
-                        const response = await axios.post(`/GroupBuying/Home/MyOrders`, { user: username });
+                        const response = await axios.post(`/SecondHand/Home/MyOrders`, { user: username });
                         if (response.status === 200) {
-                            window.location.href = `/GroupBuying/Home/MyOrders/${username}`;
+                            window.location.href = `/SecondHand/Home/MyOrders/${username}`;
                         }
                     } catch (error) {
                         console.error('Error get my orders:', error);
@@ -233,9 +253,9 @@
                     //console.log('myOrders', username);
                     try {
                         //alert('myOrders~', username);
-                        const response = await axios.post(`/GroupBuying/Home/MyFavorite`, { user: username });
+                        const response = await axios.post(`/SecondHand/Home/MyFavorite`, { user: username });
                         if (response.status === 200) {
-                            window.location.href = `/GroupBuying/Home/MyFavorite/${username}`;
+                            window.location.href = `/SecondHand/Home/MyFavorite/${username}`;
                         }
                     } catch (error) {
                         console.error('Error get my favorite:', error);

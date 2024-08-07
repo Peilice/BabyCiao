@@ -1,0 +1,382 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>新增二手物品</title>
+	<style>
+		.preview {
+			width: 200px;
+			border: 1px solid #ccc;
+			margin-top: 10px;
+			object-fit: cover;
+			margin-right: 10px;
+		}
+
+		.preview-container {
+			display: flex;
+			flex-wrap: wrap;
+		}
+		.order-details {
+			padding: 20px;
+			background-color: #fff;
+			border-radius: 8px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			max-width: 600px;
+			margin: auto;
+		}
+
+		.form-group {
+			margin-bottom: 15px;
+		}
+
+		.actions {
+			margin-top: 20px;
+		}
+
+		.radio-group {
+			margin-bottom: 15px;
+		}
+
+			.radio-group label {
+				display: block;
+			}
+
+		.radio-option {
+			display: flex;
+			align-items: center;
+			margin-bottom: 5px;
+		}
+
+			.radio-option input[type="radio"] {
+				margin-right: 5px;
+			}
+
+		.invalid-feedback {
+			color: red;
+			font-size: 0.875em;
+		}
+	</style>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+
+	<div id="order-app">
+		<!-- breadcrumb start -->
+		<div class="px-3 py-2 mb-2">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb mb-0 bg-transparent p-2 text-dark bg-opacity-10">
+					<li class="breadcrumb-item"><a class="text-decoration-none" href="https://localhost:7231/">首頁</a></li>
+					<li class="breadcrumb-item" aria-current="page"><a class="text-decoration-none" href="https://localhost:7231/SecondHand">二手物品</a></li>
+					<li class="breadcrumb-item active" aria-current="page">我的二手物品</li>
+				</ol>
+			</nav>
+		</div>
+		<!-- breadcrumb end -->
+		<button @@click="createProduct()">新增商品</button>
+		<!-- 商品詳情模態框 -->
+		<div class="modal fade" data-bs-backdrop="static" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">新增物品</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form class="product-details needs-validation" novalidate v-on:submit.prevent="validateAndSubmit" enctype="multipart/form-data">
+							<h2>商品詳情</h2>
+
+							<div class="form-group">
+								<label for="photoFiles"><strong>商品照片</strong></label>
+								<input type="file" id="fileInput" class="form-control" multiple @@change=fileInput />
+								
+								<div id="preview-container" class="preview-container"></div>
+								
+							</div>
+
+							<div class="form-group">
+								<label for="suppliesName"><strong>商品名稱</strong></label>
+								<input type="text" id="suppliesName" v-model="productDetails.suppliesName" class="form-control" required>
+								<div class="invalid-feedback" v-if="!productDetails.suppliesName">
+									此欄位必填!
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="suppliesDescription"><strong>商品敘述</strong></label>
+								<input type="text" id="suppliesDescription" class="form-control" v-model="productDetails.suppliesDescription" required>
+								<div class="invalid-feedback" v-if="!productDetails.suppliesDescription">
+									此欄位必填!
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="stockQuantity"><strong>物品數量</strong></label>
+								<input type="number" id="stockQuantity" v-model="productDetails.stockQuantity" class="form-control" min="1" required>
+								<div class="invalid-feedback" v-if="productDetails.stockQuantity <= 0">
+									數量必須大於零!
+								</div>
+							</div>
+
+							@* 分類start *@
+							<div class="form-group">
+								<label class="control-label">商品分類</label>
+								<select v-model="productDetails.type" id="productCategory" class="form-control">
+									<option value="">選擇商品分類</option>
+									<!-- 母嬰與童裝 -->
+									<optgroup label="母嬰與童裝">
+										<option value="嬰兒服飾">嬰兒服飾</option>
+										<option value="童裝">童裝</option>
+										<option value="嬰兒車">嬰兒車</option>
+										<option value="嬰兒用品">嬰兒用品</option>
+									</optgroup>
+
+									<!-- 電子產品 -->
+									<optgroup label="電子產品">
+										<option value="手機">手機</option>
+										<option value="平板">平板</option>
+										<option value="筆記型電腦">筆記型電腦</option>
+										<option value="桌上型電腦">桌上型電腦</option>
+										<option value="攝影器材">攝影器材</option>
+										<option value="智能穿戴裝置">智能穿戴裝置</option>
+										<option value="電子配件">電子配件</option>
+									</optgroup>
+
+									<!-- 家居與生活用品 -->
+									<optgroup label="家居與生活用品">
+										<option value="家具">家具</option>
+										<option value="家用電器">家用電器</option>
+										<option value="廚房用品">廚房用品</option>
+										<option value="收納與整理">收納與整理</option>
+										<option value="清潔用品">清潔用品</option>
+										<option value="園藝用品">園藝用品</option>
+									</optgroup>
+
+									<!-- 時尚與配件 -->
+									<optgroup label="時尚與配件">
+										<option value="女裝">女裝</option>
+										<option value="男裝">男裝</option>
+										<option value="童裝">童裝</option>
+										<option value="鞋子">鞋子</option>
+										<option value="包包">包包</option>
+										<option value="飾品">飾品</option>
+									</optgroup>
+
+									<!-- 美容與保健 -->
+									<optgroup label="美容與保健">
+										<option value="化妝品">化妝品</option>
+										<option value="護膚品">護膚品</option>
+										<option value="保健食品">保健食品</option>
+										<option value="美髮用品">美髮用品</option>
+										<option value="美容儀器">美容儀器</option>
+									</optgroup>
+
+									<!-- 運動與戶外用品 -->
+									<optgroup label="運動與戶外用品">
+										<option value="運動服裝">運動服裝</option>
+										<option value="健身器材">健身器材</option>
+										<option value="戶外裝備">戶外裝備</option>
+										<option value="自行車及配件">自行車及配件</option>
+									</optgroup>
+
+									<!-- 玩具與遊戲 -->
+									<optgroup label="玩具與遊戲">
+										<option value="玩具">玩具</option>
+										<option value="遊戲機">遊戲機</option>
+										<option value="遊戲配件">遊戲配件</option>
+									</optgroup>
+
+									<!-- 汽機車與配件 -->
+									<optgroup label="汽機車與配件">
+										<option value="汽車配件">汽車配件</option>
+										<option value="機車配件">機車配件</option>
+										<option value="車用電子產品">車用電子產品</option>
+									</optgroup>
+
+									
+
+									<!-- 書籍與文具 -->
+									<optgroup label="書籍與文具">
+										<option value="書籍">書籍</option>
+										<option value="雜誌">雜誌</option>
+										<option value="文具">文具</option>
+									</optgroup>
+
+									<!-- 食品與飲料 -->
+									<optgroup label="食品與飲料">
+										<option value="零食">零食</option>
+										<option value="飲料">飲料</option>
+										<option value="罐頭食品">罐頭食品</option>
+										<option value="生鮮食品">生鮮食品</option>
+									</optgroup>
+								</select>
+								<div class="invalid-feedback" v-if="productDetails.type===''">
+									請選擇商品分類!
+								</div>
+							</div>
+							@* 分類end *@
+
+							<div class="actions d-flex justify-content-end">
+								<button type="submit" class="btn btn-success mx-2">創建商品</button>
+								<button type="button" data-bs-dismiss="modal" class="btn btn-outline-secondary">返回</button>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+@* 
+						<button @@click="joinGroupBuy(productDetails.id)" class="btn btn-success">參加</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button> *@
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 商品詳情模態框end -->
+
+
+
+		<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<script>
+
+			document.getElementById('fileInput').addEventListener('change', function (event) {
+				
+			});
+
+			document.addEventListener('DOMContentLoaded', function () {
+				const orderApp = Vue.createApp({
+					data() {
+						return {
+							u_name: "",
+
+							productDetails: {
+								id: 0,
+								accountUserAccount:'',
+								suppliesName: '',
+								suppliesDescription: '',
+								stockQuantity: 0,
+								type:'',
+								modifiedTime:'',
+								display:true,
+								photoFiles: [
+								
+								],
+								photos:[
+									
+								]
+
+							},
+
+						};
+					},
+					mounted() {
+						this.productDetails.accountUserAccount = sessionStorage.getItem("username");
+					},
+					computed: {
+
+					},
+					methods: {
+						fileInput(event) {
+							//alert('input');
+							this.productDetails.photoFiles = Array.from(event.target.files);
+							this.productDetails.photos = [];  // 清空之前的照片資訊
+							this.productDetails.photoFiles.forEach(file => {
+								this.productDetails.photos.push({
+									id: 0,
+									idSecondHandSupplies: 0,
+									photoName: file.name,  // 這裡是檔案的名稱
+									modifiedTime: 'A'
+								});
+							});
+							var files = event.target.files;
+							var previewContainer = document.getElementById('preview-container');
+							previewContainer.innerHTML = ''; // 清空現有預覽
+
+							for (var i = 0; i < files.length; i++) {
+								var file = files[i];
+								if (file) {
+									var reader = new FileReader();
+									reader.onload = (function (file) {
+										return function (e) {
+											var img = document.createElement('img');
+											img.src = e.target.result;
+											img.className = 'preview';
+											previewContainer.appendChild(img);
+										};
+									})(file);
+									reader.readAsDataURL(file);
+								}
+							}
+							this.productDetails.photoFiles = Array.from(event.target.files);
+						
+						
+
+
+						},
+						createProduct() {
+							$('#createModal').modal('show');
+						},
+
+						validateAndSubmit() {
+							const form = document.querySelector('.needs-validation');
+							if (form.checkValidity() === false) {
+								form.classList.add('was-validated');
+								Swal.fire({
+									icon: 'error',
+									title: '表單驗證錯誤',
+									text: '請填寫所有必填欄位並確保數據有效。',
+								});
+								return;
+							}
+
+							// 如果表單驗證成功，提交表單
+							this.submit();
+						},
+						async submit() {
+							
+							try {
+								const formData = new FormData();
+								formData.append('accountUserAccount', sessionStorage.getItem("username"));
+								formData.append('suppliesName', this.productDetails.suppliesName);
+								formData.append('suppliesDescription', this.productDetails.suppliesDescription);
+								formData.append('stockQuantity', this.productDetails.stockQuantity);
+								formData.append('type', this.productDetails.type);
+								formData.append('display', this.productDetails.display);
+
+								// 將每個文件附加到 FormData
+								for (let i = 0; i < this.productDetails.photoFiles.length; i++) {
+									formData.append('photoFiles', this.productDetails.photoFiles[i]);
+								}
+
+								const response = await axios.post('https://localhost:7292/api/SecondHand/CreateProduct', formData, {
+									headers: {
+										'Content-Type': 'multipart/form-data'
+									}
+								});
+								Swal.fire({
+									icon: 'success',
+									title: '創建成功',
+									text: '您的二手物品已創建成功。',
+								}).then(() => {
+									window.location.href = 'https://localhost:7231/SecondHand';
+								});
+							} catch (error) {
+								Swal.fire({
+									icon: 'error',
+									title: '訂單提交失敗',
+									text: '提交訂單時出錯，請稍後再試。',
+								});
+							}
+						},
+
+						goBack() {
+							window.history.back();
+						}
+					}
+				});
+
+				orderApp.mount('#order-app');
+			});
+		</script>
+</body>
+</html>

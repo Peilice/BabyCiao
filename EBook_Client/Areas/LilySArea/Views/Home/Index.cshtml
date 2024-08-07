@@ -1,0 +1,466 @@
+﻿@{
+    ViewData["Title"] = "二手物品交換";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>二手物品交換</title>
+    <style>
+        .accordion-button::after {
+            display: none; /* 隱藏箭頭符號 */
+        }
+
+        .accordion-button.all-items {
+            background-color: #f8f9fa; /* 自定義背景顏色 */
+            border: none; /* 去掉邊框 */
+        }
+
+        .swiper-container {
+            position: relative;
+                 width: 100%;
+            height: 300px; /* 設定合適的高度 */
+            overflow: hidden; /* 隱藏任何超出範圍的內容 */
+            margin-bottom: 20px; /* Swiper 和下方 p 元素的間距 */
+        }
+
+        .card-img-top,.swiper-slide img {
+            width: 100%; /* 確保圖片寬度填滿容器 */
+            height: 300px; /* 固定圖片高度 */
+            object-fit: cover; /* 確保圖片填滿容器，超出部分裁剪 */
+        }
+
+        
+
+        .swiper-button-prev, .swiper-button-next, .swiper-pagination{
+            color:white;
+        }
+
+        .swiper-pagination-bullet-active {
+            background: white; /* 設定選中狀態的顏色為白色 */
+        }
+
+        .modal-title {
+            font-weight: bold; /* 使標題變為粗體 */
+            font-size: 1.5rem; /* 增大字體大小（可根據需要調整） */
+        }
+
+    </style>
+</head>
+<body>
+    <div id="indexApp" class="container">
+		<!-- breadcrumb start -->
+		<div class="px-3 py-2 mb-2">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb mb-0 bg-transparent p-2 text-dark bg-opacity-10">
+					<li class="breadcrumb-item"><a class="text-decoration-none" href="https://localhost:7231/">首頁</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">二手物品</li>
+				</ol>
+			</nav>
+			<div class="row" style="width:50%;margin-left:auto;margin-right:0">
+				<label class="col-md-4 form-label">篩選關鍵字:</label>
+				<input type="text" class="col-md-8 form-control" placeholder="請輸入篩選關鍵字" v-model="filter" @@keyup="filterProducts" />
+			</div>
+		</div>
+		<!-- breadcrumb end -->
+
+
+        <div class="container">
+            <div class="row">
+                <!-- 左側導覽 start -->
+                <div class="col-3">
+                    <div class="accordion" id="categoryAccordion">
+                        <!-- 母嬰與童裝 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingBabyKids">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"  aria-expanded="false" aria-controls="collapseBabyKids" @@click.prevent="filterByCategory('')">
+                                    全部商品
+                                </button>
+                            </h2>
+                        </div>
+                        <!-- 母嬰與童裝 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingBabyKids">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBabyKids" aria-expanded="true" aria-controls="collapseBabyKids">
+                                    母嬰與童裝
+                                </button>
+                            </h2>
+                            <div id="collapseBabyKids" class="accordion-collapse collapse show" aria-labelledby="headingBabyKids" data-bs-parent="#categoryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled">
+                                        <li><a href="#" @@click.prevent="filterByCategory('嬰兒服飾')">嬰兒服飾</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('童裝')">童裝</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('嬰兒車')">嬰兒車</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('嬰兒用品')">嬰兒用品</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 電子產品 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingElectronics">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseElectronics" aria-expanded="false" aria-controls="collapseElectronics">
+                                    電子產品
+                                </button>
+                            </h2>
+                            <div id="collapseElectronics" class="accordion-collapse collapse" aria-labelledby="headingElectronics" data-bs-parent="#categoryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled">
+                                        <li><a href="#" @@click.prevent="filterByCategory('手機')">手機</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('平板')">平板</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('筆記型電腦')">筆記型電腦</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('桌上型電腦')">桌上型電腦</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('攝影器材')">攝影器材</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('智能穿戴裝置')">智能穿戴裝置</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('電子配件')">電子配件</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 家居與生活用品 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingHomeLiving">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHomeLiving" aria-expanded="false" aria-controls="collapseHomeLiving">
+                                    家居與生活用品
+                                </button>
+                            </h2>
+                            <div id="collapseHomeLiving" class="accordion-collapse collapse" aria-labelledby="headingHomeLiving" data-bs-parent="#categoryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled">
+                                        <li><a href="#" @@click.prevent="filterByCategory('家具')">家具</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('家用電器')">家用電器</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('廚房用品')">廚房用品</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('收納與整理')">收納與整理</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('清潔用品')">清潔用品</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('園藝用品')">園藝用品</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('時尚與配件')">時尚與配件</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 服飾配件 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFashionAccessories">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFashionAccessories" aria-expanded="false" aria-controls="collapseFashionAccessories">
+                                    服飾配件
+                                </button>
+                            </h2>
+                            <div id="collapseFashionAccessories" class="accordion-collapse collapse" aria-labelledby="headingFashionAccessories" data-bs-parent="#categoryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled">
+                                        <li><a href="#" @@click.prevent="filterByCategory('女裝')">女裝</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('男裝')">男裝</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('童裝')">童裝</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('鞋子')">鞋子</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('包包')">包包</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('飾品')">飾品</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('美容與保健')">美容與保健</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 美容與保健 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingBeautyHealth">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBeautyHealth" aria-expanded="false" aria-controls="collapseBeautyHealth">
+                                    美容與保健
+                                </button>
+                            </h2>
+                            <div id="collapseBeautyHealth" class="accordion-collapse collapse" aria-labelledby="headingBeautyHealth" data-bs-parent="#categoryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled">
+                                        <li><a href="#" @@click.prevent="filterByCategory('化妝品')">化妝品</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('護膚品')">護膚品</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('保健食品')">保健食品</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('美髮用品')">美髮用品</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('美容儀器')">美容儀器</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 運動與戶外用品 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSportsOutdoor">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSportsOutdoor" aria-expanded="false" aria-controls="collapseSportsOutdoor">
+                                    運動與戶外用品
+                                </button>
+                            </h2>
+                            <div id="collapseSportsOutdoor" class="accordion-collapse collapse" aria-labelledby="headingSportsOutdoor" data-bs-parent="#categoryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled">
+                                        <li><a href="#" @@click.prevent="filterByCategory('運動服裝')">運動服裝</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('健身器材')">健身器材</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('戶外裝備')">戶外裝備</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('自行車及配件')">自行車及配件</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('玩具與遊戲')">玩具與遊戲</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 玩具與遊戲 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingToysGames">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseToysGames" aria-expanded="false" aria-controls="collapseToysGames">
+                                    玩具與遊戲
+                                </button>
+                            </h2>
+                            <div id="collapseToysGames" class="accordion-collapse collapse" aria-labelledby="headingToysGames" data-bs-parent="#categoryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled">
+                                        <li><a href="#" @@click.prevent="filterByCategory('玩具')">玩具</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('遊戲機')">遊戲機</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('遊戲配件')">遊戲配件</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 汽機車與配件 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingAutoAccessories">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAutoAccessories" aria-expanded="false" aria-controls="collapseAutoAccessories">
+                                    汽機車與配件
+                                </button>
+                            </h2>
+                            <div id="collapseAutoAccessories" class="accordion-collapse collapse" aria-labelledby="headingAutoAccessories" data-bs-parent="#categoryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled">
+                                        <li><a href="#" @@click.prevent="filterByCategory('汽車配件')">汽車配件</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('機車配件')">機車配件</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('車用電子產品')">車用電子產品</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <!-- 書籍與文具 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingBooksStationery">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBooksStationery" aria-expanded="false" aria-controls="collapseBooksStationery">
+                                    書籍與文具
+                                </button>
+                            </h2>
+                            <div id="collapseBooksStationery" class="accordion-collapse collapse" aria-labelledby="headingBooksStationery" data-bs-parent="#categoryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled">
+                                        <li><a href="#" @@click.prevent="filterByCategory('書籍')">書籍</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('雜誌')">雜誌</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('文具')">文具</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 食品與飲料 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFoodBeverage">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFoodBeverage" aria-expanded="false" aria-controls="collapseFoodBeverage">
+                                    食品與飲料
+                                </button>
+                            </h2>
+                            <div id="collapseFoodBeverage" class="accordion-collapse collapse" aria-labelledby="headingFoodBeverage" data-bs-parent="#categoryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled">
+                                        <li><a href="#" @@click.prevent="filterByCategory('零食')">零食</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('飲料')">飲料</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('罐頭食品')">罐頭食品</a></li>
+                                        <li><a href="#" @@click.prevent="filterByCategory('生鮮食品')">生鮮食品</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 可以添加更多分類 -->
+                    </div>
+                </div>
+                <!-- 左側導覽 end -->
+                <!-- 主內容區域 -->
+                <div class="col-9">
+                    <div class="row">
+                        @* card start *@
+                        <div class="col-4 mb-2" v-for="item in secondHand" :key="item.id">
+							<div class="card">
+                                <img :src="getPhotoUrl(item.photo)" class="card-img-top" :alt="item.suppliesName" style="height: 180px;"> 
+                                <div class="card-body">
+                                    <h5 class="card-title">{{item.suppliesName}}</h5>
+                                     @* <p class="card-text">{{item.suppliesDescription}}</p>  *@
+                                    <p class="card-text d-flex justify-content-end">{{item.accountUserAccount}}</p>
+
+                                    <div class="d-flex justify-content-center">
+                                        <button class="btn btn-outline-success" @@click="showDetails(item.id)">詳細資訊</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @* card end *@
+                    </div>
+                </div>
+            </div>
+        </div>
+
+	</div>
+
+    <!-- 商品詳情模態框 -->
+    <div class="modal fade" data-bs-backdrop="static" id="productDetailsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{ productDetails.suppliesName }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Swiper -->
+                    @*  <div class="swiper-container pb-2">
+                    <div class="swiper-wrapper">
+                    <div class="swiper-slide" v-for="photo in productDetails.photos" :key="photo.id">
+                    <img :src="getPhotoUrl(photo.photoName)" :alt="productDetails.productName" >
+                    </div>
+                    </div>
+                    <!-- Add Pagination -->
+                    <div class="swiper-pagination"></div>
+                    <!-- Add Navigation -->
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                    </div> *@
+
+                    <!-- Swiper end-->
+                    <p>{{ productDetails.suppliesDescription }}</p>
+                    <p class="d-flex justify-content-end">用戶：{{suppliesDescription.accountUserAccount}}</p>
+                    <hr>
+
+                    <p>上傳日期：{{ productDetails.modifiedTimeView }}</p>
+
+                </div>
+                <div class="modal-footer">
+
+                    <button @@click="joinGroupBuy(productDetails.id)" class="btn btn-success">申請交換</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+	<script>
+
+		var vueApp2 = {
+			data() {
+				return {
+                    secondHand: [],
+					filter: "",
+					productDetails: {}
+				};
+			},
+			created() {
+                this.fetchSecondHand();
+            },
+            mounted() {
+                this.$nextTick(() => {
+                    if (this.productDetails && this.productDetails.photos) {
+                        new Swiper('.swiper-container', {
+                            loop: true, // 啟用循環模式
+                            pagination: {
+                                el: '.swiper-pagination',
+                                clickable: true,
+                            },
+                            navigation: {
+                                nextEl: '.swiper-button-next',
+                                prevEl: '.swiper-button-prev',
+                            },
+                        });
+                    }
+                });
+            },
+			methods: {
+                fetchSecondHand() {
+                    axios.get('https://localhost:7292/api/SecondHand')
+						.then(response => {
+                            this.secondHand = response.data;
+							//progress: item.progress ?? 0 // 確保 progress 屬性存在
+						})
+						.catch(error => {
+							console.error("Error fetching data:", error);
+						});
+				},
+				getPhotoUrl(photoUrl) {
+                    return photoUrl != null ? `https://localhost:7231/uploads/${photoUrl}` : 'https://localhost:7231/images/noimage.jpg';
+				},
+                getProductFormats(x) {
+                    return x != null ? `https://localhost:7231/uploads/${photoUrl}` : 'https://localhost:7231/images/noimage.jpg';
+                },
+				filterProducts() {
+					let _this = this;
+					var request = {};
+					request.id = isNaN(Number(_this.filter)) ? -1 : Number(_this.filter);
+                    request.suppliesName = request.accountUserAccount = request.suppliesDescription = _this.filter;
+                    axios.post('https://localhost:7292/api/SecondHand/Filter', request)
+						.then(response => {
+                            _this.secondHand = response.data;
+						})
+						.catch(err => {
+							console.error("Error filtering data:", err);
+						});
+                },
+                filterByCategory(x) {
+                    
+                    let _this = this;
+                    var request = {};
+                    request.id = isNaN(Number(_this.filter)) ? -1 : Number(_this.filter);
+                    request.suppliesName = request.accountUserAccount = request.suppliesDescription = request.type = x;
+                    axios.post('https://localhost:7292/api/SecondHand/Filter', request)
+                        .then(response => {
+                            _this.secondHand = response.data;
+                        })
+                        .catch(err => {
+                            console.error("Error filtering data:", err);
+                        });
+                },
+                // showDetails(id) {
+                //     axios.get(`https://localhost:7292/api/GroupBuying/Detail/${id}`)
+                //         .then(response => {
+                //             this.productDetails = response.data;
+                //             this.$nextTick(() => {
+                //                 if (this.productDetails && this.productDetails.photos) {
+                //                     // Destroy the existing Swiper instance if any
+                //                     if (this.swiper) {
+                //                         this.swiper.destroy(true, true);
+                //                     }
+                //                     this.swiper = new Swiper('.swiper-container', {
+                //                         loop: true, // 啟用循環模式
+                //                         pagination: {
+                //                             el: '.swiper-pagination',
+                //                             clickable: true
+                //                         },
+                //                         navigation: {
+                //                             nextEl: '.swiper-button-next',
+                //                             prevEl: '.swiper-button-prev'
+                //                         }
+                //                     });
+                //                 }
+                //             });
+                //             $('#productDetailsModal').modal('show');
+                //         })
+                //         .catch(error => {
+                //             console.error("Error fetching product details:", error);
+                //         });
+                // },
+                async joinGroupBuy(productId) {
+                    try {
+                        const response = await axios.post(`/GroupBuying/Home/Order`, {
+                            id: productId
+                        });
+                        if (response.status === 200) {
+                            window.location.href = `/GroupBuying/Home/Order?id=${productId}`;
+                        }
+                    } catch (error) {
+                        console.error('Error joining group buy:', error);
+                    }
+                }
+			}
+		}
+						 
+		var app = Vue.createApp(vueApp2).mount('#indexApp')
+
+
+	</script>
+
+
+</body>
+</html>
