@@ -14,7 +14,7 @@ using System.Security.Cryptography;
 
 namespace BabyCiao.Controllers
 {
-    [Authorize(Roles = "公告管理")]
+    [Authorize(Roles = "公告編輯")]
     public class AnnouncementsController : Controller
     {
         private readonly BabyciaoContext _context;
@@ -84,6 +84,9 @@ namespace BabyCiao.Controllers
                 //先取得新公告的ID
                 var newAnnouncement = _context.Announcements.Where(a => a.Tittle == my_vm.Tittle).FirstOrDefault();
                 //新增公告照片
+                string aaa= Request.Form.Files["Picture"].GetType().ToString();
+
+
                 string URL= CopyPictureAndGetURL(Request.Form.Files["Picture"]);
                 AnnouncementPhoto announcementPhoto = new AnnouncementPhoto()
                 {

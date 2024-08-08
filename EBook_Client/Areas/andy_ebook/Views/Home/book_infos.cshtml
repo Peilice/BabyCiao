@@ -1,8 +1,6 @@
 ﻿@section Styles{
     <style>
-        .div1 {
-            height: 650px;
-        }
+        
     </style>
 }
 
@@ -13,7 +11,7 @@
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item"><a href="@Utility.SD.localHost_Client/Home/Index">首頁</a></li>
             <li class="breadcrumb-item active" aria-current="page"><a href="@Utility.SD.localHost_Client/andy_ebook/Home/Index">電子聯絡簿</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{babyName}}</li>
+                <li class="breadcrumb-item active" aria-current="page">{{datas.babyName}}</li>
 
         </ol>
     </nav>
@@ -40,62 +38,220 @@
                     <div class="col-12">
                         <div class="row">
                             <div class="col-4">
-                                <img class="w-100 rounded-3 mb-1" src="~/images/背景2.png" />
-                                <input class="form-control form-control-sm" id="formFileSm" type="file">
+                                <template v-if="isEdit==true">
+                                    <img id="image" class="w-100 rounded-3 mb-1" v-bind:src=`@Utility.SD.localHost_API/api/Ebook/getBabyPhoto/${Id_ContactBook}?rand=${rand}`  />
+                                    <input id="editFile" class="form-control form-control-sm" type="file" v-on:change="previewPhoto($event.target)">
+                                </template>
+                                <template v-else>
+                                    <img class="w-100 rounded-3 mb-1" v-bind:src=`@Utility.SD.localHost_API/api/Ebook/getBabyPhoto/${Id_ContactBook}?rand=${rand}`  />
+                                </template>
                             </div>
                             <div class="col-8">
                                 <div class="border border-3 border-danger rounded p-2">
-                                    <p class="mb-0">緊急聯絡人 : {{emergencyContact}}</p>
-                                    <p class="mb-0">連絡電話1 : {{emergencyContactPhone1}}</p>
-                                    <p class="mb-0">連絡電話2 : {{emergencyContactPhone2}}</p>
+                                    <template v-if="isEdit==true">
+                                        <div class="d-flex flex-row">
+                                        <p class="mb-1 me-2">緊急聯絡人 : </p><input type="text" class="form-control w-25" style="height:24px" v-model="datas.emergencyContact" />
+                                        </div>
+                                        <div class="d-flex flex-row">
+                                            <p class="mb-1 me-2">連絡電話1 : </p><input type="text" class="form-control w-25" style="height:24px" v-model="datas.emergencyContactPhone1" />
+                                        </div>
+                                        <div class="d-flex flex-row">
+                                            <p class="mb-0 me-2">連絡電話2 : </p><input type="text" class="form-control w-25" style="height:24px" v-model="datas.emergencyContactPhone2" />
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <p class="mb-1">緊急聯絡人 : {{datas.emergencyContact}}</p>
+                                        <p class="mb-1">連絡電話1 : {{datas.emergencyContactPhone1}}</p>
+                                        <p class="mb-0">連絡電話2 : {{datas.emergencyContactPhone2}}</p>
+                                    </template>
                                 </div>
                                 <div class="row mx-1 mt-3">
                                     <div class="col-4">
                                         <h5>基本資料:</h5>
-                                        <hr>
-                                        <p class="mb-1 w-100">姓名 : {{babyName}}</p>
-                                        <p class="mb-1">性別 : {{gender}}</p>
-                                        <p class="mb-1">生日 : {{birthday}}</p>
-                                        <p class="mb-1">年齡 : {{age}}</p>
-                                        <p class="mb-1">血型 : {{bloodType}}</p>
+                                        <hr class="my-2">
+                                        <p class="mb-1 w-100">姓名 : {{datas.babyName}}</p>
+                                        <p class="mb-1">性別 : {{datas.gender}}</p>
+                                        <p class="mb-1">生日 : {{datas.birthday}}</p>
+                                        <p class="mb-1">年齡 : {{now_age}}</p>
+                                        <template v-if="isEdit==true">
+                                            <div class="d-flex flex-row">
+                                                <p class="mb-1 me-2">血型 : </p>
+                                                <select class=" w-50 " v-model="datas.bloodType" style="height:24px">
+                                                    <option value="O">O</option>
+                                                    <option value="A">A</option>
+                                                    <option value="B">B</option>
+                                                    <option value="AB">AB</option>
+                                                </select>
+                                            </div>
+                                            
+                                        </template>
+                                        <template v-else>
+                                            <p class="mb-1">血型 : {{datas.bloodType}} 型</p>
+                                        </template>
                                     </div>
                                     <div class="col-4">
                                         <h5>成長狀態:</h5>
-                                        <hr>
-                                        <p class="mb-1">身高 : {{height}}</p>
-                                        <p class="mb-1">體重 : {{weight}}</p>
-                                        <p class="mb-1">頭圍 : {{headCircumference}}</p>
+                                        <hr class="my-2">
+                                        <p class="mb-1">身高 : {{datas.height}} 公分(cm)</p>
+                                        <p class="mb-1">體重 : {{datas.weight}} 公克(g)</p>
+                                        <p class="mb-1">頭圍 : {{datas.headCircumference}} 公分(cm)</p>
                                     </div>
                                     <div class="col-4">
                                         <h5>注意事項:</h5>
-                                        <hr>
-                                        <p class="mb-1">疾病史 : {{medicalHistory}}</p>
-                                        <p class="mb-1">過敏史 : {{allergyHistory}}</p>
+                                        <hr class="my-2">
+                                        <p class="mb-1">疾病史 : {{datas.medicalHistory}}</p>
+                                        <p class="mb-1">過敏史 : {{datas.allergyHistory}}</p>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-end">
-                                    <div>編輯時間 : {{modifiedDate}}<button class="btn btn-primary">編輯</button></div>
-                                </div>
+                                
+                                <template v-if="isEdit==true">
+                                    <div class="d-flex justify-content-end">
+                                        <button id="btn_update_base" class="me-2 btn btn-warning h-50 d-flex align-items-center" v-on:click="update_base">更新</button>
+                                        <button class=" btn btn-primary h-50 d-flex align-items-center" v-on:click="cancel_base">取消</button>
+                                    </div>
+                                </template>
+                                <template v-else >
+                                    <div class="d-flex justify-content-end">
+                                        <button class="btn btn-primary " v-on:click="edit_base">編輯</button>
+                                    </div>
+                                    
+                                </template>
                             </div>
                         </div>
-                        <hr>
-                        <div class="row rounded m-1 w-100" style="background-color: lightyellow;" V-for="item in datas">
+                        <hr class="my-2">
+                        <!-- 成長狀態detail start -->
+                        <div class="d-flex justify-content-between ">
+                            <button v-on:click="edit_form" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#babyGrowpData">新增成長紀錄</button>
+                            <div>最新紀錄時間 : {{datas.modifiedDate}}</div>
+                        </div>
+                        <div class="" style="height:300px;overflow-y:auto;overflow-x:hidden;">
+                        <div class="row rounded m-1 w-100" style="background-color: lightyellow;" V-for="item in HealthInfos">
                             <div class="col-4 my-2">
-                                <h5 class="fw-bolder">{{item.dateTimeString}}</h5>
+                                <h5 class="fw-bolder">年齡: {{item.age}}</h5>
+                                <p class="mb-0">資料時間: {{item.str_modifiedDate}}</p>
                             </div>
                             <div class="col-5 my-2">
-                                <p class="ms-5 mb-0">飲食類別: {{item.type}}</p>
-                                <p class="ms-5 mb-0">飲食狀況: {{item.amount}}{{item.unit}}</p>
+                                <template v-if="item.edit==true">
+                                    <div class="d-flex flex-row">
+                                            <p class="ms-5 mb-0  me-2">身高 : </p> <input type="number" class="form-control w-50" style="height:24px" v-model="item.height" /> 公分(cm)
+                                    </div>
+                                    <div class="d-flex flex-row">
+                                            <p class="ms-5 mb-0  me-2">體重 : </p> <input type="number" class="form-control w-50" style="height:24px" v-model="item.weight" /> 克(g)
+                                    </div>
+                                    <div class="d-flex flex-row">
+                                            <p class="ms-5 mb-0  me-2">頭圍 : </p> <input type="number" class="form-control w-50" style="height:24px" v-model="item.headCircumference" /> 公分(cm)
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <p class="ms-5 mb-0">身高 : {{item.height}} 公分(cm)</p>
+                                    <p class="ms-5 mb-0">體重 : {{item.weight}} 克(g)</p>
+                                    <p class="ms-5 mb-0">頭圍 : {{item.headCircumference}} 公分(cm)</p>
+                                </template>
                             </div>
                             <div class="col-3 d-flex justify-content-center align-items-center">
-                                <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="edit(item.id)">編輯</button>
-                                <button class="m-1 btn btn-danger h-50 d-flex align-items-center" v-on:click="toDelete(item.id)">刪除</button>
+                                <template v-if="item.edit==true">
+                                    <button class="m-1 btn btn-warning h-50 d-flex align-items-center" v-on:click="update_others(item)">更新</button>
+                                        <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="cancel_others(item.healthInfosId)">取消</button>
+                                </template>
+                                <template v-else>
+                                        <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="edit_others(item.healthInfosId)">編輯</button>
+                                        <button class="m-1 btn btn-danger h-50 d-flex align-items-center" v-on:click="toDelete(item.healthInfosId)">刪除</button>
+                                </template>
+                                
                             </div>
                         </div>
+                        </div>
+                        <!-- 成長狀態detail end -->
                     </div>
                 </div>
             </div>
             <!-- tabs end -->
+        </div>
+    </div>
+    @* 新增成長紀錄的表單 *@
+    <div class="modal fade " data-bs-backdrop="static" id="babyGrowpData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">成長紀錄</h5>
+                    
+                    <button  type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body ">
+                    <form id="form" class="needs-validation" novalidate>
+                        <div class="d-flex justify-content-between">
+                            <div class="mb-3 has-validation">
+                                <label class="form-label">寶寶姓名</label>
+                                <input type="text" class="form-control" id="userAccount" v-model="datas.babyName" disabled>
+                            </div>
+                            <div class="mb-3 has-validation">
+                                <label for="Measure_date" class="form-label">量測日期</label>
+                                <input type="date" class="form-control" id="Measure_date" autocomplete="off" v-on:change="countDate" v-model="Measure_date" required>
+                            </div>
+                            <div class="mb-3 has-validation">
+                                <label for="age" class="form-label">寶寶年齡</label>
+                                <input type="text" class="form-control" id="age" autocomplete="off" v-model="Measure_age" disabled>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                        <div class="mb-3 has-validation">
+                                <label for="height" class="form-label">身高</label>
+                                <input v-model="datas.height" type="number" class="form-control" id="height" aria-describedby="height" required>
+                            <div id="height" class="form-text">上次紀錄:{{datas.last_height}}公分(cm)</div>
+                            <div class="invalid-feedback">
+                                此欄位必填!
+                            </div>
+                        </div>
+                        <div class="mb-3 has-validation">
+                                <label for="weight" class="form-label">體重</label>
+                                <input v-model="datas.weight" type="number" class="form-control" id="weight" aria-describedby="weight" required>
+                            <div id="weight" class="form-text">上次紀錄:{{datas.last_weight}}公克(g)</div>
+                            <div class="invalid-feedback">
+                                此欄位必填!
+                            </div>
+                        </div>
+                        <div class="mb-3 has-validation">
+                            <label for="headCircumference" class="form-label">頭圍</label>
+                                <input v-model="datas.headCircumference" type="number" class="form-control" id="headCircumference" aria-describedby="headCircumference" required>
+                            <div id="headCircumference" class="form-text">上次紀錄:{{datas.last_headCircumference}}公分(cm)</div>
+                            <div class="invalid-feedback">
+                                此欄位必填!
+                            </div>
+                        </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                        <div class="mb-3 has-validation">
+                            <label for="medicalHistory" class="form-label">疾病史</label>
+                                <input v-model="datas.medicalHistory" type="text" class="form-control" id="medicalHistory" aria-describedby="medicalHistory" required>
+                                <div id="medicalHistory" class="form-text">上次紀錄:{{datas.last_medicalHistory}}</div>
+                            <div class="invalid-feedback">
+                                此欄位必填!
+                            </div>
+                        </div>
+                        <div class="mb-3 has-validation">
+                            <label for="allergyHistory" class="form-label">過敏史</label>
+                                <input v-model="datas.allergyHistory" type="text" class="form-control" id="allergyHistory" aria-describedby="allergyHistory" required>
+                                <div id="allergyHistory" class="form-text">上次紀錄:{{datas.last_allergyHistory}}</div>
+                            <div class="invalid-feedback">
+                                此欄位必填!
+                            </div>
+                        </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="memo" class="form-label">備註</label>
+                            <input v-model="memo" type="text" class="form-control" id="memo" aria-describedby="memo">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" v-on:click="cancel_form">取消</button>
+                            <button type="submit" class="btn btn-primary" v-on:click="checkForm">新增</button>
+                            <div class="invalid-feedback">
+                                此欄位必填!
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>
@@ -106,37 +262,336 @@
         const headers = {
             'Authorization': `Bearer ${useToken}`,
         };
+        const now = new Date();
+        now.setHours(now.getHours() + 8);
         let Ebook_user = sessionStorage.getItem("username");
         let IdContactBook = sessionStorage.getItem("IdContactBook");
 
-        var vueApp = {
+        var vueApp_Ebook_infos = {
             data() {
                 return{
                     datas:[],
-
+                    isEdit:false,
+                    now_age:"",
+                    isCreate:false,
+                    memo:"",
+                    HealthInfos:[],
+                    Measure_date:"",
+                    Measure_age: `請先選填量測日期`,
+                    rand: 1,
+                    Id_ContactBook: IdContactBook,
                 };
             },
             methods:{
-                edit: function (targetId) {
-                    alert('edit')
+                //edit功能區
+                edit_base: function () {
+                    let _this = this;
+                    //alert('edit_base');
+                    _this.isEdit = true;
+                    _this.datas.old_emergencyContact = _this.datas.emergencyContact;
+                    _this.datas.old_emergencyContactPhone1 = _this.datas.emergencyContactPhone1;
+                    _this.datas.old_emergencyContactPhone2 = _this.datas.emergencyContactPhone2;
+                    _this.datas.old_babyPhoto = _this.datas.babyPhoto;
+                    _this.datas.old_bloodType = _this.datas.bloodType;
                 },
+                edit_others: function (targetId) {
+                    let _this = this;
+                    for (var i = 0; i < _this.HealthInfos.length; i++) {
+                        if (_this.HealthInfos[i].healthInfosId == targetId) {
+                            _this.HealthInfos[i].edit = true;
+                            _this.HealthInfos[i].original_height = _this.HealthInfos[i].height;
+                            _this.HealthInfos[i].original_weight = _this.HealthInfos[i].weight;
+                            _this.HealthInfos[i].original_headCircumference = _this.HealthInfos[i].headCircumference;
+                        }
+                    }
+                },
+                edit_form: function () {
+                    let _this = this;
+                    //alert('edit_form');
+                    _this.datas.original_medicalHistory = _this.datas.medicalHistory;
+                    _this.datas.original_allergyHistory = _this.datas.allergyHistory;
+                    _this.datas.original_height = _this.datas.height;
+                    _this.datas.original_weight = _this.datas.weight;
+                    _this.datas.original_headCircumference = _this.datas.headCircumference;
+                    _this.datas.original_memo = _this.datas.memo;
+
+                },
+                //cancel功能區
+                cancel_others: function (targetId) {
+                    let _this = this;
+                    //alert('cancel');
+                    for (var i = 0; i < _this.HealthInfos.length; i++) {
+                        if (_this.HealthInfos[i].healthInfosId == targetId) {
+                            _this.HealthInfos[i].height = _this.HealthInfos[i].original_height;
+                            _this.HealthInfos[i].weight = _this.HealthInfos[i].original_weight;
+                            _this.HealthInfos[i].headCircumference = _this.HealthInfos[i].original_headCircumference;
+                            _this.HealthInfos[i].edit = false;
+                        }
+                    }
+                },
+                cancel_base: function () {
+                    let _this = this;
+                    //alert('cancel');
+                    _this.datas.emergencyContact = _this.datas.old_emergencyContact;
+                    _this.datas.emergencyContactPhone1 = _this.datas.old_emergencyContactPhone1;
+                    _this.datas.emergencyContactPhone2 = _this.datas.old_emergencyContactPhone2;
+                    _this.datas.babyPhoto = _this.datas.old_babyPhoto;
+                    _this.datas.bloodType = _this.datas.old_bloodType;
+                    _this.isEdit = false;
+                },
+                cancel_form: function () {
+                    let _this = this;
+                    //alert('cancel');
+                    _this.datas.medicalHistory = _this.datas.original_medicalHistory;
+                    _this.datas.allergyHistory = _this.datas.original_allergyHistory;
+                    _this.datas.height = _this.datas.original_height;
+                    _this.datas.weight = _this.datas.original_weight;
+                    _this.datas.headCircumference = _this.datas.original_headCircumference;
+                    _this.datas.memo = _this.datas.original_memo;
+                    $('#babyGrowpData').modal('hide');
+                },
+                //update功能區
+                update_base: function () {
+                    let _this = this;
+                    var formData = new FormData();
+                    formData.append('emergencyContact', _this.datas.emergencyContact);
+                    formData.append('emergencyContactPhone1', _this.datas.emergencyContactPhone1);
+                    formData.append('emergencyContactPhone2', _this.datas.emergencyContactPhone2);
+                    formData.append('babyPhoto', document.querySelector('#editFile').files[0]);
+                    formData.append('bloodType', _this.datas.bloodType);
+
+                    axios.put(`@Utility.SD.localHost_API/api/Ebook/UpdateBabyInfos/${IdContactBook}`, formData, {
+                        headers
+                    }).then(result => {
+                        //alert(result.data)
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "更新成功",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(result => {
+                            _this.isEdit = false;
+                            _this.rand = new Date().getTime();
+                            _this.getBabyInfos();
+                        })
+
+
+                    }).catch(err => {
+                        //alert(err)
+                        alert(`Error: ${err.response.status} - ${err.response.statusText}`);
+                    });
+                },
+                update_others: function (item) {
+                    //alert('update_others');
+                    let _this = this;
+                    var request = {};
+                    request.height = item.height;
+                    request.weight = item.weight;
+                    request.headCircumference = item.headCircumference;
+                    request.modifiedDate = new Date(now);
+                    axios.put(`@Utility.SD.localHost_API/api/Ebook/UpdateHealthInfos/${item.healthInfosId}`, request, {
+                        headers
+                    }).then(result => {
+                        //alert(result.data)
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "更新成功",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(result => {
+                            _this.isEdit = false;
+                            _this.getBabyInfos();
+                        })
+
+
+                    }).catch(err => { alert(err) });
+                },
+                //Delete功能區
                 toDelete: function (targetId) {
-                    alert('toDelete')
+                    let _this = this;
+                    //alert('toDelete')
+                    Swal.fire({
+                        title: "提示!",
+                        text: "您確定的刪除?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "是的,確定刪除!"
+                    }).then(s => {
+                        axios.delete(`@Utility.SD.localHost_API/api/Ebook/DeleteHealthInfos/${targetId}`, {
+                            headers
+                        }).then(result => {
+                            _this.getHealthInfos();
+                            _this.getBabyInfos();
+                        }).catch(err => { alert(err) });
+                    });
+                    Swal.fire({
+                        title: "刪除成功!",
+                        text: "刪除成功!",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                },
+                //其他
+                create_babyGrowpData: function (e) {
+                    //alert('create_babyGrowpData');
+                    e.preventDefault();
+                    let _this = this;
+                    var request = {};
+                    request.healthInfosId = 0,
+                    request.idContactBook = IdContactBook;
+                    request.medicalHistory = _this.datas.medicalHistory;
+                    request.allergyHistory = _this.datas.allergyHistory;
+                    request.height = _this.datas.height;
+                    request.weight = _this.datas.weight;
+                    request.headCircumference = _this.datas.headCircumference;
+                    request.modifiedDate = new Date(now);
+                    request.memo = _this.datas.memo;
+                    request.age = _this.Measure_age;
+
+                    axios.post(`@Utility.SD.localHost_API/api/Ebook/CreateBabyInfos`, request, { headers }).then(result => {
+                        // alert(result.data)
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "新增成功",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(result => {
+                            _this.getBabyInfos();
+                            $('#babyGrowpData').modal('hide');
+                        })
+                    }).catch(err => {
+                        alert(err);
+                    })
                 },
                 getBabyInfos: function () {
                     let _this = this;
-                    axios.get(`@Utility.SD.localHost_API/api/Ebook/getBabyInfos/${id}`, { headers 
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/getBabyInfos/${IdContactBook}`, {
+                        headers
                     }).then(result => {
-                        alert(result);
+                        //alert(result.data);
+                        _this.datas = result.data;
+                        if (this.datas.gender == 0) {
+                            _this.datas.gender = "女";
+                        } else {
+                            _this.datas.gender = "男";
+                        }
+
+                        var str_time = ` ${new Date(_this.datas.modifiedDate).getFullYear()}年${new Date(_this.datas.modifiedDate).getMonth()+1}月${new Date(_this.datas.modifiedDate).getDate()}日${new Date(_this.datas.modifiedDate).getHours()}:${new Date(_this.datas.modifiedDate).getMinutes()} `;
+                        _this.datas.modifiedDate = str_time;
+                        _this.datas.last_height = _this.datas.height;
+                        _this.datas.last_weight = _this.datas.weight;
+                        _this.datas.last_headCircumference = _this.datas.headCircumference;
+                        _this.datas.last_medicalHistory = _this.datas.medicalHistory;
+                        _this.datas.last_allergyHistory = _this.datas.allergyHistory;
+
+                        
+
+                        var today = new Date();
+                        var birthday = new Date(_this.datas.birthday)
+
+                        var years = today.getFullYear() - birthday.getFullYear();
+                        var months = today.getMonth() - birthday.getMonth();
+
+                        if (years != 0 && months < 0) {
+                            years -= 1;
+                            months += 12
+                        }
+                        _this.now_age = `${years}歲${months}個月`;
+                        _this.getHealthInfos();
+
                     }).catch(err => {alert(err)});
+
+                },
+                checkForm: function () {
+                    let _this = this;
+                    _this.isCreate = true;
+                    let forms = document.querySelectorAll('.needs-validation')
+                    //alert(forms)
+                    Array.prototype.slice.call(forms)
+                        .forEach(function (form) {
+                            form.addEventListener('submit', function (event) {
+                                if (!form.checkValidity()) {
+                                    event.preventDefault()
+                                    event.stopPropagation()
+                                } else {
+                                    if (_this.isCreate) {
+                                        //alert('create!')
+                                        _this.isCreate = false;
+                                        _this.create_babyGrowpData(event);
+                                    } else {
+                                        event.preventDefault()
+                                        event.stopPropagation()
+                                    }
+                                }
+                                form.classList.add('was-validated')
+                            }, false)
+                        })
+                },
+                getHealthInfos: function () {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/getHealthInfos/${IdContactBook}`, {
+                        headers
+                    }).then(result => {
+                        //alert(result.data);
+                        _this.HealthInfos = result.data;
+                        for (var i = 0; i < _this.HealthInfos.length; i++) {
+                            var fulltime =new Date(_this.HealthInfos[i].modifiedDate);
+                            var str_modifiedDate = `${fulltime.getFullYear()}年${fulltime.getMonth()+1}月${fulltime.getDate()}日${fulltime.getHours()}:${fulltime.getMinutes()}`;
+                            _this.HealthInfos[i].str_modifiedDate = str_modifiedDate;
+                            _this.HealthInfos[i].edit = false;
+                        }
+                    }).catch(err => { alert(err) });
+                },
+                countDate: function () {
+                    let _this = this;
+                    if (_this.Measure_date!="") {
+                        var today = new Date(_this.Measure_date);
+                        var birthday = new Date(_this.datas.birthday)
+
+                        var years = today.getFullYear() - birthday.getFullYear();
+                        var months = today.getMonth() - birthday.getMonth();
+
+                        if (years != 0 && months < 0) {
+                            years -= 1;
+                            months += 12
+                        }
+                        _this.Measure_age = `${years}歲${months}個月`;
+                    }
+                },
+                readURL: function (file,image,button) {
+                    var allowType="image.*"
+                    if (file.files[0].type.match(allowType)) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            image.attr("src", e.target.result); //jQuery用法
+                            //image.scr = e.target.result;      //javascript用法
+                        };
+                        reader.readAsDataURL(file.files[0]);
+                        button.prop("disabled", false);
+                    } else {
+                        alert("不允許的檔案上傳格式");
+                        button.prop("disabled", true);
+                    }
+                },
+                previewPhoto: function (file) { 
+                    let _this = this;
+                    _this.readURL(file, $('#image'), $('#btn_update_base'));
                 }
             },
             mounted: function () {
                 let _this = this;
-                alert('start')
+                //alert('start')
+                _this.getBabyInfos();
+                //_this.getHealthInfos();
             }
         }
 
-        var app_Ebook_infos = Vue.createApp(vueApp).mount("app_Ebook_infos");
+        var app_Ebook_infos = Vue.createApp(vueApp_Ebook_infos).mount("#app_Ebook_infos");
     </script>
 }
