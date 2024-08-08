@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <Content Remove="Areas\LilyGArea\Views\Home\Detail.cshtml" />
+    <Content Remove="Views\Platform\MyArticle.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +49,7 @@
     <None Include="Areas\Machplateform\Views\Shared\_Layout.cshtml" />
     <None Include="Areas\Machplateform\Views\Shared\_LoginPartial.cshtml" />
     <None Include="Areas\Machplateform\Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="Views\Platform\MyArticle.cshtml" />
     <None Include="wwwroot\NannnyAndPerant\合約\合同文件1" />
     <None Include="wwwroot\NannnyAndPerant\合約\合同文件1.pdf" />
     <None Include="wwwroot\NannnyAndPerant\合約\合同文件10.pdf" />
@@ -623,6 +625,14 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Platform\MyArticle.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Platform\MyArticle.cshtml" />
   </ItemGroup>
 
 </Project>

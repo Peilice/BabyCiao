@@ -3,23 +3,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BabyCiaoAPI.Models;
 
-public class PlatformDTO
+public class PlatformResponseDTO
 {
+    //讀取文章
     public int ArticleID { get; set; }
-    public string PostAccount { get; set; }
-    public string PostTitle { get; set; }
-    public string PostType {  get; set; }
-    public DateOnly PostModifiedTime { get; set; }
-    public int ResponseCount { get; set; }
-
-}
-
-public class Platform_createDTO
-{
     public string PostAccount { get; set; }
     public string PostTitle { get; set; }
     public string PostContent { get; set; }
     public string PostType { get; set; }
+    public DateOnly PostModifiedTime { get; set; }
+
+    //讀取回應
+    public int ResponseID { get; set; }
+    public string ResponseAccount { get; set; }
+    public string ResponseContent { get; set; }
+    public DateTime ResponseModifiedTime { get; set; }
 
 }
 

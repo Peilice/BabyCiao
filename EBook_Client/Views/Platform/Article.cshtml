@@ -1,9 +1,10 @@
 ﻿<div id="vueApp">
+    <!-- Breadcrumb -->
     <div class="container mb-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">社群</li>
-                <li class="breadcrumb-item"><a href="https://localhost:7231/Competitions">討論區</li>
+                <li class="breadcrumb-item"><a href="https://localhost:7231/Platform">討論區</a></li>
             </ol>
         </nav>
     </div>
@@ -19,9 +20,10 @@
                 <a v-on:click="getType(4)" class="list-group-item list-group-item-action">親子旅遊</a>
             </div>
         </div>
-    <!-- 主畫面(顯示資料) -->
+    
         <div class ="col-9">
-            <div >
+            <div>
+                <!-- 主畫面(顯示資料) -->
                 <div v-show="isArticle">
                     <div class="d-flex justify-content-between">
                         <h3>{{type}}</h3>
@@ -39,7 +41,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="item in Article">
-                                <th scope="row">{{item.postTitle}}</th>
+                                <th scope="row"><a v-on:click="getInfo(item.articleID)">{{item.postTitle}}</a></th>
                                 <td>{{item.responseCount}}</td>
                                 <td>{{item.postAccount}}</td>
                                 <td>{{item.postModifiedTime}}</td>
@@ -48,6 +50,7 @@
                     </table>
                 </div>
             </div>
+            <!-- 主畫面(發佈貼文) -->
             <div v-show="isPost">
                 <h3>我要發表</h3>
                 <form>
@@ -108,7 +111,7 @@
             getArticle: function () {
                 let _this = this;
                 //alert(articleType)
-                axios.get(`https://localhost:7292/api/Platform/${articleType}`)
+                axios.get(`https://localhost:7292/api/Platform/getArticle/${articleType}`)
                 .then(response=>{
                     _this.Article = response.data;
                     _this.type = response.data[0].postType;
@@ -134,7 +137,7 @@
                         break;
 
                 }
-                axios.get(`https://localhost:7292/api/Platform/${gettype}`)
+                axios.get(`https://localhost:7292/api/Platform/getArticle/${gettype}`)
                     .then(response => {
                         _this.Article = response.data;
                         _this.type = response.data[0].postType;
@@ -166,6 +169,10 @@
                     })
                 })
             },
+            getInfo: function (i) {
+                sessionStorage.setItem("PlatformID",i);
+                window.location.href = "https://localhost:7231/Platform/ArticleInfo";
+            }
         },
         mounted:function(){
             let _this = this;

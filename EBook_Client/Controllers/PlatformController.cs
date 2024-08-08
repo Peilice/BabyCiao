@@ -11,35 +11,21 @@ namespace BabyCiao_Client.Controllers
             return View();
         }
 
-        // GET: PlatformController/Details/5
+        // GET: Platform/Details/5
         public ActionResult Article()
         {
             return View();
         }
 
-        // GET: PlatformController/Create
-        public ActionResult Create()
+        // GET: Platform/ArticleInfo
+        public ActionResult ArticleInfo()
         {
             return View();
         }
 
-        // POST: PlatformController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
-        // GET: PlatformController/Edit/5
-        public ActionResult Edit(int id)
+        // GET: Platform/MyArticle
+        public ActionResult MyArticle()
         {
             return View();
         }

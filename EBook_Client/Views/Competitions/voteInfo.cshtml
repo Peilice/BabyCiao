@@ -1,7 +1,7 @@
 ﻿
 
 
-<div id="app" class="container mb-4">
+<div id="App" class="container mb-4">
     <!-- Breadcrumb -->
     <div class="container d-flex justify-content-between">
         <nav aria-label="breadcrumb">
@@ -24,9 +24,8 @@
         <h3>比賽進行狀態</h3>
         <p>{{Statement}}</p>
         <div class="d-flex justify-content-between">
-            @* 待處理 *@
             <!-- 靜態互動背景 -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-bind:disabled="isEnd">
                 報名此比賽
             </button>
             <button class="btn btn-outline-dark me-2" type="submit" v-on:click="newfavorite"><i class="bi bi-bookmark-heart">收藏此活動</i></button>
@@ -35,7 +34,7 @@
     <div class="container" id="app">
         @* <img v-bind:src="{{Imageurl}}" /> *@
         <div class="d-flex justify-content-between">    
-              <div class="dropdown">
+              @* <div class="dropdown">
                     排序
                   <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -45,7 +44,7 @@
                       <li><a class="dropdown-item" href="#">最新</a></li>
                       <li><a class="dropdown-item" href="#">投票數</a></li>
                   </ul>
-              </div>
+              </div> *@
             <div>
                 <label for="" class="me-3">參賽者：<span>{{Competitor}}</span></label>
                 <label for="" class="me-3">總票數：<span>{{allvote}}</span></label>
@@ -145,6 +144,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     var IdCompetitions = sessionStorage.getItem("IdCompetition");
+    var comStatement = sessionStorage.getItem("comStatement"); 
     var CompetitorID = 0;
 
     var vueApp = {
@@ -161,6 +161,7 @@
                 RecordDetail:[],
                 allvote:0,
                 CompetitionId: 0,
+                isEnd:false,
 
                 //表單
                 CompetitorContent:"",
@@ -188,11 +189,12 @@
                          _this.CompetitionId = response.data[0].Id;
                          CompetitorID = response.data.competitionDetailId;
                     })
-                    .catch(error => alert(error))
+                    
                 }
                 catch (error) {
                     console.log(error);
-                }
+                };
+
             },
             getPhotoUrl(CompetitionPhotos) {
                 return CompetitionPhotos != null ? `https://localhost:7000/uploads/${CompetitionPhotos}` : `https://localhost:7000/image/noimage.jpg`;
@@ -301,8 +303,11 @@
         },
         mounted: function () {
             let _this = this;
-            _this.fetchcompetitions()
+            _this.fetchcompetitions();
+            if (comStatement = "已結束") {
+                _this.isEnd = true;
+            };
         }
     };
-    var app = Vue.createApp(vueApp).mount('#app');
+    var app = Vue.createApp(vueApp).mount('#App');
 </script>

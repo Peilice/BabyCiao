@@ -1,0 +1,104 @@
+﻿
+<div id="App">
+    <!-- Breadcrumb -->
+    <div class="container mb-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">社群</li>
+                <li class="breadcrumb-item"><a href="https://localhost:7231/Competitions">討論區</a></li>
+                <li class="breadcrumb-item">文章標題</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="container d-flex justify-content-between">
+        <!-- 側欄 -->
+        <div class="col-2">
+            <button type="button" class="btn btn-outline-primary mb-4" v-on:click="">管理我的文章</button>
+            <div class="list-group">
+                <a v-on:click="getType(1)" class="list-group-item list-group-item-action">育兒大小事</a>
+                <a v-on:click="getType(2)" class="list-group-item list-group-item-action">好物分享</a>
+                <a v-on:click="getType(3)" class="list-group-item list-group-item-action">生活交流</a>
+                <a v-on:click="getType(4)" class="list-group-item list-group-item-action">親子旅遊</a>
+            </div>
+        </div>
+
+        <!--主要內容-->
+        <div class="col-md-9" >
+            <div >
+                <h2>文章分類</h2>
+                <p></p>
+            </div>
+            <!--發布者資訊-->
+            <div>
+                發文帳號資訊
+            </div>
+            <!--文章內容-->
+            <div>
+                <p>{{artTitle}}</p>
+                <p>{{artContent}}</p>
+            </div>
+            <!--回應顯示-->
+            <div>
+                <ul class="list-group">
+                    <li class="list-group-item" v-for="item in Information" :key="item.responseID">
+                        <div>
+                            <p>{{item.responseAccount}}</p>
+                        </div>
+                        <div>
+                            <p>{{item.responseModifiedTime}}</p>
+                        </div>
+                        <div>
+                            <p>{{item.responseContent}}</p>
+                        </div>
+                    </li>
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- axios -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
+        integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    //var articleType = sessionStorage.getItem("articleType");
+    var articleType = "育兒大小事";
+    //var articleId = sessionStorage.getItem("PlatformID");
+    articleId = 1;
+    var vueApp = {
+        data() {
+            return {
+                //userAccount:sessionStorage.getItem("username"),
+                userAccount: "user5",
+
+                //讀取內容
+                Information:[],
+                artTitle:"",
+                artContent:"",
+            };
+        },
+        methods: {
+            getInfo: function () {
+                let _this = this;
+                axios.get(`https://localhost:7292/api/Platform/getResponse/${articleId}`)
+                    .then(response => {
+                        _this.Information = response.data;
+                        _this.artTitle = response.data[0].postTitle;
+                        _this.artContent = response.data[0].postContent;
+                    })
+            }
+
+        },
+        mounted: function () {
+            let _this = this;
+            _this.getResponse;
+        }
+
+    };
+    var app = Vue.createApp(vueApp).mount("#App");
+</script>

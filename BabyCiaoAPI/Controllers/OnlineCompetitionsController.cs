@@ -41,6 +41,12 @@ namespace BabyCiaoAPI.Controllers
                                          Statement = com.Statement,
                                          CompetitionPhotoNames = comp.PhotoName,
                                      }).ToListAsync();
+            List<int> ids= new List<int>();
+            foreach(var i in Competition)
+            {
+                ids.Add(i.Id);
+            }
+
             return Ok(Competition);
         }
 

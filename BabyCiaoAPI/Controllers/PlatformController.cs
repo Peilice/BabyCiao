@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Cors;
 using System;
 using Microsoft.JSInterop.Infrastructure;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+
 namespace BabyCiaoAPI.Controllers
 {
     [EnableCors("andy")]
     [Route("api/[controller]")]
     [ApiController]
-    public class PlatformController : Controller
+    public class PlatformController : ControllerBase
     {
         private readonly BabyciaoContext _context;
         public PlatformController(BabyciaoContext context)
@@ -22,7 +23,7 @@ namespace BabyCiaoAPI.Controllers
 
         //讀取區塊文章
         //Get api/Platform/{type}
-        [HttpGet("{type}")]
+        [HttpGet("getArticle/{type}")]
         public async Task<ActionResult<IEnumerable<PlatformDTO>>> getArticle(string type)
         {
             //讀出ID
@@ -33,7 +34,6 @@ namespace BabyCiaoAPI.Controllers
                                    ArticleID=p.Id,
                                    PostAccount=p.AccountUserAccount,
                                    PostTitle=p.Title,
-                                   PostContent=p.Content,
                                    PostType=p.Type,
                                    PostModifiedTime=p.ModifiedTime,
                                }).ToListAsync();
@@ -60,7 +60,6 @@ namespace BabyCiaoAPI.Controllers
                     ArticleID = Article[i].ArticleID,
                     PostAccount = Article[i].PostAccount,
                     PostTitle = Article[i].PostTitle,
-                    PostContent = Article[i].PostContent,
                     PostType = Article[i].PostType,
                     PostModifiedTime = Article[i].PostModifiedTime,
                     ResponseCount = count[i],
@@ -97,5 +96,35 @@ namespace BabyCiaoAPI.Controllers
                 return ex.ToString();
             }
         }
+
+
+        //讀取文章+
+        //Get api/Platform/{id}
+        [HttpGet("getResponse/{id}")]
+        public async Task<ActionResult<IEnumerable<PlatformResponseDTO>>> getResponse(int id)
+        {
+            var response = await(from p in _context.Platforms
+                                 join pr in _context.PlatformResponses
+                                 on p.Id equals pr.IdPlatform
+                                 where pr.IdPlatform == id
+                                 select new PlatformResponseDTO
+                                 {
+                                     //文章
+                                     ArticleID=p.Id,
+                                     PostAccount=p.AccountUserAccount,
+                                     PostTitle=p.Title,
+                                     PostContent=p.Content,
+                                     PostType=p.Type,
+                                     PostModifiedTime=p.ModifiedTime,
+                                     //回應
+                                     ResponseID =pr.Id,
+                                     ResponseAccount=pr.AccountUserAccount,
+                                     ResponseContent=pr.Content,
+                                     ResponseModifiedTime=pr.ModifiedTime,
+                                 }).ToListAsync();
+            return Ok(response);
+        }
+
+
     }
 }

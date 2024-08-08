@@ -1,10 +1,10 @@
 ﻿
-<div id="app">
+<div id="App">
     <!-- Breadcrumb -->
     <div class="container d-flex justify-content-between">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item">社群<</li>
+                <li class="breadcrumb-item">社群</li>
                 <li class="breadcrumb-item"><a href="https://localhost:7231/Competitions">線上投票活動</a></li>
                 <li class="breadcrumb-item">管理我的活動</li>
             </ol>
@@ -86,7 +86,7 @@
                                 <h5>活動時間：{{item.startTime}} ~ {{item.endTime}}</h5>
                                 <p>{{item.competitionContent}}</p>
                             </div>
-                                <button class="btn btn-secondary" type="button" v-on:click="delFavorite(item.competitionId,userAccount)">取消收藏</button>
+                                <button class="btn btn-secondary" type="button" v-on:click="delFavorite(item.competitionId,userAccount)"><i class="fa-solid fa-heart-circle-minus"></i>取消收藏</button>
                         </div>
                     </li>
                 </ul>
@@ -260,6 +260,6 @@
         },
 
     }
-    var app = Vue.createApp(vueApp).mount("#app");
+    var app = Vue.createApp(vueApp).mount("#App");
 
 </script>

@@ -21,13 +21,13 @@
             <div class="row row-cols-1 row-cols-md-3 g-4">
                 <div class="col" v-for="item in OnlineCompetitions" :key="item.id">
                     <div class="card h-100">
-                        <a v-on:click="check(item.id)"><img v-bind:src="getPhotoUrl(item.competitionPhotoNames)" class="card-img-top w-100" alt="活動主要照片"></a>
+                        <a v-on:click="check(item.id,item.statement)"><img v-bind:src="getPhotoUrl(item.competitionPhotoNames)" class="card-img-top w-100" alt="活動主要照片"></a>
                         <div class="card-body">
                             <h5 class="card-title">{{ item.competitionName }}</h5>
                             <p>活動期間 {{item.startTime}}~ {{item.endTime}}</p>
                             <div class="d-flex justify-content-between">
                                 <button class="btn btn-outline-dark mb-2" type="submit" v-on:click="newfavorite(item.id)">
-                                    <i class="bi bi-bookmark-heart">收藏</i>
+                                    <i class="fa-solid fa-heart-circle-plus">收藏</i>
                                 </button>
                                 <p class="badge bg-light text-dark">{{ item.statement }}</p>
                             </div>
@@ -80,9 +80,10 @@
                 getPhotoUrl(CompetitionPhotoNames) {
                     return CompetitionPhotoNames != null ? `https://localhost:7000/uploads/${CompetitionPhotoNames}` : `https://localhost:7000/image/noimage.jpg`;
                 },
-                check:function(IdCom){
-                    sessionStorage.setItem("IdCompetition", IdCom);
-                    window.location.href = `https://localhost:7231/Competitions/voteInfo/${IdCom}`;
+                check:function(ID,Stament){
+                sessionStorage.setItem("IdCompetition", ID);
+                sessionStorage.setItem("comStatement", Stament)
+                window.location.href = `https://localhost:7231/Competitions/voteInfo/${ID}`;
 
                 },
                 mycompetition: function (userAccount) {
@@ -96,11 +97,11 @@
                 },
                 newfavorite: function (id) {
                     let _this = this;
-                    var request = {};
-                    request.CompetitionId = id;
-                    request.myAccount = _this.userAccount;
+                var request = {};
+                request.CompetitionId = id;
+                request.myAccount = _this.userAccount;
 
-                    axios.post(`https://localhost:7292/api/OnlineCompetitions/createFavorite`, request)
+                axios.post(`https://localhost:7292/api/OnlineCompetitions/createFavorite`, request)
                     .then(result => {
                         Swal.fire({
                             position: "center",
@@ -111,17 +112,17 @@
                         })
                         .then(result => {
                             _this.fetchcompetitions();
-                            //收藏按鈕變色
-
+                            this.buttonColor = this.buttonColor === 'blue' ? 'green' : 'blue';
                         })
                     })
                     
                 },
+                
 
             },
             mounted: function () {
                 let _this = this;
-                _this.fetchcompetitions()
+                _this.fetchcompetitions();
             }
 
 

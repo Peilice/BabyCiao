@@ -3,7 +3,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">社群</a></li>
-            <li class="breadcrumb-item">論壇</li>
+            <li class="breadcrumb-item">討論區</li>
         </ol>
     </nav>
     <button type="button" class="btn btn-outline-primary" v-on:click="myPost">管理我的文章</button>
@@ -116,7 +116,7 @@
     var vueApp={
         data(){
             return {
-                aaa:"測試",
+                
             }
         },
         methods: {
@@ -136,6 +136,9 @@
                 sessionStorage.setItem("articleType", "親子旅遊");
                 window.location.href = `https://localhost:7231/Platform/Article`;
             },
+            myPost:function(){
+                window.location.href = `https://localhost:7231/Platform/MyArticle`;
+            }
         }
     }
     var app = Vue.createApp(vueApp).mount("#vueApp");
