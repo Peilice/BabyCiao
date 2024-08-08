@@ -1,4 +1,7 @@
-﻿<!-- Breadcrumb -->
+﻿@{
+    Layout = "_Layout";
+}
+<!-- Breadcrumb -->
 <div class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -138,10 +141,13 @@
 
 
 
+
 <!-- axios -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
         integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+@section Scripts {
+
 <script>
     var IdCompetitions = sessionStorage.getItem("IdCompetition");
     var CompetitorID = 0;
@@ -252,3 +258,4 @@
     };
     var app = Vue.createApp(vueApp).mount('#app');
 </script>
+}

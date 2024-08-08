@@ -39,11 +39,11 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<UserInfoServer>();
 
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
-{
-    option.LoginPath = new PathString("/andy_login/login");
-    option.AccessDeniedPath = new PathString("/Home/NoRole");
-});
+//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+//{
+//    option.LoginPath = new PathString("/andy_login/login");
+//    option.AccessDeniedPath = new PathString("/Home/NoRole");
+//});
 
 var app = builder.Build();
 

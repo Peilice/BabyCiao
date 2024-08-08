@@ -21,7 +21,6 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<UserInfoServer>();
 
@@ -37,11 +36,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
-//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
-//{
-//    option.LoginPath = new PathString("/Home/Login");
-//    option.AccessDeniedPath = new PathString("/Home/NoRole");
-//});
+
 
 builder.Services.AddControllersWithViews();
 
@@ -64,9 +59,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseCookiePolicy();
-app.UseAuthentication();
-app.UseAuthorization();
+
+
 app.MapAreaControllerRoute(
     name: "GroupBuyingArea",
     areaName: "LilyGArea",

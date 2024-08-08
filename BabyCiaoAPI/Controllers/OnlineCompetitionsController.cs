@@ -10,7 +10,7 @@ using Microsoft.JSInterop.Infrastructure;
 
 namespace BabyCiaoAPI.Controllers
 {
-    [EnableCors("andy")]
+    [EnableCors("AllowAll")]
     [Route("api/[controller]")]
     [ApiController]
     public class OnlineCompetitionsController : ControllerBase
