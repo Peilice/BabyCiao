@@ -1,0 +1,192 @@
+﻿@{
+    ViewData["Title"] = "線上客服系統";
+    Layout = "_Layout";
+}
+
+<div id="app" class="container mt-5" v-cloak>
+    <div class="row d-flex justify-content-end">
+        <div class="col-md-3">
+            <button class="btn btn-primary mt-4 fixed-chatbot" id="btn機器人" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasChat" aria-controls="offcanvasChat">
+                @* <img src="~/img/智能客服.jpg"> *@
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb4 text-center">客服系統</h1>
+        </div>
+    </div>
+    <!-- Offcanvas -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasChat" aria-labelledby="offcanvasChatLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasChatLabel">智慧客服 AI 機器人</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3" v-for="(stat, index) in stats" :key="index">
+            <div :class="'stat-card ' + stat.bgClass">
+                <div class="stat-value text-center">{{ stat.value }}</div>
+                <div class="text-center">{{ stat.label }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <h4>處理中問題 ({{ inProgress.length }})</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>帳號</th>
+                        <th>處理中</th>
+                        <th>工單號碼</th>
+                        <th>轉派</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(issue, index) in inProgress" :key="index" v-on:click="selectTicket(issue)">
+                        <td>{{ issue.accountUserAccount }}</td>
+                        <td>{{ issue.title }}</td>
+                        <td>{{ issue.id}}</td>
+                        <td>{{ issue.context}}</td>
+                        <td>
+                            <select class="form-control">
+                                <option>轉派</option>
+                                <option v-for="(agent, agentIndex) in agents" :key="agentIndex">{{ agent.userName }}</option>
+                            </select>
+                            <button class="btn btn-success mt-2">確認</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-6" style="margin-left: 400px;">
+        <h4>使用者工單</h4>
+        <form v-on:submit.prevent="reply">
+            <div class="form-group">
+                <label for="Worknumber">工單號碼</label>
+                <input type="text" class="form-control" id="Worknumber" readonly v-model="selectedTicket.id">
+            </div>
+            <div class="form-group">
+                <label for="name">姓名</label>
+                <input type="text" class="form-control" id="name" readonly v-model="selectedTicket.userName">
+            </div>
+            <div class="form-group">
+                <label for="email">電子郵件</label>
+                <input type="email" class="form-control" id="email" readonly v-model="selectedTicket.email">
+            </div>
+            <div class="form-group">
+                <label for="phone">聯絡電話</label>
+                <input type="text" class="form-control" id="phone" readonly v-model="selectedTicket.phone">
+            </div>
+            <div class="form-group">
+                <label for="message">訊息內容</label>
+                <textarea class="form-control" id="message" rows="4" v-model="selectedTicket.context"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 15px;">回覆</button>
+        </form>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    stats: [
+                        { label: '未處理問題', value: 11, bgClass: 'bg-light' },
+                        { label: '電話 (5)', value: 8, bgClass: 'bg-success text-white' },
+                        { label: 'E-mail (15)', value: 15, bgClass: 'bg-warning text-white' },
+                        { label: '線上文字 (7)', value: 11, bgClass: 'bg-danger text-white' },
+                        { label: '工單 (9)', value: 13, bgClass: 'bg-secondary text-white' }
+                    ],
+                    inProgress: [],
+                    agents: [],
+                    selectedTicket: {
+                        id: '',
+                        userName: '',
+                        email: '',
+                        phone: '',
+                        context: '',
+                        title: '',
+                        type: '',
+                        statement: '',
+                        accountUserAccount: ''
+                    }
+                };
+            },
+            methods: {
+                getCookie(name) {
+                    const value = `; ${document.cookie}`;
+                    const parts = value.split(`; ${name}=`);
+                    if (parts.length === 2) return parts.pop().split(';').shift();
+                    return null;
+                },
+                loadData() {
+                    const token = this.getCookie('token'); // 從cookie中獲取token
+                    axios.get('https://localhost:7292/api/CustomerService', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    })
+                        .then(response => {
+                            this.inProgress = response.data.$values; // 確保數據正確提取
+                            console.log('InProgress Data:', this.inProgress); // 用於除錯
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
+                },
+                loadAgents() {
+                    const token = this.getCookie('token'); // 從cookie中獲取token
+                    axios.get('https://localhost:7292/api/CustomerService', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    })
+                        .then(response => {
+                            this.agents = response.data.$values; // 確保數據正確提取
+                            console.log('Agents Data:', this.agents); // 用於除錯
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
+                },
+                reply() {
+                    const token = this.getCookie('token'); // 從cookie中獲取token
+                    const newTicket = {
+                        id: this.selectedTicket.id,
+                        userName: this.selectedTicket.userName,
+                        email: this.selectedTicket.email,
+                        phone: this.selectedTicket.phone,
+                        context: this.selectedTicket.context,
+                        title: this.selectedTicket.title,
+                        type: this.selectedTicket.type,
+                        statement: this.selectedTicket.statement,
+                        accountUserAccount: this.selectedTicket.accountUserAccount,
+                        createddated: this.selectedTicket.createddated,
+                        modiifiedDate: new Date() // 更新修改日期
+                    };
+
+                    axios.post('https://localhost:7292/api/CustomerService', newTicket, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    })
+                        .then(response => {
+                            alert('新增工單成功');
+                            this.loadData(); // 重新載入數據
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
+                },
+                selectTicket(issue) {
+                    this.selectedTicket = issue;
+                }
+            },
+            mounted() {
+                this.loadData();
+                this.loadAgents();
+            }
+        }).mount('#app')
+    </script>
+}

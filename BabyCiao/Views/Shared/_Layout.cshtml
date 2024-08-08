@@ -4,16 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - BabyCiao</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/BabyCiao.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    @await RenderSectionAsync("Styles", required: false)
     <style>
         body {
             background-image: url('/images/giftly.png');
         }
     </style>
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <header>
@@ -70,6 +68,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="DataAnalysis" asp-action="Index">數據分析管理</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="CustomerService" asp-action="CustomerService">客服系統</a>
+                        </li>
                     </ul>
                     <div>
                         <div v-if="isLoggedIn">
@@ -83,61 +84,11 @@
     </header>
     <div class="page-content p-4">
         @RenderBody()
-        <!-- Page Footer-->
-        <footer class="position-absolute bottom-0 bg-dash-dark-2 text-white text-center py-3 w-100 text-xs" id="footer">
-            <div class="container-fluid text-center">
-                <p class="mb-0 text-dash-gray">&copy; 貝比巧遇 <a target="_blank" href=""></a></p>
-            </div>
-        </footer>
     </div>
     <!-- JavaScript files-->
-    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="~/vendor/just-validate/js/just-validate.min.js"></script>
-    <script src="~/vendor/chart.js/Chart.min.js"></script>
-    <script src="~/vendor/choices.js/public/assets/scripts/choices.min.js"></script>
-    <script src="~/js/js-cookie.js"></script>
-    <script src="~/js/demo.js"></script>
-    <script src="~/js/charts-home.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Notifications  -->
-    <!-- Toast-->
-    <script src="~/js/home-premium.js"></script>
-    <!-- Main File-->
-    <script src="~/js/front.js"></script>
-    <script src="https://unpkg.com/vue@3.4.31/dist/vue.global.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+    <script src="https://unpkg.com/vue@3.4.31/dist/vue.global.prod.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"></script>
     <script>
-        function injectSvgSprite(path) {
-            var ajax = new XMLHttpRequest();
-            ajax.open("GET", path, true);
-            ajax.send();
-            ajax.onload = function (e) {
-                var div = document.createElement("div");
-                div.className = 'd-none';
-                div.innerHTML = ajax.responseText;
-                document.body.insertBefore(div, document.body.childNodes[0]);
-            }
-        }
-        injectSvgSprite('~/icons/orion-svg-sprite.svg');
-    </script>
-    <!-- FontAwesome CSS - loading as last, so it doesn't block rendering-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-    @RenderSection("scripts", required: false)
-
-    <script>
-        // 讀取Cookies中的值
-        function getCookie(name) {
-            let cookieArr = document.cookie.split(";");
-            for (let i = 0; i < cookieArr.length; i++) {
-                let cookiePair = cookieArr[i].split("=");
-                if (name == cookiePair[0].trim()) {
-                    return decodeURIComponent(cookiePair[1]);
-                }
-            }
-            return null;
-        }
-
         const navbarApp = Vue.createApp({
             data() {
                 return {
@@ -151,8 +102,8 @@
             },
             methods: {
                 checkLoginStatus() {
-                    this.account = getCookie('account');
-                    this.permissions = parseInt(getCookie('permissions'), 10);
+                    this.account = this.getCookie('account');
+                    this.permissions = parseInt(this.getCookie('permissions'), 10);
                     this.isLoggedIn = !!this.account;
 
                     // 檢查權限值，如果小於4，則自動登出
@@ -166,11 +117,22 @@
                     document.cookie = 'permissions=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
                     this.isLoggedIn = false;
                     window.location.href = 'https://localhost:7231';
+                },
+                getCookie(name) {
+                    let cookieArr = document.cookie.split(";");
+                    for (let i = 0; i < cookieArr.length; i++) {
+                        let cookiePair = cookieArr[i].split("=");
+                        if (name == cookiePair[0].trim()) {
+                            return decodeURIComponent(cookiePair[1]);
+                        }
+                    }
+                    return null;
                 }
             }
         });
 
         navbarApp.mount('#navbar-admin');
     </script>
+    @RenderSection("scripts", required: false)
 </body>
 </html>
