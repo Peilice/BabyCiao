@@ -126,5 +126,27 @@ namespace BabyCiaoAPI.Controllers
         }
 
 
+        //收藏文章
+        //Post api/Platform/newFavorite
+        [HttpPost("newFavorite")]
+        public async Task<string> newFavorite([FromBody] Favorite_createDTO createDTO)
+        {
+            PlatformFavorite Favorite = new PlatformFavorite()
+            {
+                IdPlatform=createDTO.ArticleID,
+                AccountUserAccount=createDTO.favoriteAccount,
+            };
+            try
+            {
+                _context.PlatformFavorites.Add(Favorite);
+                await _context.SaveChangesAsync();
+                return "新增成功";
+            }
+            catch
+            {
+                return "新增失敗";
+            }
+        }
+
     }
 }

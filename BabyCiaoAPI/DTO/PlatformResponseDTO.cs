@@ -21,3 +21,9 @@ public class PlatformResponseDTO
 
 }
 
+public class Response_createDTO
+{
+    public int ArticleID { get; set; }
+    public string favoriteAccount { get; set; }
+}
+

@@ -25,19 +25,36 @@
 
         <!--主要內容-->
         <div class="col-md-9" >
-            <div >
-                <h2>文章分類</h2>
-                <p></p>
+            <div class="border-bottom mb-2">
+                <h3>{{artiType}}</h3>
             </div>
             <!--發布者資訊-->
-            <div>
-                發文帳號資訊
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="mb-3">
+                    <p>{{artiAccount}}</p>
+                    <p>{{artiTime}}</p>
+                </div>
+                <a v-on:click="newfavortie()">
+                    <div class="rounded-circle border border-1 border-dark text-center" style="width:50px; height:50px">
+                    <i class="bi bi-bookmark-heart fs-2"></i>
+                    </div>
+                </a>
             </div>
+            
             <!--文章內容-->
             <div>
-                <p>{{artTitle}}</p>
-                <p>{{artContent}}</p>
+                <h4>{{artiTitle}}</h4>
+                <p>{{artiContent}}</p>
             </div>
+
+            <!--新增回應-->
+            <div class="mb-3 has-validation border border-light p-2">
+                <h4 class="form-label border-bottom">我要回應</h4>
+                <p>300字內</p>
+                <textarea type="text" class="form-control mb-3" id="Content" rows="5" v-model="CompetitorContent"></textarea>
+                <button class="btn btn-primary" type="submit">發布回應</button>
+            </div>
+
             <!--回應顯示-->
             <div>
                 <ul class="list-group">
@@ -78,8 +95,12 @@
 
                 //讀取內容
                 Information:[],
-                artTitle:"",
-                artContent:"",
+                artiTitle:"",
+                artiContent: "",
+                artiAccount: "",
+                artiTime: "",
+                artiType:"",
+
             };
         },
         methods: {
@@ -88,15 +109,18 @@
                 axios.get(`https://localhost:7292/api/Platform/getResponse/${articleId}`)
                     .then(response => {
                         _this.Information = response.data;
-                        _this.artTitle = response.data[0].postTitle;
-                        _this.artContent = response.data[0].postContent;
+                        _this.artiTitle = response.data[0].postTitle;
+                        _this.artiContent = response.data[0].postContent;
+                        _this.artiAccount = response.data[0].postAccount;
+                        _this.artiTime = response.data[0].postModifiedTime;
+                        _this.artiType = response.data[0].postType;
                     })
             }
 
         },
         mounted: function () {
             let _this = this;
-            _this.getResponse;
+            _this.getInfo();
         }
 
     };
