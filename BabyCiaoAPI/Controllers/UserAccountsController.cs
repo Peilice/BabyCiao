@@ -105,7 +105,6 @@ namespace BabyCiaoAPI.Controllers
 
             return Ok(userAccount);
         }
-
         [HttpGet]
         [Authorize]
         public IActionResult GetAllUsers()
@@ -114,7 +113,14 @@ namespace BabyCiaoAPI.Controllers
             {
                 u.UserId,
                 u.Account,
-                u.Permissions
+                u.Permissions,
+                UserInfo = _context.UserInformations
+                    .Where(info => info.AccountUser == u.Account)
+                    .Select(info => new
+                    {
+                        info.UserFirstName,
+                        info.UserLastName
+                    }).FirstOrDefault()
             }).ToList();
 
             return Ok(userAccounts);

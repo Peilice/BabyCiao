@@ -6,10 +6,10 @@
 <div id="app" class="container mt-5" v-cloak>
     <div class="row d-flex justify-content-end">
         <div class="col-md-3">
-            <button class="btn btn-primary mt-4 fixed-chatbot" id="btn機器人" type="button" data-bs-toggle="offcanvas"
+            @* <button class="btn btn-primary mt-4 fixed-chatbot" id="btn機器人" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasChat" aria-controls="offcanvasChat">
-                @* <img src="~/img/智能客服.jpg"> *@
-            </button>
+                @* <img src="~/img/智能客服.jpg"> 
+            </button> *@
         </div>
     </div>
     <div class="row">
@@ -53,7 +53,7 @@
                         <td>
                             <select class="form-control">
                                 <option>轉派</option>
-                                <option v-for="(agent, agentIndex) in agents" :key="agentIndex">{{ agent.userName }}</option>
+                                <option v-for="(agent, agentIndex) in filteredAgents" :key="agentIndex">{{ agent.userInfo.userFirstName }} {{ agent.userInfo.userLastName }}</option>
                             </select>
                             <button class="btn btn-success mt-2">確認</button>
                         </td>
@@ -97,13 +97,13 @@
         createApp({
             data() {
                 return {
-                    stats: [
-                        { label: '未處理問題', value: 11, bgClass: 'bg-light' },
-                        { label: '電話 (5)', value: 8, bgClass: 'bg-success text-white' },
-                        { label: 'E-mail (15)', value: 15, bgClass: 'bg-warning text-white' },
-                        { label: '線上文字 (7)', value: 11, bgClass: 'bg-danger text-white' },
-                        { label: '工單 (9)', value: 13, bgClass: 'bg-secondary text-white' }
-                    ],
+                    // stats: [
+                    //     { label: '未處理問題', value: 11, bgClass: 'bg-light' },
+                    //     { label: '電話 (5)', value: 8, bgClass: 'bg-success text-white' },
+                    //     { label: 'E-mail (15)', value: 15, bgClass: 'bg-warning text-white' },
+                    //     { label: '線上文字 (7)', value: 11, bgClass: 'bg-danger text-white' },
+                    //     { label: '工單 (9)', value: 13, bgClass: 'bg-secondary text-white' }
+                    // ],
                     inProgress: [],
                     agents: [],
                     selectedTicket: {
@@ -118,6 +118,11 @@
                         accountUserAccount: ''
                     }
                 };
+            },
+            computed: {
+                filteredAgents() {
+                    return this.agents.filter(agent => agent.permissions >= 4);
+                }
             },
             methods: {
                 getCookie(name) {
@@ -140,20 +145,20 @@
                         });
                 },
                 loadAgents() {
-                    const token = this.getCookie('token'); // 從cookie中獲取token
-                    axios.get('https://localhost:7292/api/CustomerService', {
+                    const token = this.getCookie('token');
+                    axios.get('https://localhost:7292/api/UserAccount', {
                         headers: { Authorization: `Bearer ${token}` }
                     })
                         .then(response => {
-                            this.agents = response.data.$values; // 確保數據正確提取
-                            console.log('Agents Data:', this.agents); // 用於除錯
+                            this.agents = response.data.$values;
+                            console.log('Agents Data:', this.agents);
                         })
                         .catch(error => {
                             console.error(error);
                         });
                 },
                 reply() {
-                    const token = this.getCookie('token'); // 從cookie中獲取token
+                    const token = this.getCookie('token');
                     const newTicket = {
                         id: this.selectedTicket.id,
                         userName: this.selectedTicket.userName,
@@ -165,7 +170,7 @@
                         statement: this.selectedTicket.statement,
                         accountUserAccount: this.selectedTicket.accountUserAccount,
                         createddated: this.selectedTicket.createddated,
-                        modiifiedDate: new Date() // 更新修改日期
+                        modiifiedDate: new Date()
                     };
 
                     axios.post('https://localhost:7292/api/CustomerService', newTicket, {
@@ -173,7 +178,7 @@
                     })
                         .then(response => {
                             alert('新增工單成功');
-                            this.loadData(); // 重新載入數據
+                            this.loadData();
                         })
                         .catch(error => {
                             console.error(error);

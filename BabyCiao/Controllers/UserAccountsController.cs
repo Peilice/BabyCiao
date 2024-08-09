@@ -6,33 +6,35 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BabyCiao.Models;
+using BCrypt.Net;
 
 namespace BabyCiao.Controllers
 {
     [Route("/UserAccounts/{action=Index}/{UserID?}")]
     public class UserAccountsController : Controller
     {
-            private readonly BabyciaoContext _context;
+        private readonly BabyciaoContext _context;
 
-            public UserAccountsController(BabyciaoContext context)
-            {
-                _context = context;
-            }
+        public UserAccountsController(BabyciaoContext context)
+        {
+            _context = context;
+        }
 
         private static readonly Dictionary<int, string> PermissionsDictionary = new Dictionary<int, string>
-          {
-            { 0, "審核中" },
+        {
+            { 0, "停權" },
             { 1, "家長" },
             { 2, "保母" },
             { 3, "家長 / 保母" },
-            { 4, "停權"}
-           };
+            { 4, "客服"},
+            { 5, "管理員"},
+        };
+
         // GET: UserAccounts
         [HttpGet]
         public async Task<IActionResult> Index(string selectedPermission = null)
         {
             var userAccounts = await _context.UserAccounts.ToListAsync();
-           
 
             if (!string.IsNullOrEmpty(selectedPermission))
             {
@@ -55,7 +57,6 @@ namespace BabyCiao.Controllers
 
             return View();
         }
-
 
         // GET: UserAccounts/Details/5
         [HttpGet]
@@ -84,14 +85,15 @@ namespace BabyCiao.Controllers
         }
 
         // POST: UserAccounts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreatePost([Bind("UserId,Account,PasswordEncryption,Permissions,Vip")] UserAccount userAccount)
+        public async Task<IActionResult> CreatePost([Bind("UserId,Account,Password,Permissions,Vip")] UserAccount userAccount)
         {
             if (ModelState.IsValid)
             {
+                // 對密碼進行加密
+                userAccount.Password = EncryptPassword(userAccount.Password);
+
                 _context.Add(userAccount);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -99,7 +101,6 @@ namespace BabyCiao.Controllers
             return View(userAccount);
         }
 
-        // GET: UserAccounts/Edit/5
         [HttpGet]
         public async Task<IActionResult> Edit(int UserID)
         {
@@ -113,43 +114,62 @@ namespace BabyCiao.Controllers
             {
                 return NotFound();
             }
+
+            // 確保 ViewBag.PermissionsDictionary 被正確設置
+            ViewBag.PermissionsDictionary = PermissionsDictionary;
+
             return View(userAccount);
         }
 
+
         // POST: UserAccounts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int UserID, [Bind("UserId,Account,PasswordEncryption,Permissions,Vip")] UserAccount userAccount)
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Edit(int UserID, string Account, int Permissions, string? Password)
+{
+    var userAccount = await _context.UserAccounts.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == UserID);
+
+    if (userAccount == null)
+    {
+        return NotFound();
+    }
+
+    if (ModelState.IsValid)
+    {
+        try
         {
-            if (UserID != userAccount.UserId)
+            userAccount.Permissions = Permissions;
+            if (!string.IsNullOrEmpty(Password))
+            {
+                userAccount.Password = EncryptPassword(Password);
+                 
+            }
+            
+            _context.Update(userAccount);
+            await _context.SaveChangesAsync();
+            
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            
+            if (!UserAccountExists(userAccount.UserId))
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            else
             {
-                try
-                {
-                    _context.Update(userAccount);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserAccountExists(userAccount.UserId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                throw;
             }
-            return View(userAccount);
         }
+        return RedirectToAction(nameof(Index));
+    }
+    
+   
+    ViewBag.PermissionsDictionary = PermissionsDictionary; 
+    return View(userAccount);
+}
+
+
 
         // GET: UserAccounts/Delete/5
         public async Task<IActionResult> Delete(int UserID)
@@ -187,6 +207,12 @@ namespace BabyCiao.Controllers
         private bool UserAccountExists(int UserID)
         {
             return _context.UserAccounts.Any(e => e.UserId == UserID);
+        }
+
+        // 加密密碼的函數
+        private string EncryptPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password);
         }
     }
 }
