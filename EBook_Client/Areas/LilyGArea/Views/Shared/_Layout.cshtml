@@ -109,7 +109,7 @@
     <a 
            class="bg-success bg-opacity-75 text-white position-fixed bottom-0 end-0 p-2 text-decoration-none m-3 border border-1" onclick="scrollToTop()">PAGETOP</a>
 
-    <div class="position-fixed top-10 start-0">
+        <div v-if="loggedInUsername" class="position-fixed top-10 start-0">
             <button @@click="myOrders(loggedInUsername)"
                 class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
             我的訂單
