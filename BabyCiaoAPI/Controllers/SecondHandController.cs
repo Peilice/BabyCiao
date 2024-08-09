@@ -231,45 +231,18 @@ namespace BabyCiaoAPI.Controllers
 
         //      // PUT: api/SecondHand/5
         //      // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //      [HttpPut("{id}")]
-        //      public async Task<IActionResult> PutSecondHandSupply(int id, SecondHandSupply secondHandSupply)
-        //      {
-        //          if (id != secondHandSupply.Id)
-        //          {
-        //              return BadRequest();
-        //          }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutSecondHandSupply(int id, SecondHandSupply secondHandSupply)
+        {
+            if (id != secondHandSupply.Id)
+            {
+                return BadRequest();
+            }
 
-        //          _context.Entry(secondHandSupply).State = EntityState.Modified;
 
-        //          try
-        //          {
-        //              await _context.SaveChangesAsync();
-        //          }
-        //          catch (DbUpdateConcurrencyException)
-        //          {
-        //              if (!SecondHandSupplyExists(id))
-        //              {
-        //                  return NotFound();
-        //              }
-        //              else
-        //              {
-        //                  throw;
-        //              }
-        //          }
+            return NoContent();
+        }
 
-        //          return NoContent();
-        //      }
-
-        //      // POST: api/SecondHand
-        //      // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //      [HttpPost]
-        //      public async Task<ActionResult<SecondHandSupply>> PostSecondHandSupply(SecondHandSupply secondHandSupply)
-        //      {
-        //          _context.SecondHandSupplies.Add(secondHandSupply);
-        //          await _context.SaveChangesAsync();
-
-        //          return CreatedAtAction("GetSecondHandSupply", new { id = secondHandSupply.Id }, secondHandSupply);
-        //      }
 
         // DELETE: api/SecondHand/5
         [HttpDelete("{id}")]
