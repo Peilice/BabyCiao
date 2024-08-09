@@ -34,13 +34,14 @@ namespace BabyCiao.Models.DTO
 		public bool Display { get; set; }//顯示控制
         [Display(Name = "顯示")]
         public string DisplayString { get; set; }//顯示控制
+		[Display(Name = "備註")]
+		public string? Note { get; set; }//顯示控制
 
-
-        [Display(Name = "目前參加團購數")]
+		[Display(Name = "目前參加團購數")]
         public int JoinQuantity { get; set; }//目前參加團購數
 
         //////////////////////////
-        [Display(Name = "參團編號")]
+        [Display(Name = "訂單編號")]
 		public int JoinId { get; set; }//參加編號 
 
         public int JoinGroupId { get; set; }//參加團號 
@@ -52,7 +53,7 @@ namespace BabyCiao.Models.DTO
 
 		
 
-		[Display(Name = "團購數量")]
+		[Display(Name = "購買數量")]
 		public int Quantity { get; set; }//加購數量
         [Display(Name = "訂購總數")]
         public int TotalQuantity { get; set; }//加購數量
@@ -102,7 +103,7 @@ namespace BabyCiao.Models.DTO
 
 		public int GroupBuyingDetailId { get; set; }
 
-		public int FormatId { get; set; }
+		public int? FormatId { get; set; }
 
 		[Display(Name = "規格名稱")]
 		public string FormatType { get; set; } = null!;

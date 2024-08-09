@@ -188,7 +188,7 @@
                                 <template v-else>
                                     <h5>自訂義範圍:{{searchRangeDate}}</h5>
                                 </template>
-                                <div id="context2">
+                                    <div id="context2" style="overflow-y:auto;overflow-x:hidden;height:400px;">
                                 </div>
                             </div>
 
@@ -260,7 +260,7 @@
                         </div>
                         <button type="button" class="btn btn-success" id="btn1" v-on:click="createDietDetail">新增</button>
                     </div>
-                    <div class="container w-100">
+                        <div class="container w-100 " style="overflow-y:auto;overflow-x:hidden;height:350px;">
                         <div class="row rounded m-1 w-100" style="background-color: pink;" V-for="item in DietDetail">
                             <template v-if="item.edit==true">
                                 <div class="col-4 my-2">
@@ -275,7 +275,7 @@
                                     </div>
                                 </div>
                                 <div class="col-3 d-flex justify-content-center align-items-center">
-                                    <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
+                                        <button class="m-1 btn btn-warning h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
                                     <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="cancel(item.category,item.id)">取消</button>
                                 </div> 
                             </template>
@@ -343,7 +343,7 @@
                         </div>
                             <button type="button" class="btn btn-success " v-on:click="createDiaperDetail">新增</button>
                     </div>
-                    <div class="container w-100">
+                        <div class="container w-100" style="overflow-y:auto;overflow-x:hidden;height:350px;">
                             <div class="row rounded m-1 w-100" style="background-color: orange" V-for="item in DiaperDetail">
                             <template v-if="item.edit==true">
                                 <div class="col-4 my-2">
@@ -358,7 +358,7 @@
                                     </div>
                                 </div>
                                 <div class="col-3 d-flex justify-content-center align-items-center">
-                                    <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
+                                        <button class="m-1 btn btn-warning h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
                                     <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="cancel(item.category,item.id)">取消</button>
                                 </div>
                             </template>
@@ -410,7 +410,7 @@
                                 <button type="button" class="btn btn-success" v-on:click="createSleepDetail">新增</button>
                         </div>
                     </div>
-                    <div class="container w-100">
+                        <div class="container w-100" style="overflow-y:auto;overflow-x:hidden;height:350px;">
                             <div class="row rounded m-1 w-100" style="background-color: lightblue" V-for="item in SleepDetail">
                             <template v-if="item.edit==true">
                                 <div class="col-4 my-2">
@@ -426,7 +426,7 @@
                                     
                                 </div>
                                 <div class="col-3 d-flex justify-content-center align-items-center">
-                                    <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
+                                        <button class="m-1 btn btn-warning h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
                                     <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="cancel(item.category,item.id)">取消</button>
                                 </div>
                             </template>
@@ -468,7 +468,7 @@
                                 <button type="button" class="btn btn-success" v-on:click="createMemo">新增</button>
                         </div>
                     </div>
-                    <div class="container w-100">
+                        <div class="container w-100" style="overflow-y:auto;overflow-x:hidden;height:350px;">
                             <div class="row rounded m-1 w-100" style="background-color: lightgreen" V-for="item in Memo">
                             <template v-if="item.edit==true">
                                 <div class="col-4 my-2">
@@ -480,7 +480,7 @@
                                         <textarea type="text" class="ms-5 form-control w-100 h-50" v-model="item.memo1"></textarea>
                                 </div>
                                 <div class="col-3 d-flex justify-content-center align-items-center">
-                                    <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
+                                        <button class="m-1 btn btn-warning h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
                                     <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="cancel(item.category,item.id)">取消</button>
                                 </div>
                             </template>
@@ -577,7 +577,6 @@
                 _this.getEbookData(IdContactBook);
                 _this.getDietDetailData(IdContactBook);
                 _this.getDiaperDetailData(IdContactBook);
-                //_this.getHealthInfosData(IdContactBook);
                 _this.getMemoData(IdContactBook);
                 _this.getSleepDetailData(IdContactBook);
                 //_this.reflesh();
@@ -663,13 +662,6 @@
                         })
                         
                         _this.reflesh();
-                    }).catch(err => { alert(err) });
-                },
-                getHealthInfosData: function (IdContactBook) {
-                    let _this = this;
-                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetHealthInfos/${IdContactBook}`, { headers 
-                    }).then(result => { 
-                        //alert(result) 
                     }).catch(err => { alert(err) });
                 },
                 getMemoData: function (IdContactBook) {
@@ -845,33 +837,31 @@
                             case "飲食":
                                 var datas_time = new Date(item.recodeTime);
                                 div.innerHTML = `${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 -> ${item.category} : ${item.amount} ${item.unit}`
-                                div.className = 'w-100 MSG_title';
+                                div.className = 'w-100 MSG_title rounded';
                                 context2.appendChild(div);
                                 break;
                             case "尿布":
                                 var datas_time = new Date(item.recodeTime);
                                 div.innerHTML = `${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 -> ${item.category} : ${item.unit}`;
-                                div.className = 'w-100 MSG_title_Diaper';
+                                div.className = 'w-100 MSG_title_Diaper rounded';
                                 context2.appendChild(div);
                                 break;
                             case "睡眠":
                                 var datas_time = new Date(item.recodeTime);
                                 var datas_time_start = new Date(item.sleepTime);
                                 div.innerHTML = `${datas_time_start.getMonth() + 1}月${datas_time_start.getDate()}日 ${datas_time_start.getHours()}點${datas_time_start.getMinutes()}分~${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 <br>-> ${item.category} : ${item.sleepState}`;
-                                div.className = 'w-100 MSG_title_SleepState';
+                                div.className = 'w-100 MSG_title_SleepState rounded';
                                 context2.appendChild(div);
                                 break;
                             case "備註":
                                 var datas_time = new Date(item.recodeTime);
                                 div.innerHTML = `${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 -> ${item.category} : ${item.memo1}`;
-                                div.className = 'w-100 MSG_title_Memo';
+                                div.className = 'w-100 MSG_title_Memo rounded';
                                 context2.appendChild(div);
                                 break;
                             default:
                                 break;
                         }
-                        
-                    
                     })
                 },
                 addContext1: function (datas) {
@@ -885,26 +875,26 @@
                             case "飲食":
                                 var datas_time = new Date(item.recodeTime);
                                 div.innerHTML = `${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 -> ${item.category} : ${item.amount} ${item.unit}`
-                                div.className = 'w-100 MSG_title';
+                                div.className = 'w-100 MSG_title rounded';
                                 context1.appendChild(div);
                                 break;
                             case "尿布":
                                 var datas_time = new Date(item.recodeTime);
                                 div.innerHTML = `${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 -> ${item.category} : ${item.unit}`;
-                                div.className = 'w-100 MSG_title_Diaper';
+                                div.className = 'w-100 MSG_title_Diaper rounded';
                                 context1.appendChild(div);
                                 break;
                             case "睡眠":
                                 var datas_time = new Date(item.recodeTime);
                                 var datas_time_start = new Date(item.sleepTime);
                                 div.innerHTML = `${datas_time_start.getMonth() + 1}月${datas_time_start.getDate()}日 ${datas_time_start.getHours()}點${datas_time_start.getMinutes()}分~${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 <br>-> ${item.category} : ${item.sleepState}`;
-                                div.className = 'w-100 MSG_title_SleepState';
+                                div.className = 'w-100 MSG_title_SleepState rounded';
                                 context1.appendChild(div);
                                 break;
                             case "備註":
                                 var datas_time = new Date(item.recodeTime);
                                 div.innerHTML = `${datas_time.getMonth() + 1}月${datas_time.getDate()}日 ${datas_time.getHours()}點${datas_time.getMinutes()}分 -> ${item.category} : ${item.memo1}`;
-                                div.className = 'w-100 MSG_title_Memo';
+                                div.className = 'w-100 MSG_title_Memo rounded';
                                 context1.appendChild(div);
                                 break;
                             default:
