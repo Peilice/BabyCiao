@@ -10,6 +10,8 @@ using BabyCiaoAPI.DTO;
 using Microsoft.AspNetCore.Cors;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using Microsoft.SqlServer.Server;
+using System.Net;
 
 namespace BabyCiaoAPI.Controllers
 {
@@ -107,6 +109,7 @@ namespace BabyCiaoAPI.Controllers
             }
         }
 
+        //篩選商品
         //POST:api/GroupBuying/Filter
         [HttpPost("Filter")]
         public async Task<ActionResult<IEnumerable<GBFilterDTO>>> FilterProducts([FromBody] GBFilterDTO model)
@@ -171,6 +174,7 @@ namespace BabyCiaoAPI.Controllers
             }
         }
 
+        //商品詳情
         // GET: api/GroupBuying/5
         [HttpGet("Detail/{id}")]
         public async Task<ActionResult<GBDTO>> Detail(int id)
@@ -258,6 +262,7 @@ namespace BabyCiaoAPI.Controllers
             }
         }
 
+        //訂購頁面
         // GET: api/GroupBuying/5
         [HttpGet("Order/{id}")]
         public async Task<ActionResult<GBDTO>> Order(int id)
@@ -280,7 +285,7 @@ namespace BabyCiaoAPI.Controllers
                                    Statement = gb.Statement,
                                    ProductType = gb.ProductType,
                                    ModifiedTime = DateTime.Now,
-                                   ModifiedTimeView = DateTime.Now.ToString("yyyy-MM-dd"),
+                                   ModifiedTimeView = DateTime.Now.ToString("yyyy-MM-dd HH:mm"),
                                    Display = gb.Display,
                                    Photos = (from ph in _context.GroupBuyingPhotos
                                              where ph.IdGroupBuying == id
@@ -309,47 +314,115 @@ namespace BabyCiaoAPI.Controllers
 
             return Ok(order);
         }
-        // PUT: api/GroupBuying/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutGroupBuying(int id, GroupBuying groupBuying)
+
+		//送出訂單
+		[HttpPost("SubmitOrder")]
+		public async Task<ActionResult<IEnumerable<GBOrderDTO>>> SubmitOrder([FromBody] GBOrderDTO model)
         {
-            if (id != groupBuying.Id)
+            if (model == null)
             {
-                return BadRequest();
+                return NotFound();
             }
-
-            _context.Entry(groupBuying).State = EntityState.Modified;
-
-            try
+            var order = new GroupBuyingDetail
             {
+                Id=model.Id,
+                GroupBuyingId=model.GroupBuyingId,
+                AccountUserAccount = model.UserAccount,
+                Address=model.Address,
+                Note=model.Note!=null? model.Note:"無",
+                ModifiedTime = DateTime.Now,
+                Statement = "已參加",
+            };
+            _context.GroupBuyingDetails.Add(order);
+            await _context.SaveChangesAsync();
+            var newId = order.Id;
+
+            if (model.OrderFormats != null&& model.OrderFormats[0].FormatId!=0  )
+            {
+                foreach (var f in model.OrderFormats)
+                {
+                    var format = new GroupBuyingDetailFormat
+                    {
+                        GroupBuyingDetailId = newId,
+                        FormatId = f.FormatId,
+                        Quantity = f.Quantity,
+                    };
+                    _context.GroupBuyingDetailFormats.Add(format);
+                }
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!GroupBuyingExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                var singleFormat=new GroupBuyingDetailFormat
+				{
+					GroupBuyingDetailId = newId,
+					FormatId = null,
+					Quantity = model.OrderFormats[0].Quantity,
+				};
+				_context.GroupBuyingDetailFormats.Add(singleFormat);
+			await _context.SaveChangesAsync();
+			}
+		
+			return Ok(new { groupBuyingDetailId = newId });
+			
+
+        }
+
+        //訂購頁面
+        // GET: api/GroupBuying/5
+        [HttpGet("MyOrders/{user}")]
+        public async Task<ActionResult<GetOrderDTO>> MyOrders(string user)
+        {
+            if (user == null)
+            {
+                return NotFound();
             }
 
-            return NoContent();
+            var myorders = await (from gbd in _context.GroupBuyingDetails
+                                  join gb in _context.GroupBuyings on gbd.GroupBuyingId equals gb.Id
+                                 
+                                  where gbd.AccountUserAccount == user 
+                                  select new GetOrderDTO
+                                  {
+                                      Id = gbd.Id,
+                                      GroupBuyingId = gbd.GroupBuyingId,
+                                      ProductName=gb.ProductName,
+                                      Address = gbd.Address,
+                                      Note = gbd.Note == null ? "" : gbd.Note,
+                                      JoinModifiedTime = gbd.ModifiedTime,
+									  JoinModifiedTimeView= gbd.ModifiedTime.ToString("G"),
+                                      JoinStatement = gbd.Statement,
+
+                                      Price= gb.Price,
+                                      OrderPrice= (_context.GroupBuyingDetailFormats
+                    .Where(f => f.GroupBuyingDetailId == gbd.Id)
+                        .Select(gbdf => gbdf.Quantity))
+                    .Sum() * gb.Price,
+                                      OrderFormats = (from dt in _context.GroupBuyingDetailFormats
+                                                      join ft in _context.ProductFormats
+                                                      on dt.FormatId equals ft.Id into formatsGroup
+                                                      from ft in formatsGroup.DefaultIfEmpty() // This performs the LEFT JOIN
+                                                      where dt.GroupBuyingDetailId == gbd.Id
+                                                      select new GetOrderFormatDTO
+                                                   {
+                                      OrderFormatId=dt.Id,                 GroupBuyingDetailId = gbd.Id,
+                                                       FormatType = ft.FormatType,
+                                                       FormatName = ft.FormatName,
+                                                       Quantity = dt.Quantity,
+
+                                                   }).ToList(),
+
+                                  }).ToListAsync();
+
+            if (myorders == null)
+            {
+                return NotFound(new { message = "查無訂單" });
+            }
+
+            return Ok(myorders);
         }
 
-        // POST: api/GroupBuying
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<GroupBuying>> PostGroupBuying(GroupBuying groupBuying)
-        {
-            _context.GroupBuyings.Add(groupBuying);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetGroupBuying", new { id = groupBuying.Id }, groupBuying);
-        }
 
         // DELETE: api/GroupBuying/5
         [HttpDelete("{id}")]

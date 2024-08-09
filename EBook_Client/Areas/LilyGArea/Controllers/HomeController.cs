@@ -23,17 +23,13 @@ namespace BabyCiao_Client.Areas.LilyGArea.Controllers
             return View();
         }
 
-        public IActionResult Detail ()
+        public IActionResult MyOrders()
         {
             return View();
         }
+        
 
-        public IActionResult book_historySearch()
-        {
-            return View();
-        }
-
-        public IActionResult book_activityDaily()
+        public IActionResult MyFavorite()
         {
             return View();
         }

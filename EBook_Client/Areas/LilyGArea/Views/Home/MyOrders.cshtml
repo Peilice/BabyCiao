@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的訂單</title>
+
+</head>
+<body>
+    <div id="order-app">
+        <!-- 你的 HTML 內容 -->
+        <div class="px-3 py-2 mb-2">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 bg-transparent p-2 text-dark bg-opacity-10">
+                    <li class="breadcrumb-item"><a class="text-decoration-none" href="https://localhost:7231/">首頁</a></li>
+                    <li class="breadcrumb-item" aria-current="page"><a class="text-decoration-none" href="https://localhost:7231/GroupBuying">團購</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">我的訂單</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div id="app">
+            <h2>我的訂單</h2>
+            <table id="ordersTable" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>訂單編號</th>
+                        <th>商品名稱</th>
+                        <th>商品價格</th>
+                        <th>訂購數量</th>
+                        <th>訂單價格</th>
+                        <th>地址</th>
+                        <th>下單時間</th>
+                        <th>參加狀態</th>
+                        <th>商品規格</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="order in orders" :key="order.id">
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.productName }}</td>
+                        <td>{{ order.price }}</td>
+                        <td>{{ order.orderFormats[0].quantity }}</td>
+                        <td>{{ order.orderPrice }}</td>
+                        <td>{{ order.address }}</td>
+                        <td>{{ order.joinModifiedTimeView }}</td>
+                        <td>{{ order.joinStatement }}</td>
+                        <td>
+                            <ul>
+                                <li v-for="format in order.orderFormats" :key="format.orderFormatId">
+                                    <p v-if="format.formatType">{{ format.formatType }}: {{ format.formatName }}</p>
+                                    <p v-else>單一規格</p>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    username: sessionStorage.getItem("username"),
+                    orders: []
+                };
+            },
+            mounted() {
+                this.fetchOrders();
+            },
+            methods: {
+                fetchOrders() {
+                    const username = sessionStorage.getItem("username");
+                    axios.get(`https://localhost:7292/api/GroupBuying/MyOrders/${username}`)
+                        .then(response => {
+                            this.orders = response.data;
+                            // 初始化 DataTables
+                            this.$nextTick(() => {
+                                $('#ordersTable').DataTable({
+                                    language: {
+                                        "sProcessing": "處理中...",
+                                        "sLengthMenu": "顯示 _MENU_ 項結果",
+                                        "sZeroRecords": "查無訂單",
+                                        "sInfo": "顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項",
+                                        "sInfoEmpty": "顯示第 0 至 0 項結果，共 0 項",
+                                        "sInfoFiltered": "(從 _MAX_ 項結果過濾)",
+                                        "sSearch": "搜尋:",
+                                        "sUrl": "",
+                                        "sInfoThousands": ",",
+                                        "oPaginate": {
+                                            "sFirst": "首頁",
+                                            "sPrevious": "上一頁",
+                                            "sNext": "下一頁",
+                                            "sLast": "末頁"
+                                        },
+                                        "oAria": {
+                                            "sSortAscending": ": 開啟排序升序",
+                                            "sSortDescending": ": 開啟排序降序"
+                                        }
+                                    }
+                                });
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Error fetching orders:', error);
+                        });
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

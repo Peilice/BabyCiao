@@ -1,0 +1,145 @@
+﻿<!-- Breadcrumb -->
+<div class="container d-flex justify-content-between mb-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">社群</a></li>
+            <li class="breadcrumb-item">討論區</li>
+        </ol>
+    </nav>
+    <button type="button" class="btn btn-outline-primary" v-on:click="myPost">管理我的文章</button>
+</div>
+
+<!-- 輪播 -->
+<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="~/images/小小守護者.jpg" class="d-block w-100 h-75" alt="...">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>活動進行中</h5>
+                <p>快來上傳你家寶寶與毛小孩的親愛合照~</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="~/images/寶寶兔耳頭圍巾.jpg" class="d-block w-100 h-75" alt="...">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>現正熱烈開團中</h5>
+                <p>可愛俏皮的風格，非常適合作為寶寶冬季保暖物。</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="~/images/寶寶搖籃.jpg" class="d-block w-100 h-75" alt="...">
+            <div class="carousel-caption d-none d-md-block">
+                <h5 class="text-dark">寶寶搖籃</h5>
+                <p class="text-dark">較小的尺寸，能夠輕鬆地擺放在父母的臥室或客廳等房間中</p>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+<!-- 分隔線 -->
+<img src="~/images/b_simple_87_0l.png" class="mb-3 mt-3 w-100" />
+
+<!-- 文章區 -->
+<div id="vueApp">
+    <div class="container ">
+        <div class="d-flex justify-content-between mb-3">
+            <a v-on:click="page1" class="text-decoration-none text-black">
+                <div class="border border-1 rounded rounded-2 box-shadow shadow-sm">
+                <img src="~/images/育兒.jpg" class="mb-1" />
+                    <h3 class="text-center">育兒大小事</h3>
+                    <p class="text-center">嬰幼兒疾病、生長曲線、教養、親子關係</p>
+                </div>
+            </a>
+            <a v-on:click="page2" class="text-decoration-none text-black">
+                <div class="border border-1 rounded rounded-2 box-shadow shadow-sm">
+                    <img src="~/images/好物分享.jpg" class="mb-1" />
+                    <h3 class="text-center">好物分享</h3>
+                    <p class="text-center">育兒小物、居家布置、穿搭</p>
+                </div>
+            </a>
+        </div>
+        <div class="d-flex justify-content-between">
+            <a v-on:click="page3" class="text-decoration-none text-black">
+                <div class="border border-1 rounded rounded-2 box-shadow shadow-sm">
+                    <img src="~/images/生活交流.jpg" class="mb-1" />
+                    <h3 class="text-center">生活交流</h3>
+                    <p class="text-center">生活點滴、趣味分享</p>
+                </div>
+            </a>
+            <a v-on:click="page4" class="text-decoration-none text-black">
+                <div class="border border-1 rounded rounded-2 box-shadow shadow-sm">
+                    <img src="~/images/親子旅遊.jpg" class="mb-1" />
+                    <h3 class="text-center">親子旅遊</h3>
+                    <p class="text-center">親子旅遊、私房景點、美食</p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+</div>
+<img src="~/images/b_simple_87_0l.png" class="mb-3 mt-3 w-100" />
+
+<!-- 影片插入 -->
+<div class="d-flex">
+    <div class="col-6">
+        <div class="ratio ratio-4x3">
+            <iframe src="https://www.youtube.com/embed/aeO-f8gT7X0" title="ㄅㄆㄇㄈ幼兒注音教學｜中英文單字｜注音符號發音｜兒童英文學習｜雙語教育｜Learn the Chinese Alphabet"></iframe>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="ratio ratio-4x3">
+            <iframe src="https://www.youtube.com/embed/Wl_WDv3jAiw" title="【YOYO點點名精選兒歌】火車嘟嘟嘟✕卡加布列島✕釣魚記✕棒棒棒✕捏泥巴｜帶動跳｜幼兒律動｜YOYO｜兒歌｜童謠｜唱跳｜熱門TOP｜Kids Song"></iframe>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- axios -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
+        integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    var vueApp={
+        data(){
+            return {
+                
+            }
+        },
+        methods: {
+            page1: function () {
+                sessionStorage.setItem("articleType", "育兒大小事");
+                window.location.href = `https://localhost:7231/Platform/Article`;
+            },
+            page2: function () {
+                sessionStorage.setItem("articleType", "好物分享");
+                window.location.href = `https://localhost:7231/Platform/Article`;
+            },
+            page3: function () {
+                sessionStorage.setItem("articleType", "生活交流");
+                window.location.href = `https://localhost:7231/Platform/Article`;
+            },
+            page4: function () {
+                sessionStorage.setItem("articleType", "親子旅遊");
+                window.location.href = `https://localhost:7231/Platform/Article`;
+            },
+            myPost:function(){
+                window.location.href = `https://localhost:7231/Platform/MyArticle`;
+            }
+        }
+    }
+    var app = Vue.createApp(vueApp).mount("#vueApp");
+</script>

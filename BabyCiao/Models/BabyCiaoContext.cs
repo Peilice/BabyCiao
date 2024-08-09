@@ -683,6 +683,32 @@ public partial class BabyciaoContext : DbContext
                 .HasConstraintName("FK__Inquire__UserAcc__4959E263");
         });
 
+        modelBuilder.Entity<Inquire>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("Inquire");
+
+            entity.Property(e => e.UserAccountinquire)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.UserAccountresponse)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.UserAccountinquireNavigation).WithMany()
+                .HasPrincipalKey(p => p.Account)
+                .HasForeignKey(d => d.UserAccountinquire)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Inquire__UserAcc__4A4E069C");
+
+            entity.HasOne(d => d.UserAccountresponseNavigation).WithMany()
+                .HasPrincipalKey(p => p.Account)
+                .HasForeignKey(d => d.UserAccountresponse)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Inquire__UserAcc__4959E263");
+        });
+
         modelBuilder.Entity<Memo>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Memo__3214EC27456F396C");
