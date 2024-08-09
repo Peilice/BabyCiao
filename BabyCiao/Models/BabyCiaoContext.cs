@@ -101,7 +101,7 @@ public partial class BabyciaoContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=Babyciao;Integrated Security=true;TrustServerCertificate=true;Encrypt=true;");
+        => optionsBuilder.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=Babyciao;TrustServerCertificate=True;Integrated Security=true");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -777,9 +777,7 @@ public partial class BabyciaoContext : DbContext
                 .HasColumnName("NannyAccount_UserAccount");
             entity.Property(e => e.NationalIdentificationCard).HasMaxLength(500);
             entity.Property(e => e.PoliceCriminalRecordCertificate).HasMaxLength(500);
-            entity.Property(e => e.RequirementDate)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
+            entity.Property(e => e.RequirementDate).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Statement).HasDefaultValue(1);
 
             entity.HasOne(d => d.NannyAccountUserAccountNavigation).WithMany(p => p.NannyRequirments)
@@ -797,7 +795,6 @@ public partial class BabyciaoContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.City).HasMaxLength(10);
-            entity.Property(e => e.DisplayControl).HasDefaultValue(true);
             entity.Property(e => e.District).HasMaxLength(10);
             entity.Property(e => e.Introduction).HasMaxLength(500);
             entity.Property(e => e.Language)
