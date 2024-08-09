@@ -25,6 +25,8 @@ public partial class ContactBook
 
     public string? EmergencyContactPhone2 { get; set; }
 
+    public string? BabyPhoto { get; set; }
+
     public virtual ICollection<DiaperDetail> DiaperDetails { get; set; } = new List<DiaperDetail>();
 
     public virtual ICollection<Diary> Diaries { get; set; } = new List<Diary>();

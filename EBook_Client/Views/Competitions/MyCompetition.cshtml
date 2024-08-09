@@ -1,0 +1,265 @@
+﻿
+<div id="App">
+    <!-- Breadcrumb -->
+    <div class="container d-flex justify-content-between">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">社群</li>
+                <li class="breadcrumb-item"><a href="https://localhost:7231/Competitions">線上投票活動</a></li>
+                <li class="breadcrumb-item">管理我的活動</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="container d-flex justify-content-between">
+        <!--側欄-->
+        <div class="col-md-2">
+            <div class="d-grid gap-3">
+                <button class="btn btn-info" type="button" v-on:click="getCompetiton">我的比賽</button>
+                <button class="btn btn-info" type="button" v-on:click="getVote">我支持的選手</button>
+                <button class="btn btn-info" type="button" v-on:click="getFavorite">我的收藏</button>
+            </div>
+        </div>
+        <!--主要內容-->
+        <div class="col-md-9">
+        
+            <div>
+                <!--我的比賽-->
+                <div v-show="myCom">
+                    <h2>我的比賽</h2>
+                    <ul class="list-group">
+                        <li class="list-group-item" v-for="item in myCompetition" :key="item.id">
+                            <div>
+                                <h4 class="text-center">比賽資訊</h4>
+                                <div class="d-flex justify-content-between">
+                                    <h5>{{item.competitionName}}</h5>
+                                    <span>{{item.statement}}</span>
+                                </div>
+                                <p>活動時間：{{item.startTime}} ~ {{item.endTime}}</p>
+                            </div>
+                            <img src="~/images/b_simple_122_0m.jpg" />
+                            <div>
+                                <h4 class="text-center">參賽資訊</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <img v-bind:src="getPhoto(item.competitorPhoto)" style="width:200px;height:150px" />
+                                    <p>{{item.competitorContent}}</p>
+                                    <button class="btn btn-secondary" type="button" v-on:click="delCom(item.id,userAccount)">取消參賽</button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!--我投票的選手-->
+                <div v-show="myVote">
+                    <h2>我支持的選手</h2>
+                    <ul class="list-group">
+                    <li class="list-group-item" v-for="item in myVote" :key="item.voteid">
+                        <div class="d-flex justify-content-between">
+                        <h3>{{item.competitionName}}</h3>
+                            <span>{{item.statement}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <img v-bind:src="getPhoto(item.competitorPhoto)" style="width:200px;height:150px" />
+                            <div>
+                            <h5>{{item.competitorName}}</h5>
+                            <p>{{item.content}}</p>
+                            </div>
+                                <button class="btn btn-secondary" type="button" v-on:click="delVote(item.competitionID,userAccount)">取消投票</button>
+                        </div>
+                    </li>
+                    </ul>
+                </div>
+
+                <!--我收藏的比賽-->
+                <div v-show="myFavorite">
+                    <h2>我收藏的比賽</h2>
+                <ul class="list-group"> 
+                    <li class="list-group-item" v-for="item in myFavorite" :key="item.favoriteId">
+                        <div class="d-flex justify-content-between">
+                            <h3>{{item.competitionName}}</h3>
+                            <span>{{item.statement}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <img v-bind:src="getPhoto(item.competitionPhoto)" style="width:200px;height:150px" />
+                            <div>
+                                <h5>活動時間：{{item.startTime}} ~ {{item.endTime}}</h5>
+                                <p>{{item.competitionContent}}</p>
+                            </div>
+                                <button class="btn btn-secondary" type="button" v-on:click="delFavorite(item.competitionId,userAccount)"><i class="fa-solid fa-heart-circle-minus"></i>取消收藏</button>
+                        </div>
+                    </li>
+                </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- axios -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
+        integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+
+    var vueApp = {
+        data() {
+            return {
+                myCompetition:[],
+                myVote:[],
+                myFavorite:[],
+                myCom:false,
+                myVote:false,
+                myFavorite:false,
+
+                //userAccount:sessionStorage.getItem("username"),
+                userAccount: "user5",
+            };
+        },
+        methods:{
+            getCompetiton: function () {
+                let _this = this;
+                try {
+                    axios.get(`https://localhost:7292/api/OnlineCompetitions/MyCompetition/${_this.userAccount}`)
+                        .then(response => {
+                            _this.myCompetition = response.data;
+                        });
+                    _this.myCom = true;
+                    _this.myVote = false;
+                    _this.myFavorite = false;
+                    console.log(_this.CompetitionName)
+                }
+                catch (error) {
+                    console.log(error)
+                }
+            },
+            getPhoto: function (competitionPhotos) {
+                return competitionPhotos != null ? `https://localhost:7000/uploads/${competitionPhotos}`: `https://localhost:7000/image/noimage.jpg`;
+            },
+            getVote:function(){
+                let _this = this;
+                try {
+                    axios.get(`https://localhost:7292/api/OnlineCompetitions/MyVote/${_this.userAccount}`)
+                        .then(response => {
+                            _this.myVote = response.data;
+                        });
+                    _this.myCom = false;
+                    _this.myVote = true;
+                    _this.myFavorite = false;
+                }
+                catch(error) {
+                    console.log(error)
+                }
+            },
+            getFavorite:function(){
+                let _this = this;
+                try {
+                    axios.get(`https://localhost:7292/api/OnlineCompetitions/MyFavorite/${_this.userAccount}`)
+                        .then(response => {
+                            _this.myFavorite = response.data;
+                        });
+                    _this.myCom = false;
+                    _this.myVote = false;
+                    _this.myFavorite = true;
+                }
+                catch(error) {
+                    console.log(error)
+                }
+            },
+            delCom:function(x,y){
+                let _this=this;
+                var request = {};
+                request.id = x;
+                request.account = y;
+                
+                //再次確認是否刪除
+                Swal.fire({
+                    title: "是否確定取消?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "確認取消報名!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.delete(`https://localhost:7292/api/OnlineCompetitions/deleteApply/${request.id}/${request.account}`, request)
+                            .then(result => {
+                            Swal.fire({
+                            title: "您的報名已取消!",
+                            icon: "success"
+                            })
+                            .then(result =>{
+                                _this.getCompetiton();
+                            })
+                        })
+                        
+                    }
+                });
+            },
+            delVote: function (x, y) {
+                let _this = this;
+                var request = {};
+                request.id = x;
+                request.account = y;
+
+                //再次確認是否刪除
+                Swal.fire({
+                    title: "是否確定取消?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "確認取消投票!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.delete(`https://localhost:7292/api/OnlineCompetitions/deleteVote/${request.id}/${request.account}`)
+                            .then(result => {
+                                Swal.fire({
+                                    title: "您的投票已取消!",
+                                    icon: "success"
+                                })
+                                    .then(result => {
+                                        _this.getCompetiton();
+                                    })
+                            })
+
+                    }
+                });
+            },
+            delFavorite: function (x, y) {
+                let _this = this;
+                var request = {};
+                request.id = x;
+                request.account = y;
+
+                //再次確認是否刪除
+                Swal.fire({
+                    title: "是否確定取消?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "確認取消收藏!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.delete(`https://localhost:7292/api/OnlineCompetitions/deleteFavorite/${request.id}/${request.account}`)
+                            .then(result => {
+                                Swal.fire({
+                                    title: "您的收藏已取消!",
+                                    icon: "success"
+                                })
+                                .then(result => {
+                                    _this.getCompetiton();
+                                })
+                            })
+
+                    }
+                });
+            },
+        },
+
+    }
+    var app = Vue.createApp(vueApp).mount("#App");
+
+</script>

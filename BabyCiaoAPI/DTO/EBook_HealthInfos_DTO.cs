@@ -2,7 +2,7 @@
 {
     public class EBook_HealthInfos_DTO
     {
-        public int Id { get; set; }
+        public int HealthInfosId { get; set; }
 
         public int IdContactBook { get; set; }
 
@@ -16,8 +16,10 @@
 
         public int HeadCircumference { get; set; }
 
-        //public DateTime ModifiedDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
 
         public string Memo { get; set; } //= null!;
+
+        public string Age { get; set; } //= null!;
     }
 }

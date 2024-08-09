@@ -31,7 +31,14 @@ namespace BabyCiaoAPI.Controllers
             _context = context;
             _webHostEnvironment = webHostEnvironment ?? throw new ArgumentNullException(nameof(webHostEnvironment));
         }
-    
+
+        //[HttpGet("NAB")]
+        //public async Task<ActionResult<IEnumerable<NABDTO>>> NAB()
+        //{ 
+        //var babyResume = await _context.BabyResumes
+        //        .Where(n=>n.Display)
+        //        .ToListAsync();
+        //}
 
         // GET: api/Categories
         [HttpGet]
@@ -54,7 +61,7 @@ namespace BabyCiaoAPI.Controllers
         {
             try
             {
-                var resumes = await _context.BabyResumes.Select(c => new BabyResumeDTO
+                var resume = await _context.BabyResumes.Select(c => new BabyResumeDTO
                 {
                     Id = c.Id,
                     AccountUserAccount = c.AccountUserAccount,
@@ -71,13 +78,54 @@ namespace BabyCiaoAPI.Controllers
                     Display = c.Display
                 }).ToListAsync();
 
-                return Ok(resumes);
+                return Ok(resume);
             }
             catch (Exception ex)
             {
                 // Log the exception
                 Console.WriteLine(ex.Message);
                 return StatusCode(500, "Internal server error");
+            }
+        }
+        // GET: api/BabyResumes/Fullinformation/5
+        [HttpGet("Fullinformation/{id}")]
+        public async Task<ActionResult<BabyResumeDTO>> GetFullinformation(int id)
+        {
+            try
+            {
+                // 查找指定 Id 的 BabyResume 对象
+                var resume = await _context.BabyResumes
+                    .Where(c => c.Id == id)
+                    .Select(c => new BabyResumeDTO
+                    {
+                        Id = c.Id,
+                        AccountUserAccount = c.AccountUserAccount,
+                        Photo = c.Photo,
+                        FirstName = c.FirstName,
+                        City = c.City,
+                        District = c.District,
+                        ApplyDate = c.ApplyDate,
+                        RequireDate = c.RequireDate,
+                        Babyage = c.Babyage,
+                        TypeOfDaycare = c.TypeOfDaycare,
+                        TimeSlot = c.TimeSlot,
+                        Memo = c.Memo,
+                        Display = c.Display
+                    })
+                    .FirstOrDefaultAsync();
+
+                if (resume == null)
+                {
+                    return NotFound(); // 如果没有找到，返回 404 Not Found
+                }
+
+                return Ok(resume); // 返回找到的对象
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Internal server error"); // 返回 500 Internal Server Error
             }
         }
 
@@ -144,7 +192,7 @@ namespace BabyCiaoAPI.Controllers
                 }
 
                 // Execute the query and convert to DTO
-                var resumes = await query.Select(a => new BabyResumeDTO
+                var resume = await query.Select(a => new BabyResumeDTO
                 {
                     Id = a.Id,
                     AccountUserAccount = a.AccountUserAccount,
@@ -161,7 +209,7 @@ namespace BabyCiaoAPI.Controllers
                     Display = a.Display
                 }).ToListAsync();
 
-                return Ok(resumes);
+                return Ok(resume);
             }
             catch (Exception ex)
             {
