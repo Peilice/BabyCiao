@@ -67,11 +67,16 @@ app.UseRouting();
 app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
-//app.MapAreaControllerRoute(
-//    name: "GroupBuyingArea",
-//    areaName: "LilyGArea",
-//    pattern: "GroupBuying/{controller=Home}/{action=Index}/{id?}"
-//);
+app.MapAreaControllerRoute(
+    name: "GroupBuyingArea",
+    areaName: "LilyGArea",
+    pattern: "GroupBuying/{controller=Home}/{action=Index}/{id?}"
+);
+app.MapAreaControllerRoute(
+	name: "SecondHandArea",
+	areaName: "LilySArea",
+	pattern: "SecondHand/{controller=Home}/{action=Index}/{id?}"
+);
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");

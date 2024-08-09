@@ -395,7 +395,7 @@ namespace BabyCiaoAPI.Controllers
 
                                       Price= gb.Price,
                                       OrderPrice= (_context.GroupBuyingDetailFormats
-                    .Where(f => f.GroupBuyingDetailId == gbd.Id)
+                    .Where(f => f.GroupBuyingDetailId == gbd.Id).Take(1)
                         .Select(gbdf => gbdf.Quantity))
                     .Sum() * gb.Price,
                                       OrderFormats = (from dt in _context.GroupBuyingDetailFormats
