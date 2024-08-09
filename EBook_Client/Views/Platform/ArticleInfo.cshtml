@@ -5,7 +5,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">社群</li>
-                <li class="breadcrumb-item"><a href="https://localhost:7231/Competitions">討論區</a></li>
+                <li class="breadcrumb-item"><a href="https://localhost:7231/Platform">討論區</a></li>
                 <li class="breadcrumb-item">文章標題</li>
             </ol>
         </nav>
@@ -14,7 +14,7 @@
     <div class="container d-flex justify-content-between">
         <!-- 側欄 -->
         <div class="col-2">
-            <button type="button" class="btn btn-outline-primary mb-4" v-on:click="">管理我的文章</button>
+            <button type="button" class="btn btn-outline-primary mb-4" v-on:click="myArticle">管理我的文章</button>
             <div class="list-group">
                 <a v-on:click="getType(1)" class="list-group-item list-group-item-action">育兒大小事</a>
                 <a v-on:click="getType(2)" class="list-group-item list-group-item-action">好物分享</a>
@@ -83,15 +83,16 @@
         integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    //var articleType = sessionStorage.getItem("articleType");
-    var articleType = "育兒大小事";
-    //var articleId = sessionStorage.getItem("PlatformID");
-    articleId = 1;
+    var articleType = sessionStorage.getItem("articleType");
+    //var articleType = "育兒大小事";
+    var articleId = sessionStorage.getItem("PlatformID");
+    //articleId = 1;
+
     var vueApp = {
         data() {
             return {
-                //userAccount:sessionStorage.getItem("username"),
-                userAccount: "user5",
+                userAccount:sessionStorage.getItem("username"),
+                //userAccount: "user5",
 
                 //讀取內容
                 Information:[],
@@ -123,9 +124,36 @@
                         _this.artiID = response.data[0].articleID;
                     })
             },
+            getType: function (e) {
+                let _this = this;
+                let gettype = "";
+                switch (e) {
+                    case 1:
+                        gettype = "育兒大小事";
+                        break;
+
+                    case 2:
+                        gettype = "好物分享";
+                        break;
+                    case 3:
+                        gettype = "生活交流";
+                        break;
+                    case 4:
+                        gettype = "親子旅遊";
+                        break;
+
+                }
+                axios.get(`https://localhost:7292/api/Platform/getArticle/${gettype}`)
+                    .then(response => {
+                        _this.Article = response.data;
+                        _this.type = response.data[0].postType;
+                    })
+            },
             newResponse:function(id){
                 let _this = this;
                 let request = {};
+
+                if (_this.userAccount!=null){
                 request.ArticleID = id;
                 request.ResponseAccount = _this.userAccount;
                 request.ResponseContent = _this.CompetitorContent;
@@ -135,6 +163,14 @@
                         _this.getInfo();
                         _this.CompetitorContent = "";
                     })
+                }
+                else{
+                    alert("請先登入");
+                }
+                
+            },
+            myArticle: function () {
+                window.location.href = `https://localhost:7231/Platform/MyArticle`;
             },
 
         },
