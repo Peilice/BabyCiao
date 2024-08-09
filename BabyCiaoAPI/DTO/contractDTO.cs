@@ -11,9 +11,13 @@ public partial class ContractDTO
 
     public bool NannySignature { get; set; }
 
+    public string NannySignatureFile { get; set; } = null!;
+
     public string AccountUserAccount { get; set; } = null!;
 
     public bool UserSignature { get; set; }
+
+    public string UserSignatureFile { get; set; } = null!;
 
     public DateOnly ContractStartTime { get; set; }
 
@@ -28,8 +32,4 @@ public partial class ContractDTO
     public DateTime BuiledTime { get; set; }
 
     public bool Display { get; set; }
-
-    public virtual UserAccount AccountUserAccountNavigation { get; set; } = null!;
-
-    public virtual UserAccount NannyAccountUserAccountNavigation { get; set; } = null!;
 }

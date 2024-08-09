@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BabyCiaoAPI.Models;
-
-public partial class NannyResumeDTO
+﻿public partial class NannyResumeDTO
 {
     public int Id { get; set; }
 
     public string NannyAccountUserAccount { get; set; } = null!;
+
+    public string? Nickname { get; set; }
 
     public string City { get; set; } = null!;
 
@@ -17,7 +14,9 @@ public partial class NannyResumeDTO
 
     public string TypeOfDaycare { get; set; } = null!;
 
-    public string ServiceItems { get; set; } = null!;
+    public string ServiceType { get; set; } = null!;
+
+    public int ServiceItems { get; set; }
 
     public bool QuasiPublicChildcare { get; set; }
 
@@ -29,11 +28,20 @@ public partial class NannyResumeDTO
 
     public string ServiceCenter { get; set; } = null!;
 
-    public string? ProfessionalPortrait { get; set; }
+    public string ProfessionalPortrait { get; set; } = null!;
 
-    public bool DisplayControl { get; set; }
+    public bool? DisplayControl { get; set; }
 
-    public virtual UserAccount NannyAccountUserAccountNavigation { get; set; } = null!;
+}
 
-    public virtual ICollection<NannyResumePhoto> NannyResumePhotos { get; set; } = new List<NannyResumePhoto>();
+
+public partial class NRPDTO
+{
+    public int Id { get; set; }
+
+    public int IdNannyResume { get; set; }
+
+    public string PhotoName { get; set; } = null!;
+
+    public DateTime ModifiedTime { get; set; }
 }
