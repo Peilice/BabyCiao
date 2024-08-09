@@ -18,12 +18,14 @@ public class PlatformResponseDTO
     public string ResponseAccount { get; set; }
     public string ResponseContent { get; set; }
     public DateTime ResponseModifiedTime { get; set; }
+    public string? ResponseModifiedTimeView { get; set; }
 
 }
 
 public class Response_createDTO
 {
     public int ArticleID { get; set; }
-    public string favoriteAccount { get; set; }
+    public string ResponseAccount { get; set; }
+    public string ResponseContent { get; set; }
 }
 

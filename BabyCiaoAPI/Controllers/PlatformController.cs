@@ -98,7 +98,7 @@ namespace BabyCiaoAPI.Controllers
         }
 
 
-        //讀取文章+
+        //讀取文章+回應
         //Get api/Platform/{id}
         [HttpGet("getResponse/{id}")]
         public async Task<ActionResult<IEnumerable<PlatformResponseDTO>>> getResponse(int id)
@@ -121,6 +121,7 @@ namespace BabyCiaoAPI.Controllers
                                      ResponseAccount=pr.AccountUserAccount,
                                      ResponseContent=pr.Content,
                                      ResponseModifiedTime=pr.ModifiedTime,
+                                     ResponseModifiedTimeView= pr.ModifiedTime.ToString("yyyy-MM-dd HH:MM"),
                                  }).ToListAsync();
             return Ok(response);
         }
@@ -147,6 +148,31 @@ namespace BabyCiaoAPI.Controllers
                 return "新增失敗";
             }
         }
+
+
+        //創立回應
+        //Post api/Platform/
+        [HttpPost("newResponse")]
+        public async Task<string> newResponse([FromBody] Response_createDTO createDTO)
+        {
+            PlatformResponse Response = new PlatformResponse()
+            {
+                AccountUserAccount = createDTO.ResponseAccount,
+                IdPlatform = createDTO.ArticleID,
+                Content=createDTO.ResponseContent,
+            };
+            try
+            {
+                _context.PlatformResponses.Add(Response);
+                await _context.SaveChangesAsync();
+                return "新增成功";
+            }
+            catch
+            {
+                return "新增失敗";
+            }
+        }
+
 
     }
 }

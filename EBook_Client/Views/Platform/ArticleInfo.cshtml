@@ -52,7 +52,7 @@
                 <h4 class="form-label border-bottom">我要回應</h4>
                 <p>300字內</p>
                 <textarea type="text" class="form-control mb-3" id="Content" rows="5" v-model="CompetitorContent"></textarea>
-                <button class="btn btn-primary" type="submit">發布回應</button>
+                <button class="btn btn-primary" type="submit" v-on:click="newResponse(artiID)">發布回應</button>
             </div>
 
             <!--回應顯示-->
@@ -63,7 +63,7 @@
                             <p>{{item.responseAccount}}</p>
                         </div>
                         <div>
-                            <p>{{item.responseModifiedTime}}</p>
+                            <p>{{item.responseModifiedTimeView}}</p>
                         </div>
                         <div>
                             <p>{{item.responseContent}}</p>
@@ -100,6 +100,10 @@
                 artiAccount: "",
                 artiTime: "",
                 artiType:"",
+                artiID:0,
+
+                //新增回應
+                CompetitorContent:"",
 
             };
         },
@@ -112,10 +116,26 @@
                         _this.artiTitle = response.data[0].postTitle;
                         _this.artiContent = response.data[0].postContent;
                         _this.artiAccount = response.data[0].postAccount;
-                        _this.artiTime = response.data[0].postModifiedTime;
+                       //_this.artiTime = response.data[0].postModifiedTime;
+                        _this.artiTime = new Date(response.data[0].postModifiedTime).toLocaleString();
+
                         _this.artiType = response.data[0].postType;
+                        _this.artiID = response.data[0].articleID;
                     })
-            }
+            },
+            newResponse:function(id){
+                let _this = this;
+                let request = {};
+                request.ArticleID = id;
+                request.ResponseAccount = _this.userAccount;
+                request.ResponseContent = _this.CompetitorContent;
+
+                axios.post("https://localhost:7292/api/Platform/newResponse",request)
+                    .then(result => {
+                        _this.getInfo();
+                        _this.CompetitorContent = "";
+                    })
+            },
 
         },
         mounted: function () {

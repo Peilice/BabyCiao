@@ -306,8 +306,11 @@
             _this.fetchcompetitions();
             if (comStatement = "已結束") {
                 _this.isEnd = true;
-            };
-        }
+            }
+            else {
+                _this.isEnd = false;
+            }
+        },
     };
     var app = Vue.createApp(vueApp).mount('#App');
 </script>
