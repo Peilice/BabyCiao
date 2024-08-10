@@ -1,4 +1,4 @@
-﻿<div class="container-fluid" id=" app_Ebook_historySearch">
+﻿<div class="container-fluid" id="app_Ebook_historySearch">
 <!-- breadcrmb start -->
 <div>
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -24,33 +24,313 @@
                 <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_activityDaily" class="list-group-item list-group-item-action">活動日記</a>
             </div>
         </div>
-        <!-- list end -->
         <div class="col-12 col-md-9 rounded">
-            <!-- tabs start -->
-            <div class="div1" style="background-color:#fff4ef ;">
-                <h1>統計圖表</h1>
+            <div class="div1 p-2" style="background-color:#fff4ef ;">
+                <div class="d-flex justify-content-between">
+                    <ul class="nav nav-pills mb-1" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active " id="pills-1-tab" data-bs-toggle="pill"
+                                    data-bs-target="#pills-1" type="button" role="tab" aria-controls="pills-1"
+                                    aria-selected="true">
+                                飲食統計
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-2-tab" data-bs-toggle="pill" data-bs-target="#pills-2"
+                                    type="button" role="tab" aria-controls="pills-2" aria-selected="false">
+                                睡眠統計
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-3-tab" data-bs-toggle="pill" data-bs-target="#pills-3"
+                                    type="button" role="tab" aria-controls="pills-3" aria-selected="false">
+                                代謝統計
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-4-tab" data-bs-toggle="pill" data-bs-target="#pills-4"
+                                    type="button" role="tab" aria-controls="pills-4" aria-selected="false">
+                                成長分析
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-content px-2 h-75 rounded" id="pills-tabContent">
+                    
+                    <!-- 飲食統計 start -->
+                    <div class="tab-pane show active h-100" id="pills-1" role="tabpanel" aria-labelledby="pills-1-tab">
+                        <div class="mb-5 " width="900" height="550">
+                            <canvas width="900" height="550" id="myChart1"></canvas>
+                        </div>
+                    </div>
+                    <!-- 飲食統計 end -->
+                    <!-- 代謝統計 start -->
+                    <div class="tab-pane fade h-100" id="pills-2" role="tabpanel" aria-labelledby="pills-2-tab">
+                        <div class="mb-5 " width="900" height="550">
+                            <canvas width="900" height="550" id="myChart2"></canvas>
+                        </div>
+                    </div>
+                    <!-- 代謝統計 end -->
+                    <!-- 睡眠統計 start -->
+                    <div class="tab-pane fade h-100" id="pills-3" role="tabpanel" aria-labelledby="pills-3-tab">
+                        <div class="mb-5 " width="900" height="550">
+                            <canvas width="900" height="550" id="myChart3"></canvas>
+                        </div>
+                    </div>
+                    <!-- 睡眠統計 end -->
+                    <!-- 成長分析 start -->
+                    <div class="tab-pane fade h-100" id="pills-4" role="tabpanel" aria-labelledby="pills-4-tab">
+                        <div class="mb-5 " width="900" height="550">
+                            <canvas width="900" height="550" id="myChart4"></canvas>
+                        </div>
+                    </div>
+                    <!-- 成長分析 end -->
+                    
+                </div>
+                
             </div>
-            <!-- tabs end -->
         </div>
+       
     </div>
 </div>
 <!-- list and tabs end -->
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@@^2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@@^1"></script>
+
+        
     <script>
+        const useToken = localStorage.getItem("token");
+        const headers = {
+            'Authorization': `Bearer ${useToken}`,
+        };
+        const now = new Date();
+        let Ebook_user = sessionStorage.getItem("username");
+        let IdContactBook = sessionStorage.getItem("IdContactBook");
+        let Diaper_datas = [];
+        let oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        const yesterday = new Date(now);
+        yesterday.setDate(now.getDate() - 1);
+        console.log(yesterday)
+
         var vueApp = {
             data() {
                 return {
-
+                    babyName:"",
+                    HealthInfos:[],
+                    chart_type:"line",
                 };
             },
             methods: {
+                getBabyInfos: async function () {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/getBabyInfos/${IdContactBook}`, {
+                        headers
+                    }).then(result => {
+                        //alert(result.data.babyName);
+                        _this.babyName = result.data.babyName;
+                    }).catch(err => { alert(err) });
+                },
+                getHealthInfos: async function () {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/getHealthInfos/${IdContactBook}`, {
+                        headers
+                    }).then(result => {
+                        //alert(result.data);
+                        var labels = result.data.map(item => item.age);
+                        var values = result.data.map(item => item.height);
+                        _this.addToChart(labels, values, "myChart4", "成長狀態");
+                    }).catch(err => { alert(err) });
+                },
+                getDietDetail: async function () {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDietDetail/${IdContactBook}`, {
+                        headers
+                    }).then(result => {
+                        //alert(result.data);
+                        var labels = result.data.map(item => new Date(item.recodeTime).toLocaleString());
+                        var values = result.data.map(item => item.amount);
+                        _this.addToChart(labels, values, "myChart1", "飲食統計");
+                    }).catch(err => { alert(err) });
+                },
+                getDiaperDetail: async function () {
+                    let _this = this;
+                   await  axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDiaperDetail/${IdContactBook}`, {
+                        headers
+                    }).then(result => {
+                        //alert(result.data);
+                        Diaper_datas = result.data.map(item => new Date(item.recodeTime)).filter(date => date >= oneWeekAgo);
+                        //Diaper_datas = result.data.map(item => new Date(item.recodeTime));
+                        console.log(Diaper_datas);
+                        
+                    }).catch(err => { alert(err) });
+                    
+                },
+                getSleepDetail: async function () {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetSleepDetail/${IdContactBook}`, {
+                        headers
+                    }).then(result => {
+                        //alert(result.data);
+                        var labels = result.data.map(item => new Date(item.recodeTime).toLocaleString());
+                        var values = result.data.map(item => item.content);
+                        _this.addToChart(labels, values, "myChart3", "睡眠統計");
+                    }).catch(err => { alert(err) });
+                },
+                addToChart: function (labels, values, id, category) {
+                    let _this = this;
+                    const ctx = document.getElementById(`${id}`).getContext('2d');
+                    const myChart = new Chart(ctx, {
+                        type: _this.chart_type, // 圖表類型，例如 'bar', 'line', 'pie' 等
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: category,
+                                data: values,
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                },
+                createChartData: async function (Diaper_datas) {
+                    let _this = this;
+                    let datas = [];
+                    for (var i = 0; i < Diaper_datas.length; i++) {
+                        let date = new Date(Diaper_datas[i]);
+                        console.log('Date:', date); // 檢查日期格式
+                        switch (date.getDay()) {
+                            case 0:
+                                var data_detail0 = { x: date.getHours(), y: '星期日' };
+                                datas.push(data_detail0);
+                                break;
+                            case 1:
+                                var data_detail1 = { x: date.getHours(), y: '星期一' };
+                                datas.push(data_detail1);
+                                break;
+                            case 2:
+                                var data_detail2 = { x: date.getHours(), y: '星期二' };
+                                datas.push(data_detail2);
+                                break;
+                            case 3:
+                                var data_detail3 = { x: date.getHours(), y: '星期三' };
+                                datas.push(data_detail3);
+                                break;
+                            case 4:
+                                var data_detail4 = { x: date.getHours(), y: '星期四' };
+                                datas.push(data_detail4);
+                                break;
+                            case 5:
+                                var data_detail5 = { x: date, y: '星期五' };
+                                datas.push(data_detail5);
+                                break;
+                            case 6:
+                                var data_detail6 = { x: date, y: '星期六' };
+                                datas.push(data_detail6);
+                                break;
+                        }
+                    }
+                    //console.log('Datas:', datas); // 檢查 datas 陣列
+                   await _this.createChart3(datas);
+                    console.log('圖表產出1')
 
+                },
+                createChart3: function (datas) {
+                    const ctx = document.getElementById('myChart3');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],
+                            datasets: [
+                                {
+                                    type: 'bubble',
+                                    label: '尿布更換',
+                                    data: datas,
+                                    backgroundColor: 'yellow',
+                                    borderColor: 'black',
+                                    borderWidth: 1,
+                                    hoverRadius: 10,
+                                    hitRadius: 20,
+                                    radius: 15,
+                                },
+                            ],
+                            
+                        },
+                        options: {
+                            //barPercentage:1,
+                            //categoryPercentage:1,
+                            indexAxis: "y",
+                            //aspectRatio: 5,
+                            legend: {
+                                position: 'top',
+                                display: true,
+                            },
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    max: 24,
+                                    ticks:{
+                                        callback: function (value,index,values) {
+                                            return value + '點';
+                                        },
+                                        stepSize: 1
+                                    },
+                                    grid: {
+                                        color: function (context) {
+                                            if (context.tick.value % 12 === 0) {
+                                                return 'rgba(0, 0, 0, 1)'; // 黑色
+                                            }
+                                            return 'rgba(0, 0, 0, 0.1)'; // 淡灰色
+                                        },
+                                        lineWidth: function (context) {
+                                            if (context.tick.value % 12 === 0) {
+                                                return 2; // 加粗
+                                            }
+                                            return 1; // 正常
+                                        }
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    stacked: true,
+                                    ticks: {
+                                        padding: 20 // 調整這個數值來增加距離
+                                    }
+                                }
+                            },
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: `${new Date(oneWeekAgo).getMonth() + 1}月${new Date(oneWeekAgo).getDate()}~${new Date().getMonth() + 1}月${new Date().getDate()}日`
+                                }
+                            }
+                            
+                        }
+                    });
+                },
             },
-            mounted: function () {
-
+            mounted:async function () {
+                let _this = this;
+                await _this.getBabyInfos();
+                await _this.getHealthInfos();
+                await _this.getDietDetail();
+                await _this.getDiaperDetail();
+                _this.createChartData(Diaper_datas);
             }
         }
+        var app_Ebook_historySearch = Vue.createApp(vueApp).mount("#app_Ebook_historySearch");
 
-        var app_Ebook_historySearch = Vue.createApp(vueApp).mount("app_Ebook_historySearch");
     </script>
 }

@@ -157,7 +157,6 @@
                                         <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="edit_others(item.healthInfosId)">編輯</button>
                                         <button class="m-1 btn btn-danger h-50 d-flex align-items-center" v-on:click="toDelete(item.healthInfosId)">刪除</button>
                                 </template>
-                                
                             </div>
                         </div>
                         </div>
@@ -389,7 +388,9 @@
                     request.height = item.height;
                     request.weight = item.weight;
                     request.headCircumference = item.headCircumference;
-                    request.modifiedDate = new Date(now);
+                    var temp_now = new Date();
+                    temp_now.setHours(temp_now.getHours() + 8);
+                    request.modifiedDate = new Date(temp_now);
                     axios.put(`@Utility.SD.localHost_API/api/Ebook/UpdateHealthInfos/${item.healthInfosId}`, request, {
                         headers
                     }).then(result => {
@@ -449,7 +450,9 @@
                     request.height = _this.datas.height;
                     request.weight = _this.datas.weight;
                     request.headCircumference = _this.datas.headCircumference;
-                    request.modifiedDate = new Date(now);
+                    var temp_now = new Date();
+                    temp_now.setHours(temp_now.getHours() + 8);
+                    request.modifiedDate = new Date(temp_now);
                     request.memo = _this.datas.memo;
                     request.age = _this.Measure_age;
 

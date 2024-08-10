@@ -94,7 +94,7 @@
                         <li class="nav-item" role="presentation" >
                             <button class="nav-link active " id="pills-1-tab" data-bs-toggle="pill"
                                     data-bs-target="#pills-1" type="button" role="tab" aria-controls="pills-1"
-                                    aria-selected="true">
+                                    aria-selected="true" v-on:click="reload">
                                 全部
                             </button>
                         </li>
@@ -176,9 +176,12 @@
                     <!-- 互動式時間軸 start -->
                     <div class="container-fluid my-3">
                         <div class="row">
-                            <div class="col-6 ">
+                            <div class="col-12 ">
+                                <canvas class="w-100" id="myChart"></canvas>
+                            </div>
+                            <div class="col-6 " >
                                 <h5>近期狀況(24hr)</h5>
-                                <div id="context1">
+                                    <div id="context1" style="overflow-y:auto;overflow-x:hidden;height:400px;">
                                 </div>
                             </div>
                             <div class="col-6" >
@@ -312,25 +315,25 @@
                         <div class="w-100 d-flex align-items-center mb-1">
                                 <label for="" class="col-form-label">▲ 排泄狀況：</label>
                             <div class="form-check me-2">
-                                    <input class="form-check-input" type="radio" name="radio_pu" id="radio3" value="1" v-model="Content_picker">
+                                    <input class="form-check-input" type="radio" name="radio_pu" id="radio3" value="1" v-model="content_picker">
                                 <label class="form-check-label" for="radio3">
                                     乾爽
                                 </label>
                             </div>
                             <div class="form-check me-2">
-                                    <input class="form-check-input" type="radio" name="radio_pu" id="radio4" value="2" v-model="Content_picker">
+                                    <input class="form-check-input" type="radio" name="radio_pu" id="radio4" value="2" v-model="content_picker">
                                 <label class="form-check-label" for="radio4">
                                     噓噓
                                 </label>
                             </div>
                             <div class="form-check me-2">
-                                    <input class="form-check-input" type="radio" name="radio_pu" id="radio5" value="3" v-model="Content_picker">
+                                    <input class="form-check-input" type="radio" name="radio_pu" id="radio5" value="3" v-model="content_picker">
                                 <label class="form-check-label" for="radio5">
                                     便便
                                 </label>
                             </div>
                             <div class="form-check me-2">
-                                    <input class="form-check-input" type="radio" name="radio_pu" id="radio6" value="4" v-model="Content_picker">
+                                    <input class="form-check-input" type="radio" name="radio_pu" id="radio6" value="4" v-model="content_picker">
                                 <label class="form-check-label" for="radio6">
                                     噓噓+便便
                                 </label>
@@ -514,8 +517,13 @@
      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
             crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@@^2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@@^1"></script>
     
     <script>
+            
         const useToken = localStorage.getItem("token");
         const headers = {
             'Authorization': `Bearer ${useToken}`,
@@ -525,35 +533,45 @@
         let List_Datas = new Array();
         let Temp_List_Datas = new Array();
         const now = new Date();
-        now.setHours(now.getHours() + 8);
+        //now.setHours(now.getHours() + 8);
+        console.log(now)
         const today = new Date();
         today.setHours(24);
         today.setSeconds(-1);
 
         const yesterday = new Date(now);
         yesterday.setDate(now.getDate() - 1);
+        console.log(yesterday)
         const oneWeek= new Date(today);
         oneWeek.setDate(today.getDate() - 7);
+        
+        let Diet_datas = [];
+        let Diaper_datas = [];
+        let Sleep_datas = [];
+        let Memo_datas = [];
+        let chart;
+
         var vueApp = {
             data() {
                 return {
-                    username:"",
-                    DiaperDetail:[],
-                    DietDetail:[],
-                    HealthInfos:[],
-                    Memo:[],
-                    SleepDetail:[],
-                    searchRangeDate:"",
-                    isoneWeek:true,
-                    babyName :"",
+                    username: "",
+                    DiaperDetail: [],
+                    DietDetail: [],
+                    HealthInfos: [],
+                    Memo: [],
+                    SleepDetail: [],
+                    searchRangeDate: "",
+                    isoneWeek: true,
+                    babyName: "",
+                    data_test:"",
                     //MaxTime: today.toISOString().substr(0,10),
-                    MaxTime:"",
+                    MaxTime: "",
                     //MinTime: yesterday.toISOString().substr(0, 10),
                     MinTime: "",
-                    type_check:["飲食","尿布","睡眠","備註"],
+                    type_check: ["飲食", "尿布", "睡眠", "備註"],
                     //共用參數:
                     idContactBook: "",
-                    recodeTime:"",
+                    recodeTime: "",
                     modifiedTime: new Date(),
                     accountUserAccount: "",
                     //飲食用的參數:
@@ -564,22 +582,26 @@
                     content_picker: "",
                     bowelSituation: "",
                     //睡眠用的參數:
-                    sleep_Time :"",//時間
-                    wakeUp_Time : "",//時間
-                    sleep_content : "",
-                    sleepState:"",
+                    sleep_Time: "",//時間
+                    wakeUp_Time: "",//時間
+                    sleep_content: "",
+                    sleepState: "",
                     //備註用的參數:
                     memo1: "",
                 }
             },
-            mounted: function () {
+            mounted:async function () {
                 let _this = this;
-                _this.getEbookData(IdContactBook);
-                _this.getDietDetailData(IdContactBook);
-                _this.getDiaperDetailData(IdContactBook);
-                _this.getMemoData(IdContactBook);
-                _this.getSleepDetailData(IdContactBook);
+                await _this.getEbookData(IdContactBook);
+                await _this.getDietDetailData(IdContactBook);
+                await _this.getDiaperDetailData(IdContactBook);
+                await _this.getMemoData(IdContactBook);
+                await _this.getSleepDetailData(IdContactBook);
                 //_this.reflesh();
+                //_this.addToChart();
+
+                createChart(Diet_datas, Diaper_datas, Memo_datas, Sleep_datas);
+                //console.log(chart);
             },
             methods: {
                 //取得資料區
@@ -589,14 +611,15 @@
                         headers
                     }).then(result => {
                         //alert(result)
-                        let _this=this;
+                        let _this = this;
                         _this.babyName = result.data[0].babyName;
                     }).catch(err => { alert(err) });
                 },
-                getDiaperDetailData: function (IdContactBook) {
+                getDiaperDetailData:async function (IdContactBook) {
                     let _this = this;
-                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDiaperDetail/${IdContactBook}`, { headers 
-                    }).then(result => { 
+                    await  axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDiaperDetail/${IdContactBook}`, {
+                        headers
+                    }).then(result => {
                         // alert(result)
                         _this.DiaperDetail = result.data;
                         for (var i = 0; i < _this.DiaperDetail.length; i++) {
@@ -620,17 +643,17 @@
 
                             _this.DiaperDetail[i].edit = false;
                         }
-                        
+
                         _this.DiaperDetail.forEach(function (item, index) {
                             List_Datas.push(item);
                         })
                         _this.reflesh();
                     }).catch(err => { alert(err) });
                 },
-                getDietDetailData: function (IdContactBook) {
+                getDietDetailData: async function (IdContactBook) {
                     let _this = this;
-                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDietDetail/${IdContactBook}`, {
-                        headers 
+                    await axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDietDetail/${IdContactBook}`, {
+                        headers
                     }).then(result => {
                         // alert(result.data)
                         _this.DietDetail = result.data;
@@ -650,23 +673,24 @@
                                     break;
                             }
                             var fulltime = new Date(this.DietDetail[i].recodeTime);
-                            var str = `${fulltime.getMonth()+1}月${fulltime.getDate()}日 ${fulltime.getHours()}點${fulltime.getMinutes()}分`;
+                            var str = `${fulltime.getMonth() + 1}月${fulltime.getDate()}日 ${fulltime.getHours()}點${fulltime.getMinutes()}分`;
                             _this.DietDetail[i].dateTimeString = `${str}`;
 
                             _this.DietDetail[i].edit = false;
                         }
                         _this.DietDetail.forEach(function (item, index) {
-                            if (List_Datas.some(f => f.id == item.id && f.category=="飲食") != true) {
+                            if (List_Datas.some(f => f.id == item.id && f.category == "飲食") != true) {
                                 List_Datas.push(item);
                             }
                         })
-                        
+
                         _this.reflesh();
                     }).catch(err => { alert(err) });
                 },
-                getMemoData: function (IdContactBook) {
+                getMemoData: async function (IdContactBook) {
                     let _this = this;
-                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetMemo/${IdContactBook}`, { headers 
+                    await axios.get(`@Utility.SD.localHost_API/api/Ebook/GetMemo/${IdContactBook}`, {
+                        headers
                     }).then(result => {
                         // alert(result.data)
                         _this.Memo = result.data;
@@ -683,12 +707,13 @@
                             }
                         })
 
-                        _this.reflesh();
+                       _this.reflesh();
                     }).catch(err => { alert(err) });
                 },
-                getSleepDetailData: function (IdContactBook) {
+                getSleepDetailData: async function (IdContactBook) {
                     let _this = this;
-                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetSleepDetail/${IdContactBook}`, {headers 
+                    await axios.get(`@Utility.SD.localHost_API/api/Ebook/GetSleepDetail/${IdContactBook}`, {
+                        headers
                     }).then(result => {
                         // alert(result.data)
                         _this.SleepDetail = result.data;
@@ -714,7 +739,7 @@
                     }).catch(err => { alert(err) });
                 },
                 //新增資料區
-                createDietDetail: function () {
+                createDietDetail:async function () {
                     let _this = this;
                     var request = {};
                     request.category = "飲食";
@@ -726,9 +751,9 @@
                     request.type = _this.foodType_picker;
                     request.amount = Number(_this.amount);
                     request.quantity = Number(_this.quantity);
-                    axios.post(`@Utility.SD.localHost_API/api/Ebook/CreateDietDetail`, request, {
+                   await axios.post(`@Utility.SD.localHost_API/api/Ebook/CreateDietDetail`, request, {
                         headers
-                    }).then(result=>{
+                    }).then(result => {
                         // alert(result.data);
                         Swal.fire({
                             position: "center",
@@ -739,21 +764,22 @@
                         })
                         _this.getDietDetailData(IdContactBook);
                         _this.cleanInput();
-                    }).catch(err => {alert(err) });
+                    }).catch(err => { alert(err) });
+                        chart.update();
                 },
-                createDiaperDetail: function () {
+                createDiaperDetail:async function () {
                     let _this = this;
                     var request = {};
                     request.category = "尿布";
                     request.id = 0;
                     request.idContactBook = Number(IdContactBook);
                     request.recodeTime = _this.recodeTime;
-                    request.content = Number(_this.Content_picker);
+                    request.content = Number(_this.content_picker);
                     request.bowelSituation = _this.bowelSituation;
                     request.modifiedTime = _this.modifiedTime;
                     request.accountUserAccount = Ebook_user;
 
-                    axios.post(`@Utility.SD.localHost_API/api/Ebook/CreateDiaperDetail`, request, {
+                   await axios.post(`@Utility.SD.localHost_API/api/Ebook/CreateDiaperDetail`, request, {
                         headers
                     }).then(result => {
                         // alert(result.data);
@@ -767,10 +793,11 @@
                         _this.getDiaperDetailData(IdContactBook);
                         _this.cleanInput();
                     }).catch(err => { alert(err) });
+                        chart.update();
                 },
-                createSleepDetail: function () {
+                createSleepDetail:async function () {
                     let _this = this;
-                    
+
                     var request = {};
                     request.category = "睡眠";
                     request.id = 0;
@@ -779,11 +806,18 @@
                     request.accountUserAccount = Ebook_user;
 
                     request.sleepState = _this.sleepState;
+                    
+                    var start_time = new Date(Math.max(new Date(_this.sleep_Time), new Date(_this.wakeUp_Time)));
+                    start_time.setHours(start_time.getHours + 8);
+                    var end_time = new Date(Math.min(new Date(_this.sleep_Time), new Date(_this.wakeUp_Time)));
+                    end_time.setHours(end_time.getHours + 8);
+
                     request.recodeTime = new Date(Math.max(new Date(_this.sleep_Time), new Date(_this.wakeUp_Time)));
                     request.sleepTime = new Date(Math.min(new Date(_this.sleep_Time), new Date(_this.wakeUp_Time)));
+                    end_time.setHours(end_time.getHours + 8);
                     request.content = _this.sleep_content;
-                    
-                    axios.post(`@Utility.SD.localHost_API/api/Ebook/CreateSleepDetail`, request, {
+
+                   await axios.post(`@Utility.SD.localHost_API/api/Ebook/CreateSleepDetail`, request, {
                         headers
                     }).then(result => {
                         // alert(result.data);
@@ -797,8 +831,9 @@
                         _this.getSleepDetailData(IdContactBook);
                         _this.cleanInput();
                     }).catch(err => { alert(err) });
+                        chart.update();
                 },
-                createMemo: function () {
+                createMemo:async function () {
                     let _this = this;
                     var request = {};
                     request.category = "備註";
@@ -810,7 +845,7 @@
 
                     request.memo1 = _this.memo1;
 
-                    axios.post(`@Utility.SD.localHost_API/api/Ebook/CreateMemo`, request, {
+                   await axios.post(`@Utility.SD.localHost_API/api/Ebook/CreateMemo`, request, {
                         headers
                     }).then(result => {
                         // alert(result.data);
@@ -824,6 +859,7 @@
                         _this.getMemoData(IdContactBook);
                         _this.cleanInput();
                     }).catch(err => { alert(err) });
+                        chart.update();
                 },
                 //共用功能區
                 addContext2: function (datas) {
@@ -924,14 +960,14 @@
                         return new Date(b.recodeTime).getTime() - new Date(a.recodeTime).getTime()
                     });
                     //整理全部陣列
-                    
+
                     List_Datas.sort(function (a, b) {
                         return new Date(b.recodeTime).getTime() - new Date(a.recodeTime).getTime()
                     });
 
-                    if (_this.MaxTime!="" && _this.MinTime!="") {
+                    if (_this.MaxTime != "" && _this.MinTime != "") {
                         //修正時差+8的問題
-                        var real_MaxTime = new Date( Math.max(new Date(_this.MaxTime), new Date(_this.MinTime)));
+                        var real_MaxTime = new Date(Math.max(new Date(_this.MaxTime), new Date(_this.MinTime)));
                         real_MaxTime.setHours(24);
                         real_MaxTime.setSeconds(-1);
                         var real_MinTime = new Date(Math.min(new Date(_this.MaxTime), new Date(_this.MinTime)));
@@ -940,7 +976,7 @@
                         _this.isoneWeek = false;
                         var str = `${real_MinTime.getMonth() + 1}月${real_MinTime.getDate()}日~${real_MaxTime.getMonth() + 1}月${real_MaxTime.getDate()}日`
                         _this.searchRangeDate = `${str}`
-                    }else{
+                    } else {
                         var real_MaxTime = today;
                         var real_MinTime = oneWeek;
                     }
@@ -948,7 +984,7 @@
                     //一選取日期範圍調整陣列顯示
                     var StartIndex = List_Datas.findIndex(f => new Date(f.recodeTime).getTime() < new Date(real_MaxTime).getTime())
                     var EndIndex = List_Datas.findIndex(f => new Date(f.recodeTime).getTime() < new Date(real_MinTime).getTime())
-                    if (EndIndex==-1) {
+                    if (EndIndex == -1) {
                         EndIndex = List_Datas.length;
                     }
                     var Start = Math.min(Math.max(StartIndex, 0), Math.max(EndIndex, 0));
@@ -963,13 +999,22 @@
                     var End_24hr = Math.max(Math.max(StartIndex_24hr, 0), Math.max(EndIndex_24hr, 0));
                     Temp_List_Datas_24hr = List_Datas;
                     Temp_List_Datas_24hr = Temp_List_Datas_24hr.slice(Start_24hr, End_24hr);
-                    _this.addContext1(Temp_List_Datas_24hr)
+                    
+                    try{
+                       _this.createChartData(Temp_List_Datas_24hr);
+                      
+                    }catch (ex) {
+
+                    };
+
+                    _this.addContext1(Temp_List_Datas_24hr);
                     _this.filter();
+                    
                 },
                 filter: function () {
-                    let _this=this;
+                    let _this = this;
                     for (var i = 0; i < _this.type_check.length; i++) {
-                        var target =_this.type_check[i]
+                        var target = _this.type_check[i]
                         //alert(target);
                         switch (target) {
                             case "飲食":
@@ -990,7 +1035,7 @@
                 },
                 update: function (item) {
                     let _this = this;
-                     // alert(`update`);
+                    // alert(`update`);
                     switch (item.category) {
                         case "飲食":
                             //let _this = this;
@@ -1006,7 +1051,8 @@
                             request.type = item.type;
                             request.amount = Number(item.amount);
                             request.quantity = Number(item.quantity);
-                            axios.put(`@Utility.SD.localHost_API/api/Ebook/UpdateDietDetail/${item.id}`, request, { headers
+                            axios.put(`@Utility.SD.localHost_API/api/Ebook/UpdateDietDetail/${item.id}`, request, {
+                                headers
                             }).then(response => {
                                 //alert(response.data);
 
@@ -1017,7 +1063,7 @@
                                     //alert('移除了')
                                 }
                                 _this.getDietDetailData(IdContactBook);
-                                
+
                             }).catch(err => {
                                 alert(err);
                             });
@@ -1118,7 +1164,7 @@
                         default:
                             break;
                     }
-                    
+
                 },
                 cancel: function (category, targetId) {
                     let _this = this;
@@ -1177,7 +1223,7 @@
                                 if (item.id == targetId) {
                                     item.edit = true;
                                     _this.original_dateTimeString = item.dateTimeString;
-                                    item.dateTimeString =new Date(item.recodeTime).toISOString().substr(0, 16);
+                                    item.dateTimeString = new Date(item.recodeTime).toISOString().substr(0, 16);
                                     _this.original_amount = item.amount;
                                 }
                             }
@@ -1301,7 +1347,7 @@
                     });
                 },
                 cleanInput: function () {
-                    let _this=this;
+                    let _this = this;
                     _this.MaxTime = "";
                     _this.MinTime = "";
                     _this.recodeTime = "";
@@ -1315,15 +1361,139 @@
                     _this.sleep_content = "";
                     _this.sleepState = "";
                     _this.memo1 = "";
-                    if (_this.isoneWeek!=true) {
-                        _this.isoneWeek=true ;
+                    if (_this.isoneWeek != true) {
+                        _this.isoneWeek = true;
                     }
                     _this.reflesh();
                 },
+                createChartData:function (all_Datas) {
+                    let _this = this;
+                    Diet_datas = [];
+                    Diaper_datas = [];
+                    Sleep_datas = [];
+                    Memo_datas = [];
+                    for (var i = 0; i < all_Datas.length; i++) {
+                        let data_detail = { x:new Date(all_Datas[i].recodeTime), y: '(24hr)' };
+                        let data_detail_forSleep = { x: [new Date(all_Datas[i].sleepTime), new Date(all_Datas[i].recodeTime)], y: '(24hr)' };
+                        switch (all_Datas[i].category) {
+                            case "飲食":
+                                Diet_datas.push(data_detail);
+                                break;
+                            case "尿布":
+                                Diaper_datas.push(data_detail);
+                                break;
+                            case "睡眠":
+                                Sleep_datas.push(data_detail_forSleep);
+                                break;
+                            case "備註":
+                                Memo_datas.push(data_detail);
+                                break;
+                        }
+                    }
+                    
+                    console.log('圖表產出1')
+
+                },
+                reload: function () {
+                    location.reload();
+                },
             }
         }
-
         var app_Ebook_record = Vue.createApp(vueApp).mount('#app_Ebook_record');
-        
+
+
+
+        function createChart(_Diet_datas, _Diaper_datas, _Memo_datas, Sleep_datas) {
+            const ctx = document.getElementById('myChart');
+            chart= new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['(24hr)'],
+                    datasets: [
+                        {
+                            type: 'bubble',
+                            label: '飲食',
+                            data: _Diet_datas,
+                            backgroundColor: 'pink',
+                            borderColor: 'red',
+                            borderWidth: 1,
+                            hoverRadius: 10,
+                            hitRadius: 20,
+                            radius: 13,
+                        },
+                        {
+                            type: 'bubble',
+                            label: '尿布更換',
+                            data: _Diaper_datas,
+                            backgroundColor: 'yellow',
+                            borderColor: 'black',
+                            borderWidth: 1,
+                            hoverRadius: 10,
+                            hitRadius: 20,
+                            radius: 15,
+                        },
+                        {
+                            type: 'bubble',
+                            label: '備註',
+                            data: _Memo_datas,
+                            backgroundColor: 'lightgreen',
+                            borderColor: 'green',
+                            borderWidth: 1,
+                            hoverRadius: 10,
+                            hitRadius: 20,
+                            radius: 17,
+                        },
+                        {
+                            label: '睡眠',
+                            //data: [
+                            //    { x: [new Date('2024-08-10T06:00'), new Date('2024-08-10T07:30')], y: '(24hr)' }
+                            //],
+                            data: Sleep_datas,
+                            backgroundColor: 'lightblue',
+                            borderColor: 'lightblue',
+                            borderWidth: 1
+                        },
+                    ]
+                },
+                options: {
+                    //barPercentage:1,
+                    //categoryPercentage:1,
+                    indexAxis: "y",
+                    aspectRatio: 5,
+                    legend: {
+                        position: 'top',
+                        display: true,
+                    },
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'hour'
+                            },
+                            min: yesterday,
+                            max: now,
+                            grid: {
+                                color: function (context) {
+                                    if (new Date( context.tick.value).getHours()%12 ===0) {
+                                        return 'rgba(0, 0, 0, 1)'; // 黑色
+                                    }
+                                    return 'rgba(0, 0, 0, 0.1)'; // 淡灰色
+                                },
+                                lineWidth: function (context) {
+                                    if (new Date(context.tick.value).getHours() % 12 === 0) {
+                                        return 2; // 加粗
+                                    }
+                                    return 1; // 正常
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            stacked: true,
+                        }
+                    },
+                }
+            });
+        }
     </script>
 }
