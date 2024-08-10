@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BabyCiao_Client</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/BabyCiao_Client.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Vue -->
+    <script src="https://unpkg.com/vue@latest"></script>
+    @await RenderSectionAsync("Styles", required: false)
+
+    <!-- 外掛套版 -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="~/fonts/icomoon/style.css" rel="stylesheet" />
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link href="~/css/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/css/owl.theme.default.min.css" rel="stylesheet" />
+    <link href="~/css/jquery.fancybox.min.css" rel="stylesheet" />
+    <link href="~/css/bootstrap-datepicker.css" rel="stylesheet" />
+    <link href="~/fonts/flaticon/font/flaticon.css" rel="stylesheet" />
+    <link href="~/css/aos.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+
+
+</head>
+<body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+    
+    <div class="site-wrap">
+        <div class="site-mobile-menu site-navbar-target">
+            <div class="site-mobile-menu-header">
+                <div class="site-mobile-menu-close mt-3">
+                    <span class="icon-close2 js-menu-toggle"></span>
+                </div>
+            </div>
+            <div class="site-mobile-menu-body"></div>
+        </div>
+
+        @* 套版導覽列 *@
+        <header class="site-navbar light js-sticky-header site-navbar-target" role="banner">
+
+            <div class="container">
+                <div class="row align-items-center">
+                    @* LOGO *@
+                    <div class="col-6 col-xl-2">
+                        <div class="mb-0 site-logo"><a href="index.html" class="mb-0">Elderly<span class="text-primary">.</span> </a></div>
+                    </div>
+                    @* 功能按鈕 *@
+                    <div class="col-12 col-md-10 d-none d-xl-block">
+                        <nav class="site-navigation position-relative text-right" role="navigation">
+                            <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
+                                <li><a class="active nav-link" asp-area="" asp-controller="Home" asp-action="About">關於我們</a></li>
+                                <li class="has-children">
+                                    <a href="services.html" class="nav-link">媒合平台</a>
+                                    <ul class="dropdown">
+                                        <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="MatchIndex">一同巧育</a></li>
+                                        <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="NannyResume">保母委託單</a></li>
+                                        <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="BabyResume">家長委託單</a></li>
+                                    </ul>
+                                </li>
+
+                                <li><a class="nav-link text-dark" href="@Utility.SD.localHost_Backstage/Home/Index">管理後台</a></li>
+
+                                <li><a id="e_book" class="nav-link text-dark" asp-area="andy_ebook" asp-controller="Home" asp-action="Index">電子聯絡簿</a></li>
+
+                                <li class="has-children">
+                                    <a href="services.html" class="nav-link">社群</a>
+                                    <ul class="dropdown">
+                                        <li><a class="nav-link text-dark" asp-area="LilyGArea" asp-controller="Home" asp-action="Index">團購商品</a></li>
+                                        <li><a class="nav-link text-dark" asp-area="LilySArea" asp-controller="Home" asp-action="Index">二手商品</a></li>
+                                        <li><a class="nav-link text-dark" asp-controller="Competitions" asp-action="Index">線上投票活動</a></li>
+                                        <li><a class="nav-link text-dark" asp-controller="Platform" asp-action="Index">討論區</a></li>
+                                    </ul>
+                                </li>
+
+                                <li><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contact">聯絡我們</a></li>
+                                @* 登入/註冊 *@
+                                <div class="col-6 d-inline-block d-xl-none ml-md-0 py-3" style="position: relative; top: 3px;">
+                                <li class="social"><a href="#contact-section" class="nav-link"><span class="icon-facebook"></span></a></li>
+                                <li class="social"><a href="#contact-section" class="nav-link"><span class="icon-twitter"></span></a></li>
+                                <li class="social"><a href="#contact-section" class="nav-link"><span class="icon-linkedin"></span></a></li>
+                                
+                            </ul>
+                            
+                        </nav>
+                    </div>
+                </div>
+
+
+                    <div class="col-6 d-inline-block d-xl-none ml-md-0 py-3" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle float-right"><span class="icon-menu h3 text-white"></span></a>
+                    </div>
+
+                </div>
+            </div>
+
+        </header>
+
+        <div class="slide-item overlay" style="background-image: url('~/images/giftly.png')">
+            <div class="container">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+
+    </div>
+
+
+@*     <div class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - test2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>*@
+    </div> 
+    @* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://unpkg.com/vue@3.4.31/dist/vue.global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @* 外掛套版 *@
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/jquery-ui.js"></script>
+    <script src="~/js/popper.min.js"></script>
+    <script src="~/js/owl.carousel.min.js"></script>
+    <script src="~/js/jquery.countdown.min.js"></script>
+    <script src="~/js/jquery.easing.1.3.js"></script>
+    <script src="~/js/aos.js"></script>
+    <script src="~/js/jquery.waypoints.min.js"></script>
+    <script src="~/js/jquery.animatenumber.min.js"></script>
+    <script src="~/js/jquery.fancybox.min.js"></script>
+    <script src="~/js/jquery.sticky.js"></script>
+    <script src="~/js/isotope.pkgd.min.js"></script>
+    <script src="~/js/main.js"></script>
+
+    <script>
+        let username = sessionStorage.getItem("username");
+        
+        var vueApp = {
+            data() {
+                return {
+                    u_name: "",
+                    islogin: false,
+                };
+            },
+            mounted: function () {
+                let _this = this;
+                _this.reflesh();
+            },
+            methods: {
+                reflesh: function () {
+                    let _this = this;
+                    if (username != null) {
+                        _this.islogin = true;
+                    }
+                    _this.u_name = username;
+                },
+            },
+           
+        }
+        var app = Vue.createApp(vueApp).mount('#loginApp')
+
+        $(function () {
+            //登出動畫與操作
+            $('#logoutForm').on('click', function (e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: "提示!",
+                    text: "您確定要登出?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "是的,確定登出!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: "登出成功!",
+                            text: "歡迎再次蒞臨!",
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then((result) => {
+                            sessionStorage.removeItem("username");
+                            localStorage.removeItem("token");
+                            window.location.href = `@Utility.SD.localHost_Client/Home/Index`
+                        });
+                    }
+                });
+
+            })
+            $('#e_book').on("click", function (e) {
+                if (username != null) {
+                    
+                } else {
+                    e.preventDefault();
+                    sessionStorage.setItem("target", "@Utility.SD.localHost_Client/andy_ebook/Home/Index")
+                    window.location.href = "@Utility.SD.localHost_Client/Home/Login";
+                }
+            })
+        })
+        
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+

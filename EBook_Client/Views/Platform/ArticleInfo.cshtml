@@ -1,0 +1,148 @@
+﻿
+<div id="App">
+    <!-- Breadcrumb -->
+    <div class="container mb-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">社群</li>
+                <li class="breadcrumb-item"><a href="https://localhost:7231/Competitions">討論區</a></li>
+                <li class="breadcrumb-item">文章標題</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="container d-flex justify-content-between">
+        <!-- 側欄 -->
+        <div class="col-2">
+            <button type="button" class="btn btn-outline-primary mb-4" v-on:click="">管理我的文章</button>
+            <div class="list-group">
+                <a v-on:click="getType(1)" class="list-group-item list-group-item-action">育兒大小事</a>
+                <a v-on:click="getType(2)" class="list-group-item list-group-item-action">好物分享</a>
+                <a v-on:click="getType(3)" class="list-group-item list-group-item-action">生活交流</a>
+                <a v-on:click="getType(4)" class="list-group-item list-group-item-action">親子旅遊</a>
+            </div>
+        </div>
+
+        <!--主要內容-->
+        <div class="col-md-9" >
+            <div class="border-bottom mb-2">
+                <h3>{{artiType}}</h3>
+            </div>
+            <!--發布者資訊-->
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="mb-3">
+                    <p>{{artiAccount}}</p>
+                    <p>{{artiTime}}</p>
+                </div>
+                <a v-on:click="newfavortie()">
+                    <div class="rounded-circle border border-1 border-dark text-center" style="width:50px; height:50px">
+                    <i class="bi bi-bookmark-heart fs-2"></i>
+                    </div>
+                </a>
+            </div>
+            
+            <!--文章內容-->
+            <div>
+                <h4>{{artiTitle}}</h4>
+                <p>{{artiContent}}</p>
+            </div>
+
+            <!--新增回應-->
+            <div class="mb-3 has-validation border border-light p-2">
+                <h4 class="form-label border-bottom">我要回應</h4>
+                <p>300字內</p>
+                <textarea type="text" class="form-control mb-3" id="Content" rows="5" v-model="CompetitorContent"></textarea>
+                <button class="btn btn-primary" type="submit" v-on:click="newResponse(artiID)">發布回應</button>
+            </div>
+
+            <!--回應顯示-->
+            <div>
+                <ul class="list-group">
+                    <li class="list-group-item" v-for="item in Information" :key="item.responseID">
+                        <div>
+                            <p>{{item.responseAccount}}</p>
+                        </div>
+                        <div>
+                            <p>{{item.responseModifiedTimeView}}</p>
+                        </div>
+                        <div>
+                            <p>{{item.responseContent}}</p>
+                        </div>
+                    </li>
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- axios -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
+        integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    //var articleType = sessionStorage.getItem("articleType");
+    var articleType = "育兒大小事";
+    //var articleId = sessionStorage.getItem("PlatformID");
+    articleId = 1;
+    var vueApp = {
+        data() {
+            return {
+                //userAccount:sessionStorage.getItem("username"),
+                userAccount: "user5",
+
+                //讀取內容
+                Information:[],
+                artiTitle:"",
+                artiContent: "",
+                artiAccount: "",
+                artiTime: "",
+                artiType:"",
+                artiID:0,
+
+                //新增回應
+                CompetitorContent:"",
+
+            };
+        },
+        methods: {
+            getInfo: function () {
+                let _this = this;
+                axios.get(`https://localhost:7292/api/Platform/getResponse/${articleId}`)
+                    .then(response => {
+                        _this.Information = response.data;
+                        _this.artiTitle = response.data[0].postTitle;
+                        _this.artiContent = response.data[0].postContent;
+                        _this.artiAccount = response.data[0].postAccount;
+                       //_this.artiTime = response.data[0].postModifiedTime;
+                        _this.artiTime = new Date(response.data[0].postModifiedTime).toLocaleString();
+
+                        _this.artiType = response.data[0].postType;
+                        _this.artiID = response.data[0].articleID;
+                    })
+            },
+            newResponse:function(id){
+                let _this = this;
+                let request = {};
+                request.ArticleID = id;
+                request.ResponseAccount = _this.userAccount;
+                request.ResponseContent = _this.CompetitorContent;
+
+                axios.post("https://localhost:7292/api/Platform/newResponse",request)
+                    .then(result => {
+                        _this.getInfo();
+                        _this.CompetitorContent = "";
+                    })
+            },
+
+        },
+        mounted: function () {
+            let _this = this;
+            _this.getInfo();
+        }
+
+    };
+    var app = Vue.createApp(vueApp).mount("#App");
+</script>

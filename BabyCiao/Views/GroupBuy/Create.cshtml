@@ -203,30 +203,6 @@
         });
 
         //動態加入規格
-        // let fieldCount = 0;
-
-        // function addField() {
-        //     fieldCount++;
-        //     const container = document.getElementById('dynamicFields');
-        //     const newField = document.createElement('div');
-        //     newField.className = 'form-group d-flex align-items-center ';
-        //     newField.innerHTML = `
-        //                             <label for="ProductFormats_${fieldCount}__FormatType" class="control-label m-1">規格</label>
-        //                                                                                                                             <select id="ProductFormats_${fieldCount}__FormatType" name="ProductFormats[${fieldCount}].FormatType" class="form-control m-1">
-        //                             <option value="尺寸">尺寸</option>
-        //                             <option value="顏色">顏色</option>
-        //                             <option value="其他">其他</option>
-        //                         </select>
-        //                                                                                         <input type="text" id="ProductFormats_${fieldCount}__FormatName" name="ProductFormats[${fieldCount}].FormatName" class="form-control" />
-        //                                                                        <button type="button" class="btn btn-outline-danger m-1" onclick="removeField(this)">-</button>
-        //                     `;
-        //     container.appendChild(newField);
-        // }
-
-
-
-
-
         document.getElementById('addFormat').addEventListener('click', function () {
             var fieldCount = document.querySelectorAll('#productFormats .product-format').length;
             var newFieldHtml = `

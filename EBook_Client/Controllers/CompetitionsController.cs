@@ -3,23 +3,23 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BabyCiao_Client.Controllers
 {
-    //[Area("OnlineCompetitions")]
+
     public class CompetitionsController : Controller
     {
-        // GET: CompetitionsController
+        // GET: Competitions/Index
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: CompetitionsController/Details/5
+        // GET: Competitions/voteInfo
         public ActionResult voteInfo(int id)
         {
             return View();
         }
 
-        // GET: CompetitionsController/Create
-        public ActionResult Create()
+        // GET: Competitions/MyCompetition
+        public ActionResult MyCompetition()
         {
             return View();
         }

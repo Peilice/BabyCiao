@@ -1,0 +1,256 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>貝比巧遇</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .accordion-button::after {
+            display: none; /* 隱藏箭頭符號 */
+        }
+
+        .accordion-button.all-items {
+            background-color: #f8f9fa; /* 自定義背景顏色 */
+            border: none; /* 去掉邊框 */
+        }
+
+        .card {
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-weight: bold; /* 使標題變為粗體 */
+            font-size: 1.5rem; /* 增大字體大小（可根據需要調整） */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Breadcrumb start -->
+        <div class="px-3 py-2 mb-2">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 bg-transparent p-2 text-dark bg-opacity-10">
+                    <li class="breadcrumb-item"><a class="text-decoration-none" href="https://localhost:7231/">首頁</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">保母平台</li>
+                </ol>
+            </nav>
+        </div>
+        <!-- Breadcrumb end -->
+
+        <div class="row">
+            <!-- 左側導覽 start -->
+            <div class="col-3">
+                <div class="accordion" id="categoryAccordion">
+                    <!-- 我的平台 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingAll">
+                            <button class="accordion-button all-items" type="button" v-on:click="MyIndex">
+                                我的平台
+                            </button>
+                        </h2>
+                    </div>
+                    <!-- 媒合平台 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button all-items" type="button" v-on:click="showMatchingPlatform">
+                                媒合平台
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#categoryAccordion">
+                            <div class="accordion-body">
+                                <ul class="list-unstyled">
+                                    <li><a href="#" v-on:click.prevent="fetchUserEntrustOrders">我的委託單</a></li>
+                                    <li><a href="#" v-on:click.prevent="fetchNannyEntrustOrders">保母的委託單</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 合約狀態 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingContracts">
+                            <button class="accordion-button all-items" type="button" v-on:click="showContractStatus">
+                                合約狀態
+                            </button>
+                        </h2>
+                    </div>
+                    <!-- 行事曆 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingCalendar">
+                            <button class="accordion-button all-items" type="button" v-on:click="showCalendar">
+                                行事曆
+                            </button>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <!-- 左側導覽 end -->
+            <!-- 主要內容 start -->
+            <div class="col-9">
+                <div id="app">
+                    <div class="container mt-3">
+                        <!-- Notification Section -->
+                        <h2>未讀通知</h2>
+                        <ul class="list-group mb-4">
+                            <li v-for="notification in notifications" :key="notification.id" class="list-group-item">
+                                {{ notification.message }}
+                            </li>
+                        </ul>
+
+                        <!-- Issued Contracts Section -->
+                        <h2 class="mt-5">我的委託單</h2>
+                        <div v-if="contracts.length">
+                            <div v-for="contract in contracts" :key="contract.id" class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ contract.name }}</h5>
+                                    <p class="card-text">{{ contract.details }}</p>
+                                    <p class="card-text"><small class="text-muted">狀態: {{ contract.status }}</small></p>
+                                    <button class="btn btn-primary" v-on:click="showDetails(contract.id)">詳細資訊</button>
+                                    <button class="btn btn-success" v-on:click="handleStatusAction(contract)">動作</button>
+                                </div>
+                            </div>
+                        </div>
+                        <p v-else>目前沒有委託單。</p>
+
+                        <!-- Calendar Section -->
+                        <h2 class="mt-5">行事曆</h2>
+                        <div id="calendar">
+                            <p>這裡可以顯示行事曆</p>
+                            <!-- 您可以在這裡嵌入一個行事曆元件，並允許用戶拖動項目 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 主要內容 end -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    notifications: [],
+                    contracts: []
+                };
+            },
+            methods: {
+                fetchNotifications() {
+                    axios.get('https://localhost:7292/api/Notifications')
+                        .then(response => {
+                            this.notifications = response.data;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching notifications:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error fetching notifications',
+                                text: 'There was an error fetching notifications.'
+                            });
+                        });
+                },
+                fetchContracts() {
+                    axios.get('https://localhost:7292/api/Contracts')
+                        .then(response => {
+                            this.contracts = response.data;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching contracts:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error fetching contracts',
+                                text: 'There was an error fetching contracts.'
+                            });
+                        });
+                },
+                fetchUserEntrustOrders() {
+                    axios.get('https://localhost:7292/api/BabyResumes')
+                        .then(response => {
+                            this.contracts = response.data;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching user entrust orders:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error fetching user entrust orders',
+                                text: 'There was an error fetching user entrust orders.'
+                            });
+                        });
+                },
+                fetchNannyEntrustOrders() {
+                    axios.get('https://localhost:7292/api/NannyResumes')
+                        .then(response => {
+                            this.contracts = response.data;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching nanny entrust orders:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error fetching nanny entrust orders',
+                                text: 'There was an error fetching nanny entrust orders.'
+                            });
+                        });
+                },
+                showDetails(id) {
+                    const userUrl = `https://localhost:7292/api/BabyResumes/Fullinformation/${id}`;
+                    const nannyUrl = `https://localhost:7292/api/NannyResumes/GetNannyResumeinfoJoin/${id}`;
+
+                    axios.get(userUrl)
+                        .then(response => {
+                            console.log(response.data); // 处理用户详细信息的逻辑
+                            Swal.fire({
+                                title: '詳細資訊',
+                                html: `<pre>${JSON.stringify(response.data, null, 2)}</pre>`,
+                                width: 600
+                            });
+                        })
+                        .catch(() => {
+                            axios.get(nannyUrl)
+                                .then(response => {
+                                    console.log(response.data); // 处理保母详细信息的逻辑
+                                    Swal.fire({
+                                        title: '詳細資訊',
+                                        html: `<pre>${JSON.stringify(response.data, null, 2)}</pre>`,
+                                        width: 600
+                                    });
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching details:', error);
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error fetching details',
+                                        text: 'There was an error fetching the details.'
+                                    });
+                                });
+                        });
+                },
+                handleStatusAction(contract) {
+                    if (contract.status === '待回復') {
+                        window.location.href = 'https://localhost:7231/Machplateform/Home/SignContract';
+                    } else {
+                        Swal.fire({
+                            icon: 'info',
+                            title: `Status: ${contract.status}`,
+                            text: 'You can perform other actions based on the status here.'
+                        });
+                    }
+                },
+                showMatchingPlatform() {
+                    // 可以在這裡添加媒合平台的顯示邏輯
+                },
+                showContractStatus() {
+                    // 可以在這裡添加合約狀態的顯示邏輯
+                },
+                showCalendar() {
+                    // 可以在這裡添加行事曆的顯示邏輯
+                }
+            },
+            mounted() {
+                this.fetchNotifications();
+                this.fetchContracts();
+            }
+        });
+    </script>
+</body>
+</html>

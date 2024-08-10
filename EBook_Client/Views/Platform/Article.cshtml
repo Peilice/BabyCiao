@@ -1,0 +1,183 @@
+﻿<div id="vueApp">
+    <!-- Breadcrumb -->
+    <div class="container mb-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">社群</li>
+                <li class="breadcrumb-item"><a href="https://localhost:7231/Platform">討論區</a></li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="d-flex justify-content-between">
+    <!-- 側欄 -->
+        <div class="col-2">
+            <button type="button" class="btn btn-outline-primary mb-4" v-on:click="">管理我的文章</button>
+            <div class="list-group">
+                <a v-on:click="getType(1)" class="list-group-item list-group-item-action">育兒大小事</a>
+                <a v-on:click="getType(2)" class="list-group-item list-group-item-action">好物分享</a>
+                <a v-on:click="getType(3)" class="list-group-item list-group-item-action">生活交流</a>
+                <a v-on:click="getType(4)" class="list-group-item list-group-item-action">親子旅遊</a>
+            </div>
+        </div>
+    
+        <div class ="col-9">
+            <div>
+                <!-- 主畫面(顯示資料) -->
+                <div v-show="isArticle">
+                    <div class="d-flex justify-content-between">
+                        <h3>{{type}}</h3>
+                        <button type="button" class="btn btn-outline-primary" v-on:click="showPost">發表文章</button>
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">標題</th>
+                                <th scope="col">回應</th>
+                                <th scope="col">發佈者</th>
+                                <th scope="col">發佈時間</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in Article">
+                                <th scope="row"><a v-on:click="getInfo(item.articleID)">{{item.postTitle}}</a></th>
+                                <td>{{item.responseCount}}</td>
+                                <td>{{item.postAccount}}</td>
+                                <td>{{item.postModifiedTime}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- 主畫面(發佈貼文) -->
+            <div v-show="isPost">
+                <h3>我要發表</h3>
+                <form>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">討論類別</label>
+                        <p>{{type}}</p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">文章標題</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="請輸入標題" v-model="newtitle" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">文章內容</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="5" v-model="newContent"></textarea>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="flexCheckDefault" v-model="isChecked">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            我已閱讀並同意遵守貝比巧育討論區討論須知
+                        </label>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary">取消</button>
+                    <button type="submit" class="btn btn-primary" v-on:click="create" id="create" :disabled="!isChecked">確認發布</button>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+</div>
+
+
+<!-- axios -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
+        integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    var articleType = sessionStorage.getItem("articleType")
+    var vueApp = {
+        data() {
+            return {
+                Article: [],
+                type:"",
+                isChecked: false,
+                isPost: false,
+                isArticle:true,
+                newtitle:"",
+                newContent:"",
+
+                //使用者帳號
+                //userAccount:sessionStorage.getItem("username"),
+                userAccount: "user5",
+
+            }
+        },
+        methods:{
+            getArticle: function () {
+                let _this = this;
+                //alert(articleType)
+                axios.get(`https://localhost:7292/api/Platform/getArticle/${articleType}`)
+                .then(response=>{
+                    _this.Article = response.data;
+                    _this.type = response.data[0].postType;
+                })
+            },
+            getType:function(e){
+                let _this = this;
+                let gettype = "";
+                switch(e)
+                {
+                    case 1:
+                        gettype = "育兒大小事";
+                        break;
+
+                    case 2:
+                        gettype = "好物分享";
+                        break;
+                    case 3:
+                        gettype = "生活交流";
+                        break;
+                    case 4:
+                        gettype = "親子旅遊";
+                        break;
+
+                }
+                axios.get(`https://localhost:7292/api/Platform/getArticle/${gettype}`)
+                    .then(response => {
+                        _this.Article = response.data;
+                        _this.type = response.data[0].postType;
+                    })
+            },
+            showPost: function () {
+                let _this = this;
+                _this.isPost = true;
+                _this.isArticle = false;
+            },
+            create:function(){
+                let _this = this;
+                let request = {};
+                request.PostAccount = _this.userAccount;
+                request.PostTitle = _this.newtitle;
+                request.PostContent = _this.newContent;
+                request.PostType = _this.type;
+                axios.post(`https://localhost:7292/api/Platform/createPost`, request)
+                .then(result=>{
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "發佈成功",
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    .then(result=>{
+                        _this.getArticle();
+                    })
+                })
+            },
+            getInfo: function (i) {
+                sessionStorage.setItem("PlatformID",i);
+                window.location.href = "https://localhost:7231/Platform/ArticleInfo";
+            }
+        },
+        mounted:function(){
+            let _this = this;
+            _this.getArticle();
+        },
+    }
+    var app = Vue.createApp(vueApp).mount("#vueApp");
+</script>

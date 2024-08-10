@@ -33,7 +33,7 @@
 		</dt>
 		<dd class="col-sm-10">
 
-			@if (Model.OrderFormat != null && Model.OrderFormat.Count > 0)
+			@if (Model.OrderFormat[0].FormatId!=null)
 			{
 
 				@foreach (var OrderFormat in Model.OrderFormat)
@@ -41,13 +41,17 @@
 					<li>@OrderFormat.FormatType - @OrderFormat.FormatName</li>
 				}
 			}
+			else
+			{
+				<li>單一規格</li>
+			}
 
 		</dd>
 		<dt class="col-sm-2">
 			@Html.DisplayNameFor(model => model.Quantity)
 		</dt>
 		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Quantity)
+			@Html.DisplayFor(model => model.OrderFormat[0].Quantity)
 		</dd>
 		<dt class="col-sm-2">
 			@Html.DisplayNameFor(model => model.Price)
@@ -66,6 +70,12 @@
 		</dt>
 		<dd class="col-sm-10">
 			@Html.DisplayFor(model => model.Address)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Note)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Note)
 		</dd>
 		<dt class="col-sm-2">
 			@Html.DisplayNameFor(model => model.ViewJoinModifiedTime)

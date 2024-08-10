@@ -1,0 +1,528 @@
+﻿<!DOCTYPE html>
+<html>
+
+<body>
+    <div id="App" class="container mt-5">
+        <!-- Breadcrumb -->
+        <div class="container d-flex justify-content-between">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">加入我們</li>
+                    <li class="breadcrumb-item"><a href="https://localhost:7231/Competitions">保母申請單</a></li>
+                    <li class="breadcrumb-item">管理我的履歷表</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="container d-flex justify-content-between">
+            <!--側欄-->
+            <div class="col-md-2">
+                <div class="d-grid gap-3">
+                    <button class="btn btn-info" type="button" v-on:click="getResume">我的委託單</button>
+                    <button class="btn btn-info" type="button" v-on:click="getParent">我的喜歡的家長</button>
+                    <button class="btn btn-info" type="button" v-on:click="getFavorite">我收藏的委託</button>
+                </div>
+            </div>
+
+            <!--我投票的選手-->
+            <div v-show="myResume">
+                <h2>我的委託單</h2>
+                <ul class="list-group">
+                    <li class="list-group-item" v-for="item in myParent" :key="item.Parentid">
+                        <div class="d-flex justify-content-between">
+                            <h3>{{item.competitionName}}</h3>
+                            <span>{{item.statement}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <img v-bind:src="getPhoto(item.competitorPhoto)" style="width:200px;height:150px" />
+                            <div>
+                                <h5>{{item.competitorName}}</h5>
+                                <p>{{item.content}}</p>
+                            </div>
+                            <button class="btn btn-secondary" type="button" v-on:click="delVote(item.competitionID,userAccount)">取消投票</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+
+
+            <!--我投票的選手-->
+            <div v-show="myVote">
+                <h2>我喜歡的家長</h2>
+                <ul class="list-group">
+                    <li class="list-group-item" v-for="item in myParent" :key="item.Parentid">
+                        <div class="d-flex justify-content-between">
+                            <h3>{{item.competitionName}}</h3>
+                            <span>{{item.statement}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <img v-bind:src="getPhoto(item.competitorPhoto)" style="width:200px;height:150px" />
+                            <div>
+                                <h5>{{item.competitorName}}</h5>
+                                <p>{{item.content}}</p>
+                            </div>
+                            <button class="btn btn-secondary" type="button" v-on:click="delVote(item.competitionID,userAccount)">取消投票</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!--我收藏的比賽-->
+            <div v-show="myFavorite">
+                <h2>我收藏的委託單</h2>
+                <ul class="list-group">
+                    <li class="list-group-item" v-for="item in myFavorite" :key="item.favoriteId">
+                        <div class="d-flex justify-content-between">
+                            <h3>{{item.competitionName}}</h3>
+                            <span>{{item.statement}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <img v-bind:src="getPhoto(item.competitionPhoto)" style="width:200px;height:150px" />
+                            <div>
+                                <h5>活動時間：{{item.startTime}} ~ {{item.endTime}}</h5>
+                                <p>{{item.competitionContent}}</p>
+                            </div>
+                            <button class="btn btn-secondary" type="button" v-on:click="delFavorite(item.competitionId,userAccount)"><i class="fa-solid fa-heart-circle-minus"></i>取消收藏</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- axios -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
+            integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+
+        var vueApp = {
+            data() {
+                return {
+                    myResume: [],
+                    myParent: [],
+                    myFavorite: [],
+                    myResume: false,
+                    myParent: false,
+                    myFavorite: false,
+
+                    //userAccount:sessionStorage.getItem("username"),
+                    userAccount: "user5",
+                };
+            },
+            methods: {
+                getResume: function () {
+                    let _this = this;
+                    try {
+                        axios.get(`https://localhost:7292/api/OnlineCompetitions/MyCompetition/${_this.userAccount}`)
+                            .then(response => {
+                                _this.myResume = response.data;
+                            });
+                        _this.myParent = true;
+                        _this.myParent = false;
+                        _this.myFavorite = false;
+                        console.log(_this.CompetitionName)
+                    }
+                    catch (error) {
+                        console.log(error)
+                    }
+                },
+                getPhoto: function (competitionPhotos) {
+                    return competitionPhotos != null ? `https://localhost:7000/uploads/${competitionPhotos}` : `https://localhost:7000/image/noimage.jpg`;
+                },
+
+                getFavorite: function () {
+                    let _this = this;
+                    try {
+                        axios.get(`https://localhost:7292/api/OnlineCompetitions/MyFavorite/${_this.userAccount}`)
+                            .then(response => {
+                                _this.myFavorite = response.data;
+                            });
+                        _this.myCom = false;
+                        _this.myVote = false;
+                        _this.myFavorite = true;
+                    }
+                    catch (error) {
+                        console.log(error)
+                    }
+                },
+                delCom: function (x, y) {
+                    let _this = this;
+                    var request = {};
+                    request.id = x;
+                    request.account = y;
+
+                    //再次確認是否刪除
+                    Swal.fire({
+                        title: "是否確定取消?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "確認取消報名!"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            axios.delete(`https://localhost:7292/api/OnlineCompetitions/deleteApply/${request.id}/${request.account}`, request)
+                                .then(result => {
+                                    Swal.fire({
+                                        title: "您的報名已取消!",
+                                        icon: "success"
+                                    })
+                                        .then(result => {
+                                            _this.getCompetiton();
+                                        })
+                                })
+
+                        }
+                    });
+                },
+
+                delFavorite: function (x, y) {
+                    let _this = this;
+                    var request = {};
+                    request.id = x;
+                    request.account = y;
+
+                    //再次確認是否刪除
+                    Swal.fire({
+                        title: "是否確定取消?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "確認取消收藏!"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            axios.delete(`https://localhost:7292/api/OnlineCompetitions/deleteFavorite/${request.id}/${request.account}`)
+                                .then(result => {
+                                    Swal.fire({
+                                        title: "您的收藏已取消!",
+                                        icon: "success"
+                                    })
+                                        .then(result => {
+                                            _this.getCompetiton();
+                                        })
+                                })
+
+                        }
+                    });
+                },
+            },
+
+        }
+        var app = Vue.createApp(vueApp).mount("#App");
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+    @* <h1 class="text-center mb-3 mt-3 fw-bold">保母申請單</h1>
+    <!-- 比賽內容介紹 -->
+    <div class="form-group">
+    <label for="nannyAccount">保母帳號：{{NannyAccountUserAccount}}</label>
+    </div>
+    <div class="form-group">
+    <label for="addressesOfAgencies">服務中心：{{addressesOfAgencies}}</label>
+    </div>
+    <div class="form-group">
+    <label for="validPeriodsOfCertificates">證件有效期限：{validPeriodsOfCertificates{}}</label>
+    <input type="date" id="validPeriodsOfCertificates" v-model="validPeriodsOfCertificates" class="form-control" required />
+    </div>
+    <div class="form-group">
+    <label for="policeCriminalRecordCertificate">良民證</label>
+    <img v-bind:src="getPhotoUrl(policeCriminalRecordCertificate)" class="card-img-top h-100" alt="...">
+    </div>
+    <div class="form-group">
+    <label for="childCareCertificate">保母證</label>
+    <img v-bind:src="getPhotoUrl(policeCriminalRecordCertificate)" class="card-img-top h-100" alt="...">
+    </div>
+    <div class="form-group">
+    <label for="nationalIdentificationCard">身分證</label>
+    <img v-bind:src="getPhotoUrl(policeCriminalRecordCertificate)" class="card-img-top h-100" alt="...">
+    </div>
+    <h3>審核狀態：{{Statement}}</h3>
+    </div>
+    <!-- 靜態互動背景模板 -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+    <h5 class="modal-title" id="staticBackdropLabel">新增申請表</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <form id="form" class="needs-validation" v-on:submit.prevent="apply" novalidate>
+    <div class="modal-body">
+    <input type="text" class="form-control" id="IdCompetition" v-model="CompetitionId">
+    <div class="mb-3 has-validation">
+    <label class="form-label">帳號</label>
+    <input type="text" class="form-control" id="userAccount" v-model="userAccount" readonly>
+    </div>
+    <div class="mb-3 has-validation">
+    <label class="form-label">服務中心</label>
+    <input type="text" class="form-control" id="AddressesOfAgencies" rows="3" v-model="AddressesOfAgencies" required />
+    </div>
+    <div class="mb-3 has-validation">
+    <label class="form-label">保母證證有效期限</label>
+    <input type="date" class="form-control" id="ValidPeriodsOfCertificates" rows="3" v-model="ValidPeriodsOfCertificates" required />
+    </div>
+    <div class="mb-3 has-validation">
+    <label class="form-label">申請時間</label>
+    <input type="date" class="form-control" id="RequirementDate" rows="3" v-model="RequirementDate" required />
+    </div>
+
+    <div class="mb-3 has-validation">
+    <label class="form-label">良民證</label>
+    <input type="file" class="form-control" id="policeCriminalRecordCertificate" v-on:change="onFileChange">
+    <div id="EmergencyContactHelp" class="form-text">請選擇一張照片</div>
+    <div class="invalid-feedback">
+    此欄位必填!
+    </div>
+    </div>
+
+    <div class="mb-3 has-validation">
+    <label class="form-label">保母證</label>
+    <input type="file" class="form-control" id="Photos" v-on:change="onFileChange">
+    <div id="EmergencyContactHelp" class="form-text">請選擇一張照片</div>
+    <div class="invalid-feedback">
+    此欄位必填!
+    </div>
+    </div>
+
+
+    <div class="mb-3 has-validation">
+    <label class="form-label">身分證</label>
+    <input type="file" class="form-control" id="policeCriminalRecordCertificate" v-on:change="onFileChange">
+    <div id="EmergencyContactHelp" class="form-text">請選擇一張照片</div>
+    <div class="invalid-feedback">
+    此欄位必填!
+    </div>
+    </div>
+
+
+    </div>
+    </form>
+
+    <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+    <button type="submit" class="btn btn-primary" v-on:click="create">確認報名</button>
+    </div>
+    </div>
+    </div>
+    </div> *@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
+            integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+
+        var vueApp = {
+            data() {
+                return {
+                    getApply: [],
+                    myVote: [],
+                    myFavorite: [],
+                    myCom: false,
+                    myVote: false,
+                    myFavorite: false,
+
+                    const headers = {
+                        'Authorization': Bearer ${ useToken },
+            };
+
+            var Id = sessionStorage.getItem("Id");
+            var comStatement = sessionStorage.getItem("comStatement");
+            var Id = 0;
+
+            var vueApp = {
+                data() {
+                    return {
+                        NannyAccountUserAccount: "",
+                        AddressesOfAgencies: "",
+                        RequirementDate: "yyyy-mm-dd",
+                        ValidPeriodsOfCertificates: "yyyy-mm-dd",
+                        Statement: 0,
+                        Competitionsdetail: [],
+                        Id: 0,
+
+
+                        //表單
+                        CompetitorContent: "",
+                        Photos: "noimage.jpg",
+
+                        //使用者帳號
+                        //userAccount:sessionStorage.getItem("username"),
+                        userAccount: "user5",
+                    };
+                },
+                methods: {
+                    fetchnannyresumerequerment: function () {
+                        let _this = this;
+                        try {
+                            axios.get(`https://localhost:7292/api/GetNannyRequirmentinfo/${Id}`)
+                                .then(response => {
+                                    _this.NannyAccountUserAccount = response.data[0].account;
+                                    _this.AddressesOfAgencies = response.data[0].competitionName;
+                                    _this.RequirementDate = response.data[0].startTime;
+                                    _this.ValidPeriodsOfCertificates = response.data;
+                                    _this.Statement = response.data[0].statement;
+                                    _this.applyId = response.data[0].Id;
+                                    Id = response.data.Id;
+                                })
+
+                        }
+                        catch (error) {
+                            console.log(error);
+                        };
+
+                    },
+                    getPhotoUrl(policeCriminalRecordCertificate) {
+                        return policeCriminalRecordCertificate != null ? `https ://localhost:7000/NannnyAndPerant/良民證/${PoliceCriminalRecordCertificate} ` : https://localhost:7000/image/noimage.jpg;
+                        getPhotoUrl(childCareCertificate) {
+                            return childCareCertificate != null ? ` https ://localhost:7000/NannnyAndPerant/保母證/${ChildCareCertificate}` : https://localhost:7000/image/noimage.jpg;
+                            getPhotoUrl(nationalIdentificationCard) {
+                                return nationalIdentificationCard != null ? `https ://localhost:7000/NannnyAndPerant/身分證/${NationalIdentificationCard}` : https://localhost:7000/image/noimage.jpg;
+                            },
+                            apply: function () {
+                                let _this = this;
+                                let forms = document.querySelectorAll('.needs-validation');
+                                Array.prototype.slice.call(forms)
+                                    .forEach(function (form) {
+                                        form.addEventListener('submit', function (event) {
+                                            if (!form.checkValidity()) {
+                                                event.preventDefault()
+                                                event.stopPropagation()
+                                            }
+                                            else {
+                                                _this.create(event);
+                                            }
+
+                                            form.classList.add('was-validated')
+                                        }, false)
+                                    })
+                            },
+                            create: function (e) {
+                                e.preventDefault();
+                                let _this = this;
+                                let request = document.querySelectorAll('.needs-validation');
+                                var request = {}; //收集履歷表資訊  還沒更改
+                                request.NannyAccountUserAccount = NannyAccountUserAccount;
+                                request.PoliceCriminalRecordCertificates = _this.PoliceCriminalRecordCertificates.name;
+                                request.ChildCareCertificates = _this.ChildCareCertificates.name;
+                                request.NationalIdentificationCards = _this.NationalIdentificationCards.name;
+                                request.AddressesOfAgencies = _this..AddressesOfAgencies,
+                                    request.ValidPeriodsOfCertificates = ValidPeriodsOfCertificates;
+
+                                axios.post(https://localhost:7292/api/NannyRequirments/apply, request)
+                                        .then(result => {
+                                    Swal.fire({
+                                        position: "center",
+                                        icon: "success",
+                                        title: "報名成功",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                        .then(result => {
+                                            _this.fetchcompetitions();
+                                            $('#staticBackdrop').modal('hide');
+
+                                        })
+                                })
+                                    .catch(err => {
+                                        alert(err);
+                                    })
+                            },
+                            //處理照片上傳
+                            onFileChange: function (event) {
+                                this.CompetitorPhoto = event.target.files[0];
+                            },
+                            newfavorite: function () {
+                                let _this = this;
+                                var request = {};
+                                if (_this.userAccount == null) {
+                                    alert("請先登入");
+                                }
+                                else {
+                                    request.CompetitionId = IdCompetitions;
+                                    request.myAccount = _this.userAccount;
+                                    //console.log(request);
+                                    axios.post(https://localhost:7292/api/OnlineCompetitions/createFavorite, request)
+                                            .then(result => {
+                                        Swal.fire({
+                                            position: "center",
+                                            icon: "success",
+                                            title: "收藏成功",
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        })
+                                            .then(result => {
+                                                _this.fetchcompetitions();
+                                                //$('#staticBackdrop').modal('hide');
+
+                                            })
+                                    })
+                                };
+
+                            },
+                            myresume: function (userAccount) {
+                                if (userAccount == null) {
+                                    alert("請先登入");
+                                    //跳轉到登入頁面
+                                }
+                                else {
+                                    window.location.href = `https://localhost:7231/Competitions/MyCompetition/${userAccount};`
+                                }
+                            },
+                            newVote: function (x) {
+                                let _this = this;
+                                var record = {};
+                                record.voterAccount = _this.userAccount;
+                                record.CompetitionId = IdCompetitions;
+                                record.CompetitorId = x;
+                                //console.log(record);
+                                axios.post(https://localhost:7292/api/OnlineCompetitions/createVote, record)
+                                        .then(result => {
+                                    _this.fetchcompetitions();
+                                    alert("投票成功")
+                                })
+                            },
+                        },
+
+                        var app = Vue.createApp(vueApp).mount('#App');
+    </script>
+
+</body>
+</html>
+

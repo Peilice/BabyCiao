@@ -39,7 +39,7 @@ public class NannyRequirmentsController : Controller
          .Select(n => new NannyRequirementDTO
          {
              Id= n.Id,
-             RequirementDate = n.RequirementDate,
+             //RequirementDate = n.RequirementDate,
              NannyAccountUserAccount = n.NannyAccountUserAccount,
              PoliceCriminalRecordCertificate = n.PoliceCriminalRecordCertificate,
              ChildCareCertificate = n.ChildCareCertificate,
@@ -102,7 +102,7 @@ public class NannyRequirmentsController : Controller
         var Requirment = new NannyRequirment
         {
             Id = model.Id,
-            RequirementDate = model.RequirementDate,
+            //RequirementDate = model.RequirementDate,
             NannyAccountUserAccount = model.NannyAccountUserAccount,
             PoliceCriminalRecordCertificate = model.PoliceCriminalRecordCertificate,
             ChildCareCertificate = model.ChildCareCertificate,
@@ -174,7 +174,7 @@ public class NannyRequirmentsController : Controller
                           select new NannyRequirementDTO
                           {
                               Id = nn.Id,
-                              RequirementDate = nn.RequirementDate,
+                              //RequirementDate = nn.RequirementDate,
                               NannyAccountUserAccount = nn.NannyAccountUserAccount,
                               PoliceCriminalRecordCertificate = nn.PoliceCriminalRecordCertificate,
                               ChildCareCertificate = nn.ChildCareCertificate,
@@ -210,7 +210,7 @@ public class NannyRequirmentsController : Controller
         var Requirment = new NannyRequirment
         {
             Id = model.Id,
-            RequirementDate = model.RequirementDate,
+            //RequirementDate = model.RequirementDate,
             NannyAccountUserAccount = model.NannyAccountUserAccount,
             PoliceCriminalRecordCertificate = model.PoliceCriminalRecordCertificate,
             ChildCareCertificate = model.ChildCareCertificate,
@@ -317,7 +317,7 @@ public class NannyRequirmentsController : Controller
                           select new NannyRequirementDTO
                           {
                               Id = nn.Id,
-                              RequirementDate = nn.RequirementDate,
+                              //RequirementDate = nn.RequirementDate,
                               NannyAccountUserAccount = nn.NannyAccountUserAccount,
                               PoliceCriminalRecordCertificate = nn.PoliceCriminalRecordCertificate,
                               ChildCareCertificate = nn.ChildCareCertificate,

@@ -1,0 +1,118 @@
+﻿
+<div id="App">
+    <!-- Breadcrumb -->
+    <div class="container mb-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">社群</li>
+                <li class="breadcrumb-item"><a href="https://localhost:7231/Competitions">討論區</a></li>
+                <li class="breadcrumb-item">討論區</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="container d-flex justify-content-between">
+        <!--側欄-->
+        <div class="col-md-2">
+            <div class="d-grid gap-3">
+                <button class="btn btn-info" type="button">我的文章</button>
+                <button class="btn btn-info" type="button">收藏的文章</button>
+                <button class="btn btn-info" type="button">收藏的帳號</button>
+            </div>
+        </div>
+        <!--主要內容-->
+        <div class="col-md-9">
+            <div>
+                <h2><i class="bi bi-bookmark-heart">我的文章</i></h2>
+            </div>
+
+            <div>
+                <!--我的文章-->
+                <div>
+
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <div>
+                                <h4 class="text-center">文章標題</h4>
+                            </div>
+                            <div>
+                                <h4 class="text-center">文章分類</h4>
+                            </div>
+                            <div>
+                                <h4 class="text-center">發布時間</h4>
+
+                            </div>
+                            <button class="btn btn-secondary" type="button">刪除文章</button>
+
+
+                        </li>
+                    </ul>
+                </div>
+
+                <!--收藏的文章-->
+                <div>
+                    <h2>收藏的文章</h2>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <div>
+                                <h4 class="text-center">文章標題</h4>
+
+                            </div>
+                            <div>
+                                <h4 class="text-center">文章分類</h4>
+
+                            </div>
+                            <div>
+                                <h4 class="text-center">發布時間</h4>
+
+                            </div>
+                            <button class="btn btn-secondary" type="button">刪除收藏</button>
+                        </li>
+                    </ul>
+                </div>
+
+                <!--收藏的帳號-->
+                <div>
+                    <h2>收藏的帳號</h2>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <div>
+                                <h4 class="text-center">圖片</h4>
+
+                            </div>
+                            <div>
+                                <h4 class="text-center">帳號</h4>
+
+                            </div>
+                            <button class="btn btn-secondary" type="button">刪除收藏</button>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- axios -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
+        integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    var vueApp = {
+        data() {
+            return {
+                //userAccount:sessionStorage.getItem("username"),
+                userAccount: "user5",
+            };
+        },
+        methods: {
+
+
+        },
+
+    }
+    var app = Vue.createApp(vueApp).mount("#App");
+</script>
