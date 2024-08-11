@@ -14,13 +14,12 @@
     <script src="https://unpkg.com/vue@latest"></script>
     @await RenderSectionAsync("Styles", required: false)
 
-
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid" id="app00">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/style/babyciao文字圖.png" width="300" /></a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BabyCiao</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -66,23 +65,17 @@
             </div>
         </nav>
     </header>
-    <div class="mb-5">
-        <div class="mb-5">
-
-        </div>
-    </div>
-    <div class="container mb-5">
+    <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-@*     <footer id="footer" class="border-top footer text-muted" >
-        <div>
-            <p>電話：0945789456 | 地址：高雄市前鎮區中華五路200號</p>
-            <p><small>&copy; 2024 BabyCiao</small></p>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - test2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
-    </footer> *@
+    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -160,4 +153,5 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
 

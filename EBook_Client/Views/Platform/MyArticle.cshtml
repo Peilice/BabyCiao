@@ -15,64 +15,57 @@
         <!--側欄-->
         <div class="col-md-2">
             <div class="d-grid gap-3">
-                <button class="btn btn-info" type="button">我的文章</button>
-                <button class="btn btn-info" type="button">收藏的文章</button>
-                <button class="btn btn-info" type="button">收藏的帳號</button>
+                <button class="btn btn-info" type="button" v-on:click="getmyArti">我的貼文</button>
+                <button class="btn btn-info" type="button" v-on:click="getmyRes">我的回應</button>
+                @* <button class="btn btn-info" type="button">收藏的帳號</button> *@
             </div>
         </div>
         <!--主要內容-->
         <div class="col-md-9">
             <div>
-                <h2><i class="bi bi-bookmark-heart">我的文章</i></h2>
+                <h2>管理我的文章</i></h2>
+            </div>
+            <!--我的文章-->
+            <div v-show="isArti">
+                <h4>我的貼文</h4>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between" v-for="item in myArti">
+                        <div>
+                            <h5>{{item.postTitle}}</h5>
+                            <h5>《{{item.postType}}》</h5>
+                            <h5>發布時間：{{item.postModifiedTime}}</h5>
+                            <h5>留言回應數：{{item.responseCount}}</h5>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-secondary" type="button">刪除文章</button>
+                        </div>
+                    </li>
+                </ul>
             </div>
 
-            <div>
-                <!--我的文章-->
-                <div>
-
+                <!--我的回應-->
+                <div v-show="isResponse">
+                    <h4>我的回應</h4>
                     <ul class="list-group">
-                        <li class="list-group-item">
+                    <li class="list-group-item d-flex justify-content-between" v-for="item in myRes">
                             <div>
-                                <h4 class="text-center">文章標題</h4>
+                                <div>
+                                    <h5>《{{item.postType}}》{{item.postTitle}}</h5>
+                                </div>
+                                <div>
+                                    <p>{{item.responseAccount}}</p>
+                                    <p>{{item.responseContent}}</p>
+                                </div>
                             </div>
-                            <div>
-                                <h4 class="text-center">文章分類</h4>
+                            <div class="d-flex align-items-center">
+                            <button class="btn btn-secondary" type="button" v-on:click="delRes(item.responseID)">刪除回應</button>
                             </div>
-                            <div>
-                                <h4 class="text-center">發布時間</h4>
-
-                            </div>
-                            <button class="btn btn-secondary" type="button">刪除文章</button>
-
-
-                        </li>
-                    </ul>
-                </div>
-
-                <!--收藏的文章-->
-                <div>
-                    <h2>收藏的文章</h2>
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <div>
-                                <h4 class="text-center">文章標題</h4>
-
-                            </div>
-                            <div>
-                                <h4 class="text-center">文章分類</h4>
-
-                            </div>
-                            <div>
-                                <h4 class="text-center">發布時間</h4>
-
-                            </div>
-                            <button class="btn btn-secondary" type="button">刪除收藏</button>
                         </li>
                     </ul>
                 </div>
 
                 <!--收藏的帳號-->
-                <div>
+                <div v-show="isFavorite">
                     <h2>收藏的帳號</h2>
                     <ul class="list-group">
                         <li class="list-group-item">
@@ -88,8 +81,6 @@
                         </li>
                     </ul>
                 </div>
-
-            </div>
         </div>
     </div>
 
@@ -104,12 +95,48 @@
     var vueApp = {
         data() {
             return {
-                //userAccount:sessionStorage.getItem("username"),
-                userAccount: "user5",
+                userAccount:sessionStorage.getItem("username"),
+                //userAccount: "user5",
+                myArti:[],
+                myRes:[],
+
+                //控制出現頁面
+                isFavorite:false,
+                isArti:false,
+                isResponse:false,
+
             };
         },
         methods: {
+            getmyArti: function () {
+                let _this = this;
+                _this.isArti = true;
+                _this.isResponse = false;
 
+                account = _this.userAccount;
+                axios.get(`https://localhost:7292/api/Platform/getMyArti/${account}`)
+                .then(result=>{
+                    _this.myArti = result.data;
+                })
+            },
+            getmyRes:function(){
+                let _this = this;
+                _this.isArti = false;
+                _this.isResponse = true;
+
+                account = _this.userAccount;
+                axios.get(`https://localhost:7292/api/Platform/getMyRes/${account}`)
+                    .then(result => {
+                        _this.myRes = result.data;
+                    })
+            },
+            delRes:function(id){
+                let _this = this;
+                axios.delete(`https://localhost:7292/api/Platform/delResponse/${id}`)
+                .then(result=>{
+                    _this.getmyRes();
+                })
+            },
 
         },
 

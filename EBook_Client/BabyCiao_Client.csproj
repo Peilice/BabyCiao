@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <Content Remove="Areas\LilyGArea\Views\Home\Detail.cshtml" />
-    <Content Remove="Views\Platform\MyArticle.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,7 +48,6 @@
     <None Include="Areas\Machplateform\Views\Shared\_Layout.cshtml" />
     <None Include="Areas\Machplateform\Views\Shared\_LoginPartial.cshtml" />
     <None Include="Areas\Machplateform\Views\Shared\_ValidationScriptsPartial.cshtml" />
-    <None Include="Views\Platform\MyArticle.cshtml" />
     <None Include="wwwroot\css\.DS_Store" />
     <None Include="wwwroot\fonts\.DS_Store" />
     <None Include="wwwroot\fonts\flaticon\font\Flaticon.svg" />
@@ -728,14 +726,6 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Views\Platform\MyArticle.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Views\Platform\MyArticle.cshtml" />
   </ItemGroup>
 
 </Project>

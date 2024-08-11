@@ -126,51 +126,55 @@
             },
             getType: function (e) {
                 let _this = this;
-                let gettype = "";
                 switch (e) {
                     case 1:
-                        gettype = "育兒大小事";
+                        sessionStorage.setItem("articleType", "育兒大小事");
+                        window.location.href = `https://localhost:7231/Platform/Article`;
                         break;
 
                     case 2:
-                        gettype = "好物分享";
+                        sessionStorage.setItem("articleType", "好物分享");
+                        window.location.href = `https://localhost:7231/Platform/Article`;
                         break;
                     case 3:
-                        gettype = "生活交流";
+                        sessionStorage.setItem("articleType", "生活交流");
+                        window.location.href = `https://localhost:7231/Platform/Article`;
                         break;
                     case 4:
-                        gettype = "親子旅遊";
+                        sessionStorage.setItem("articleType", "親子旅遊");
+                        window.location.href = `https://localhost:7231/Platform/Article`;
                         break;
 
                 }
-                axios.get(`https://localhost:7292/api/Platform/getArticle/${gettype}`)
-                    .then(response => {
-                        _this.Article = response.data;
-                        _this.type = response.data[0].postType;
-                    })
             },
             newResponse:function(id){
                 let _this = this;
                 let request = {};
+                if (_this.userAccount != null) {
+                    request.ArticleID = id;
+                    request.ResponseAccount = _this.userAccount;
+                    request.ResponseContent = _this.CompetitorContent;
 
-                if (_this.userAccount!=null){
-                request.ArticleID = id;
-                request.ResponseAccount = _this.userAccount;
-                request.ResponseContent = _this.CompetitorContent;
-
-                axios.post("https://localhost:7292/api/Platform/newResponse",request)
+                    axios.post("https://localhost:7292/api/Platform/newResponse",request)
                     .then(result => {
                         _this.getInfo();
                         _this.CompetitorContent = "";
                     })
                 }
                 else{
-                    alert("請先登入");
+                    alert("請先登入")
                 }
+                
                 
             },
             myArticle: function () {
-                window.location.href = `https://localhost:7231/Platform/MyArticle`;
+                let _this = this;
+                if (_this.userAccount != null) {
+                    window.location.href = `https://localhost:7231/Platform/MyArticle`;
+                }
+                else {
+                    alert("請先登入");
+                }
             },
 
         },

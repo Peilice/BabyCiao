@@ -29,3 +29,14 @@ public class Response_createDTO
     public string ResponseContent { get; set; }
 }
 
+public class Response_readDTO
+{
+    public int ArticleID { get; set; }
+    public string PostAccount { get; set; }
+    public string PostTitle { get; set; }
+    public string PostType { get; set; }
+    public DateOnly PostModifiedTime { get; set; }
+    public int ResponseID { get; set; }
+    public string ResponseAccount { get; set; }
+    public string ResponseContent { get; set; }
+}
