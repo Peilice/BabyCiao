@@ -746,6 +746,7 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Views\Platform\MyArticle.cshtml" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\andy_style.css" />
   </ItemGroup>
 
 </Project>

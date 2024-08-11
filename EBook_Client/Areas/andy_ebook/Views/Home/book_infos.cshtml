@@ -47,23 +47,32 @@
                                 </template>
                             </div>
                             <div class="col-8">
-                                <div class="border border-3 border-danger rounded p-2">
-                                    <template v-if="isEdit==true">
-                                        <div class="d-flex flex-row">
-                                        <p class="mb-1 me-2">緊急聯絡人 : </p><input type="text" class="form-control w-25" style="height:24px" v-model="datas.emergencyContact" />
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="border border-3 border-danger rounded p-2 col-9">
+                                            <template v-if="isEdit==true">
+                                                <div class="d-flex flex-row">
+                                                <p class="mb-1 me-2">緊急聯絡人 : </p><input type="text" class="form-control w-25" style="height:24px" v-model="datas.emergencyContact" />
+                                                </div>
+                                                <div class="d-flex flex-row">
+                                                    <p class="mb-1 me-2">連絡電話1 : </p><input type="text" class="form-control w-25" style="height:24px" v-model="datas.emergencyContactPhone1" />
+                                                </div>
+                                                <div class="d-flex flex-row">
+                                                    <p class="mb-0 me-2">連絡電話2 : </p><input type="text" class="form-control w-25" style="height:24px" v-model="datas.emergencyContactPhone2" />
+                                                </div>
+                                            </template>
+                                            <template v-else>
+                                                <p class="mb-1">緊急聯絡人 : {{datas.emergencyContact}}</p>
+                                                <p class="mb-1">連絡電話1 : {{datas.emergencyContactPhone1}}</p>
+                                                <p class="mb-0">連絡電話2 : {{datas.emergencyContactPhone2}}</p>
+                                            </template>
+                                   
                                         </div>
-                                        <div class="d-flex flex-row">
-                                            <p class="mb-1 me-2">連絡電話1 : </p><input type="text" class="form-control w-25" style="height:24px" v-model="datas.emergencyContactPhone1" />
+                                        <div class="col-3">
+                                            <h5 class="text-center">【QRcode】</h5>
+                                            <img class="w-100" id="qrcode"/>
                                         </div>
-                                        <div class="d-flex flex-row">
-                                            <p class="mb-0 me-2">連絡電話2 : </p><input type="text" class="form-control w-25" style="height:24px" v-model="datas.emergencyContactPhone2" />
-                                        </div>
-                                    </template>
-                                    <template v-else>
-                                        <p class="mb-1">緊急聯絡人 : {{datas.emergencyContact}}</p>
-                                        <p class="mb-1">連絡電話1 : {{datas.emergencyContactPhone1}}</p>
-                                        <p class="mb-0">連絡電話2 : {{datas.emergencyContactPhone2}}</p>
-                                    </template>
+                                    </div>
                                 </div>
                                 <div class="row mx-1 mt-3">
                                     <div class="col-4">
@@ -117,6 +126,7 @@
                                     
                                 </template>
                             </div>
+                            
                         </div>
                         <hr class="my-2">
                         <!-- 成長狀態detail start -->
@@ -585,12 +595,22 @@
                 previewPhoto: function (file) { 
                     let _this = this;
                     _this.readURL(file, $('#image'), $('#btn_update_base'));
+                },
+                getQRcode:function(){
+                    axios.get(`@Utility.SD.localHost_API/api/Andy_QRcode/${IdContactBook}`, {
+                        headers
+                    }).then(result => {
+                        let base64Image = result.data;
+                        $("#qrcode").attr("src", `data:image/png;base64,${base64Image}`);
+                    }).catch(err => {alert(err) });
                 }
             },
             mounted: function () {
                 let _this = this;
                 //alert('start')
                 _this.getBabyInfos();
+                _this.getQRcode();
+
                 //_this.getHealthInfos();
             }
         }

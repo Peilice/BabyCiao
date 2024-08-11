@@ -111,7 +111,10 @@
         let IdContactBook = sessionStorage.getItem("IdContactBook");
         let Diaper_datas = [];
         let oneWeekAgo = new Date();
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        oneWeekAgo.setHours(0);
+        oneWeekAgo.setMinutes(0);
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 6);
+        console.log(oneWeekAgo)
         const yesterday = new Date(now);
         yesterday.setDate(now.getDate() - 1);
         console.log(yesterday)
@@ -210,7 +213,7 @@
                     let datas = [];
                     for (var i = 0; i < Diaper_datas.length; i++) {
                         let date = new Date(Diaper_datas[i]);
-                        console.log('Date:', date); // 檢查日期格式
+                        //console.log('Date:', date); // 檢查日期格式
                         switch (date.getDay()) {
                             case 0:
                                 var data_detail0 = { x: date.getHours(), y: '星期日' };
@@ -233,22 +236,25 @@
                                 datas.push(data_detail4);
                                 break;
                             case 5:
-                                var data_detail5 = { x: date, y: '星期五' };
+                                var data_detail5 = { x: date.getHours(), y: '星期五' };
                                 datas.push(data_detail5);
                                 break;
                             case 6:
-                                var data_detail6 = { x: date, y: '星期六' };
+                                var data_detail6 = { x: date.getHours(), y: '星期六' };
                                 datas.push(data_detail6);
                                 break;
                         }
                     }
                     //console.log('Datas:', datas); // 檢查 datas 陣列
                    await _this.createChart3(datas);
-                    console.log('圖表產出1')
+                    //console.log('圖表產出1')
 
                 },
                 createChart3: function (datas) {
+                    let _this = this;
                     const ctx = document.getElementById('myChart3');
+                    let str_week_strart = _this.getDayName(oneWeekAgo);
+                    let str_week_end = _this.getDayName(new Date());
                     new Chart(ctx, {
                         type: 'bar',
                         data: {
@@ -313,12 +319,30 @@
                             plugins: {
                                 title: {
                                     display: true,
-                                    text: `${new Date(oneWeekAgo).getMonth() + 1}月${new Date(oneWeekAgo).getDate()}~${new Date().getMonth() + 1}月${new Date().getDate()}日`
+                                    text: `${new Date(oneWeekAgo).getMonth() + 1}月${new Date(oneWeekAgo).getDate()}(${str_week_strart})~${new Date().getMonth() + 1}月${new Date().getDate()}日(${str_week_end})`
                                 }
                             }
                             
                         }
                     });
+                },
+                getDayName: function (date) {
+                    switch (date.getDay()) {
+                        case 0:
+                            return "星期日";
+                        case 1:
+                            return "星期一";
+                        case 2:
+                            return "星期二";
+                        case 3:
+                            return "星期三";
+                        case 4:
+                            return "星期四";
+                        case 5:
+                            return "星期五";
+                        case 6:
+                            return "星期六";
+                    }
                 },
             },
             mounted:async function () {

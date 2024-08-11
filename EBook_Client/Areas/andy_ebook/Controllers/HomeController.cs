@@ -45,6 +45,11 @@ namespace BabyCiao_Client.Areas.andy_ebook.Controllers
             return View();
         }
 
+        public IActionResult QRcode()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
