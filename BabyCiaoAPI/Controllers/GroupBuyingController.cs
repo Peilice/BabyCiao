@@ -23,13 +23,13 @@ namespace BabyCiaoAPI.Controllers
         private readonly BabyciaoContext _context;
 
         private readonly ILogger<GroupBuyingController> _logger;
-        public GroupBuyingController(BabyciaoContext context,ILogger<GroupBuyingController> logger)
+        public GroupBuyingController(BabyciaoContext context, ILogger<GroupBuyingController> logger)
         {
             _context = context;
             _logger = logger;
         }
 
-        
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GBDTO>>> GetGroupBuyings()
         {
@@ -95,7 +95,7 @@ namespace BabyCiaoAPI.Controllers
                             IdGroupBuying = gbp.IdGroupBuying,
                             PhotoName = gbp.PhotoName,
                             ModifiedTime = gbp.ModifiedTime,
-                           
+
                         })
                         .ToList()
                 }).ToList();
@@ -272,8 +272,8 @@ namespace BabyCiaoAPI.Controllers
                 return NotFound();
             }
 
-            var order =await (from gb in _context.GroupBuyings
-                              where gb.Id == id
+            var order = await (from gb in _context.GroupBuyings
+                               where gb.Id == id
                                select new GBDTO
                                {
                                    Id = id,
@@ -306,18 +306,18 @@ namespace BabyCiaoAPI.Controllers
                                                          FormatType = of.FormatType,
                                                      }).ToList(),
                                }).FirstOrDefaultAsync();
-           
+
             if (order == null || !order.Display)
             {
-				return NotFound(new { message = "該商品不存在" });
-			}
+                return NotFound(new { message = "該商品不存在" });
+            }
 
             return Ok(order);
         }
 
-		//送出訂單
-		[HttpPost("SubmitOrder")]
-		public async Task<ActionResult<IEnumerable<GBOrderDTO>>> SubmitOrder([FromBody] GBOrderDTO model)
+        //送出訂單
+        [HttpPost("SubmitOrder")]
+        public async Task<ActionResult<IEnumerable<GBOrderDTO>>> SubmitOrder([FromBody] GBOrderDTO model)
         {
             if (model == null)
             {
@@ -325,11 +325,11 @@ namespace BabyCiaoAPI.Controllers
             }
             var order = new GroupBuyingDetail
             {
-                Id=model.Id,
-                GroupBuyingId=model.GroupBuyingId,
+                Id = model.Id,
+                GroupBuyingId = model.GroupBuyingId,
                 AccountUserAccount = model.UserAccount,
-                Address=model.Address,
-                Note=model.Note!=null? model.Note:"無",
+                Address = model.Address,
+                Note = model.Note != null ? model.Note : "無",
                 ModifiedTime = DateTime.Now,
                 Statement = "已參加",
             };
@@ -337,7 +337,7 @@ namespace BabyCiaoAPI.Controllers
             await _context.SaveChangesAsync();
             var newId = order.Id;
 
-            if (model.OrderFormats != null&& model.OrderFormats[0].FormatId!=0  )
+            if (model.OrderFormats != null && model.OrderFormats[0].FormatId != 0)
             {
                 foreach (var f in model.OrderFormats)
                 {
@@ -353,18 +353,18 @@ namespace BabyCiaoAPI.Controllers
             }
             else
             {
-                var singleFormat=new GroupBuyingDetailFormat
-				{
-					GroupBuyingDetailId = newId,
-					FormatId = null,
-					Quantity = model.OrderFormats[0].Quantity,
-				};
-				_context.GroupBuyingDetailFormats.Add(singleFormat);
-			await _context.SaveChangesAsync();
-			}
-		
-			return Ok(new { groupBuyingDetailId = newId });
-			
+                var singleFormat = new GroupBuyingDetailFormat
+                {
+                    GroupBuyingDetailId = newId,
+                    FormatId = null,
+                    Quantity = model.OrderFormats[0].Quantity,
+                };
+                _context.GroupBuyingDetailFormats.Add(singleFormat);
+                await _context.SaveChangesAsync();
+            }
+
+            return Ok(new { groupBuyingDetailId = newId });
+
 
         }
 
@@ -380,21 +380,21 @@ namespace BabyCiaoAPI.Controllers
 
             var myorders = await (from gbd in _context.GroupBuyingDetails
                                   join gb in _context.GroupBuyings on gbd.GroupBuyingId equals gb.Id
-                                 
-                                  where gbd.AccountUserAccount == user 
+
+                                  where gbd.AccountUserAccount == user
                                   select new GetOrderDTO
                                   {
                                       Id = gbd.Id,
                                       GroupBuyingId = gbd.GroupBuyingId,
-                                      ProductName=gb.ProductName,
+                                      ProductName = gb.ProductName,
                                       Address = gbd.Address,
                                       Note = gbd.Note == null ? "" : gbd.Note,
                                       JoinModifiedTime = gbd.ModifiedTime,
-									  JoinModifiedTimeView= gbd.ModifiedTime.ToString("G"),
+                                      JoinModifiedTimeView = gbd.ModifiedTime.ToString("G"),
                                       JoinStatement = gbd.Statement,
 
-                                      Price= gb.Price,
-                                      OrderPrice= (_context.GroupBuyingDetailFormats
+                                      Price = gb.Price,
+                                      OrderPrice = (_context.GroupBuyingDetailFormats
                     .Where(f => f.GroupBuyingDetailId == gbd.Id).Take(1)
                         .Select(gbdf => gbdf.Quantity))
                     .Sum() * gb.Price,
@@ -404,13 +404,14 @@ namespace BabyCiaoAPI.Controllers
                                                       from ft in formatsGroup.DefaultIfEmpty() // This performs the LEFT JOIN
                                                       where dt.GroupBuyingDetailId == gbd.Id
                                                       select new GetOrderFormatDTO
-                                                   {
-                                      OrderFormatId=dt.Id,                 GroupBuyingDetailId = gbd.Id,
-                                                       FormatType = ft.FormatType,
-                                                       FormatName = ft.FormatName,
-                                                       Quantity = dt.Quantity,
+                                                      {
+                                                          OrderFormatId = dt.Id,
+                                                          GroupBuyingDetailId = gbd.Id,
+                                                          FormatType = ft.FormatType,
+                                                          FormatName = ft.FormatName,
+                                                          Quantity = dt.Quantity,
 
-                                                   }).ToList(),
+                                                      }).ToList(),
 
                                   }).ToListAsync();
 
@@ -443,6 +444,27 @@ namespace BabyCiaoAPI.Controllers
         private bool GroupBuyingExists(int id)
         {
             return _context.GroupBuyings.Any(e => e.Id == id);
+        }
+
+        ////加到收藏/最愛
+        [HttpPost("AddFav")]
+        public async Task<ActionResult<IEnumerable<GroupBuyFavDTO>>> AddFav(int id, string user)
+        {
+            GroupBuyingFavorite fav = new GroupBuyingFavorite()
+            {
+                IdGroupBuying=id,
+                AccountUserAccount=user
+            };
+            try
+            {
+                _context.Add(fav);
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+            return NoContent();
         }
     }
 }

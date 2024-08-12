@@ -103,4 +103,16 @@ namespace BabyCiaoAPI.DTO
         [Display(Name = "上傳時間")]
         public DateTime ModifiedTime { get; set; }
     }
+	public class GroupBuyFavDTO
+	{
+		[Display(Name = "收藏編號")]
+		public int Id { get; set; }
+
+		[Display(Name = "商品編號")]
+		public int IdGroupBuying { get; set; }
+
+		[Display(Name = "帳號")]
+		public string UserName { get; set; } = null!;
+
+	}
 }
