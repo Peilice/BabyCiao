@@ -95,7 +95,7 @@
                 },
                 fetchOrders() {
                     const username = sessionStorage.getItem("username");
-                    axios.get(`https://localhost:7292/api/GroupBuying/MyOrders/${username}`)
+                    axios.get(`https://localhost:7292/api/SecondHand/MyOrders/${username}`)
                         .then(response => {
                             this.orders = response.data;
                             // 初始化 DataTables

@@ -45,7 +45,12 @@
 			font-size: 1.5rem; /* 增大字體大小（可根據需要調整） */
 		}
 
+		.icon-lg {
+			font-size: 1.5rem; /* 調整圖示大小 */
+			color: gray
+		}
 	</style>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
 <body>
 	<div id="indexApp" class="container">
@@ -57,10 +62,29 @@
 					<li class="breadcrumb-item active" aria-current="page">團購</li>
 				</ol>
 			</nav>
-			<div class="row" style="width:50%;margin-left:auto;margin-right:0">
+			<div class="row" style="width: 75%; margin-left: auto; margin-right: 0;">
+				<div class="col-md-6 d-flex align-items-center">
+					<div class="btn-group mb-3">
+						<button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+							排序方式
+						</button>
+						<ul class="dropdown-menu">
+							<li><a class="dropdown-item" href="#" @@click="sort('name')">按名稱排序</a></li>
+							<li><a class="dropdown-item" href="#" @@click="sort('modifiedTimeView')">按上傳時間排序</a></li>
+
+							@* <li><a class="dropdown-item" href="#" @@click="sort('price')">按價格排序</a></li> *@
+						</ul>
+					</div>
+				</div>
+				<div class="col-md-6 d-flex align-items-center mb-3">
+					<i class="bi bi-search me-2 icon-lg"></i>
+					<input type="text" class="form-control flex-grow-1" placeholder="請輸入篩選關鍵字" v-model="filter" @@keyup="filterProducts" />
+				</div>
+			</div>
+		@* 	<div class="row" style="width:50%;margin-left:auto;margin-right:0">
 				<label class="col-md-4 form-label">篩選關鍵字:</label>
 				<input type="text" class="col-md-8 form-control" placeholder="請輸入篩選關鍵字" v-model="filter" @@keyup="filterProducts" />
-			</div>
+			</div> *@
 		</div>
 		<!-- breadcrumb end -->
 
@@ -215,7 +239,9 @@
 									<div v-else>
 										<p>尚無進度</p>
 									</div>
-									<div class="d-flex justify-content-center">
+									<div class="d-flex justify-content-around">
+
+										<button class="btn btn-outline-danger" @@click="addFav(item.id)"> <i class="bi bi-suit-heart"></i></button>
 										<button class="btn btn-outline-success" @@click="showDetails(item.id)">詳細資訊</button>
 									</div>
 

@@ -129,7 +129,7 @@
 								<p>{{item.modifiedTimeView}}</p>
 								<p class="card-text d-flex justify-content-end">{{item.accountUserAccount}}</p>
 								<div class="d-flex justify-content-around">
-									<button @@click="editProduct(item)" class="btn btn-outline-primary">編輯</button>
+									<button @@click="editProduct(item.id)" class="btn btn-outline-primary">編輯</button>
 									<button @@click="confirmDelete(item.id)" class="btn btn-outline-danger">刪除</button>
 									<button class="btn btn-outline-secondary" @@click="showDetails(item.id)">詳細資訊</button>
 								</div>
@@ -141,7 +141,7 @@
 			</div>
 		</div>
 		<!-- 主內容區域end -->
-		<!-- 商品詳情模態框 -->
+		<!-- 商品詳情modal start -->
 		<div class="modal fade" data-bs-backdrop="static" id="productDetailsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 				<div class="modal-content">
@@ -186,9 +186,175 @@
 				</div>
 			</div>
 		</div>
+		<!-- 商品詳情modal end -->
+		<!-- 編輯modal start-->
+		<div class="modal fade" id="editProductModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="editProductModalLabel">編輯商品</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form v-on:submit.prevent="updateProduct(productDetails.id)">
+							<div class="form-group">
+								<label for="photoFiles"><strong>商品照片</strong></label>
+								<input type="file" id="fileInput" class="form-control" multiple @@change=fileInput />
 
-		<!-- create stard -->
-		<div class="modal fade" data-bs-backdrop="static" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+								<div id="preview-container" class="preview-container"></div>
+
+							</div>
+
+							<div class="form-group">
+								<label for="suppliesName"><strong>商品名稱</strong></label>
+								<input type="text" id="suppliesName" v-model="productDetails.suppliesName" class="form-control" required>
+								<div class="invalid-feedback" v-if="!productDetails.suppliesName">
+									此欄位必填!
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="suppliesDescription"><strong>商品敘述</strong></label>
+								<input type="text" id="suppliesDescription" class="form-control" v-model="productDetails.suppliesDescription" required>
+								<div class="invalid-feedback" v-if="!productDetails.suppliesDescription">
+									此欄位必填!
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="stockQuantity"><strong>物品數量</strong></label>
+								<input type="number" id="stockQuantity" v-model="productDetails.stockQuantity" class="form-control" min="1" required>
+								<div class="invalid-feedback" v-if="productDetails.stockQuantity <= 0">
+									數量必須大於零!
+								</div>
+							</div>
+
+							@* 分類start *@
+							<div class="form-group">
+								<label class="control-label">商品分類</label>
+								<select v-model="productDetails.type" id="productCategory" class="form-control" required>
+									<option value="" disabled selected>選擇商品分類</option>
+
+									<!-- 媽咪用品 -->
+									<optgroup label="媽咪用品">
+										<option value="孕婦裝">孕婦裝</option>
+										<option value="托腹帶/束腹帶">托腹帶/束腹帶</option>
+										<option value="孕哺內衣/內褲">孕哺內衣/內褲</option>
+										<option value="產後護理">產後護理</option>
+										<option value="哺乳用品">哺乳用品</option>
+										<option value="媽媽包">媽媽包</option>
+									</optgroup>
+
+									<!-- 寶寶用品 -->
+									<optgroup label="寶寶用品">
+										<option value="尿布">尿布</option>
+										<option value="奶瓶/奶嘴">奶瓶/奶嘴</option>
+										<option value="濕紙巾">濕紙巾</option>
+										<option value="嬰兒車">嬰兒車</option>
+									</optgroup>
+
+									<!-- 玩具 -->
+									<optgroup label="玩具">
+										<option value="益智玩具">益智玩具</option>
+										<option value="毛絨玩具">毛絨玩具</option>
+										<option value="積木">積木</option>
+									</optgroup>
+
+									<!-- 嬰兒服飾 -->
+									<optgroup label="嬰兒服飾">
+										<option value="衣物">衣物</option>
+										<option value="外套">外套</option>
+										<option value="鞋襪">鞋襪</option>
+										<option value="紗布巾/浴巾/口水巾">紗布巾/浴巾/口水巾</option>
+									</optgroup>
+
+									<!-- 奶粉和食品 -->
+									<optgroup label="奶粉和食品">
+										<option value="奶粉">奶粉</option>
+										<option value="嬰兒輔食">嬰兒輔食</option>
+										<option value="零食">零食</option>
+									</optgroup>
+
+									<!-- 洗護用品 -->
+									<optgroup label="洗護用品">
+										<option value="洗髮露">洗髮露</option>
+										<option value="沐浴露">沐浴露</option>
+										<option value="護膚品">護膚品</option>
+									</optgroup>
+
+									<!-- 電子產品 -->
+									<optgroup label="電子產品">
+										<option value="手機">手機</option>
+										<option value="平板">平板</option>
+										<option value="筆記型電腦">筆記型電腦</option>
+										<option value="桌上型電腦">桌上型電腦</option>
+										<option value="攝影器材">攝影器材</option>
+										<option value="電子配件">電子配件</option>
+									</optgroup>
+
+									<!-- 家居與生活用品 -->
+									<optgroup label="家居與生活用品">
+										<option value="家具">家具</option>
+										<option value="家用電器">家用電器</option>
+										<option value="廚房用品">廚房用品</option>
+										<option value="收納與整理">收納與整理</option>
+										<option value="清潔用品">清潔用品</option>
+										<option value="園藝用品">園藝用品</option>
+									</optgroup>
+
+									<!-- 服飾配件 -->
+									<optgroup label="服飾配件">
+										<option value="女裝">女裝</option>
+										<option value="男裝">男裝</option>
+										<option value="童裝">童裝</option>
+										<option value="鞋子">鞋子</option>
+										<option value="包包">包包</option>
+										<option value="飾品">飾品</option>
+									</optgroup>
+
+									<!-- 美容與保健 -->
+									<optgroup label="美容與保健">
+										<option value="化妝品">化妝品</option>
+										<option value="護膚品">護膚品</option>
+										<option value="保健食品">保健食品</option>
+										<option value="美髮用品">美髮用品</option>
+										<option value="美容儀器">美容儀器</option>
+									</optgroup>
+
+									<!-- 書籍與文具 -->
+									<optgroup label="書籍與文具">
+										<option value="書籍">書籍</option>
+										<option value="雜誌">雜誌</option>
+										<option value="文具">文具</option>
+									</optgroup>
+
+									<!-- 食品與飲料 -->
+									<optgroup label="食品與飲料">
+										<option value="零食">零食</option>
+										<option value="飲料">飲料</option>
+										<option value="罐頭食品">罐頭食品</option>
+										<option value="生鮮食品">生鮮食品</option>
+									</optgroup>
+								</select>
+								<div class="invalid-feedback" v-if="productDetails.type===''">
+									請選擇商品分類!
+								</div>
+							</div>
+							@* 分類end *@
+							<!-- 其他表單項目 -->
+							<div class="actions d-flex justify-content-end">
+								<button type="submit" class="btn btn-success mx-2">保存變更</button>
+								<button type="button" data-bs-dismiss="modal" class="btn btn-outline-secondary">返回</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 編輯modal end-->
+		<!-- 新增modal start -->
+		<div class="modal fade" data-bs-backdrop="static" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
 			<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -197,7 +363,7 @@
 					</div>
 					<div class="modal-body">
 						<form class="product-details needs-validation" novalidate v-on:submit.prevent="validateAndSubmit" enctype="multipart/form-data">
-							<h2>商品詳情</h2>
+							
 
 							<div class="form-group">
 								<label for="photoFiles"><strong>商品照片</strong></label>
@@ -234,14 +400,54 @@
 							@* 分類start *@
 							<div class="form-group">
 								<label class="control-label">商品分類</label>
-								<select v-model="productDetails.type" id="productCategory" class="form-control">
-									<option value="">選擇商品分類</option>
-									<!-- 母嬰與童裝 -->
-									<optgroup label="母嬰與童裝">
-										<option value="嬰兒服飾">嬰兒服飾</option>
-										<option value="童裝">童裝</option>
+								<select v-model="productDetails.type" id="productCategory" class="form-control"required>
+									<option value="" disabled selected>選擇商品分類</option>
+
+									<!-- 媽咪用品 -->
+									<optgroup label="媽咪用品">
+										<option value="孕婦裝">孕婦裝</option>
+										<option value="托腹帶/束腹帶">托腹帶/束腹帶</option>
+										<option value="孕哺內衣/內褲">孕哺內衣/內褲</option>
+										<option value="產後護理">產後護理</option>
+										<option value="哺乳用品">哺乳用品</option>
+										<option value="媽媽包">媽媽包</option>
+									</optgroup>
+
+									<!-- 寶寶用品 -->
+									<optgroup label="寶寶用品">
+										<option value="尿布">尿布</option>
+										<option value="奶瓶/奶嘴">奶瓶/奶嘴</option>
+										<option value="濕紙巾">濕紙巾</option>
 										<option value="嬰兒車">嬰兒車</option>
-										<option value="嬰兒用品">嬰兒用品</option>
+									</optgroup>
+
+									<!-- 玩具 -->
+									<optgroup label="玩具">
+										<option value="益智玩具">益智玩具</option>
+										<option value="毛絨玩具">毛絨玩具</option>
+										<option value="積木">積木</option>
+									</optgroup>
+
+									<!-- 嬰兒服飾 -->
+									<optgroup label="嬰兒服飾">
+										<option value="衣物">衣物</option>
+										<option value="外套">外套</option>
+										<option value="鞋襪">鞋襪</option>
+										<option value="紗布巾/浴巾/口水巾">紗布巾/浴巾/口水巾</option>
+									</optgroup>
+
+									<!-- 奶粉和食品 -->
+									<optgroup label="奶粉和食品">
+										<option value="奶粉">奶粉</option>
+										<option value="嬰兒輔食">嬰兒輔食</option>
+										<option value="零食">零食</option>
+									</optgroup>
+
+									<!-- 洗護用品 -->
+									<optgroup label="洗護用品">
+										<option value="洗髮露">洗髮露</option>
+										<option value="沐浴露">沐浴露</option>
+										<option value="護膚品">護膚品</option>
 									</optgroup>
 
 									<!-- 電子產品 -->
@@ -251,7 +457,6 @@
 										<option value="筆記型電腦">筆記型電腦</option>
 										<option value="桌上型電腦">桌上型電腦</option>
 										<option value="攝影器材">攝影器材</option>
-										<option value="智能穿戴裝置">智能穿戴裝置</option>
 										<option value="電子配件">電子配件</option>
 									</optgroup>
 
@@ -265,8 +470,8 @@
 										<option value="園藝用品">園藝用品</option>
 									</optgroup>
 
-									<!-- 時尚與配件 -->
-									<optgroup label="時尚與配件">
+									<!-- 服飾配件 -->
+									<optgroup label="服飾配件">
 										<option value="女裝">女裝</option>
 										<option value="男裝">男裝</option>
 										<option value="童裝">童裝</option>
@@ -283,30 +488,6 @@
 										<option value="美髮用品">美髮用品</option>
 										<option value="美容儀器">美容儀器</option>
 									</optgroup>
-
-									<!-- 運動與戶外用品 -->
-									<optgroup label="運動與戶外用品">
-										<option value="運動服裝">運動服裝</option>
-										<option value="健身器材">健身器材</option>
-										<option value="戶外裝備">戶外裝備</option>
-										<option value="自行車及配件">自行車及配件</option>
-									</optgroup>
-
-									<!-- 玩具與遊戲 -->
-									<optgroup label="玩具與遊戲">
-										<option value="玩具">玩具</option>
-										<option value="遊戲機">遊戲機</option>
-										<option value="遊戲配件">遊戲配件</option>
-									</optgroup>
-
-									<!-- 汽機車與配件 -->
-									<optgroup label="汽機車與配件">
-										<option value="汽車配件">汽車配件</option>
-										<option value="機車配件">機車配件</option>
-										<option value="車用電子產品">車用電子產品</option>
-									</optgroup>
-
-
 
 									<!-- 書籍與文具 -->
 									<optgroup label="書籍與文具">
@@ -339,42 +520,10 @@
 					</div>
 				</div>
 			</div>
-			<!-- create end -->
-			<!-- 編輯模態框 -->
-			<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="editProductModalLabel">編輯商品</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<form v-on:submit.prevent="updateProduct">
-								<div class="mb-3">
-									<label for="suppliesName" class="form-label">商品名稱</label>
-									<input type="text" class="form-control" id="suppliesName" v-model="productDetails.suppliesName" required>
-								</div>
-								<div class="mb-3">
-									<label for="suppliesDescription" class="form-label">商品描述</label>
-									<textarea class="form-control" id="suppliesDescription" v-model="productDetails.suppliesDescription" required></textarea>
-								</div>
-								<div class="mb-3">
-									<label for="stockQuantity" class="form-label">庫存數量</label>
-									<input type="number" class="form-control" id="stockQuantity" v-model="productDetails.stockQuantity" required>
-								</div>
-								<!-- 其他表單項目 -->
-								<button type="submit" class="btn btn-primary">保存變更</button>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-
-
-
-
 		</div>
+		<!-- 新增modal end -->
 
+	</div>
 
 
 		<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
@@ -449,6 +598,7 @@
 							this.sortOption = option;
 							this.getMyProducts();
 						},
+					
 						getMyProducts() {
 							// 根據 this.sortOption 進行排序操作
 							console.log(`排序方式: ${this.sortOption}`);
@@ -466,7 +616,7 @@
 							return photoUrl != null ? `https://localhost:7292/uploads/${photoUrl}` : 'https://localhost:7231/images/noimage.jpg';
 						},
 						showDetails(id) {
-							console.log(this.productDetails);
+							//console.log(this.productDetails);
 							axios.get(`https://localhost:7292/api/SecondHand/Detail?id=${id}`)
 								.then(response => {
 									this.productDetails = response.data;
@@ -533,6 +683,7 @@
 
 						},
 						createProduct() {
+						
 							$('#createModal').modal('show');
 						},
 
@@ -607,28 +758,37 @@
 								}
 							});
 						},
-						deleteItem(itemId) {
-							// 在這裡實現你的刪除邏輯
-							console.log('刪除項目 ID:', itemId);
-							// 例如：調用API刪除項目
-							axios.delete(`https://localhost:7292/api/SecondHand/${itemId}`)
-								.then(response => {
+					deleteItem(itemId) {
+						// 在這裡實現你的刪除邏輯
+						console.log('刪除項目 ID:', itemId);
+						// 例如：調用API刪除項目
+						axios.delete(`https://localhost:7292/api/SecondHand/${itemId}`)
+							.then(response => {
+								// 檢查是否有未處理的申請中訂單
+								if (response.data && response.data.requiresAttention) {
+									Swal.fire(
+										'刪除失敗！',
+										'此物品仍有申請中訂單未確認！請至交易清單查詢！',
+										'warning'
+									);
+								} else {
 									this.getMyProducts();
 									Swal.fire(
 										'刪除成功！',
 										'您的商品已被刪除。',
 										'success'
 									);
-								})
-								.catch(error => {
-									console.error("Error deleting item:", error);
-									Swal.fire(
-										'刪除失敗！',
-										'刪除過程中出現問題。',
-										'error'
-									);
-								});
-						},
+								}
+							})
+							.catch(error => {
+								console.error("Error deleting item:", error);
+								Swal.fire(
+									'刪除失敗！',
+									'刪除過程中出現問題。',
+									'error'
+								);
+							});
+					},
 						initializeSwiper() {
 							this.swiper = new Swiper('.swiper-container', {
 								loop: true,
@@ -642,30 +802,53 @@
 								}
 							});
 						},
-						editProduct(product) {
-							this.productDetails = 
+						editProduct(id) {
+						axios.get(`https://localhost:7292/api/SecondHand/Detail?id=${id}`)
+							.then(response => {
+								this.productDetails = response.data;
+								$('#editProductModal').modal('show');
+							})
+							.catch(error => {
+								console.error("Error fetching product details:", error);
+							});
 							
-							$('#editProductModal').modal('show');
 						},
-						updateProduct() {
-							axios.put(`https://localhost:7292/api/SecondHand/Update`, this.productDetails)
-								.then(response => {
-									this.getMyProducts();
-									$('#editProductModal').modal('hide');
-									Swal.fire(
-										'更新成功！',
-										'您的商品已被更新。',
-										'success'
-									);
-								})
-								.catch(error => {
-									console.error("Error updating item:", error);
-									Swal.fire(
-										'更新失敗！',
-										'更新過程中出現問題。',
-										'error'
-									);
-								});
+						updateProduct(id) {
+						// 創建一個 FormData 物件
+						let formData = new FormData();
+						formData.append('suppliesName', this.productDetails.suppliesName);
+						formData.append('suppliesDescription', this.productDetails.suppliesDescription);
+						formData.append('stockQuantity', this.productDetails.stockQuantity);
+						formData.append('type', this.productDetails.type);
+
+
+						// 將 photoFiles 添加到 formData
+						for (let i = 0; i < this.productDetails.photoFiles.length; i++) {
+							formData.append('photoFiles', this.productDetails.photoFiles[i]);
+						}
+
+						axios.put(`https://localhost:7292/api/SecondHand/${id}`, formData, {
+							headers: {
+								'Content-Type': 'multipart/form-data'
+							}
+						})
+							.then(response => {
+								this.getMyProducts();
+								$('#editProductModal').modal('hide');
+								Swal.fire(
+									'更新成功！',
+									'您的商品已被更新。',
+									'success'
+								);
+							})
+							.catch(error => {
+								console.error("Error updating item:", error);
+								Swal.fire(
+									'更新失敗！',
+									'更新過程中出現問題。',
+									'error'
+								);
+							});
 						}
 					}
 				});

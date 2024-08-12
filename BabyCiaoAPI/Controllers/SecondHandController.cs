@@ -49,10 +49,10 @@ namespace BabyCiaoAPI.Controllers
                                     Type = s.Type,
                                     Photo = p.PhotoName != null ? p.PhotoName : null,
                                 }).ToListAsync();
-            return Ok(result); ;
+            return Ok(result); 
         }
 
-        // GET: api/SecondHand
+        // GET: api/SecondHand/Filter
         [HttpPost("Filter")]
         public async Task<ActionResult<IEnumerable<SecondHandFilterDTO>>> Filter([FromBody] SecondHandFilterDTO model)
         {
@@ -81,13 +81,88 @@ namespace BabyCiaoAPI.Controllers
 
                 }).ToListAsync();
 
-                return Ok(result); ;
+                return Ok(result); 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred in FilterProducts");
                 return StatusCode(500, "An error occurred while processing your request.");
             }
+        }
+       
+        
+        // GET: api/SecondHand/Exchange
+        [HttpGet("Exchange")]
+        public async Task<ActionResult<IEnumerable<SecondHandExchangeDTO>>> Exchange(int id,string user)
+        {/////未完成
+            var result = await (from s in _context.SecondHandSupplies
+                                join p in _context.SuppliesPhotos on s.Id equals p.IdSecondHandSupplies into pp
+                                from p in pp.OrderBy(p => p.PhotoName).Take(1).DefaultIfEmpty()
+                                where s.Display == true
+                                select new SecondHandSuppliesDTO
+                                {
+                                    Id = s.Id,
+                                    AccountUserAccount = s.AccountUserAccount,
+                                    SuppliesName = s.SuppliesName,
+                                    ModifiedTimeView = s.ModifiedTime.ToString("yyyy-MM-dd"),
+
+                                    SuppliesDescription = s.SuppliesDescription,
+                                    StockQuantity = s.StockQuantity,
+                                    Type = s.Type,
+                                    Photo = p.PhotoName != null ? p.PhotoName : null,
+                                }).ToListAsync();
+            return Ok(result);
+        }
+        // Post: api/SecondHand/Exchange
+        [HttpPost("Exchange")]
+        public async Task<ActionResult<IEnumerable<SecondHandExchangeDTO>>> Exchange([FromBody] SecondHandExchangeDTO model)
+        {
+            try
+            {
+                var exchange = new SecondHandExchangeOrder
+                {
+                    BuyerId=model.BuyerId,
+                    SellerId=model.SellerId,
+                    WantGetId=model.WantGetId,
+                    GetQuantity = model.GetQuantity,
+                    WantGiveId = model.WantGiveId,
+                    GiveQuantity = model.GiveQuantity,
+                    ModifiedTime=DateTime.Now,
+                    Statement="申請中",
+                };
+                _context.SecondHandExchangeOrders.Add(exchange);
+                await _context.SaveChangesAsync();
+                //++++++++++++++
+                return Ok(exchange); ;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in FilterProducts");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
+
+        // GET: api/SecondHand
+        [HttpGet("MyOrders")]
+        public async Task<ActionResult<IEnumerable<SecondHandSuppliesDTO>>> MyOrders()
+        {//////未完成!! 未加入USER篩選
+            var result = await (from s in _context.SecondHandSupplies
+                                join p in _context.SuppliesPhotos on s.Id equals p.IdSecondHandSupplies into pp
+                                from p in pp.OrderBy(p => p.PhotoName).Take(1).DefaultIfEmpty()
+                                where s.Display == true
+                                select new SecondHandSuppliesDTO
+                                {
+                                    Id = s.Id,
+                                    AccountUserAccount = s.AccountUserAccount,
+                                    SuppliesName = s.SuppliesName,
+                                    ModifiedTimeView = s.ModifiedTime.ToString("yyyy-MM-dd"),
+
+                                    SuppliesDescription = s.SuppliesDescription,
+                                    StockQuantity = s.StockQuantity,
+                                    Type = s.Type,
+                                    Photo = p.PhotoName != null ? p.PhotoName : null,
+                                }).ToListAsync();
+            return Ok(result); ;
         }
         // GET: api/SecondHand
         [HttpGet("MyProducts")]
@@ -113,7 +188,7 @@ namespace BabyCiaoAPI.Controllers
         }
 
 
-        // GET: api/SecondHand
+        // GET: api/SecondHand/Detail
         [HttpGet("Detail")]
         public async Task<ActionResult<IEnumerable<SecondHandDetailDTO>>> GetDetail(int id)
         {
@@ -142,6 +217,9 @@ namespace BabyCiaoAPI.Controllers
                                 }).FirstOrDefaultAsync();
             return Ok(result); ;
         }
+
+
+        // GET: api/SecondHand/CreateProduct
         [HttpPost("CreateProduct")]
         public async Task<ActionResult> CreateProduct(
     [FromForm] string accountUserAccount,
@@ -150,7 +228,6 @@ namespace BabyCiaoAPI.Controllers
     [FromForm] int stockQuantity,
     [FromForm] string type,
     [FromForm] bool display,
-
     [FromForm] List<IFormFile> photoFiles)
         {
             var product = new SecondHandSupply
@@ -215,61 +292,88 @@ namespace BabyCiaoAPI.Controllers
 
             return Ok(new { Id = newId });
         }
-        //// GET: api/SecondHand/5
-        //[HttpGet("{id}")]
-        //      public async Task<ActionResult<SecondHandSupply>> GetSecondHandSupply(int id)
-        //      {
-        //          var secondHandSupply = await _context.SecondHandSupplies.FindAsync(id);
-
-        //          if (secondHandSupply == null)
-        //          {
-        //              return NotFound();
-        //          }
-
-        //          return secondHandSupply;
-        //      }
+    
 
         //      // PUT: api/SecondHand/5
-        //      // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //      [HttpPut("{id}")]
-        //      public async Task<IActionResult> PutSecondHandSupply(int id, SecondHandSupply secondHandSupply)
-        //      {
-        //          if (id != secondHandSupply.Id)
-        //          {
-        //              return BadRequest();
-        //          }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutSecondHandSupply(int id,
+    [FromForm] string suppliesName,
+    [FromForm] string suppliesDescription,
+    [FromForm] int stockQuantity,
+    [FromForm] string type,
+    [FromForm] List<IFormFile> photoFiles)
+        {///未完成!!!
+            var product = await _context.SecondHandSupplies.FindAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            // 更新產品資訊
+            product.SuppliesName = suppliesName;
+            product.SuppliesDescription = suppliesDescription;
+            product.StockQuantity = stockQuantity;
+            product.Type = type;
+            product.ModifiedTime = DateTime.Now;
 
-        //          _context.Entry(secondHandSupply).State = EntityState.Modified;
+            _context.SecondHandSupplies.Update(product);
+            await _context.SaveChangesAsync();
 
-        //          try
-        //          {
-        //              await _context.SaveChangesAsync();
-        //          }
-        //          catch (DbUpdateConcurrencyException)
-        //          {
-        //              if (!SecondHandSupplyExists(id))
-        //              {
-        //                  return NotFound();
-        //              }
-        //              else
-        //              {
-        //                  throw;
-        //              }
-        //          }
+            // 照片處理
+            try
+            {
 
-        //          return NoContent();
-        //      }
+                var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+                if (!Directory.Exists(uploadPath))
+                {
+                    Directory.CreateDirectory(uploadPath);
+                }
 
-        //      // POST: api/SecondHand
-        //      // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //      [HttpPost]
-        //      public async Task<ActionResult<SecondHandSupply>> PostSecondHandSupply(SecondHandSupply secondHandSupply)
-        //      {
-        //          _context.SecondHandSupplies.Add(secondHandSupply);
-        //          await _context.SaveChangesAsync();
+                // 刪除舊的照片（可選）
+                var existingPhotos = _context.SuppliesPhotos.Where(p => p.IdSecondHandSupplies == id).ToList();
+                foreach (var existingPhoto in existingPhotos)
+                {
+                    var existingPhotoPath = Path.Combine(uploadPath, existingPhoto.PhotoName);
+                    if (System.IO.File.Exists(existingPhotoPath))
+                    {
+                        System.IO.File.Delete(existingPhotoPath);
+                    }
+                    _context.SuppliesPhotos.Remove(existingPhoto);
+                }
 
-        //          return CreatedAtAction("GetSecondHandSupply", new { id = secondHandSupply.Id }, secondHandSupply);
-        //      }
+                // 儲存新的照片
+                if (photoFiles != null && photoFiles.Count > 0)
+                {
+                    foreach (var file in photoFiles)
+                    {
+                        var filePath = Path.Combine(uploadPath, file.FileName);
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+                        }
+
+                        var photo = new SuppliesPhoto
+                        {
+                            PhotoName = file.FileName,
+                            IdSecondHandSupplies = id,
+                            ModifiedTime = DateTime.Now.ToString("G"),
+                        };
+
+                        _context.SuppliesPhotos.Add(photo);
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                // 記錄錯誤
+                Console.WriteLine($"Error processing files: {ex.Message}");
+                return StatusCode(500, new { message = "Error processing files", details = ex.Message });
+            }
+
+            return Ok();
+        }
+
 
         // DELETE: api/SecondHand/5
         [HttpDelete("{id}")]
@@ -277,6 +381,16 @@ namespace BabyCiaoAPI.Controllers
         {
             var secondHandSupply = await _context.SecondHandSupplies.FindAsync(id);
             var photos = _context.SuppliesPhotos.Where(p => p.IdSecondHandSupplies == id).ToList();
+            var isExchange = _context.SecondHandExchangeOrders
+                  .Any(e => (e.WantGetId == id || e.WantGiveId == id) && e.Statement == "申請中");
+
+            if (isExchange)
+            {
+                // 如果有未處理的申請中訂單，返回一個狀態碼或消息
+                return Ok(new { requiresAttention = true });
+            }
+
+
             if (secondHandSupply == null)
             {
                 return NotFound();
@@ -296,9 +410,6 @@ namespace BabyCiaoAPI.Controllers
             return NoContent();
         }
 
-        private bool SecondHandSupplyExists(int id)
-        {
-            return _context.SecondHandSupplies.Any(e => e.Id == id);
-        }
+       
     }
 }
