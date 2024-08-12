@@ -14,29 +14,12 @@
     <script src="https://unpkg.com/vue@latest"></script>
     @await RenderSectionAsync("Styles", required: false)
 
-    <style>
-        body {
-            background-image: url('/images/giftly.png');
-            font-family: '華康采風體W3', serif;
-            font-size: 28px;
-        }
-
-        #nav {
-            background-color: #8babc6;
-            /* opacity: .8; */
-        }
-
-        /* #main {
-                    background-image: url(/images/backgroundimg.jpg);
-                } */
-    </style>
-
 </head>
 <body>
-    <header id="nav">
+    <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid" id="app00">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/babyciao文字圖.png" width="200" /></a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BabyCiao</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -60,24 +43,18 @@
                         <li class="nav-item">
                             <a id="e_book" class="nav-link text-dark" asp-area="andy_ebook" asp-controller="Home" asp-action="Index">電子聯絡簿</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">社群</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="LilyGArea" asp-controller="Home" asp-action="Index">團購商品</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="LilySArea" asp-controller="Home" asp-action="Index">二手物品</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Competitions" asp-action="Index">線上投票活動</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Platform" asp-action="Index">討論區</a>
-                                </li>
-                            </ul>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="LilyGArea" asp-controller="Home" asp-action="Index">團購商品</a>
                         </li>
-
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="LilySArea" asp-controller="Home" asp-action="Index">二手物品</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Competitions" asp-action="Index">線上投票活動</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Platform" asp-action="Index">討論區</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contact">聯絡我們</a>
                         </li>
@@ -88,17 +65,17 @@
             </div>
         </nav>
     </header>
-    <div class="container" id="main">
+    <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    @* <footer class="border-top footer text-muted">
-    <div class="container">
-    &copy; 2024 - test2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-    </div>
-    </footer> *@
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - test2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

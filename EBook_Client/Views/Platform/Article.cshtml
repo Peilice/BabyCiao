@@ -12,7 +12,7 @@
     <div class="d-flex justify-content-between">
     <!-- 側欄 -->
         <div class="col-2">
-            <button type="button" class="btn btn-outline-primary mb-4" v-on:click="">管理我的文章</button>
+            <button type="button" class="btn btn-outline-primary mb-4" v-on:click="myPost">管理我的文章</button>
             <div class="list-group">
                 <a v-on:click="getType(1)" class="list-group-item list-group-item-action">育兒大小事</a>
                 <a v-on:click="getType(2)" class="list-group-item list-group-item-action">好物分享</a>
@@ -74,7 +74,7 @@
                     </div>
                 </form>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary">取消</button>
+                    <button type="button" class="btn btn-secondary" v-on:click="cxlpost">取消</button>
                     <button type="submit" class="btn btn-primary" v-on:click="create" id="create" :disabled="!isChecked">確認發布</button>
                 </div>
             </div>
@@ -102,8 +102,8 @@
                 newContent:"",
 
                 //使用者帳號
-                //userAccount:sessionStorage.getItem("username"),
-                userAccount: "user5",
+                userAccount:sessionStorage.getItem("username"),
+                //userAccount: "user5",
 
             }
         },
@@ -144,9 +144,15 @@
                     })
             },
             showPost: function () {
-                let _this = this;
-                _this.isPost = true;
-                _this.isArticle = false;
+                    let _this = this;
+                if (_this.userAccount!=null) {
+                    _this.isPost = true;
+                    _this.isArticle = false;
+                }
+                else{
+                    alert("請先登入")
+                }
+                
             },
             create:function(){
                 let _this = this;
@@ -172,7 +178,33 @@
             getInfo: function (i) {
                 sessionStorage.setItem("PlatformID",i);
                 window.location.href = "https://localhost:7231/Platform/ArticleInfo";
-            }
+            },
+            myPost: function () {
+                let _this = this;
+                if (_this.userAccount != null) {
+                    window.location.href = `https://localhost:7231/Platform/MyArticle`;
+                }
+                else {
+                    alert("請先登入");
+                }
+            },
+            cxlpost:function(){
+
+                    let _this = this;
+                    _this.newtitle = "";
+                    _this.newContent = "";
+                
+                    _this.isPost = false;
+                    _this.isArticle = true;
+                    gettype = _this.type;
+                    axios.get(`https://localhost:7292/api/Platform/getArticle/${gettype}`)
+                    .then(response => {
+                        _this.Article = response.data;
+                        _this.type = response.data[0].postType;
+                    })
+                
+            },
+
         },
         mounted:function(){
             let _this = this;

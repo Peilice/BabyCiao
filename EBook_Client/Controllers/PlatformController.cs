@@ -11,7 +11,7 @@ namespace BabyCiao_Client.Controllers
             return View();
         }
 
-        // GET: Platform/Details/5
+        // GET: Platform/Article
         public ActionResult Article()
         {
             return View();

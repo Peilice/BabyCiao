@@ -30,7 +30,8 @@ namespace BabyCiaoAPI.Controllers
         {
             var Competition = await (from com in _context.OnlineCompetitions
                                      join comp in _context.CompetitionPhotos
-                                     on com.Id equals comp.IdOnlineCompetition
+                                     on com.Id equals comp.IdOnlineCompetition into comps
+                                     from subcomp in comps.DefaultIfEmpty()
                                      select new OnlineCompetitionsDTO
                                      {
                                          Id = com.Id,
@@ -39,7 +40,7 @@ namespace BabyCiaoAPI.Controllers
                                          StartTime = com.StartTime,
                                          EndTime = com.EndTime,
                                          Statement = com.Statement,
-                                         CompetitionPhotoNames = comp.PhotoName,
+                                         CompetitionPhotoNames = subcomp != null ? subcomp.PhotoName : null,
                                      }).ToListAsync();
             List<int> ids= new List<int>();
             foreach(var i in Competition)
