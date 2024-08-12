@@ -141,7 +141,7 @@
 			</div>
 		</div>
 		<!-- 主內容區域end -->
-		<!-- 商品詳情模態框start -->
+		<!-- 商品詳情modal start -->
 		<div class="modal fade" data-bs-backdrop="static" id="productDetailsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 				<div class="modal-content">
@@ -186,8 +186,8 @@
 				</div>
 			</div>
 		</div>
-		<!-- 商品詳情模態框end -->
-		<!-- 編輯模態框 start-->
+		<!-- 商品詳情modal end -->
+		<!-- 編輯modal start-->
 		<div class="modal fade" id="editProductModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 				<div class="modal-content">
@@ -352,9 +352,9 @@
 			</div>
 		</div>
 
-		<!-- 編輯模態框 end-->
-		<!-- create stard -->
-		<div class="modal fade" data-bs-backdrop="static" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<!-- 編輯modal end-->
+		<!-- 新增modal start -->
+		<div class="modal fade" data-bs-backdrop="static" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
 			<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -521,7 +521,7 @@
 				</div>
 			</div>
 		</div>
-			<!-- create end -->
+		<!-- 新增modal end -->
 
 	</div>
 
@@ -598,6 +598,7 @@
 							this.sortOption = option;
 							this.getMyProducts();
 						},
+					
 						getMyProducts() {
 							// 根據 this.sortOption 進行排序操作
 							console.log(`排序方式: ${this.sortOption}`);
@@ -682,6 +683,7 @@
 
 						},
 						createProduct() {
+						
 							$('#createModal').modal('show');
 						},
 

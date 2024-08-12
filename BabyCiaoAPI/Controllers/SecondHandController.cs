@@ -321,6 +321,7 @@ namespace BabyCiaoAPI.Controllers
             // 照片處理
             try
             {
+
                 var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
                 if (!Directory.Exists(uploadPath))
                 {
