@@ -23,3 +23,12 @@ public class Platform_createDTO
 
 }
 
+
+public class Platform_readDTO
+{
+    public int ArticleID { get; set; }
+    public string PostAccount { get; set; }
+    public string PostTitle { get; set; }
+    public string PostType { get; set; }
+    public DateOnly PostModifiedTime { get; set; }
+}
