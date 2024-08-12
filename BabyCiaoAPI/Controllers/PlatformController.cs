@@ -273,5 +273,34 @@ namespace BabyCiaoAPI.Controllers
         }
 
 
+        //刪除個人文章
+        //Delete api/Platform/delArticle/{id}
+        [HttpDelete("delArticle/{id}")]
+        public async Task<string> delArticle(int id)
+        {
+            if (id != 0)
+            {
+                //需要先刪除文章底下的回應，才能刪除文章
+                var delRes = _context.PlatformResponses.Where(c => c.IdPlatform == id).ToList();
+                //將查詢出來的結果遍歷做刪除的動作
+                foreach (var item in delRes)
+                {
+                _context.PlatformResponses.Remove(item);
+                }
+                await _context.SaveChangesAsync();
+
+                //刪除文章
+                var delArti=_context.Platforms.Find(id);
+                _context.Platforms.Remove(delArti);
+                await _context.SaveChangesAsync();
+                return "刪除成功";
+            }
+            else
+            {
+                return "刪除失敗";
+            }
+            
+        }
+
     }
 }
