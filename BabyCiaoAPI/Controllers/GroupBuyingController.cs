@@ -124,10 +124,20 @@ namespace BabyCiaoAPI.Controllers
 		//篩選商品
 		//POST:api/GroupBuying/Filter
 		[HttpPost("Filter")]
-		public async Task<ActionResult<IEnumerable<GBFilterDTO>>> FilterProducts([FromBody] GBFilterDTO model)
+		public async Task<ActionResult<IEnumerable<GBFilterDTO>>> FilterProducts([FromBody] GBFilterDTO model, string? userAccount)
 		{
 			try
 			{
+				List<int> userFavorites = new List<int>();
+
+				if (!string.IsNullOrEmpty(userAccount))
+				{
+					// 獲取用戶的最愛商品
+					userFavorites = await _context.GroupBuyingFavorites
+						.Where(fav => fav.AccountUserAccount == userAccount)
+						.Select(fav => fav.IdGroupBuying)
+						.ToListAsync();
+				}
 				var query = _context.GroupBuyings
 					.Where(gb => gb.Display &&
 								 ((model.Id == 0 || gb.Id == model.Id) ||
@@ -148,7 +158,8 @@ namespace BabyCiaoAPI.Controllers
 							.Where(p => p.IdGroupBuying == gb.Id)
 							.OrderBy(p => p.PhotoName)
 							.Select(p => p.PhotoName)
-							.FirstOrDefault()
+							.FirstOrDefault(),
+							IsFavorite = userFavorites.Contains(gb.Id)
 					})
 					.ToListAsync();
 

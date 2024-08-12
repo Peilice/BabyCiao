@@ -33,7 +33,7 @@
 
 
 		.swiper-button-prev, .swiper-button-next, .swiper-pagination {
-			color: white;
+			color: papayawhip;
 		}
 
 		.swiper-pagination-bullet-active {
@@ -81,7 +81,7 @@
 				</div>
 				<div class="col-md-6 d-flex align-items-center mb-3">
 					<i class="bi bi-search me-2 icon-lg"></i>
-					<input type="text" class="form-control flex-grow-1" placeholder="請輸入篩選關鍵字" v-model="filter" @@keyup="filterProducts" />
+					<input type="text" class="form-control flex-grow-1" placeholder="請輸入篩選關鍵字" v-model="filter" @@keyup="filterProducts(u_name)" />
 				</div>
 			</div>
 			@* 	<div class="row" style="width:50%;margin-left:auto;margin-right:0">
@@ -394,12 +394,12 @@
 				getProductFormats(x) {
 					return x != null ? `https://localhost:7000/uploads/${photoUrl}` : 'https://localhost:7000/img/noImage.jpg';
 				},
-				filterProducts() {
+				filterProducts(user) {
 					let _this = this;
 					var request = {};
 					request.id = isNaN(Number(_this.filter)) ? -1 : Number(_this.filter);
 					request.productName = request.productDescription = _this.filter;
-					axios.post('https://localhost:7292/api/GroupBuying/Filter', request)
+					axios.post(`https://localhost:7292/api/GroupBuying/Filter?userAccount=${user}`, request)
 						.then(response => {
 							_this.groupBuyings = response.data;
 						})
@@ -412,7 +412,7 @@
 					var request = {};
 					request.id = isNaN(Number(_this.filter)) ? -1 : Number(_this.filter);
 					request.productName = request.productType = request.productDescription = x;
-					axios.post('https://localhost:7292/api/GroupBuying/Filter', request)
+					axios.post(`https://localhost:7292/api/GroupBuying/Filter?userAccount=${sessionStorage.getItem("username")}`, request)
 						.then(response => {
 							_this.groupBuyings = response.data;
 						})

@@ -89,8 +89,9 @@ namespace BabyCiaoAPI.DTO
         public int Price { get; set; }//$$
 
         public string? photoUrl { get; set; }
+		public bool IsFavorite { get; set; }
 
-    }
+	}
     public class GroupBuyPhotoDTO
     {
         [Display(Name = "照片編號")]
