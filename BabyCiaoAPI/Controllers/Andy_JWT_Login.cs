@@ -8,6 +8,8 @@ using System.Security.Claims;
 using System.Text;
 using BabyCiaoAPI.Models;
 using BabyCiaoAPI.DTO;
+using System.Security.Principal;
+using System.Runtime.Intrinsics.X86;
 
 namespace BabyCiaoAPI.Controllers
 {
@@ -35,6 +37,51 @@ namespace BabyCiaoAPI.Controllers
         }
 
 
+        [HttpPost("Register_step1")]
+        public async Task<ActionResult<string>> Register_step1(andy_register1_DTO DTO)
+        {
+            bool checkAccount = _context.UserAccounts.Where(u=>u.Account== DTO.Account).Any();
+
+            if (checkAccount)
+            {
+                return "已有此帳號，請填寫其他帳號名稱";
+            }
+            if (DTO.Password != DTO.ConfirmPassword)
+            {
+                 
+                return "密碼錯誤，請確認密碼輸入是否一致";
+            }
+
+
+            return "此帳號可使用";
+        }
+        [HttpPost("Register_step2")]
+        public async Task<ActionResult<string>> Register_step2(andy_register2_DTO DTO)
+        {
+            //將使用者密碼加密
+            string code = BCrypt.Net.BCrypt.EnhancedHashPassword(DTO.Password, 13);
+            Console.WriteLine(code.Length);
+            UserAccount userAccount = new UserAccount();
+            userAccount.Account = DTO.AccountUser;
+            userAccount.Password = code;
+            _context.Add(userAccount);
+            await _context.SaveChangesAsync();
+
+            UserInformation userInfos = new UserInformation();
+            userInfos.Email = DTO.Email;
+            userInfos.UserFirstName = DTO.UserFirstName;
+            userInfos.UserLastName = DTO.UserLastName;
+            userInfos.Nickname = DTO.Nickname;
+            userInfos.Phone = DTO.Phone;
+            userInfos.Address = DTO.Address;
+            userInfos.Gender = DTO.Gender;
+            userInfos.Birthday = DTO.Birthday;
+            userInfos.AccountUser=DTO.AccountUser;
+            _context.Add(userInfos);
+            await _context.SaveChangesAsync();
+
+            return "註冊完成";
+        }
         //post:api/Home/
         //建立token
         [HttpPost]

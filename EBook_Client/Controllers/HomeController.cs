@@ -34,7 +34,10 @@ namespace BabyCiao_Client.Controllers
             return View();
         }
 
-
+        public IActionResult Register()
+        {
+            return View();
+        }
 
 
         //[Route("Home/GetUserName")]
