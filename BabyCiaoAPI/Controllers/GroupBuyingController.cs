@@ -460,7 +460,7 @@ namespace BabyCiaoAPI.Controllers
         //我的最愛
         // GET: api/GroupBuying/5
         [HttpGet("MyFavorite/{user}")]
-        public async Task<ActionResult<GetOrderDTO>> MyFavorite(string user)
+        public async Task<ActionResult<GroupBuyGetFavDTO>> MyFavorite(string user)
         {
             if (user == null)
             {
@@ -472,6 +472,7 @@ namespace BabyCiaoAPI.Controllers
                                   where myf.AccountUserAccount == user
                                   select new GroupBuyGetFavDTO
                                   {
+									  Id= myf.Id,
                                      IdGroupBuying=myf.IdGroupBuying,
 									 UserName=user,
 									 ProductName=gb.ProductName,
@@ -481,7 +482,7 @@ namespace BabyCiaoAPI.Controllers
 
             if (myfavs == null)
             {
-                return NotFound(new { message = "查無訂單" });
+                return NotFound(new { message = "尚無已加入之最愛商品" });
             }
 
             return Ok(myfavs);

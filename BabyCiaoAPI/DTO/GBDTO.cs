@@ -120,6 +120,9 @@ namespace BabyCiaoAPI.DTO
     public class GroupBuyGetFavDTO
     {
 
+
+        [Display(Name = "最愛編號")]
+        public int Id { get; set; }
         [Display(Name = "商品編號")]
         public int IdGroupBuying { get; set; }
 

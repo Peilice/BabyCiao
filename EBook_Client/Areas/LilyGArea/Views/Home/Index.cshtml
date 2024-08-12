@@ -15,13 +15,7 @@
 			border: none; /* 去掉邊框 */
 		}
 
-		.swiper-container {
-			position: relative;
-			width: 100%;
-			height: 300px; /* 設定合適的高度 */
-			overflow: hidden; /* 隱藏任何超出範圍的內容 */
-			margin-bottom: 20px; /* Swiper 和下方 p 元素的間距 */
-		}
+		
 
 		.card-img-top, .swiper-slide img {
 			width: 100%; /* 確保圖片寬度填滿容器 */
@@ -29,7 +23,13 @@
 			object-fit: cover; /* 確保圖片填滿容器，超出部分裁剪 */
 		}
 
-
+		.swiper-container {
+			position: relative;
+			width: 100%;
+			height: 300px; /* 設定合適的高度 */
+			overflow: hidden; /* 隱藏任何超出範圍的內容 */
+			margin-bottom: 20px; /* Swiper 和下方 p 元素的間距 */
+		}
 
 
 		.swiper-button-prev, .swiper-button-next, .swiper-pagination {
@@ -67,7 +67,7 @@
 			</nav>
 			<div class="row" style="width: 75%; margin-left: auto; margin-right: 0;">
 				<div class="col-md-6 d-flex align-items-center">
-					<div class="btn-group mb-3">
+					@* <div class="btn-group mb-3">
 						<button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
 							排序方式
 						</button>
@@ -75,9 +75,9 @@
 							<li><a class="dropdown-item" href="#" @@click="sort('name')">按名稱排序</a></li>
 							<li><a class="dropdown-item" href="#" @@click="sort('modifiedTimeView')">按上傳時間排序</a></li>
 
-							@* <li><a class="dropdown-item" href="#" @@click="sort('price')">按價格排序</a></li> *@
+							 <li><a class="dropdown-item" href="#" @@click="sort('price')">按價格排序</a></li> 
 						</ul>
-					</div>
+					</div> *@
 				</div>
 				<div class="col-md-6 d-flex align-items-center mb-3">
 					<i class="bi bi-search me-2 icon-lg"></i>
@@ -334,11 +334,13 @@
 					groupBuyings: [],
 					filter: "",
 					productDetails: {},
-					isLoggedIn: false
+					isLoggedIn: false,
+					myFav:[]
 				};
 			},
 			created() {
 				this.fetchGroupBuyings(sessionStorage.getItem("username"));
+				
 			},
 			mounted() {
 				this.$nextTick(() => {
@@ -359,6 +361,7 @@
 
 			},
 			methods: {
+				
 				fetchGroupBuyings(user) {
 
 					const url = `https://localhost:7292/api/GroupBuying?userAccount=${user}`;

@@ -114,32 +114,40 @@
                 class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
             我的訂單
         </button>
-			<button @@click="myFav(loggedInUsername)" href="#CartOffcanvas" data-bs-toggle="offcanvas" aria-controls="offcanvas"
+            <button @@click="getMyFav(loggedInUsername)" href="#CartOffcanvas" data-bs-toggle="offcanvas" aria-controls="offcanvas"
 					class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
                 我的最愛
             </button>
     </div>
 
         <!-- 浮在頁面的按鈕 end -->
-    </div>
-    <!-- offcanvas start -->
+        <!-- offcanvas start -->
 
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="CartOffcanvas" aria-labelledby="CartOffcanvasLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasExampleLabel">我的最愛</h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div>
-                空
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="CartOffcanvas" aria-labelledby="CartOffcanvasLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">我的最愛</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-            <div class="dropdown mt-3">
-                <a class="btn btn-outline-success" href="./product-list.html">參加團購</a>
-                <a class="btn btn-success" data-bs-dismiss="offcanvas" aria-label="Close">返回</a>
+            <div class="offcanvas-body">
+                <div>
+                    <div v-for="item in myFavs" :key="item.id">
+                        <ul class="list-unstyled">
+                            <li class="d-flex justify-content-between align-items-center">
+                                <strong>{{item.productName}}</strong><span>${{item.price}}</span>
+                                <button @@click="joinGB(item.idGroupBuying)" class="btn btn-outline-success">參加</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="dropdown mt-3">
+                    
+                    <a class="btn btn-secondary" data-bs-dismiss="offcanvas" aria-label="Close">返回</a>
+                </div>
             </div>
         </div>
+        <!-- offcanvas end -->
     </div>
-    <!-- offcanvas end -->
+    
 
     <div class="container">
         <main role="main" class="pb-3">
@@ -166,15 +174,47 @@
                     disableCheck: true,
                     isLoggedIn: false,
                     loggedInUsername: "",
-                    myFav:[],
+                    myFavs:[],
                     baseAddress_API: "@Utility.SD.localHost_API",
                     baseAddress_client: "@Utility.SD.localHost_Client",
                 }
             },
             mounted() {
                 this.checkLoginStatus();
+                
             },
             methods: {
+                async getMyFav(x) {
+                    //alert("LAYOUT");
+                    const url = `https://localhost:7292/api/GroupBuying/MyFavorite/${sessionStorage.getItem("username")}`;
+                    await axios.get(url)
+                        .then(response => {
+                            this.myFavs = response.data;
+                        })
+                        .catch(error => {
+                            console.error("Error fetching data:", error);
+                        });
+
+                },
+                async joinGB(productId) {
+                    try {
+
+                        if (sessionStorage.getItem("username") != null) {
+                            const response = await axios.post(`/GroupBuying/Home/Order`, {
+                                id: productId
+                            });
+                            if (response.status === 200) {
+                                window.location.href = `/GroupBuying/Home/Order?id=${productId}`;
+                            }
+                        }
+                        else {
+                            alert("請先登入以繼續操作。");
+                        }
+
+                    } catch (error) {
+                        console.error('Error joining group buy:', error);
+                    }
+                },
                 checkLoginStatus() {
                     const username = sessionStorage.getItem("username");
                     if (username) {
@@ -247,18 +287,7 @@
                         console.error('Error get my orders:', error);
                     }
                 },
-                async myFav(username) {
-                    //console.log('myOrders', username);
-                    try {
-                        //alert('myOrders~', username);
-                        const response = await axios.get(`/GroupBuying/Home/MyFavorite`, { user: username });
-                        if (response.status === 200) {
-                            window.location.href = `/GroupBuying/Home/MyFavorite/${username}`;
-                        }
-                    } catch (error) {
-                        console.error('Error get my favorite:', error);
-                    }
-                },
+
 
             }
         });
