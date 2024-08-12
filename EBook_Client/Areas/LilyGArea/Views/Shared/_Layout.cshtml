@@ -105,7 +105,7 @@
             </div>
         </nav>
     </header>
-        <!-- 浮在頁面的按鈕 start -->
+        <!-- Lily浮在頁面的按鈕 start -->
     <a 
            class="bg-success bg-opacity-75 text-white position-fixed bottom-0 end-0 p-2 text-decoration-none m-3 border border-1" onclick="scrollToTop()">PAGETOP</a>
 
@@ -114,15 +114,32 @@
                 class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
             我的訂單
         </button>
-            <button @@click="myFav(loggedInUsername)"
-                    class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
+			<button @@click="myFav(loggedInUsername)" href="#CartOffcanvas" data-bs-toggle="offcanvas" aria-controls="offcanvas"
+					class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
                 我的最愛
             </button>
     </div>
 
         <!-- 浮在頁面的按鈕 end -->
     </div>
+    <!-- offcanvas start -->
 
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="CartOffcanvas" aria-labelledby="CartOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">我的最愛</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div>
+                空
+            </div>
+            <div class="dropdown mt-3">
+                <a class="btn btn-outline-success" href="./product-list.html">參加團購</a>
+                <a class="btn btn-success" data-bs-dismiss="offcanvas" aria-label="Close">返回</a>
+            </div>
+        </div>
+    </div>
+    <!-- offcanvas end -->
 
     <div class="container">
         <main role="main" class="pb-3">
@@ -149,6 +166,7 @@
                     disableCheck: true,
                     isLoggedIn: false,
                     loggedInUsername: "",
+                    myFav:[],
                     baseAddress_API: "@Utility.SD.localHost_API",
                     baseAddress_client: "@Utility.SD.localHost_Client",
                 }
@@ -220,7 +238,7 @@
                 async myOrders(username) {
                     //console.log('myOrders', username);
                     try {
-                        //alert('myOrders~', username);
+                       // alert('myOrders~', username);
                         const response = await axios.post(`/GroupBuying/Home/MyOrders`, { user: username });
                         if (response.status === 200) {
                             window.location.href = `/GroupBuying/Home/MyOrders/${username}`;
@@ -233,7 +251,7 @@
                     //console.log('myOrders', username);
                     try {
                         //alert('myOrders~', username);
-                        const response = await axios.post(`/GroupBuying/Home/MyFavorite`, { user: username });
+                        const response = await axios.get(`/GroupBuying/Home/MyFavorite`, { user: username });
                         if (response.status === 200) {
                             window.location.href = `/GroupBuying/Home/MyFavorite/${username}`;
                         }

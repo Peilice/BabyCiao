@@ -49,6 +49,9 @@
 			font-size: 1.5rem; /* 調整圖示大小 */
 			color: gray
 		}
+		/* 	.fav{
+							background-color: #FFB5B5
+						} */
 	</style>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
@@ -81,9 +84,9 @@
 					<input type="text" class="form-control flex-grow-1" placeholder="請輸入篩選關鍵字" v-model="filter" @@keyup="filterProducts" />
 				</div>
 			</div>
-		@* 	<div class="row" style="width:50%;margin-left:auto;margin-right:0">
-				<label class="col-md-4 form-label">篩選關鍵字:</label>
-				<input type="text" class="col-md-8 form-control" placeholder="請輸入篩選關鍵字" v-model="filter" @@keyup="filterProducts" />
+			@* 	<div class="row" style="width:50%;margin-left:auto;margin-right:0">
+			<label class="col-md-4 form-label">篩選關鍵字:</label>
+			<input type="text" class="col-md-8 form-control" placeholder="請輸入篩選關鍵字" v-model="filter" @@keyup="filterProducts" />
 			</div> *@
 		</div>
 		<!-- breadcrumb end -->
@@ -239,12 +242,18 @@
 									<div v-else>
 										<p>尚無進度</p>
 									</div>
-									<div class="d-flex justify-content-around">
-
-										<button class="btn btn-outline-danger" @@click="addFav(item.id)"> <i class="bi bi-suit-heart"></i></button>
+									<div class="d-flex justify-content-around" v-if="item.isFavorite">
+										<button class="btn btn-danger rounded-circle fav" v-if="u_name" @@click="addFav(item.id,u_name,item.isFavorite)">
+											<i class="bi bi-suit-heart"></i>
+										</button>
 										<button class="btn btn-outline-success" @@click="showDetails(item.id)">詳細資訊</button>
 									</div>
-
+									<div class="d-flex justify-content-around" v-else="">
+										<button class="btn btn-outline-danger rounded-circle fav" v-if="u_name" @@click="addFav(item.id,u_name,item.isFavorite)">
+											<i class="bi bi-suit-heart"></i>
+										</button>
+										<button class="btn btn-outline-success" @@click="showDetails(item.id)">詳細資訊</button>
+									</div>
 
 								</div>
 							</div>
@@ -297,7 +306,7 @@
 									<p>截止日期：{{ productDetails.deadTime }}</p>
 								</div>
 								<div class="modal-footer">
-									
+
 									<button @@click="joinGroupBuy(productDetails.id)" class="btn btn-success">參加</button>
 									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
 								</div>
@@ -321,6 +330,7 @@
 		var vueApp2 = {
 			data() {
 				return {
+					u_name: sessionStorage.getItem("username"),
 					groupBuyings: [],
 					filter: "",
 					productDetails: {},
@@ -328,7 +338,7 @@
 				};
 			},
 			created() {
-				this.fetchGroupBuyings();
+				this.fetchGroupBuyings(sessionStorage.getItem("username"));
 			},
 			mounted() {
 				this.$nextTick(() => {
@@ -346,18 +356,34 @@
 						});
 					}
 				});
-				
+
 			},
 			methods: {
-				fetchGroupBuyings() {
-					axios.get('https://localhost:7292/api/GroupBuying')
+				fetchGroupBuyings(user) {
+
+					const url = `https://localhost:7292/api/GroupBuying?userAccount=${user}`;
+					axios.get(url)
 						.then(response => {
-							this.groupBuyings = response.data.filter(item => item.display);
-							//progress: item.progress ?? 0 // 確保 progress 屬性存在
+							this.groupBuyings = response.data.map(item => ({
+								...item,
+								display: item.display,
+								progress: item.progress ?? 0, // 確保 progress 屬性存在
+								isFavorite: item.isFavorite // 確保 isFavorite 屬性存在
+							}));
 						})
 						.catch(error => {
 							console.error("Error fetching data:", error);
 						});
+
+					// axios.get('https://localhost:7292/api/GroupBuying')
+					// 	.then(response => {
+					// 		this.groupBuyings = response.data.filter(item => item.display);
+
+					// 		//progress: item.progress ?? 0 // 確保 progress 屬性存在
+					// 	})
+					// 	.catch(error => {
+					// 		console.error("Error fetching data:", error);
+					// 	});
 				},
 				getPhotoUrl(photoUrl) {
 					return photoUrl != null ? `https://localhost:7000/uploads/${photoUrl}` : 'https://localhost:7000/img/noImage.jpg';
@@ -422,25 +448,6 @@
 				},
 				async joinGroupBuy(productId) {
 					try {
-						
-						if (sessionStorage.getItem("username")!=null) {
-							const response = await axios.post(`/GroupBuying/Home/Order`, {
-								id: productId
-							});
-							if (response.status === 200) {
-								window.location.href = `/GroupBuying/Home/Order?id=${productId}`;
-							}
-						}
-						else{
-							alert("請先登入以繼續操作。");
-						}
-
-					} catch (error) {
-						console.error('Error joining group buy:', error);
-					}
-				},
-				async myFav(id){
-					try {
 
 						if (sessionStorage.getItem("username") != null) {
 							const response = await axios.post(`/GroupBuying/Home/Order`, {
@@ -449,6 +456,50 @@
 							if (response.status === 200) {
 								window.location.href = `/GroupBuying/Home/Order?id=${productId}`;
 							}
+						}
+						else {
+							alert("請先登入以繼續操作。");
+						}
+
+					} catch (error) {
+						console.error('Error joining group buy:', error);
+					}
+				},
+				
+				async addFav(id, user,isFav) {
+					try {
+
+						if (sessionStorage.getItem("username") != null) {
+							if (!isFav) {
+								//加入最愛
+								const response = await axios.post(`https://localhost:7292/api/GroupBuying/AddFav?id=${id}&user=${sessionStorage.getItem("username")}`);
+
+
+								Swal.fire({
+									icon: 'success',
+									title: '收藏成功',
+									text: '成功將商品加到最愛！',
+
+								}).then(() => {
+									window.location.href = 'https://localhost:7231/GroupBuying';
+									
+								});
+							}
+							else{
+								const response = await axios.delete(`https://localhost:7292/api/GroupBuying/DeleteFav?id=${id}&user=${sessionStorage.getItem("username")}`);
+
+
+								Swal.fire({
+									icon: 'success',
+									title: '刪除成功',
+									text: '成功將商品自最愛移除！',
+
+								}).then(() => {
+									window.location.href = 'https://localhost:7231/GroupBuying';
+									
+								});
+							}
+
 						}
 						else {
 							alert("請先登入以繼續操作。");

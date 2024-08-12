@@ -29,6 +29,8 @@ public partial class GroupBuying
 
     public virtual ICollection<GroupBuyingDetail> GroupBuyingDetails { get; set; } = new List<GroupBuyingDetail>();
 
+    public virtual ICollection<GroupBuyingFavorite> GroupBuyingFavorites { get; set; } = new List<GroupBuyingFavorite>();
+
     public virtual ICollection<GroupBuyingPhoto> GroupBuyingPhotos { get; set; } = new List<GroupBuyingPhoto>();
 
     public virtual ICollection<ProductFormat> ProductFormats { get; set; } = new List<ProductFormat>();
