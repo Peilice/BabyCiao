@@ -993,8 +993,23 @@
                     Temp_List_Datas = Temp_List_Datas.slice(Start, End);
                     _this.addContext2(Temp_List_Datas)
                     //近期狀況(24hr)
-                    var StartIndex_24hr = List_Datas.findIndex(f => new Date(f.recodeTime).getTime() < new Date(now).getTime())
-                    var EndIndex_24hr = List_Datas.findIndex(f => new Date(f.recodeTime).getTime() < new Date(yesterday).getTime())
+                    var StartIndex_24hr = List_Datas.findIndex(f => new Date(f.recodeTime).getTime() < new Date(now).getTime());
+
+                    var EndIndex_24hr = 0;
+                    if (List_Datas != null) {
+                        var check = new Date(List_Datas[List_Datas.length - 1].recodeTime).getTime() > new Date(yesterday).getTime();
+                        if (check) {
+                            EndIndex_24hr = List_Datas.length;
+                        } else {
+                            EndIndex_24hr = List_Datas.findIndex(f => new Date(f.recodeTime).getTime() < new Date(yesterday).getTime());
+                        }
+                    } else 
+                    {
+                        EndIndex_24hr = 0;
+                    }
+                    console.log(`EndIndex_24hr:${EndIndex_24hr}`);
+                   // var EndIndex_24hr = List_Datas.findIndex(f => new Date(f.recodeTime).getTime() < new Date(yesterday).getTime())
+                    
                     var Start_24hr = Math.min(Math.max(StartIndex_24hr, 0), Math.max(EndIndex_24hr, 0));
                     var End_24hr = Math.max(Math.max(StartIndex_24hr, 0), Math.max(EndIndex_24hr, 0));
                     Temp_List_Datas_24hr = List_Datas;
