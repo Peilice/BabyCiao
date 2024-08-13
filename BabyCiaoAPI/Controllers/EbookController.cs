@@ -385,18 +385,24 @@ namespace BabyCiaoAPI.Controllers
         [HttpGet("GetDiaperDetail/{id}")]
         public async Task<IEnumerable<EBook_DiaperDetail_DTO>> GetDiaperDetail(int id)
         {
-            var DTOs = _context.DiaperDetails.Where(h => h.IdContactBook == id).Select(dto => new EBook_DiaperDetail_DTO
+            bool check= _context.DiaperDetails.Where(h => h.IdContactBook == id).Any();
+
+            if (check)
             {
-                Category = "尿布",
-                Id = dto.Id,
-                IdContactBook = dto.IdContactBook,
-                RecodeTime = dto.RecodeTime,
-                Content = dto.Content,
-                BowelSituation = dto.BowelSituation,
-                ModifiedTime = dto.ModifiedTime,
-                AccountUserAccount = dto.AccountUserAccount,
-            });
-            return DTOs;
+                var DTOs = _context.DiaperDetails.Where(h => h.IdContactBook == id).Select(dto => new EBook_DiaperDetail_DTO
+                {
+                    Category = "尿布",
+                    Id = dto.Id,
+                    IdContactBook = dto.IdContactBook,
+                    RecodeTime = dto.RecodeTime,
+                    Content = dto.Content,
+                    BowelSituation = dto.BowelSituation,
+                    ModifiedTime = dto.ModifiedTime,
+                    AccountUserAccount = dto.AccountUserAccount,
+                });
+                return DTOs;
+            }
+            return null;
         }
         [HttpPut("UpdateDiaperDetail/{id}")]
         public async Task<ActionResult<EBook_DiaperDetail_DTO>> UpdateDiaperDetail(int id, [FromBody] EBook_DiaperDetail_DTO DTO)
