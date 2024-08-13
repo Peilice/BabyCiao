@@ -21,11 +21,12 @@ namespace BabyCiao.Controllers
 
         private static readonly Dictionary<int, string> PermissionsDictionary = new Dictionary<int, string>
           {
-            { 0, "審核中" },
+             { 0, "停權" },
             { 1, "家長" },
             { 2, "保母" },
             { 3, "家長 / 保母" },
-            { 4, "停權"}
+            { 4, "客服"},
+            { 5, "管理員"},
            };
         // GET: UserAccounts
         [HttpGet]

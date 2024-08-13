@@ -38,6 +38,10 @@ namespace BabyCiao_Client.Controllers
         {
             return View();
         }
+        public IActionResult UserInformation()
+        {
+            return View();
+        }
 
         public IActionResult Announcement()
         {

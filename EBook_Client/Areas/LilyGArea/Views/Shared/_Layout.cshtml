@@ -20,7 +20,15 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
     <style>
         body {
-            background-image: url('/images/giftly.png');
+            /* background-image: url('/images/bg.jpg'); */
+            font-family: '華康采風體W3', serif;
+            font-size: 20px;
+        }
+
+        .accordion-button,a {
+            text-decoration: none;
+            color:darkgrey;
+            font-size: 20px;
         }
     </style>
 
@@ -33,42 +41,50 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid" >
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BabyCiao</a>
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/babyciao文字圖.png" width="200" /></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="active nav-link" asp-area="" asp-controller="Home" asp-action="About">關於我們</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">媒合平台</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="MatchIndex">一同巧育</a></li>
-                                <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="NannyResume">保母委託單</a></li>
-                                <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="BabyResume">家長委託單</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="@Utility.SD.localHost_Backstage/Home/Index">管理後台</a>
-                        </li>
-                        <li class="nav-item">
-                            <a id="e_book" class="nav-link text-dark" asp-area="andy_ebook" asp-controller="Home" asp-action="Index">電子聯絡簿</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="LilyGArea" asp-controller="Home" asp-action="Index">團購商品</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="LilySArea" asp-controller="Home" asp-action="Index">二手物品</a>
-                        </li>
-                        <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Competitions" asp-action="Index">線上投票活動</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contact">聯絡我們</a>
-                        </li>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="active nav-link" asp-area="" asp-controller="Home" asp-action="About">關於我們</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">媒合平台</a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="Index">一同巧育</a></li>
+                                    <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="NannyApply">加入我們</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="@Utility.SD.localHost_Backstage/Home/Index">管理後台</a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="e_book" class="nav-link text-dark" asp-area="andy_ebook" asp-controller="Home" asp-action="Index">電子聯絡簿</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">社群</a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="LilyGArea" asp-controller="Home" asp-action="Index">團購商品</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="LilySArea" asp-controller="Home" asp-action="Index">二手物品</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Competitions" asp-action="Index">線上投票活動</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Platform" asp-action="Index">討論區</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contact">聯絡我們</a>
+                            </li>
                     </ul>
                     <partial name="_LoginPartial_self" />
                 </div>
@@ -105,7 +121,7 @@
             </div>
         </nav>
     </header>
-        <!-- 浮在頁面的按鈕 start -->
+        <!-- Lily浮在頁面的按鈕 start -->
     <a 
            class="bg-success bg-opacity-75 text-white position-fixed bottom-0 end-0 p-2 text-decoration-none m-3 border border-1" onclick="scrollToTop()">PAGETOP</a>
 
@@ -114,15 +130,40 @@
                 class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
             我的訂單
         </button>
-            <button @@click="myFav(loggedInUsername)"
-                    class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
+            <button @@click="getMyFav(loggedInUsername)" href="#CartOffcanvas" data-bs-toggle="offcanvas" aria-controls="offcanvas"
+					class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
                 我的最愛
             </button>
     </div>
 
         <!-- 浮在頁面的按鈕 end -->
-    </div>
+        <!-- offcanvas start -->
 
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="CartOffcanvas" aria-labelledby="CartOffcanvasLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">我的最愛</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <div>
+                    <div v-for="item in myFavs" :key="item.id">
+                        <ul class="list-unstyled">
+                            <li class="d-flex justify-content-between align-items-center">
+                                <strong>{{item.productName}}</strong><span>${{item.price}}</span>
+                                <button @@click="joinGB(item.idGroupBuying)" class="btn btn-outline-success">參加</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="dropdown mt-3">
+                    
+                    <a class="btn btn-secondary" data-bs-dismiss="offcanvas" aria-label="Close">返回</a>
+                </div>
+            </div>
+        </div>
+        <!-- offcanvas end -->
+    </div>
+    
 
     <div class="container">
         <main role="main" class="pb-3">
@@ -149,14 +190,47 @@
                     disableCheck: true,
                     isLoggedIn: false,
                     loggedInUsername: "",
+                    myFavs:[],
                     baseAddress_API: "@Utility.SD.localHost_API",
                     baseAddress_client: "@Utility.SD.localHost_Client",
                 }
             },
             mounted() {
                 this.checkLoginStatus();
+                
             },
             methods: {
+                async getMyFav(x) {
+                    //alert("LAYOUT");
+                    const url = `https://localhost:7292/api/GroupBuying/MyFavorite/${sessionStorage.getItem("username")}`;
+                    await axios.get(url)
+                        .then(response => {
+                            this.myFavs = response.data;
+                        })
+                        .catch(error => {
+                            console.error("Error fetching data:", error);
+                        });
+
+                },
+                async joinGB(productId) {
+                    try {
+
+                        if (sessionStorage.getItem("username") != null) {
+                            const response = await axios.post(`/GroupBuying/Home/Order`, {
+                                id: productId
+                            });
+                            if (response.status === 200) {
+                                window.location.href = `/GroupBuying/Home/Order?id=${productId}`;
+                            }
+                        }
+                        else {
+                            alert("請先登入以繼續操作。");
+                        }
+
+                    } catch (error) {
+                        console.error('Error joining group buy:', error);
+                    }
+                },
                 checkLoginStatus() {
                     const username = sessionStorage.getItem("username");
                     if (username) {
@@ -220,7 +294,7 @@
                 async myOrders(username) {
                     //console.log('myOrders', username);
                     try {
-                        //alert('myOrders~', username);
+                       // alert('myOrders~', username);
                         const response = await axios.post(`/GroupBuying/Home/MyOrders`, { user: username });
                         if (response.status === 200) {
                             window.location.href = `/GroupBuying/Home/MyOrders/${username}`;
@@ -229,18 +303,7 @@
                         console.error('Error get my orders:', error);
                     }
                 },
-                async myFav(username) {
-                    //console.log('myOrders', username);
-                    try {
-                        //alert('myOrders~', username);
-                        const response = await axios.post(`/GroupBuying/Home/MyFavorite`, { user: username });
-                        if (response.status === 200) {
-                            window.location.href = `/GroupBuying/Home/MyFavorite/${username}`;
-                        }
-                    } catch (error) {
-                        console.error('Error get my favorite:', error);
-                    }
-                },
+
 
             }
         });
