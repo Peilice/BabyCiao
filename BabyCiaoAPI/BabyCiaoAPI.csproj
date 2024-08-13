@@ -46,4 +46,8 @@
     <Folder Include="StaticFiles\QRcode\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BabyCiao.Utility\Utility.csproj" />
+  </ItemGroup>
+
 </Project>

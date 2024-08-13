@@ -143,9 +143,11 @@
                         headers
                     }).then(result => {
                         //alert(result.data);
-                        var labels = result.data.map(item => item.age);
-                        var values = result.data.map(item => item.height);
-                        _this.addToChart(labels, values, "myChart4", "成長狀態");
+                        if (result.data!="") {
+                            var labels = result.data.map(item => item.age);
+                            var values = result.data.map(item => item.height);
+                        }
+                            _this.addToChart(labels, values, "myChart4", "成長狀態");
                     }).catch(err => { alert(err) });
                 },
                 getDietDetail: async function () {
@@ -154,9 +156,12 @@
                         headers
                     }).then(result => {
                         //alert(result.data);
-                        var labels = result.data.map(item => new Date(item.recodeTime).toLocaleString());
-                        var values = result.data.map(item => item.amount);
-                        _this.addToChart(labels, values, "myChart1", "飲食統計");
+                        if (result.data != "") {
+                            var labels = result.data.map(item => new Date(item.recodeTime).toLocaleString());
+                            var values = result.data.map(item => item.amount);
+                        }
+                            _this.addToChart(labels, values, "myChart1", "飲食統計");
+                       
                     }).catch(err => { alert(err) });
                 },
                 getDiaperDetail: async function () {
@@ -165,12 +170,12 @@
                         headers
                     }).then(result => {
                         //alert(result.data);
-                        Diaper_datas = result.data.map(item => new Date(item.recodeTime)).filter(date => date >= oneWeekAgo);
-                        //Diaper_datas = result.data.map(item => new Date(item.recodeTime));
-                        console.log(Diaper_datas);
-                        
+                        if (result.data != "") { 
+                            Diaper_datas = result.data.map(item => new Date(item.recodeTime)).filter(date => date >= oneWeekAgo);
+                            //Diaper_datas = result.data.map(item => new Date(item.recodeTime));
+                            console.log(Diaper_datas);
+                        }
                     }).catch(err => { alert(err) });
-                    
                 },
                 getSleepDetail: async function () {
                     let _this = this;
@@ -178,9 +183,12 @@
                         headers
                     }).then(result => {
                         //alert(result.data);
-                        var labels = result.data.map(item => new Date(item.recodeTime).toLocaleString());
-                        var values = result.data.map(item => item.content);
-                        _this.addToChart(labels, values, "myChart3", "睡眠統計");
+                        if (result.data != "") {
+                            var labels = result.data.map(item => new Date(item.recodeTime).toLocaleString());
+                            var values = result.data.map(item => item.content);
+                        }
+                            _this.addToChart(labels, values, "myChart3", "睡眠統計");
+                        
                     }).catch(err => { alert(err) });
                 },
                 addToChart: function (labels, values, id, category) {
@@ -211,44 +219,45 @@
                 createChartData: async function (Diaper_datas) {
                     let _this = this;
                     let datas = [];
-                    for (var i = 0; i < Diaper_datas.length; i++) {
-                        let date = new Date(Diaper_datas[i]);
-                        //console.log('Date:', date); // 檢查日期格式
-                        switch (date.getDay()) {
-                            case 0:
-                                var data_detail0 = { x: date.getHours(), y: '星期日' };
-                                datas.push(data_detail0);
-                                break;
-                            case 1:
-                                var data_detail1 = { x: date.getHours(), y: '星期一' };
-                                datas.push(data_detail1);
-                                break;
-                            case 2:
-                                var data_detail2 = { x: date.getHours(), y: '星期二' };
-                                datas.push(data_detail2);
-                                break;
-                            case 3:
-                                var data_detail3 = { x: date.getHours(), y: '星期三' };
-                                datas.push(data_detail3);
-                                break;
-                            case 4:
-                                var data_detail4 = { x: date.getHours(), y: '星期四' };
-                                datas.push(data_detail4);
-                                break;
-                            case 5:
-                                var data_detail5 = { x: date.getHours(), y: '星期五' };
-                                datas.push(data_detail5);
-                                break;
-                            case 6:
-                                var data_detail6 = { x: date.getHours(), y: '星期六' };
-                                datas.push(data_detail6);
-                                break;
+                    if (Diaper_datas.length>0) {
+                        for (var i = 0; i < Diaper_datas.length; i++) {
+                            let date = new Date(Diaper_datas[i]);
+                            //console.log('Date:', date); // 檢查日期格式
+                            switch (date.getDay()) {
+                                case 0:
+                                    var data_detail0 = { x: date.getHours(), y: '星期日' };
+                                    datas.push(data_detail0);
+                                    break;
+                                case 1:
+                                    var data_detail1 = { x: date.getHours(), y: '星期一' };
+                                    datas.push(data_detail1);
+                                    break;
+                                case 2:
+                                    var data_detail2 = { x: date.getHours(), y: '星期二' };
+                                    datas.push(data_detail2);
+                                    break;
+                                case 3:
+                                    var data_detail3 = { x: date.getHours(), y: '星期三' };
+                                    datas.push(data_detail3);
+                                    break;
+                                case 4:
+                                    var data_detail4 = { x: date.getHours(), y: '星期四' };
+                                    datas.push(data_detail4);
+                                    break;
+                                case 5:
+                                    var data_detail5 = { x: date.getHours(), y: '星期五' };
+                                    datas.push(data_detail5);
+                                    break;
+                                case 6:
+                                    var data_detail6 = { x: date.getHours(), y: '星期六' };
+                                    datas.push(data_detail6);
+                                    break;
+                            }
                         }
+                        //console.log('Datas:', datas); // 檢查 datas 陣列
+                        //console.log('圖表產出1')
                     }
-                    //console.log('Datas:', datas); // 檢查 datas 陣列
-                   await _this.createChart3(datas);
-                    //console.log('圖表產出1')
-
+                        await _this.createChart3(datas);
                 },
                 createChart3: function (datas) {
                     let _this = this;
