@@ -188,7 +188,7 @@
                                             <span class="text-danger mb-3">{{statue}}</span>
                                         </template>
                                     </div>
-                                    <button class=" w-100 btn btn-lg btn-primary" v-on:click="checkForm">送出</button>
+                                    <button class=" w-100 btn btn-lg btn-primary" v-on:click="checkForm">確認</button>
 
                                 </div>
                                 </form>
@@ -197,13 +197,13 @@
                         <input type="button" name="next-step"
                                class="next-step btn" value="下一步" v-bind:disabled="step1" />
                     </fieldset>
-                    <fieldset>
+                    <fieldset id="step_2">
                         <h2>填寫基本資料</h2>
                         <div class="container">
                             <form class="needs-validation" novalidate>
                             <div class="row">
-                                
-                                <div class="col-4">
+
+                                    <div class="col-12 col-md-4">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="Account_User" v-model="account" readonly>
                                         <label for="Account_User">帳號</label>
@@ -217,7 +217,7 @@
                                             <label for="Phone">電話</label>
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                    <div class="col-12 col-md-4">
                                     <div class="form-floating mb-3">
                                             <input type="text" class="form-control" id="UserFirstName" v-model="userFirstName" v-bind:disabled="ischeck2" required>
                                             <label for="UserFirstName">姓氏</label>
@@ -231,7 +231,7 @@
                                             <label for="Nickname">暱稱</label>
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                    <div class="col-12 col-md-4">
                                     <div class="form-floating mb-3">
                                             <input type="text" class="form-control" id="Address" v-model="address" v-bind:disabled="ischeck2" required>
                                             <label for="Address">地址</label>
@@ -257,28 +257,22 @@
                             </div>
                             </form>
                         </div>
-                        <input type="button" name="next-step"
-                               class="next-step btn" value="下一步" v-bind:disabled="step2" />
                         <input type="button" name="previous-step"
-                               class="previous-step"
+                               class="previous-step  btn"
                                value="上一步" />
                     </fieldset>
                     <fieldset>
                         <div class="finish">
                             <h2 class="text text-center">
                                 <strong>註冊成功</strong>
+                                <h4>將於3秒後自動回到首頁</h4>
                             </h2>
                         </div>
                     </fieldset>
                 </div>
-
-
-
             </div>
         </div>
-        
     </div>
-    
 </div>
 
 
@@ -318,7 +312,8 @@
                 //_this.reflesh();
             },
             methods: {
-                register: function () {
+                register: function (event) {
+                    event.preventDefault();
                     let _this = this;
                     var request = {};
                     request.accountUser = _this.account;
@@ -342,10 +337,15 @@
                         }).then(s => {
                             _this.ischeck2 = true;
                             _this.step2 = false;
+                            GotoFinish();
+                            setTimeout(function () {
+                                window.location.href = "@Utility.SD.localHost_Client/Home/Index"; 
+                            }, 3000);
                         });
                     }).catch(err => { alert(err) });
                 },
-                check: function () {
+                check: function (event) {
+                    event.preventDefault()
                     let _this = this;
                     _this.ischeck = false;
                     var request = {};
@@ -471,5 +471,29 @@
             //     return false;
             // })
         });
+
+        function GotoFinish() {
+            currentGfgStep = $('#step_2');
+            nextGfgStep = $('#step_2').next();
+
+            $("#progressbar li").eq($("fieldset")
+                .index(nextGfgStep)).addClass("active");
+
+            nextGfgStep.show();
+            currentGfgStep.animate({ opacity: 0 }, {
+                step: function (now) {
+                    opacity = 1 - now;
+
+                    currentGfgStep.css({
+                        'display': 'none',
+                        'position': 'relative'
+                    });
+                    nextGfgStep.css({ 'opacity': opacity });
+                },
+                duration: 500
+            });
+            //setProgressBar(++current);
+        }
+        
     </script>
 }
