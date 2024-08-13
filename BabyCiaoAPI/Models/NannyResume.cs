@@ -21,7 +21,7 @@ public partial class NannyResume
 
     public int ServiceType { get; set; }
 
-    public string ServiceItems { get; set; }
+    public string ServiceItems { get; set; } = null!;
 
     public bool QuasiPublicChildcare { get; set; }
 

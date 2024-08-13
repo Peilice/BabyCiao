@@ -27,5 +27,7 @@ public partial class SecondHandSupply
 
     public virtual ICollection<SecondHandExchangeOrder> SecondHandExchangeOrderWantGives { get; set; } = new List<SecondHandExchangeOrder>();
 
+    public virtual ICollection<SecondHandFavorite> SecondHandFavorites { get; set; } = new List<SecondHandFavorite>();
+
     public virtual ICollection<SuppliesPhoto> SuppliesPhotos { get; set; } = new List<SuppliesPhoto>();
 }
