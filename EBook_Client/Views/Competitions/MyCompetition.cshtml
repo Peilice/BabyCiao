@@ -113,8 +113,8 @@
                 myVote:false,
                 myFavorite:false,
 
-                //userAccount:sessionStorage.getItem("username"),
-                userAccount: "user5",
+                userAccount:sessionStorage.getItem("username"),
+                //userAccount: "user5",
             };
         },
         methods:{
@@ -220,7 +220,7 @@
                                     icon: "success"
                                 })
                                     .then(result => {
-                                        _this.getCompetiton();
+                                        _this.getVote();
                                     })
                             })
 
@@ -250,7 +250,7 @@
                                     icon: "success"
                                 })
                                 .then(result => {
-                                    _this.getCompetiton();
+                                    _this.getFavorite();
                                 })
                             })
 

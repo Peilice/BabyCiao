@@ -25,7 +25,7 @@
         <p>{{Statement}}</p>
         <div class="d-flex justify-content-between">
             <!-- 靜態互動背景 -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-bind:disabled="isEnd">
+            <button type="button" class="btn btn-primary" data-bs-target="#staticBackdrop" v-bind:disabled="isEnd" v-bind:data-bs-dismiss="isClose?'modal' : ''" v-bind:data-bs-toggle="isShow?'modal' : ''" v-on:click="check">
                 報名此比賽
             </button>
             <button class="btn btn-outline-dark me-2" type="submit" v-on:click="newfavorite"><i class="bi bi-bookmark-heart">收藏此活動</i></button>
@@ -66,7 +66,7 @@
                                 <p class="me-3">得票數 <span><i class="bi bi-lightning-charge-fill">{{item.number}}</i></span></p>
                                 <p>{{item.competitorContent}}</p>
                             </div>
-                            <button class="btn btn-outline-dark me-2 w-100" type="submit" v-on:click="newVote(item.id)">
+                            <button class="btn btn-outline-dark me-2 w-100" type="submit" v-on:click="newVote(item.competitionDetailId)">
                                 <i class="bi bi-heart" >投票</i>
                             </button>
                         </div>
@@ -162,14 +162,16 @@
                 allvote:0,
                 CompetitionId: 0,
                 isEnd:false,
+                isClose:false,
+                isShow: false,
 
                 //表單
                 CompetitorContent:"",
                 CompetitorPhoto:"noimage.jpg",
 
                 //使用者帳號
-                //userAccount:sessionStorage.getItem("username"),
-                userAccount: "user5",
+                userAccount:sessionStorage.getItem("username"),
+                //userAccount: "user5",
             };
         },
         methods: {
@@ -189,7 +191,7 @@
                          _this.CompetitionId = response.data[0].Id;
                          CompetitorID = response.data.competitionDetailId;
                     })
-                    
+                    _this.fetchApply();
                 }
                 catch (error) {
                     console.log(error);
@@ -245,6 +247,7 @@
                 .catch(err => {
                     alert(err);
                 })
+               
             },
             //處理照片上傳
             onFileChange: function (event) {
@@ -300,16 +303,32 @@
                         alert("投票成功")
                     })
             },
+            fetchApply:function(){
+                let _this = this;
+                if (comStatement == "已結束") {
+                    _this.isEnd = true;
+                }
+                else {
+                    _this.isEnd = false;
+                }
+            },
+            check: function () {
+                let _this = this;
+                if (_this.userAccount == null) {
+                    alert("請先登入");
+                    _this.isClose = true;
+                    _this.isShow = false;
+                }
+                else{
+                    _this.isClose = false;
+                    _this.isShow = true;
+                }
+            },
+            
         },
         mounted: function () {
             let _this = this;
             _this.fetchcompetitions();
-            if (comStatement = "已結束") {
-                _this.isEnd = true;
-            }
-            else {
-                _this.isEnd = false;
-            }
         },
     };
     var app = Vue.createApp(vueApp).mount('#App');

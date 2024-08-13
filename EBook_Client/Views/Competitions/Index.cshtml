@@ -1,7 +1,17 @@
-﻿
-<div id="app">
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <style>
+            body{
+                background-color:white;
+            }
 
-    <!-- Breadcrumb -->
+        </style>
+    </head>
+    <body>
+        <div id="app">
+
+        <!-- Breadcrumb -->
         <div class="container d-flex justify-content-between">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -15,24 +25,25 @@
 
 
 
-    <div class="container mb-4">
-        <h1 class="text-center mb-3 mt-3 fw-bold">線上投票活動</h1>
-    </div>
-            <!-- 活動列表 -->
-    <div class="container">
-        <div class="row mb-4">
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                <div class="col" v-for="item in OnlineCompetitions" :key="item.id">
-                    <div class="card h-100">
-                        <a v-on:click="check(item.id,item.statement)"><img v-bind:src="getPhotoUrl(item.competitionPhotoNames)" class="card-img-top w-100" alt="活動主要照片"></a>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ item.competitionName }}</h5>
-                            <p>活動期間 {{item.startTime}}~ {{item.endTime}}</p>
-                            <div class="d-flex justify-content-between">
-                                <button class="btn btn-outline-dark mb-2" type="submit" v-on:click="newfavorite(item.id)">
-                                    <i class="fa-solid fa-heart-circle-plus">收藏</i>
-                                </button>
-                                <p class="badge bg-light text-dark">{{ item.statement }}</p>
+        <div class="container mb-4">
+            <h1 class="text-center mb-3 mt-3 fw-bold">線上投票活動</h1>
+        </div>
+        <!-- 活動列表 -->
+        <div class="container">
+            <div class="row mb-4">
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="col" v-for="item in OnlineCompetitions" :key="item.id">
+                        <div class="card h-100">
+                            <a v-on:click="check(item.id,item.statement)"><img v-bind:src="getPhotoUrl(item.competitionPhotoNames)" class="card-img-top w-100" alt="活動主要照片"></a>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ item.competitionName }}</h5>
+                                <p>活動期間 {{item.startTime}}~ {{item.endTime}}</p>
+                                <div class="d-flex justify-content-between">
+                                    <button class="btn btn-outline-dark mb-2" type="submit" v-on:click="newfavorite(item.id)">
+                                        <i class="fa-solid fa-heart-circle-plus">收藏</i>
+                                    </button>
+                                    <p class="badge bg-light text-dark">{{ item.statement }}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -40,17 +51,20 @@
             </div>
         </div>
     </div>
- </div>
-    
 
 
-    <!-- footer -->
-    <footer>
+
+        <!-- footer -->
+        <footer>
         <div class="footer">
             <p>電話：0945789456 | 地址：高雄市前鎮區中華五路200號</p>
             <p><small>&copy; 2024 BabyCiao</small></p>
         </div>
     </footer>
+    </body>
+</html>
+
+
 
 
     <!-- axios -->
@@ -62,8 +76,8 @@
             data() {
                 return {
                     OnlineCompetitions: [],
-                    //userAccount:sessionStorage.getItem("username"),
-                    userAccount: "user5",
+                    userAccount:sessionStorage.getItem("username"),
+                    //userAccount: "user5",
                 };
             },
             methods: {
