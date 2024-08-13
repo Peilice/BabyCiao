@@ -55,14 +55,19 @@ namespace BabyCiaoAPI.Controllers
 
 				List<int> userFavorites = new List<int>();
 
-				if (!string.IsNullOrEmpty(userAccount))
+				if (userAccount!=null)
 				{
-					// 獲取用戶的最愛商品
-					userFavorites = await _context.GroupBuyingFavorites
-						.Where(fav => fav.AccountUserAccount == userAccount)
-						.Select(fav => fav.IdGroupBuying)
-						.ToListAsync();
-				}
+                    if (!string.IsNullOrEmpty(userAccount))
+                    {
+                        // 獲取用戶的最愛商品
+                        userFavorites = await _context.GroupBuyingFavorites
+                            .Where(fav => fav.AccountUserAccount == userAccount)
+                            .Select(fav => fav.IdGroupBuying)
+                            .ToListAsync();
+                    }
+
+                }
+				
 
 				var result = groupBuys.Select(gb => new GBDTO
 				{
