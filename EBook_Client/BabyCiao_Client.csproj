@@ -46,6 +46,7 @@
     <Folder Include="Areas\andy_ebook\Models\" />
     <Folder Include="Areas\LilyArea\Data\" />
     <Folder Include="Areas\LilyArea\Models\" />
+    <Folder Include="wwwroot\個人資訊照片\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -846,6 +847,7 @@
     <None Include="wwwroot\template\scss\_site-base.scss" />
     <None Include="wwwroot\template\scss\_site-blocks.scss" />
     <None Include="wwwroot\template\scss\_site-navbar.scss" />
+    <None Include="wwwroot\個人資訊照片\IMG_E6957.jpg" />
   </ItemGroup>
 
   <ItemGroup>
