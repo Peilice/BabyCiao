@@ -136,8 +136,12 @@
             </button>
             <button @@click="myOrders(loggedInUsername)"
                 class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
-            交易訂單
+            我的申請單
         </button>
+            <button @@click="myUncheckedOrders(loggedInUsername)"
+                    class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
+                待確認訂單
+            </button>
             <button @@click="getMyFav(loggedInUsername)" href="#CartOffcanvas" data-bs-toggle="offcanvas" aria-controls="offcanvas"
                     class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
                 我的最愛
@@ -293,7 +297,18 @@
                     }
                 },
 
-
+                async myUncheckedOrders(username) {
+                    //console.log('myOrders', username);
+                    try {
+                        //alert('myOrders~', username);
+                        const response = await axios.post(`/SecondHand/Home/UncheckedOrders`, { user: username });
+                        if (response.status === 200) {
+                            window.location.href = `/SecondHand/Home/UncheckedOrders/${username}`;
+                        }
+                    } catch (error) {
+                        console.error('Error get my orders:', error);
+                    }
+                },
 
                 async myOrders(username) {
                     //console.log('myOrders', username);

@@ -174,9 +174,10 @@ namespace BabyCiaoAPI.Controllers
         }
 
         // GET: api/SecondHand
+        //申請中
         [HttpGet("MyOrders")]
         public async Task<ActionResult<IEnumerable<GetSecondHandExchangeDTO>>> MyOrders(string user)
-        {//////未完成!! 未加入USER篩選
+        {
             var result = await (from ex in _context.SecondHandExchangeOrders
                                 join p in _context.SecondHandSupplies on ex.WantGetId equals p.Id
 								join p2 in _context.SecondHandSupplies on ex.WantGiveId equals p2.Id
@@ -200,6 +201,38 @@ namespace BabyCiaoAPI.Controllers
 								}).ToListAsync();
             return Ok(result); ;
         }
+
+
+
+        // GET: api/SecondHand
+        //未確認
+        [HttpGet("UncheckedOrders")]
+        public async Task<ActionResult<IEnumerable<GetSecondHandExchangeDTO>>> UncheckedOrders(string user)
+        {
+            var result = await (from ex in _context.SecondHandExchangeOrders
+                                join p in _context.SecondHandSupplies on ex.WantGetId equals p.Id
+                                join p2 in _context.SecondHandSupplies on ex.WantGiveId equals p2.Id
+                                where ex.SellerId == user
+                                select new GetSecondHandExchangeDTO
+                                {
+                                    Id = ex.Id,
+                                    BuyerId = user,
+                                    SellerId = ex.SellerId,
+                                    WantGetId = ex.WantGetId,
+                                    WantName = p.SuppliesName,
+                                    GetQuantity = ex.GetQuantity,
+                                    WantGiveId = ex.WantGiveId,
+                                    GiveName = p2.SuppliesName,
+                                    GiveQuantity = ex.GetQuantity,
+                                    ModifiedTime = ex.ModifiedTime,
+                                    View = ex.ModifiedTime.ToString("yyyy-MM-dd"),
+                                    Statement = ex.Statement,
+
+
+                                }).ToListAsync();
+            return Ok(result); ;
+        }
+
         // GET: api/SecondHand
         [HttpGet("MyProducts")]
         public async Task<ActionResult<IEnumerable<SecondHandSuppliesDTO>>> MyProducts(string user)

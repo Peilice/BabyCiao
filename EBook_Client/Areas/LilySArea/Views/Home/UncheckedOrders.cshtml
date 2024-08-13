@@ -21,7 +21,7 @@
 
 		<div class="container">
 			<div class="row">
-				@* 申請中start *@
+				@* 待確認start *@
 				<div class="col-10">
 					<div id="app">
 						<h2>申請中</h2>
@@ -30,7 +30,7 @@
 								<tr>
 									<th>編號</th>
 									<th>物品名稱</th>
-									<th>賣家</th>
+									<th>申請者</th>
 									<th>數量</th>
 									<th>交換物品</th>
 									<th>數量</th>
@@ -54,7 +54,7 @@
 						</table>
 					</div>
 				</div>
-				@* 申請中end *@
+				@*待確認end *@
 
 
 				
@@ -72,6 +72,7 @@
 				return {
 					username: sessionStorage.getItem("username"),
 					orders: [],
+					uncheckedOrders: []
 				};
 			},
 			mounted() {
@@ -91,7 +92,7 @@
 				},
 				fetchOrders() {
 					const username = sessionStorage.getItem("username");
-					axios.get(`https://localhost:7292/api/SecondHand/MyOrders?user=${username}`)
+					axios.get(`https://localhost:7292/api/SecondHand/UncheckedOrders?user=${username}`)
 						.then(response => {
 							this.orders = response.data;
 							// 初始化 DataTables
@@ -127,7 +128,9 @@
 						.catch(error => {
 							console.error('Error fetching orders:', error);
 						});
-				}
+				},
+
+				
 			}
 		}).mount('#app');
 	</script>
