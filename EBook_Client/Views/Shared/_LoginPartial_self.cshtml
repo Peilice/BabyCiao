@@ -1,7 +1,7 @@
 ﻿<ul class="navbar-nav" id="loginApp">
     <template v-if="islogin==true">
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">{{u_name}},您好!!! </a>
+            <a :href="'/Home/UserInformation'" class="nav-link">{{u_name}},您好!!! </a>
         </li>
         <li class="nav-item">
             @* <form id="logoutForm" action="/andy_login/logout" method="post" class="nav-item">
