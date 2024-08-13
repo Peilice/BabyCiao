@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>合約管理</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .signature-pad {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            height: 200px;
+            position: relative;
+        }
+
+            .signature-pad canvas {
+                width: 100%;
+                height: 100%;
+            }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="container mt-5">
+        <h2>合約管理</h2>
+        <form v-on:submit.prevent="submitForm" enctype="multipart/form-data" method="post">
+            <div class="form-group">
+                <label for="contractFile">合約文件（Word 或 PDF）</label>
+                <input type="file" id="contractFile" v-on:change="handleFileUpload('contractFile')" class="form-control" accept=".doc,.docx,.pdf" required>
+            </div>
+            <div class="form-group">
+                <label for="nannySignatureFile">保母簽名文件</label>
+                <input type="file" id="nannySignatureFile" v-on:change="handleFileUpload('nannySignatureFile')" class="form-control" accept=".jpg,.jpeg,.png" required>
+            </div>
+            <div class="form-group">
+                <label for="userSignatureFile">用戶簽名文件</label>
+                <input type="file" id="userSignatureFile" v-on:change="handleFileUpload('userSignatureFile')" class="form-control" accept=".jpg,.jpeg,.png" required>
+            </div>
+            <div class="form-group">
+                <label for="comment">備註</label>
+                <textarea id="comment" v-model="comment" class="form-control" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="signature">電子簽名</label>
+                <div class="signature-pad" id="signature-pad">
+                    <canvas></canvas>
+                </div>
+                <button type="button" v-on:click="saveSignature" class="btn btn-primary mt-2">保存簽名</button>
+            </div>
+            <button type="submit" class="btn btn-primary">提交</button>
+        </form>
+
+        <!-- 文件下載按鈕 -->
+        <button type="button" class="btn btn-info mt-3" v-on:click="downloadFile">下載提供的文件</button>
+
+        <!-- 合約預覽模態框 -->
+        <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="previewModalLabel">合約預覽</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <iframe :src="previewUrl" width="100%" height="500px"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad/dist/signature_pad.umd.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                contractFile: null,
+                nannySignatureFile: null,
+                userSignatureFile: null,
+                comment: '',
+                signaturePad: null,
+                previewUrl: ''
+            },
+            mounted() {
+                this.signaturePad = new SignaturePad(document.querySelector('#signature-pad canvas'));
+            },
+            methods: {
+                handleFileUpload(fieldName) {
+                    const fileInput = document.getElementById(fieldName);
+                    if (fileInput.files.length > 0) {
+                        this[fieldName] = fileInput.files[0];
+                    }
+                },
+                saveSignature() {
+                    const dataURL = this.signaturePad.toDataURL('image/jpeg');
+                    const blob = this.dataURLToBlob(dataURL);
+                    this.userSignatureFile = new File([blob], 'signature.jpg', { type: 'image/jpeg' });
+                },
+                dataURLToBlob(dataURL) {
+                    const byteString = atob(dataURL.split(',')[1]);
+                    const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+                    const ab = new ArrayBuffer(byteString.length);
+                    const ia = new Uint8Array(ab);
+                    for (let i = 0; i < byteString.length; i++) {
+                        ia[i] = byteString.charCodeAt(i);
+                    }
+                    return new Blob([ab], { type: mimeString });
+                },
+                async submitForm() {
+                    try {
+                        const formData = new FormData();
+                        formData.append('contractFile', this.contractFile);
+                        formData.append('nannySignatureFile', this.nannySignatureFile);
+                        formData.append('userSignatureFile', this.userSignatureFile);
+                        formData.append('comment', this.comment);
+
+                        const response = await axios.post('https://localhost:7292/api/Contracts/PostContract', formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        });
+
+                        alert('提交成功');
+                    } catch (error) {
+                        console.error('提交失敗:', error);
+                        alert('提交失敗');
+                    }
+                },
+                downloadFile() {
+                    const fileUrl = 'https://localhost:7292/api/Contracts/DownloadFile';
+                    window.open(fileUrl, '_blank');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

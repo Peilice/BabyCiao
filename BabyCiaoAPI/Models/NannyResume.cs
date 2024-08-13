@@ -35,7 +35,7 @@ public partial class NannyResume
 
     public string ProfessionalPortrait { get; set; } = null!;
 
-    public bool DisplayControl { get; set; }
+    public bool? DisplayControl { get; set; }
 
     public virtual UserAccount NannyAccountUserAccountNavigation { get; set; } = null!;
 

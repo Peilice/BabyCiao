@@ -52,7 +52,9 @@ namespace BabyCiaoAPI.DTO
 
         [Display(Name = "商品照片")]
         public List<IFormFile>? PhotoFiles { get; set; }
-    }
+
+        public bool IsFavorite { get; set; }
+	}
     public partial class GroupBuyFormateDTO
     {
         [Display(Name = "規格編號")]
@@ -87,8 +89,9 @@ namespace BabyCiaoAPI.DTO
         public int Price { get; set; }//$$
 
         public string? photoUrl { get; set; }
+		public bool IsFavorite { get; set; }
 
-    }
+	}
     public class GroupBuyPhotoDTO
     {
         [Display(Name = "照片編號")]
@@ -103,4 +106,36 @@ namespace BabyCiaoAPI.DTO
         [Display(Name = "上傳時間")]
         public DateTime ModifiedTime { get; set; }
     }
+	public class GroupBuyFavDTO
+	{
+		[Display(Name = "收藏編號")]
+		public int Id { get; set; }
+
+		[Display(Name = "商品編號")]
+		public int IdGroupBuying { get; set; }
+
+		[Display(Name = "帳號")]
+		public string UserName { get; set; } = null!;
+
+	}
+    public class GroupBuyGetFavDTO
+    {
+
+
+        [Display(Name = "最愛編號")]
+        public int Id { get; set; }
+        [Display(Name = "商品編號")]
+        public int IdGroupBuying { get; set; }
+
+        [Display(Name = "帳號")]
+        public string UserName { get; set; } = null!;
+
+        [Display(Name = "商品")]
+        public string ProductName { get; set; } = null!;
+        [Display(Name = "商品價錢")]
+        public int Price { get; set; }//$$
+
+
+    }
+
 }

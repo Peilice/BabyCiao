@@ -33,6 +33,14 @@ public class CompetitionDetailDTO
     //活動總票數
     public int allnumber {  get; set; }
     
+    //確認是否有收藏
+    public bool IsLike {  get; set; }
+    public bool IsDisLike { get; set; }
+
+    //確認是否投票
+    public bool IsVote { get; set; }
+    public bool IsNotVote { get; set; }
+
 }
 
 

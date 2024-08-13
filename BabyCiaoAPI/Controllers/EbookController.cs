@@ -434,8 +434,8 @@ namespace BabyCiaoAPI.Controllers
             SleepDetail d = new SleepDetail()
             {
                 IdContactBook = DTO.IdContactBook,
-                SleepTime = DTO.SleepTime,
-                WakeUpTime = DTO.RecodeTime,
+                SleepTime = DTO.SleepTime.AddHours(8),
+                WakeUpTime = DTO.RecodeTime.AddHours(8),
                 Content = DTO.Content,
                 SleepState=DTO.SleepState,
                 ModifiedTime = DTO.ModifiedTime,

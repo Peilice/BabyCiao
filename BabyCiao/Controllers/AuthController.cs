@@ -196,7 +196,7 @@ namespace BabyCiao.Controllers
 			return View(authDTO);
 		}
 
-		//GET: Auth/Edit/{id}
+		//POST: Auth/Edit/{id}
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		//public async Task<IActionResult> Edit(int GroupId, [Bind("GroupId,GroupDescription,ModifiedPersonUserAccount,ModifiedDate,settings")] AuthDTO authDTO)

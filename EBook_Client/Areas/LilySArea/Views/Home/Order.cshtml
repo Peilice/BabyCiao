@@ -44,6 +44,7 @@
 			color: red;
 			font-size: 0.875em;
 		}
+	
 	</style>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
@@ -61,7 +62,7 @@
 		</div>
 		<!-- breadcrumb end -->
 		<form class="order-details needs-validation" novalidate v-on:submit.prevent="validateAndSubmit">
-			<h2>訂單詳情</h2>
+			<h2>申請交換單</h2>
 
 			<div class="form-group">
 				<label for="productName"><strong>商品名稱</strong></label>
@@ -79,24 +80,6 @@
 				</div>
 			</div>
 
-			<div class="form-group radio-group">
-				<strong>訂單規格</strong>
-				<div v-if="orderDetails.productFormats && Object.keys(orderDetails.productFormats).length > 0">
-					<div v-for="(formats, formatType) in groupedFormats" :key="formatType">
-						<strong>◆ {{ formatType }}</strong>
-						<div v-for="format in formats" :key="format.id" class="radio-option">
-							<input type="radio" :id="format.id" :value="format.id" v-model="selectedFormat[formatType]" @@change="updateOrderFormats(formatType, format.id)" required>
-							<label :for="format.id">{{ format.formatName }}</label>
-						</div>
-						<div class="invalid-feedback" v-if="!selectedFormat[formatType]">
-							請選擇一個{{ formatType }}!
-						</div>
-					</div>
-				</div>
-				<div v-else>
-					單一規格
-				</div>
-			</div>
 
 			<div class="form-group">
 				<label for="quantity"><strong>訂購數量</strong></label>
@@ -216,40 +199,6 @@
 							}
 						} catch (error) {
 							console.error('Error fetching order details:', error);
-						}
-					},
-					totalPrice() {
-						this.orderDetails.orderPrice = this.orderDetails.quantity * this.orderDetails.price;
-						if (this.orderDetails.productFormats && Object.keys(this.orderDetails.productFormats).length > 0) {
-							//console.log('aaa',this.submitOrderModel.orderFormats);
-							this.submitOrderModel.orderFormats.forEach(f => {
-								f.quantity = this.orderDetails.quantity;
-							});
-						} else {
-							//console.log('ccc');
-							this.submitOrderModel.orderFormats.push({
-								orderFormatId: 0, // 或者設定適當的初始值
-								groupBuyingDetailId: 0, // 或者設定適當的初始值
-								formatId: 0,
-								quantity: this.orderDetails.quantity, // 或者設定適當的數量
-							});
-						}
-						
-					},
-					updateOrderFormats(formatType, selectedFormatId) {
-						let format = this.submitOrderModel.orderFormats.find(f => f.formatType === formatType);
-						if (format) {
-							// 更新現有的項目
-							format.formatId = selectedFormatId;
-						} else {
-							// 添加新項目
-							this.submitOrderModel.orderFormats.push({
-								orderFormatId: 0, // 或者設定適當的初始值
-								groupBuyingDetailId: 0, // 或者設定適當的初始值
-								formatType: formatType, // 添加 formatType
-								formatId: selectedFormatId,
-								quantity: this.orderDetails.quantity, // 或者設定適當的數量
-							});
 						}
 					},
 					validateAndSubmit() {

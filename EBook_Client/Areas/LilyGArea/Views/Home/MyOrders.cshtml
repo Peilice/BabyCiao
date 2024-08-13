@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的訂單</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 
 </head>
 <body>
@@ -43,7 +44,7 @@
                         <td>{{ order.orderFormats[0].quantity }}</td>
                         <td>{{ order.orderPrice }}</td>
                         <td>{{ order.address }}</td>
-                        <td>{{ order.joinModifiedTimeView }}</td>
+                        <td>{{ formatDate(order.joinModifiedTime) }}</td>
                         <td>{{ order.joinStatement }}</td>
                         <td>
                             <ul>
@@ -74,10 +75,12 @@
             },
             methods: {
                 fetchOrders() {
+
                     const username = sessionStorage.getItem("username");
                     axios.get(`https://localhost:7292/api/GroupBuying/MyOrders/${username}`)
                         .then(response => {
                             this.orders = response.data;
+
                             // 初始化 DataTables
                             this.$nextTick(() => {
                                 $('#ordersTable').DataTable({
@@ -104,6 +107,16 @@
                                             "sSortAscending": ": 開啟排序升序",
                                             "sSortDescending": ": 開啟排序降序"
                                         }
+                                    },
+                                    "createdRow": function (row, data, dataIndex) {
+                                        var statementCell = $('td', row).eq(7);
+                                        if (data[7] === '已出貨') {
+                                            statementCell.css('background-color', 'rgba(212, 237, 218, 0.5)'); // 綠色，50% 透明度
+                                        } else if (data[7] === '已參加') {
+                                            statementCell.css('background-color', 'rgba(255, 243, 205, 0.5)'); // 黃色，50% 透明度
+                                        } else if (data[7] === '已取消') {
+                                            statementCell.css('background-color', 'rgba(248, 215, 218, 0.5)'); // 紅色，50% 透明度
+                                        }
                                     }
                                 });
                             });
@@ -111,6 +124,11 @@
                         .catch(error => {
                             console.error('Error fetching orders:', error);
                         });
+                },
+                formatDate(date) {
+                    if (!date) return "";
+                    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+                    return new Date(date).toLocaleString('zh-TW', options);
                 }
             }
         }).mount('#app');

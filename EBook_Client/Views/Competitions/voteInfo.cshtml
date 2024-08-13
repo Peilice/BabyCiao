@@ -1,7 +1,7 @@
 ﻿
 
 
-<div id="App" class="container mb-4">
+<div id="vuePage" class="container mb-4">
     <!-- Breadcrumb -->
     <div class="container d-flex justify-content-between">
         <nav aria-label="breadcrumb">
@@ -28,11 +28,10 @@
             <button type="button" class="btn btn-primary" data-bs-target="#staticBackdrop" v-bind:disabled="isEnd" v-bind:data-bs-dismiss="isClose?'modal' : ''" v-bind:data-bs-toggle="isShow?'modal' : ''" v-on:click="check">
                 報名此比賽
             </button>
-            <button class="btn btn-outline-dark me-2" type="submit" v-on:click="newfavorite"><i class="bi bi-bookmark-heart">收藏此活動</i></button>
+            <button v-bind:class="{'btn-outline-danger':isDislike, 'btn-danger':isLike}" class="btn me-2" type="submit" v-on:click="newfavorite"><i class="bi bi-bookmark-heart">收藏</i></button>
         </div>
     </div>
-    <div class="container" id="app">
-        @* <img v-bind:src="{{Imageurl}}" /> *@
+    <div class="container">
         <div class="d-flex justify-content-between">    
               @* <div class="dropdown">
                     排序
@@ -48,9 +47,6 @@
             <div>
                 <label for="" class="me-3">參賽者：<span>{{Competitor}}</span></label>
                 <label for="" class="me-3">總票數：<span>{{allvote}}</span></label>
-
-                @* 待處理 *@
-                @* <label for="" class="me-3">瀏覽人數：<span>675</span></label> *@
             </div>
         </div>
 
@@ -58,7 +54,7 @@
         <div class="container">
             <div class="row mb-4">
                 <div class="row row-cols-1 row-cols-md-3 g-4">
-                    <div class="col" v-for="item in Competitionsdetail" :key="item.id">
+                    <div class="col" v-for="item in Competitionsdetail" :key="item.competitionDetailId">
                         <div class="card h-100">
                             <img v-bind:src="getPhotoUrl(item.competitionPhotos)" class="card-img-top h-100" alt="...">
                             <div class="card-body">
@@ -66,8 +62,12 @@
                                 <p class="me-3">得票數 <span><i class="bi bi-lightning-charge-fill">{{item.number}}</i></span></p>
                                 <p>{{item.competitorContent}}</p>
                             </div>
-                            <button class="btn btn-outline-dark me-2 w-100" type="submit" v-on:click="newVote(item.competitionDetailId)">
-                                <i class="bi bi-heart" >投票</i>
+                            @* 確認是否有投過票 *@
+                            <button class="btn btn-outline-dark me-2 w-100"
+                                type="submit" 
+                                v-on:click="newVote(item.competitionDetailId)">
+                                @* <span>{{item.voteToID}}</span> *@
+                                <i class="bi bi-heart">投票</i>
                             </button>
                         </div>
                     </div>
@@ -161,37 +161,47 @@
                 RecordDetail:[],
                 allvote:0,
                 CompetitionId: 0,
+                VoteToId:0,
+
                 isEnd:false,
                 isClose:false,
                 isShow: false,
+                isLike:false,
+                isDislike:true,
+                //isNotVote:true,
+                //isVote:false,
+
 
                 //表單
                 CompetitorContent:"",
                 CompetitorPhoto:"noimage.jpg",
 
                 //使用者帳號
-                userAccount:sessionStorage.getItem("username"),
-                //userAccount: "user5",
+                //userAccount:sessionStorage.getItem("username"),
+                userAccount: "user5",
             };
         },
         methods: {
             fetchcompetitions: function () {
                 let _this = this;
                 try {
-                     axios.get(`https://localhost:7292/api/OnlineCompetitions/${IdCompetitions}`)
-                    .then(response => {
-                         _this.Competitionsdetail = response.data;
-                         _this.CompetitionName = response.data[0].competitionName;
-                         _this.Content = response.data[0].content;
-                         _this.StartTime = response.data[0].startTime;
-                         _this.EndTime = response.data[0].endTime;
-                         _this.Statement = response.data[0].statement;
-                         _this.Competitor = response.data.length;
-                         _this.allvote = response.data[0].allnumber;
-                         _this.CompetitionId = response.data[0].Id;
-                         CompetitorID = response.data.competitionDetailId;
-                    })
+                    axios.get(`https://localhost:7292/api/OnlineCompetitions/${IdCompetitions}/${_this.userAccount}`)
+                        .then(response => {
+                            _this.Competitionsdetail = response.data;
+                            _this.CompetitionName = response.data[0].competitionName;
+                            _this.Content = response.data[0].content;
+                            _this.StartTime = response.data[0].startTime;
+                            _this.EndTime = response.data[0].endTime;
+                            _this.Statement = response.data[0].statement;
+                            _this.Competitor = response.data.length;
+                            _this.allvote = response.data[0].allnumber;
+                            _this.CompetitionId = response.data[0].id;
+                            _this.isLike = response.data[0].isLike;
+                            _this.isDislike = response.data[0].isDisLike;
+                            CompetitorID = response.data.competitionDetailId;
+                        });
                     _this.fetchApply();
+                    //_this.fetchVote();
                 }
                 catch (error) {
                     console.log(error);
@@ -256,15 +266,15 @@
             newfavorite: function () {
                 let _this = this;
                 var request = {};
+                request.CompetitionId = IdCompetitions;
+                request.myAccount = _this.userAccount;
                 if (_this.userAccount == null) {
                     alert("請先登入");
                 }
                 else{
-                    request.CompetitionId = IdCompetitions;
-                request.myAccount = _this.userAccount;
-                //console.log(request);
-                axios.post(`https://localhost:7292/api/OnlineCompetitions/createFavorite`, request)
-                    .then(result => {
+                    if(_this.isLike==false){
+                        axios.post(`https://localhost:7292/api/OnlineCompetitions/createFavorite`, request)
+                        .then(result => {
                         Swal.fire({
                             position: "center",
                             icon: "success",
@@ -274,10 +284,29 @@
                         })
                             .then(result => {
                                 _this.fetchcompetitions();
-                                //$('#staticBackdrop').modal('hide');
-
+                                _this.isLike = true;
+                                _this.isDislike = false;
                             })
                     })
+                    }
+                    else{
+                        axios.delete(`https://localhost:7292/api/OnlineCompetitions/deleteFavorite/${IdCompetitions}/${_this.userAccount}`)
+                            .then(result => {
+                                Swal.fire({
+                                    position: "center",
+                                    icon: "error",
+                                    title: "刪除收藏",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                    .then(result => {
+                                        _this.fetchcompetitions();
+                                        _this.isLike = false;
+                                        _this.isDislike = true;
+                                    })
+                            })
+                    }
+                      
                 };
 
             },
@@ -324,6 +353,17 @@
                     _this.isShow = true;
                 }
             },
+            // fetchVote:function(){
+            //     let _this = this;
+            //     if ( === _this.VoteToId) {
+            //         _this.isNotVote = false;
+            //         _this.isVote = true;
+            //     }
+            //     else{
+            //         _this.isNotVote = true;
+            //         _this.isVote = false;
+            //     }
+            // },
             
         },
         mounted: function () {
@@ -331,5 +371,5 @@
             _this.fetchcompetitions();
         },
     };
-    var app = Vue.createApp(vueApp).mount('#App');
+    var app = Vue.createApp(vueApp).mount('#vuePage');
 </script>

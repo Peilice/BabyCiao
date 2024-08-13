@@ -9,7 +9,7 @@ namespace BabyCiao.Models.DTO
         [Display(Name = "活動名稱")]
         public string CompetitionName { get; set; }
 
-        [Display(Name = "修改人員")]
+        [Display(Name = "最後修改人")]
         public string AccountUserAccount { get; set; }
 
         [Display(Name = "活動開始時間")]
