@@ -587,11 +587,17 @@
                 },
                 async exchange(productId) {
                     try {
-                        const response = await axios.post(`/SecondHand/Home/Order`, {
-                            id: productId
-                        });
-                        if (response.status === 200) {
-                            window.location.href = `/SecondHand/Home/Order?id=${productId}`;
+
+                        if (sessionStorage.getItem("username") != null) {
+                            const response = await axios.post(`/SecondHand/Home/Order`, {
+                                id: productId
+                            });
+                            if (response.status === 200) {
+                                window.location.href = `/SecondHand/Home/Order?id=${productId}`;
+                            }
+                        }
+                        else {
+                            alert("請先登入以繼續操作。");
                         }
                     } catch (error) {
                         console.error('Error joining group buy:', error);

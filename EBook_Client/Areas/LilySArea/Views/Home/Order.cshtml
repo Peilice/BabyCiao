@@ -26,9 +26,9 @@
 			margin-bottom: 15px;
 		}
 
-		.radio-group label {
-			display: block;
-		}
+			.radio-group label {
+				display: block;
+			}
 
 		.radio-option {
 			display: flex;
@@ -36,15 +36,14 @@
 			margin-bottom: 5px;
 		}
 
-		.radio-option input[type="radio"] {
-			margin-right: 5px;
-		}
+			.radio-option input[type="radio"] {
+				margin-right: 5px;
+			}
 
 		.invalid-feedback {
 			color: red;
 			font-size: 0.875em;
 		}
-	
 	</style>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
@@ -65,64 +64,54 @@
 			<h2>申請交換單</h2>
 
 			<div class="form-group">
-				<label for="productName"><strong>商品名稱</strong></label>
-				<input type="text" id="productName" v-model="orderDetails.productName" class="form-control" readonly required>
-				<div class="invalid-feedback" v-if="!orderDetails.productName">
-					此欄位必填!
-				</div>
-			</div>
-
-			<div class="form-group">
 				<label for="userAccount"><strong>會員帳號</strong></label>
-				<input type="text" id="userAccount" class="form-control" readonly :value="u_name" required>
-				<div class="invalid-feedback" v-if="!u_name">
+				<input type="text" id="userAccount" class="form-control" readonly v-model="submitOrderModel.sellerId" :value="orderDetails.accountUserAccount" required>
+				<div class="invalid-feedback" v-if="!submitOrderModel.accountUserAccount">
+					此欄位必填!
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="productName"><strong>物品名稱</strong></label>
+				<input type="text" id="productName" v-model="orderDetails.suppliesName" class="form-control" readonly required>
+				<div class="invalid-feedback" v-if="!orderDetails.suppliesName">
 					此欄位必填!
 				</div>
 			</div>
 
 
 			<div class="form-group">
-				<label for="quantity"><strong>訂購數量</strong></label>
-				<input type="number" id="quantity" v-model="orderDetails.quantity" class="form-control" @@input="totalPrice" min="1" required>
+				<label for="quantity"><strong>交換數量</strong></label>
+				<input type="number" id="quantity" v-model="submitOrderModel.getQuantity" class="form-control" min="1" :max="orderDetails.stockQuantity" required>
 				<div class="invalid-feedback" v-if="orderDetails.quantity <= 0">
 					數量必須大於零!
 				</div>
 			</div>
 
 			<div class="form-group">
-				<label for="price"><strong>商品單價</strong></label>
-				<input type="text" id="price" v-model="orderDetails.price" class="form-control" readonly required>
-				<div class="invalid-feedback" v-if="!orderDetails.price">
-					此欄位必填!
+				<label for="quantity"><strong>選擇交換物品</strong></label>
+				<div class="d-flex justify-content-center">
+					<div class="col-9">
+						<div class="row">
+							<div class="col-4 mb-2" v-for="item in myProducts" :key="item.id">
+								<div class="card">
+									<img :src="getPhotoUrl(item.photo)" class="card-img-top" :alt="item.suppliesName" style="height: 180px;">
+									<div class="card-body">
+										<input type="radio" :value="item.id" v-model="selectedItemId" @@change="selectItem(item)" required><span class="card-title">{{ item.suppliesName }}</span>
+										
+										<input type="number" v-model="submitOrderModel.giveQuantity" class="form-control mt-2" min="1" :max="item.stockQuantity" >
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-
 			<div class="form-group">
-				<label for="orderPrice"><strong>總價錢</strong></label>
-				<input type="text" id="orderPrice" v-model="orderDetails.orderPrice" class="form-control" readonly required>
-				<div class="invalid-feedback" v-if="!orderDetails.orderPrice">
-					此欄位必填!
-				</div>
-			</div>
-
-			<div class="form-group">
-				<label for="address"><strong>地址</strong></label>
-				<textarea id="address" v-model="submitOrderModel.address" class="form-control" required></textarea>
-				<div class="invalid-feedback" v-if="!submitOrderModel.address">
-					此欄位必填!
-				</div>
-			</div>
-
-			<div class="form-group">
-				<label for="note"><strong>備註</strong></label>
-				<textarea id="note" v-model="submitOrderModel.note" class="form-control"></textarea>
-			</div>
-
-			<div class="form-group">
-				<label for="joinModifiedTime"><strong>下單時間</strong></label>
+				<label for="joinModifiedTime"><strong>申請時間</strong></label>
 				<input type="text" id="joinModifiedTime" class="form-control" :value="orderDetails.modifiedTimeView" readonly required>
 				<input type="hidden" :value="orderDetails.modifiedTime" readonly required>
-				
+
 			</div>
 
 			<div class="actions d-flex justify-content-end">
@@ -140,66 +129,66 @@
 			const orderApp = Vue.createApp({
 				data() {
 					return {
+						myProducts: [],
 						u_name: "",
-						groupBuyingId: new URLSearchParams(window.location.search).get('id'),
+						selectedItemId: null, // 選中的物品 ID
+						productId: new URLSearchParams(window.location.search).get('id'),
 						orderDetails: {
-							id: '',
-							productName: '',
-							userAccount: '',
-							quantity: 0,
-							price: 0,
-							orderPrice: 0,
-							modifiedTimeView: '',
-							productFormats: []
+							
 						},
 						submitOrderModel: {
 							id: 0,
-							groupBuyingId: 0,
-							userAccount: '',
-							address: '',
-							note: '',
-							joinModifiedTime: '',
-							joinStatement: '',
-							orderFormats: [] // 初始為空數組，動態填充
+							buyerId: sessionStorage.getItem("username"),
+							sellerId: '',
+							wantGetId: 0,
+							getQuantity: 0,
+							wantGiveId: 0,
+							giveQuantity: 0,
+							modifiedTime: new Date(),
+							statement: '申請中'
 						},
 						selectedFormat: {}
 					};
 				},
 				mounted() {
-					this.fetchOrderDetails();
+
+					this.getMyProducts();
+					this.getSellerProduct();
+					console.log(this.orderDetails.accountUserAccount);
 				},
-				computed: {
-					groupedFormats() {
-						return this.orderDetails.productFormats.reduce((acc, format) => {
-							if (!acc[format.formatType]) {
-								acc[format.formatType] = [];
-							}
-							acc[format.formatType].push(format);
-							return acc;
-						}, {});
-					}
-				},
+
 				methods: {
-					async fetchOrderDetails() {
-						try {
-							const response = await axios.get(`https://localhost:7292/api/GroupBuying/Order/${this.groupBuyingId}`);
-							this.u_name = username; // 確保 username 變數存在
-							this.submitOrderModel.joinStatement = "已參加";
-							this.submitOrderModel.groupBuyingId = this.groupBuyingId;
-							this.submitOrderModel.userAccount = username;
-							this.orderDetails = response.data;
+					getPhotoUrl(photoUrl) {
+						return photoUrl != null ? `https://localhost:7292/uploads/${photoUrl}` : 'https://localhost:7231/images/noimage.jpg';
+					},
+					selectItem(item) {
+						this.submitOrderModel.wantGiveId = item.id;
+						this.submitOrderModel.giveQuantity = item.giveQuantity;
+						
+					},
+					getSellerProduct() {
 
-							this.submitOrderModel.joinModifiedTime = this.orderDetails.modifiedTime;
+						axios.get(`https://localhost:7292/api/SecondHand/Exchange?id=${this.productId}`)
+							.then(response => {
+								this.orderDetails = response.data;
+								this.submitOrderModel.sellerId = this.orderDetails.accountUserAccount;
+								this.submitOrderModel.wantGetId = this.orderDetails.id;
+								//progress: item.progress ?? 0 // 確保 progress 屬性存在
+							})
+							.catch(error => {
+								console.error("Error fetching data:", error);
+							});
+					},
+					getMyProducts() {
 
-							// 初始化 selectedFormat
-							if (this.orderDetails.productFormats) {
-								Object.keys(this.orderDetails.productFormats).forEach(formatType => {
-									this.selectedFormat[formatType] = '';
-								});
-							}
-						} catch (error) {
-							console.error('Error fetching order details:', error);
-						}
+						axios.get(`https://localhost:7292/api/SecondHand/MyProducts?user=${sessionStorage.getItem("username")}`)
+							.then(response => {
+								this.myProducts = response.data;
+								//progress: item.progress ?? 0 // 確保 progress 屬性存在
+							})
+							.catch(error => {
+								console.error("Error fetching data:", error);
+							});
 					},
 					validateAndSubmit() {
 						const form = document.querySelector('.needs-validation');
@@ -218,7 +207,7 @@
 					},
 					async submitOrder() {
 						try {
-							const response = await axios.post('https://localhost:7292/api/GroupBuying/SubmitOrder', this.submitOrderModel);
+							const response = await axios.post('https://localhost:7292/api/SecondHand/Exchange', this.submitOrderModel);
 							Swal.fire({
 								icon: 'success',
 								title: '訂單提交成功',

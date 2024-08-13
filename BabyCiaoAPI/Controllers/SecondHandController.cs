@@ -64,12 +64,12 @@ namespace BabyCiaoAPI.Controllers
                                     Photo = p.PhotoName != null ? p.PhotoName : null,
                                     IsFavorite = userFavorites.Contains(s.Id)
                                 }).ToListAsync();
-            return Ok(result); 
+            return Ok(result);
         }
 
         // GET: api/SecondHand/Filter
         [HttpPost("Filter")]
-        public async Task<ActionResult<IEnumerable<SecondHandFilterDTO>>> Filter([FromBody] SecondHandFilterDTO model,string? userAccount)
+        public async Task<ActionResult<IEnumerable<SecondHandFilterDTO>>> Filter([FromBody] SecondHandFilterDTO model, string? userAccount)
         {
             try
             {
@@ -111,7 +111,7 @@ namespace BabyCiaoAPI.Controllers
 
                 }).ToListAsync();
 
-                return Ok(result); 
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -119,16 +119,16 @@ namespace BabyCiaoAPI.Controllers
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
-       
-        
+
+
         // GET: api/SecondHand/Exchange
         [HttpGet("Exchange")]
-        public async Task<ActionResult<IEnumerable<SecondHandExchangeDTO>>> Exchange(int id,string user)
-        {/////未完成
+        public async Task<ActionResult<IEnumerable<SecondHandExchangeDTO>>> Exchange(int id)
+        {/////傳入想換商品的ID
             var result = await (from s in _context.SecondHandSupplies
                                 join p in _context.SuppliesPhotos on s.Id equals p.IdSecondHandSupplies into pp
                                 from p in pp.OrderBy(p => p.PhotoName).Take(1).DefaultIfEmpty()
-                                where s.Display == true
+                                where s.Display == true&&s.Id==id
                                 select new SecondHandSuppliesDTO
                                 {
 
@@ -141,7 +141,7 @@ namespace BabyCiaoAPI.Controllers
                                     StockQuantity = s.StockQuantity,
                                     Type = s.Type,
                                     Photo = p.PhotoName != null ? p.PhotoName : null,
-                                }).ToListAsync();
+                                }).FirstOrDefaultAsync();
             return Ok(result);
         }
         // Post: api/SecondHand/Exchange
@@ -152,14 +152,14 @@ namespace BabyCiaoAPI.Controllers
             {
                 var exchange = new SecondHandExchangeOrder
                 {
-                    BuyerId=model.BuyerId,
-                    SellerId=model.SellerId,
-                    WantGetId=model.WantGetId,
+                    BuyerId = model.BuyerId,
+                    SellerId = model.SellerId,
+                    WantGetId = model.WantGetId,
                     GetQuantity = model.GetQuantity,
                     WantGiveId = model.WantGiveId,
                     GiveQuantity = model.GiveQuantity,
-                    ModifiedTime=DateTime.Now,
-                    Statement="申請中",
+                    ModifiedTime = DateTime.Now,
+                    Statement = "申請中",
                 };
                 _context.SecondHandExchangeOrders.Add(exchange);
                 await _context.SaveChangesAsync();
@@ -175,24 +175,29 @@ namespace BabyCiaoAPI.Controllers
 
         // GET: api/SecondHand
         [HttpGet("MyOrders")]
-        public async Task<ActionResult<IEnumerable<SecondHandSuppliesDTO>>> MyOrders()
+        public async Task<ActionResult<IEnumerable<GetSecondHandExchangeDTO>>> MyOrders(string user)
         {//////未完成!! 未加入USER篩選
-            var result = await (from s in _context.SecondHandSupplies
-                                join p in _context.SuppliesPhotos on s.Id equals p.IdSecondHandSupplies into pp
-                                from p in pp.OrderBy(p => p.PhotoName).Take(1).DefaultIfEmpty()
-                                where s.Display == true
-                                select new SecondHandSuppliesDTO
+            var result = await (from ex in _context.SecondHandExchangeOrders
+                                join p in _context.SecondHandSupplies on ex.WantGetId equals p.Id
+								join p2 in _context.SecondHandSupplies on ex.WantGiveId equals p2.Id
+								where ex.BuyerId == user
+                                select new GetSecondHandExchangeDTO
                                 {
-                                    Id = s.Id,
-                                    AccountUserAccount = s.AccountUserAccount,
-                                    SuppliesName = s.SuppliesName,
-                                    ModifiedTimeView = s.ModifiedTime.ToString("yyyy-MM-dd"),
+									Id=ex.Id,
+                                    BuyerId=user,
+                                    SellerId=ex.SellerId,
+                                    WantGetId=ex.WantGetId,
+                                    WantName=p.SuppliesName,
+                                    GetQuantity=ex.GetQuantity,
+                                    WantGiveId=ex.WantGiveId,
+                                    GiveName=p2.SuppliesName,
+                                    GiveQuantity=ex.GetQuantity,
+                                    ModifiedTime=ex.ModifiedTime,
+                                    View=ex.ModifiedTime.ToString("yyyy-MM-dd"),
+                                    Statement=ex.Statement,
 
-                                    SuppliesDescription = s.SuppliesDescription,
-                                    StockQuantity = s.StockQuantity,
-                                    Type = s.Type,
-                                    Photo = p.PhotoName != null ? p.PhotoName : null,
-                                }).ToListAsync();
+
+								}).ToListAsync();
             return Ok(result); ;
         }
         // GET: api/SecondHand
@@ -323,7 +328,7 @@ namespace BabyCiaoAPI.Controllers
 
             return Ok(new { Id = newId });
         }
-    
+
 
         //      // PUT: api/SecondHand/5
         [HttpPut("{id}")]
@@ -434,7 +439,7 @@ namespace BabyCiaoAPI.Controllers
                 }
                 _context.SecondHandSupplies.Remove(secondHandSupply);
             }
-                    await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
 
 
@@ -504,7 +509,7 @@ namespace BabyCiaoAPI.Controllers
                                     IdSecondHandSupplies = myf.IdSecondHandSupplies,
                                     UserName = user,
                                     ProductName = gb.SuppliesName,
-                               
+
 
                                 }).ToListAsync();
 

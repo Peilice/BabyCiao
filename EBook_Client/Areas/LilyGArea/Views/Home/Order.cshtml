@@ -83,7 +83,7 @@
 				<strong>訂單規格</strong>
 				<div v-if="orderDetails.productFormats && Object.keys(orderDetails.productFormats).length > 0">
 					<div v-for="(formats, formatType) in groupedFormats" :key="formatType">
-						<strong>◆ {{ formatType }}</strong>
+						<strong>-{{ formatType }}</strong>
 						<div v-for="format in formats" :key="format.id" class="radio-option">
 							<input type="radio" :id="format.id" :value="format.id" v-model="selectedFormat[formatType]" @@change="updateOrderFormats(formatType, format.id)" required>
 							<label :for="format.id">{{ format.formatName }}</label>
