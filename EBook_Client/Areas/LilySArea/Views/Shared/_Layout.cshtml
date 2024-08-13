@@ -108,9 +108,13 @@
                                         <label class="form-label" for="">密碼</label>
                                         <input class="form-control" type="password" @@keyup="enable" v-model="password">
                                     </div>
-                                    <div class="mb-3 d-flex justify-content-end">
+                                   @*  <div class="mb-3 d-flex justify-content-end">
                                         <button class="btn btn-success" :disabled="disableCheck" @@click="submit">登入</button>
-                                    </div>
+                                    </div> *@
+                                        <div class="modal-footer">
+                                            <button class="btn btn-success" v-bind:disabled="disableCheck" @@click="submit">登入</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                        </div>
                                 </div>
                             </div>
                         </div>
@@ -134,13 +138,38 @@
                 class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
             交易訂單
         </button>
-            <button @@click="myFav(loggedInUsername)"
+            <button @@click="getMyFav(loggedInUsername)" href="#CartOffcanvas" data-bs-toggle="offcanvas" aria-controls="offcanvas"
                     class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
                 我的最愛
             </button>
     </div>
 
         <!-- 浮在頁面的按鈕 end -->
+        <!-- offcanvas start -->
+
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="CartOffcanvas" aria-labelledby="CartOffcanvasLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">我的最愛</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <div>
+                    <div v-for="item in myFavs" :key="item.id">
+                        <ul class="list-unstyled">
+                            <li class="d-flex justify-content-between align-items-center">
+                                <strong>{{item.productName}}</strong>
+                                <button @@click="exchangeL(item.Id)" class="btn btn-outline-success">申請交換</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="dropdown mt-3">
+
+                    <a class="btn btn-secondary" data-bs-dismiss="offcanvas" aria-label="Close">返回</a>
+                </div>
+            </div>
+        </div>
+        <!-- offcanvas end -->
     </div>
 
 
@@ -164,6 +193,7 @@
         var app = Vue.createApp({
             data() {
                 return {
+                    myFavs: [],
                     username: "",
                     password: "",
                     disableCheck: true,
@@ -177,6 +207,18 @@
                 this.checkLoginStatus();
             },
             methods: {
+                async getMyFav(x) {
+                    //alert("LAYOUT");
+                    const url = `https://localhost:7292/api/SecondHand/MyFavorite/${sessionStorage.getItem("username")}`;
+                    await axios.get(url)
+                        .then(response => {
+                            this.myFavs = response.data;
+                        })
+                        .catch(error => {
+                            console.error("Error fetching data:", error);
+                        });
+
+                },
                 checkLoginStatus() {
                     const username = sessionStorage.getItem("username");
                     if (username) {
@@ -277,6 +319,9 @@
                         console.error('Error get my favorite:', error);
                     }
                 },
+                exchangeL(x) {
+                    alert("change",x);
+                }
 
             }
         });

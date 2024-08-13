@@ -108,9 +108,12 @@
                                         <label class="form-label" for="">密碼</label>
                                         <input class="form-control" type="password" @@keyup="enable" v-model="password">
                                     </div>
-                                    <div class="mb-3 d-flex justify-content-end">
+                                  @*   <div class="mb-3 d-flex justify-content-end">
                                         <button class="btn btn-success" :disabled="disableCheck" @@click="submit">登入</button>
-                                    </div>
+                                        </div> *@  <div class="modal-footer">
+                                            <button class="btn btn-success" v-bind:disabled="disableCheck" @@click="submit">登入</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                        </div>
                                 </div>
                             </div>
                         </div>

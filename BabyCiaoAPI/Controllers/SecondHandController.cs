@@ -31,8 +31,22 @@ namespace BabyCiaoAPI.Controllers
 
         // GET: api/SecondHand
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SecondHandSuppliesDTO>>> GetSecondHandSupplies()
+        public async Task<ActionResult<IEnumerable<SecondHandSuppliesDTO>>> GetSecondHandSupplies(string? userAccount)
         {
+            List<int> userFavorites = new List<int>();
+
+            if (userAccount != null)
+            {
+                if (!string.IsNullOrEmpty(userAccount))
+                {
+                    // 獲取用戶的最愛商品
+                    userFavorites = await _context.SecondHandFavorites
+                        .Where(fav => fav.AccountUserAccount == userAccount)
+                        .Select(fav => fav.IdSecondHandSupplies)
+                        .ToListAsync();
+                }
+
+            }
             var result = await (from s in _context.SecondHandSupplies
                                 join p in _context.SuppliesPhotos on s.Id equals p.IdSecondHandSupplies into pp
                                 from p in pp.OrderBy(p => p.PhotoName).Take(1).DefaultIfEmpty()
@@ -48,16 +62,31 @@ namespace BabyCiaoAPI.Controllers
                                     StockQuantity = s.StockQuantity,
                                     Type = s.Type,
                                     Photo = p.PhotoName != null ? p.PhotoName : null,
+                                    IsFavorite = userFavorites.Contains(s.Id)
                                 }).ToListAsync();
             return Ok(result); 
         }
 
         // GET: api/SecondHand/Filter
         [HttpPost("Filter")]
-        public async Task<ActionResult<IEnumerable<SecondHandFilterDTO>>> Filter([FromBody] SecondHandFilterDTO model)
+        public async Task<ActionResult<IEnumerable<SecondHandFilterDTO>>> Filter([FromBody] SecondHandFilterDTO model,string? userAccount)
         {
             try
             {
+                List<int> userFavorites = new List<int>();
+
+                if (userAccount != null)
+                {
+                    if (!string.IsNullOrEmpty(userAccount))
+                    {
+                        // 獲取用戶的最愛商品
+                        userFavorites = await _context.SecondHandFavorites
+                            .Where(fav => fav.AccountUserAccount == userAccount)
+                            .Select(fav => fav.IdSecondHandSupplies)
+                            .ToListAsync();
+                    }
+
+                }
                 var query = _context.SecondHandSupplies.Where(s => s.Display == true && ((model.Id == 0 || s.Id == model.Id) ||
                                   (string.IsNullOrEmpty(model.SuppliesName) || s.SuppliesName.Contains(model.SuppliesName)) || (string.IsNullOrEmpty(model.AccountUserAccount) || s.AccountUserAccount.Contains(model.AccountUserAccount)) ||
                                   (string.IsNullOrEmpty(model.SuppliesDescription) || s.SuppliesDescription.Contains(model.SuppliesDescription))) &&
@@ -76,7 +105,8 @@ namespace BabyCiaoAPI.Controllers
                             .Where(p => p.IdSecondHandSupplies == s.Id)
                             .OrderBy(p => p.PhotoName)
                             .Select(p => p.PhotoName)
-                            .FirstOrDefault()
+                            .FirstOrDefault(),
+                    IsFavorite = userFavorites.Contains(s.Id)
 
 
                 }).ToListAsync();
@@ -101,6 +131,7 @@ namespace BabyCiaoAPI.Controllers
                                 where s.Display == true
                                 select new SecondHandSuppliesDTO
                                 {
+
                                     Id = s.Id,
                                     AccountUserAccount = s.AccountUserAccount,
                                     SuppliesName = s.SuppliesName,
@@ -410,6 +441,79 @@ namespace BabyCiaoAPI.Controllers
             return NoContent();
         }
 
-       
+        ////加到收藏/最愛
+        [HttpPost("AddFav")]
+        public async Task<ActionResult<IEnumerable<SecondGetFavDTO>>> AddFav(int id, string user)
+        {
+            if (id == 0 || string.IsNullOrEmpty(user))
+            {
+                return BadRequest(new { message = "Invalid ID or User" });
+            }
+
+            try
+            {
+                var fav = new SecondHandFavorite
+                {
+                    Id = 0,
+                    IdSecondHandSupplies = id,
+                    AccountUserAccount = user
+                };
+                _context.SecondHandFavorites.Add(fav);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while adding favorite.");
+                return BadRequest(new { message = "An error occurred while processing your request.", error = ex.Message });
+            }
+
+            return NoContent();
+        }
+        ////刪除收藏/最愛
+        [HttpDelete("DeleteFav")]
+        public async Task<ActionResult<IEnumerable<SecondGetFavDTO>>> DeleteFav(int id, string user)
+        {
+
+            var fav = await _context.SecondHandFavorites.Where(f => f.IdSecondHandSupplies == id && f.AccountUserAccount == user).FirstOrDefaultAsync();
+            if (fav == null)
+            {
+                return NotFound();
+            }
+
+            _context.SecondHandFavorites.Remove(fav);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+
+        }
+        //我的最愛
+        [HttpGet("MyFavorite/{user}")]
+        public async Task<ActionResult<SecondGetFavDTO>> MyFavorite(string user)
+        {
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var myfavs = await (from myf in _context.SecondHandFavorites
+                                join gb in _context.SecondHandSupplies on myf.IdSecondHandSupplies equals gb.Id
+                                where myf.AccountUserAccount == user
+                                select new SecondGetFavDTO
+                                {
+                                    Id = myf.Id,
+                                    IdSecondHandSupplies = myf.IdSecondHandSupplies,
+                                    UserName = user,
+                                    ProductName = gb.SuppliesName,
+                               
+
+                                }).ToListAsync();
+
+            if (myfavs == null)
+            {
+                return NotFound(new { message = "尚無已加入之最愛商品" });
+            }
+
+            return Ok(myfavs);
+        }
     }
 }
