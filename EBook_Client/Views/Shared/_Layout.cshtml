@@ -92,12 +92,45 @@
             @RenderBody()
         </main>
     </div>
+    @* 互動式視窗 *@
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="app">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class=" mb-3 ">
+                                <label class="form-label" for="">帳號</label>
+                                <input class="form-control" type="text" @@keyup="enable" v-model="username">
+                            </div>
+                            <div class=" mb-3 ">
+                                <label class="form-label" for="">密碼</label>
+                                <input class="form-control" type="password" @@keyup="enable" v-model="password">
+                            </div>
+                            <div class=" mb-3">
+                                
+                            </div>
+                        </div>
 
-    @* <footer class="border-top footer text-muted">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button class="btn btn-primary" v-bind:disabled="disableCheck" @@click="submit">登入</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="border-top footer text-muted" style="position:relative">
         <div class="container">
             &copy; 2024 - test2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
-    </footer> *@
+    </footer> 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -126,11 +159,79 @@
                     }
                     _this.u_name = username;
                 },
+                
             },
 
         }
         var app = Vue.createApp(vueApp).mount('#loginApp')
+        var vueApp_login = {
+            data() {
+                return {
+                    username: "",
+                    password: "",
+                    disableCheck: true,
+                    baseAddress_API: "@Utility.SD.localHost_API",
+                    baseAddress_client: "@Utility.SD.localHost_Client",
+                }
+            },
+            mounted: function () {
+                let _this = this;
+            },
+            methods: {
+                enable: function () {
+                    this.disableCheck = this.password.length <= 0 || this.username.length <= 0
 
+                },
+                submit: function () {
+                    // alert("submit");
+                    let _this = this;
+                    var request = {};
+                    request.name = _this.username;
+                    request.password = _this.password;
+
+                    axios.post(`${_this.baseAddress_API}/api/Andy_JWT_Login`, request).then(response => {
+                        const token = response.data;
+                        const data1 = { Token: token };
+                        localStorage.setItem("token", data1.Token);
+
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "登入成功",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(s => {
+                            const useToken = localStorage.getItem("token");
+                            const headers = {
+                                'Authorization': `Bearer ${useToken}`,
+                            };
+
+                            axios.get(`${_this.baseAddress_API}/api/Andy_JWT_Login`, {
+                                headers
+                            }).then(result => {
+                                // alert(result.data)
+                                const username = result.data;
+                                const data2 = { Name: username };
+                                sessionStorage.setItem("username", data2.Name);
+                                // $('#username').text(`${result.data} ,你好!`);//實驗
+                                var target = sessionStorage.getItem("target");
+                                if (target != null) {
+                                    window.location.href = `${target}`;
+                                } else {
+                                    window.location.href = `${_this.baseAddress_client}/Home/Index`;
+                                }
+                            }).catch(err => {
+                                alert(err);
+                            })
+                        });
+
+                    }).catch(err => {
+                        alert(err);
+                    })
+                },
+            }
+        };
+        var app01 = Vue.createApp(vueApp_login).mount("#app");
         $(function () {
             //登出動畫與操作
             $('#logoutForm').on('click', function (e) {
@@ -166,7 +267,8 @@
                 } else {
                     e.preventDefault();
                     sessionStorage.setItem("target", "@Utility.SD.localHost_Client/andy_ebook/Home/Index")
-                    window.location.href = "@Utility.SD.localHost_Client/Home/Login";
+                    //window.location.href = "@Utility.SD.localHost_Client/Home/Login";
+                    $('#exampleModal').modal('show');
                 }
             })
         })
