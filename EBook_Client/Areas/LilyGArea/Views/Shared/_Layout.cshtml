@@ -20,7 +20,15 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
     <style>
         body {
-            background-image: url('/images/giftly.png');
+            /* background-image: url('/images/bg.jpg'); */
+            font-family: '華康采風體W3', serif;
+            font-size: 20px;
+        }
+
+        .accordion-button,a {
+            text-decoration: none;
+            color:darkgrey;
+            font-size: 20px;
         }
     </style>
 
@@ -66,10 +74,10 @@
                                         <a class="nav-link text-dark" asp-area="LilySArea" asp-controller="Home" asp-action="Index">二手物品</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-controller="Competitions" asp-action="Index">線上投票活動</a>
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Competitions" asp-action="Index">線上投票活動</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-controller="Platform" asp-action="Index">討論區</a>
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Platform" asp-action="Index">討論區</a>
                                     </li>
                                 </ul>
                             </li>
