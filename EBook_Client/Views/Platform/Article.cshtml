@@ -171,7 +171,10 @@
                         timer: 1500
                     })
                     .then(result=>{
-                        _this.getArticle();
+                        _this.isPost = false;
+                        _this.isArticle = true;
+                        _this.getArticle(_this.type);
+
                     })
                 })
             },
