@@ -62,11 +62,9 @@
                                 <p class="me-3">得票數 <span><i class="bi bi-lightning-charge-fill">{{item.number}}</i></span></p>
                                 <p>{{item.competitorContent}}</p>
                             </div>
-                            @* 確認是否有投過票 *@
-                            <button class="btn btn-outline-dark me-2 w-100"
-                                type="submit" 
-                                v-on:click="newVote(item.competitionDetailId)">
-                                @* <span>{{item.voteToID}}</span> *@
+                            <button class="btn me-2 w-100 text-dark"
+                                    v-bind:class="item.isVoteorNot" type="button"
+                                    v-on:click="newVote(item.competitionDetailId,item.isVoteorNot)">
                                 <i class="bi bi-heart">投票</i>
                             </button>
                         </div>
@@ -177,8 +175,8 @@
                 CompetitorPhoto:"noimage.jpg",
 
                 //使用者帳號
-                //userAccount:sessionStorage.getItem("username"),
-                userAccount: "user5",
+                userAccount:sessionStorage.getItem("username"),
+                //userAccount: "user5",
             };
         },
         methods: {
@@ -319,18 +317,50 @@
                     window.location.href = `https://localhost:7231/Competitions/MyCompetition/${userAccount}`;
                 }
             },
-            newVote:function(x){
+            newVote:function(x,y){
                 let _this = this;
                 var record = {};
                 record.voterAccount = _this.userAccount;
                 record.CompetitionId = IdCompetitions;
                 record.CompetitorId = x;
                 //console.log(record);
-                axios.post(`https://localhost:7292/api/OnlineCompetitions/createVote`, record)
-                    .then(result => {
-                        _this.fetchcompetitions();
-                        alert("投票成功")
-                    })
+                if (_this.userAccount == null){
+                    alert("請先登入");
+                }
+                else{
+                    if(y==="isNotVote"){
+                        axios.post(`https://localhost:7292/api/OnlineCompetitions/createVote`, record)
+                        .then(result => {
+                                Swal.fire({
+                                    position: "center",
+                                    icon: "success",
+                                    title: "投票成功",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                .then(result=>{
+                                    _this.fetchcompetitions();
+                                })
+                        })
+                    }
+                    else{
+                        axios.delete(`https://localhost:7292/api/OnlineCompetitions/deleteVote/${IdCompetitions}/${_this.userAccount}`)
+                            .then(result => {
+                                Swal.fire({
+                                    position: "center",
+                                    icon: "error",
+                                    title: "取消投票",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                .then(result=>{
+                                        _this.fetchcompetitions();
+                                })
+                            })
+                    }
+                }
+                
+                
             },
             fetchApply:function(){
                 let _this = this;

@@ -40,6 +40,7 @@ public class CompetitionDetailDTO
     //確認是否投票
     public bool IsVote { get; set; }
     public bool IsNotVote { get; set; }
+    public string IsVoteorNot {  get; set; }
 
 }
 

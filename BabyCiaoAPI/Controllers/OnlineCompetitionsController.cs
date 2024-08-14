@@ -96,7 +96,7 @@ namespace BabyCiaoAPI.Controllers
             //***[var num = _context.CompetitionRecords.Where(c2 => c2.IdCompetitionDetail== ???不能是var).Count();]***
             foreach (var item in ids)
             {
-                var num = _context.CompetitionRecords.Where(c2 => c2.IdCompetitionDetail == item && c2.IdOnlineCompetition == id).Count();
+                var num = await _context.CompetitionRecords.Where(c2 => c2.IdCompetitionDetail == item && c2.IdOnlineCompetition == id).CountAsync();
                 nums.Add(num);
 
             }
@@ -117,9 +117,63 @@ namespace BabyCiaoAPI.Controllers
                 isDislike = false;
             }
 
-            //確認是否有投票
-           
-            
+            //尋找個人投票紀錄
+            ////var vote = _context.CompetitionRecords.Where(c => c.IdOnlineCompetition == id && c.VoterAccount == account).SingleOrDefault();
+
+            //儲存比對結果，Dictionary<isNotVote,isVote>
+            ////Dictionary<bool,bool> bools = new Dictionary<bool,bool>();
+            ////var voteToid = vote.IdCompetitionDetail;
+
+            ////foreach (var item in a)
+            ////{
+
+            ////    if (voteToid == item.CompetitionDetailId)
+            ////    {
+            ////        bools.Add(false, true);
+
+            ////    }
+            ////    else
+            ////    {
+            ////        bools.Add(true, false);
+            ////    }
+            ////}
+
+            var vote = _context.CompetitionRecords
+                        .Where(c => c.IdOnlineCompetition == id && c.VoterAccount == account)
+                        .SingleOrDefault();
+
+            //Dictionary<bool, bool> bools = new Dictionary<bool, bool>();
+            List<string> isClass = new List<string>();
+            //bool isVote = false;
+            //bool isNotVote = false;
+
+            foreach (var item in a)
+            {
+                
+                if (vote != null)
+                {
+                    var voteToId = vote.IdCompetitionDetail;
+                    if (voteToId == item.CompetitionDetailId)
+                    {
+                        isClass.Add("btn-warning");
+                    }
+                    else
+                    {
+                        isClass.Add("btn-outline-warning");
+                    }
+
+                }
+                else
+                {
+                    isClass.Add("isNotVote");
+                }
+                   
+            }
+
+            // 更新字典值
+            //bools[false] = isNotVote;
+            //bools[true] = isVote;
+
 
             //將選手資料及得票數包進DTO list內
             for (int i = 0; i < nums.Count(); i++)
@@ -139,7 +193,10 @@ namespace BabyCiaoAPI.Controllers
                 dto.allnumber = b;
                 dto.IsLike = isLike;
                 dto.IsDisLike = isDislike;
+                dto.IsVoteorNot = isClass[i];
 
+                //dto.IsNotVote = bools.ElementAt(i).Key;
+                //dto.IsVote = bools.ElementAt(i).Value;
 
                 competitionDetailDTOs.Add(dto);
 
