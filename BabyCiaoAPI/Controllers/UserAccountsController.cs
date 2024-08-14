@@ -60,7 +60,7 @@ namespace BabyCiaoAPI.Controllers
             var userAccount = _context.UserAccounts
                 .FirstOrDefault(u => u.Account == loginDTO.Account);
 
-            if (userAccount == null || !BCrypt.Net.BCrypt.EnhancedVerify(loginDTO.Password, userAccount.Password))
+            if (userAccount == null || !BCrypt.Net.BCrypt.Verify(loginDTO.Password, userAccount.Password))
             {
                 return Unauthorized(new { message = "登入失敗" });
             }
@@ -148,7 +148,7 @@ namespace BabyCiaoAPI.Controllers
 
             var token = GenerateVerificationToken(userAccount);
 
-            var verificationLink = $"https://localhost:7231/Login/resetpassword?token={token}";
+            var verificationLink = $"https://localhost:7231/Home/resetpassword?token={token}";
             await SendEmailAsync(emailDTO.Email, "重設密碼驗證", $"請點擊此連結重設您的密碼: <a href=\"{verificationLink}\">點擊這裡</a>");
 
             return Ok(new { message = "已發送" });
@@ -242,7 +242,7 @@ namespace BabyCiaoAPI.Controllers
                     return BadRequest(new { message = "無效的令牌" });
                 }
 
-                var hashedPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(resetPasswordDTO.NewPassword, 13);
+                var hashedPassword = BCrypt.Net.BCrypt.HashPassword(resetPasswordDTO.NewPassword, 13);
                 userAccount.Password = hashedPassword;
                 _context.SaveChanges();
 

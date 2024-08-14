@@ -43,12 +43,11 @@ namespace BabyCiao_Client.Controllers
             return View();
         }
 
-        public IActionResult Announcement()
+        public IActionResult sendVerificationEmail()
         {
             return View();
         }
-
-        public IActionResult Announcement_Index()
+        public IActionResult resetpassword()
         {
             return View();
         }

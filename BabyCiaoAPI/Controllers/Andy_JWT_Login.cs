@@ -109,8 +109,10 @@ namespace BabyCiaoAPI.Controllers
         
             
             var accounts = _context.UserAccounts.Where(m => m.Account == my_account.name).FirstOrDefault();
-
-            bool check = BCrypt.Net.BCrypt.EnhancedVerify(my_account.password, accounts.Password);
+            if (accounts == null || !BCrypt.Net.BCrypt.Verify(my_account.password, accounts.Password))
+            {
+                return Unauthorized(new { message = "驗證失敗" });
+            }
             List<string> user_roles = getKeysByAccountName(accounts.Account);
             var varClaims = new List<Claim>
                 {
