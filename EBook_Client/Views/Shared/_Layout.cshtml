@@ -79,6 +79,9 @@
                         <li class="nav-item li_andy">
                             <a class="active nav-link" asp-area="" asp-controller="Home" asp-action="About">關於我們</a>
                         </li>
+                        <li class="nav-item li_andy">
+                            <a class="active nav-link" asp-area="" asp-controller="Home" asp-action="Announcement_Index">公告消息</a>
+                        </li>
                         <li class="nav-item dropdown li_andy">
                             <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">媒合平台</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -112,11 +115,6 @@
                         <template v-if="isadmin==true">
                             <li class="nav-item li_andy">
                                 <a class="nav-link text-dark" href="@Utility.SD.localHost_Backstage/Home/Index">管理後台</a>
-                            </li>
-                        </template>
-                        <template v-else>
-                            <li class="nav-item li_andy">
-                                <a class="nav-link text-dark" href="@Utility.SD.localHost_Backstage/Home/Index"></a>
                             </li>
                         </template>
                     </ul>
