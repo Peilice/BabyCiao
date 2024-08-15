@@ -264,7 +264,8 @@ header {
 }
 
 .header_div1 {
-    background-color: #f3c76a;
+    /*background-color: #f3c76a;*/
+    background-image: url('/images/圖片3.jpg');
     margin: 0;
     margin-bottom: 16px;
     height: 5em;

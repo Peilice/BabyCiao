@@ -599,8 +599,8 @@
                 await _this.getSleepDetailData(IdContactBook);
                 //_this.reflesh();
                 //_this.addToChart();
-                
-                createChart(Diet_datas, Diaper_datas, Memo_datas, Sleep_datas);
+
+                await createChart(Diet_datas, Diaper_datas, Memo_datas, Sleep_datas);
                 //console.log(chart);
             },
             methods: {
@@ -1031,7 +1031,7 @@
 
                         try {
                             _this.createChartData(Temp_List_Datas_24hr);
-
+                            console.log(Temp_List_Datas_24hr);
                         } catch (ex) {
 
                         };
