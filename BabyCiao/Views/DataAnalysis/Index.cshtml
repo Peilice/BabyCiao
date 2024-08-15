@@ -1,4 +1,4 @@
-﻿@* @model BabyCiao.Controllers.DataAnalysisViewModel
+﻿@model BabyCiao.Controllers.DataAnalysisViewModel
 
 
 <div id="app">
@@ -18,8 +18,8 @@
                 nannyTotalCount: @Model.NannyTotalCount
                     },
             mounted() {
-                console.log('家長總數量:', this.parentTotalCount);
-                console.log('保母總數量:', this.nannyTotalCount);
+                console.log('帳號總數量:', this.parentTotalCount);
+                console.log('聯絡簿總數量:', this.nannyTotalCount);
                 this.drawChart();
             },
             methods: {
@@ -36,7 +36,7 @@
                             }
                         },
                         legend: {
-                            data: ['保母數量', '家長數量'],
+                            data: ['帳號數量', '聯絡簿數量'],
                             textStyle: {
                                 fontSize: 18, // 設定圖例字體大小
                                 color: 'black' // 設定圖例字體顏色
@@ -50,7 +50,7 @@
                         },
                         xAxis: {
                             type: 'category',
-                            data: ['委託單'],
+                            data: ['各數據分析'],
                             axisLabel: {
                                 fontSize: 24, // 設定X軸標籤字體大小
                                 color: 'black' // 設定X軸標籤字體顏色
@@ -65,7 +65,7 @@
                         },
                         series: [
                             {
-                                name: '保母數量',
+                                name: '帳號數量',
                                 type: 'bar',
                                 data: [this.nannyTotalCount],
                                 itemStyle: {
@@ -79,7 +79,7 @@
                                 }
                             },
                             {
-                                name: '家長數量',
+                                name: '聯絡簿數量',
                                 type: 'bar',
                                 data: [this.parentTotalCount],
                                 itemStyle: {
@@ -101,4 +101,3 @@
         });
     </script>
 }
- *@

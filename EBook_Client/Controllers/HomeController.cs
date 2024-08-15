@@ -42,6 +42,10 @@ namespace BabyCiao_Client.Controllers
         {
             return View();
         }
+        public IActionResult Message()
+        {
+            return View();
+        }
 
         public IActionResult sendVerificationEmail()
         {
@@ -51,6 +55,7 @@ namespace BabyCiao_Client.Controllers
         {
             return View();
         }
+       
 
 
         //[Route("Home/GetUserName")]
