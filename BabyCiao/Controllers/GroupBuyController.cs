@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BabyCiao.Controllers
 {
-    [Authorize(Roles = "公告編輯")]
+   // [Authorize(Roles = "公告編輯")]
     public class GroupBuyController : Controller
     {
         private readonly BabyciaoContext _context;
