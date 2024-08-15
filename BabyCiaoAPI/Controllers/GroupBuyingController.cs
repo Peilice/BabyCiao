@@ -381,11 +381,12 @@ namespace BabyCiaoAPI.Controllers
 			}
 			else
 			{
+				
 				var singleFormat = new GroupBuyingDetailFormat
 				{
 					GroupBuyingDetailId = newId,
 					FormatId = null,
-					Quantity = model.OrderFormats[0].Quantity,
+					Quantity = model.OrderFormats[model.OrderFormats.Count - 1].Quantity,
 				};
 				_context.GroupBuyingDetailFormats.Add(singleFormat);
 				await _context.SaveChangesAsync();

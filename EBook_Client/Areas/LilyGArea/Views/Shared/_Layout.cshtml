@@ -36,6 +36,31 @@
             background-image: url('/images/圖片3.jpg');
             /* opacity: .8; */
         }
+
+        .img6 {
+            margin: 8px auto;
+            float: left;
+            width: 70px;
+            height: auto;
+        }
+
+        .img7 {
+            margin: 8px 32px;
+            float: right;
+            width: 25px;
+            height: auto;
+        }
+
+        footer {
+            background-color: #FFF0AC;
+            margin: 0;
+        }
+
+        .p1 {
+            color: azure;
+            padding: 16px;
+            text-align: center;
+        }
     </style>
 
     <script>
@@ -180,12 +205,14 @@
             @RenderBody()
         </main>
     </div>
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - test2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer >
+        <img class="img6" src="~/images/p6.png" alt="">
+        <img class="img7" src="~/images/p7.png" alt="">
+        <div class="container p1">
+            2024 - BabyCiao
         </div>
     </footer>
-    
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
