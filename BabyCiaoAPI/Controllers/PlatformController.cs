@@ -302,5 +302,13 @@ namespace BabyCiaoAPI.Controllers
             
         }
 
+
+        //搜尋
+        //Post api/Platform/Search
+        //[HttpPost("Search")]
+        //public async Task<IActionResult<IEnumerable<PlatformDTO>>> Search()
+        //{
+            
+        //}
     }
 }
