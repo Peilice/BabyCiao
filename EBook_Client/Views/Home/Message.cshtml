@@ -10,11 +10,11 @@
                     <h2>訊息</h2>
                 </div>
                 <div class="card-body" id="myapp">
-                    <!-- 只顯示後台客服的回覆Context內容 -->
-                    <div v-for="context in contexts" :key="context.id" class="mb-3">
+                    <!-- 只顯示後台客服的回覆Context內容，並顯示回覆的帳號 -->
+                    <div v-for="(context, index) in contexts" :key="index" class="mb-3">
                         <div class="card">
                             <div class="card-body">
-                                <p>{{ context }}</p>
+                                <p><strong>{{ context.userName ? context.userName : "客服人員" }}:</strong> {{ context.context }}</p>
                             </div>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
         createApp({
             data() {
                 return {
-                    contexts: [], // 儲存 API 返回的 context 字段
+                    contexts: [], // 儲存 API 返回的 context 和 userName
                     userMessage: '', // 使用者輸入的回覆訊息
                     accountUserAccount: '' // 用戶帳號，用於識別用戶
                 };
@@ -54,28 +54,30 @@
                         .then(response => {
                             this.contexts = response.data
                                 .filter(ticket => ticket.accountUserAccount === this.accountUserAccount) // 過濾出與當前用戶帳號匹配的記錄
-                                .map(ticket => ticket.context); // 只提取 context 字段
+                                .map(ticket => ({
+                                    userName: ticket.userName,
+                                    context: ticket.context
+                                })); // 提取 userName 和 context 字段
                         })
                         .catch(error => {
                             console.error('Error loading contexts:', error);
+                            alert('載入回覆內容時發生錯誤，請稍後再試。');
                         });
                 },
                 submitReply() {
-                    // 構造使用者回覆的資料
                     const newReply = {
-                        userName: this.accountUserAccount || '',  // 使用 accountUserAccount 作為 userName，如果為空，則設為空字串
-                        phone: '',  // 如果不需要，可以設置為空字串
-                        email: '',  // 如果不需要，可以設置為空字串
-                        title: '',  // 設置為固定字串或由使用者輸入
-                        context: this.userMessage || '',  // 使用者輸入的內容，如果為空，則設為空字串
-                        type: '',  // 如果不需要，可以設置為空字串
-                        statement: '',  // 如果不需要，可以設置為空字串
-                        accountUserAccount: this.accountUserAccount || '',  // 用戶帳號，如果為空，則設為空字串
-                        createddated: new Date(),  // 設置為當前日期
-                        modiifiedDate: new Date()  // 設置為當前日期
+                        userName: this.accountUserAccount || '',
+                        phone: '',
+                        email: '',
+                        title: '',
+                        context: this.userMessage || '',
+                        type: '',
+                        statement: '',
+                        accountUserAccount: this.accountUserAccount || '',
+                        createddated: new Date(),
+                        modiifiedDate: new Date()
                     };
 
-                    // 提交使用者的回覆
                     axios.post('https://localhost:7292/api/CustomerService', newReply)
                         .then(response => {
                             alert('您的回覆已送出');
@@ -84,24 +86,18 @@
                         })
                         .catch(error => {
                             console.error('提交回覆時發生錯誤:', error);
-                            console.error('請求資料:', newReply);
+                            alert('提交回覆時發生錯誤，請稍後再試。');
                         });
                 }
-
             },
             mounted() {
-                // 從 sessionStorage 取得用戶帳號
                 this.accountUserAccount = sessionStorage.getItem('username');
 
-                // 檢查是否成功獲取帳號
                 if (!this.accountUserAccount) {
                     alert('用戶資料缺失，請重新登錄。');
                     return;
                 }
 
-                console.log('取得的帳號:', this.accountUserAccount); // 確認帳號是否正確
-
-                // 初始化時載入回覆內容
                 this.loadReplies();
             }
         }).mount('#myapp');

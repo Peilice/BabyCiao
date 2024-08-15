@@ -27,11 +27,15 @@ namespace BabyCiao.Controllers
             var nannyTotalCount = await _context.ContactBooks
                 .CountAsync();
 
+            var AddressTotalCount = await _context.UserInformations
+               .CountAsync();
+
             // 準備數據發送到視圖
             var model = new DataAnalysisViewModel
             {
                 ParentTotalCount = parentTotalCount,
-                NannyTotalCount = nannyTotalCount
+                NannyTotalCount = nannyTotalCount,
+                AddressTotalCount = AddressTotalCount
             };
 
             return View(model);
@@ -42,5 +46,6 @@ namespace BabyCiao.Controllers
     {
         public int ParentTotalCount { get; set; }
         public int NannyTotalCount { get; set; }
+        public int AddressTotalCount { get; set; }
     }
 }
