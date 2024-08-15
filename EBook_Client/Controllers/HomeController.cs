@@ -51,7 +51,14 @@ namespace BabyCiao_Client.Controllers
         {
             return View();
         }
-
+        public IActionResult Announcement()
+        {
+            return View();
+        }
+        public IActionResult Announcement_Index()
+        {
+            return View();
+        }
 
         //[Route("Home/GetUserName")]
         //[HttpGet]
