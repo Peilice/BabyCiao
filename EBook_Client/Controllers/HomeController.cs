@@ -38,6 +38,19 @@ namespace BabyCiao_Client.Controllers
         {
             return View();
         }
+        public IActionResult UserInformation()
+        {
+            return View();
+        }
+
+        public IActionResult sendVerificationEmail()
+        {
+            return View();
+        }
+        public IActionResult resetpassword()
+        {
+            return View();
+        }
 
 
         //[Route("Home/GetUserName")]

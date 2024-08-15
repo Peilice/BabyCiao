@@ -36,20 +36,21 @@
             },
             methods: {
                 enable: function () {
-                    this.disableCheck = this.password.length <= 0 || this.username.length <= 0
-
+                    this.disableCheck = this.password.length <= 0 || this.username.length <= 0;
                 },
                 submit: function () {
-                    // alert("submit");
                     let _this = this;
-                    var request = {};
-                    request.name = _this.username;
-                    request.password = _this.password;
+                    var request = {
+                        name: _this.username,
+                        password: _this.password
+                    };
 
                     axios.post(`${_this.baseAddress_API}/api/Andy_JWT_Login`, request).then(response => {
                         const token = response.data;
-                        const data1 = { Token: token };
-                        localStorage.setItem("token", data1.Token);
+
+                        // 儲存 Token 和帳號到 localStorage
+                        localStorage.setItem("token", token);
+                        localStorage.setItem("account", _this.username);
 
                         Swal.fire({
                             position: "center",
@@ -57,34 +58,32 @@
                             title: "登入成功",
                             showConfirmButton: false,
                             timer: 1500
-                        }).then(s => {
+                        }).then(() => {
                             const useToken = localStorage.getItem("token");
                             const headers = {
                                 'Authorization': `Bearer ${useToken}`,
                             };
 
-                            axios.get(`${_this.baseAddress_API}/api/Andy_JWT_Login`, {
-                                headers
-                            }).then(result => {
-                                // alert(result.data)
-                                const username = result.data;
-                                const data2 = { Name: username };
-                                sessionStorage.setItem("username", data2.Name);
-                                // $('#username').text(`${result.data} ,你好!`);//實驗
-                                var target = sessionStorage.getItem("target");
-                                if (target != null) {
-                                    window.location.href = `${target}`;
-                                } else {
-                                    window.location.href = `${_this.baseAddress_client}/Home/Index`;
-                                }
-                            }).catch(err => {
-                                alert(err);
-                            })
+                            axios.get(`${_this.baseAddress_API}/api/Andy_JWT_Login`, { headers })
+                                .then(result => {
+                                    const username = result.data;
+                                    sessionStorage.setItem("username", username);
+
+                                    var target = sessionStorage.getItem("target");
+                                    if (target != null) {
+                                        window.location.href = target;
+                                    } else {
+                                        window.location.href = `${_this.baseAddress_client}/Home/Index`;
+                                    }
+                                })
+                                .catch(err => {
+                                    alert(err);
+                                });
                         });
 
                     }).catch(err => {
                         alert(err);
-                    })
+                    });
                 },
             }
         };

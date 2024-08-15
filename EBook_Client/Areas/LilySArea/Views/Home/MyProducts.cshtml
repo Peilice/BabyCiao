@@ -201,7 +201,7 @@
 								<label for="photoFiles"><strong>商品照片</strong></label>
 								<input type="file" id="fileInput" class="form-control" multiple @@change=fileInput />
 
-								<div id="preview-container" class="preview-container"></div>
+								@* <div id="preview-container" class="preview-container"></div> *@
 
 							</div>
 
@@ -600,8 +600,7 @@
 						},
 					
 						getMyProducts() {
-							// 根據 this.sortOption 進行排序操作
-							console.log(`排序方式: ${this.sortOption}`);
+							
 							axios.get(`https://localhost:7292/api/SecondHand/MyProducts?user=${this.productDetails.accountUserAccount}`)
 								.then(response => {
 									this.myProducts = response.data;

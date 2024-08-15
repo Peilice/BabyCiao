@@ -31,8 +31,22 @@ namespace BabyCiaoAPI.Controllers
 
         // GET: api/SecondHand
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SecondHandSuppliesDTO>>> GetSecondHandSupplies()
+        public async Task<ActionResult<IEnumerable<SecondHandSuppliesDTO>>> GetSecondHandSupplies(string? userAccount)
         {
+            List<int> userFavorites = new List<int>();
+
+            if (userAccount != null)
+            {
+                if (!string.IsNullOrEmpty(userAccount))
+                {
+                    // 獲取用戶的最愛商品
+                    userFavorites = await _context.SecondHandFavorites
+                        .Where(fav => fav.AccountUserAccount == userAccount)
+                        .Select(fav => fav.IdSecondHandSupplies)
+                        .ToListAsync();
+                }
+
+            }
             var result = await (from s in _context.SecondHandSupplies
                                 join p in _context.SuppliesPhotos on s.Id equals p.IdSecondHandSupplies into pp
                                 from p in pp.OrderBy(p => p.PhotoName).Take(1).DefaultIfEmpty()
@@ -48,16 +62,31 @@ namespace BabyCiaoAPI.Controllers
                                     StockQuantity = s.StockQuantity,
                                     Type = s.Type,
                                     Photo = p.PhotoName != null ? p.PhotoName : null,
+                                    IsFavorite = userFavorites.Contains(s.Id)
                                 }).ToListAsync();
-            return Ok(result); 
+            return Ok(result);
         }
 
         // GET: api/SecondHand/Filter
         [HttpPost("Filter")]
-        public async Task<ActionResult<IEnumerable<SecondHandFilterDTO>>> Filter([FromBody] SecondHandFilterDTO model)
+        public async Task<ActionResult<IEnumerable<SecondHandFilterDTO>>> Filter([FromBody] SecondHandFilterDTO model, string? userAccount)
         {
             try
             {
+                List<int> userFavorites = new List<int>();
+
+                if (userAccount != null)
+                {
+                    if (!string.IsNullOrEmpty(userAccount))
+                    {
+                        // 獲取用戶的最愛商品
+                        userFavorites = await _context.SecondHandFavorites
+                            .Where(fav => fav.AccountUserAccount == userAccount)
+                            .Select(fav => fav.IdSecondHandSupplies)
+                            .ToListAsync();
+                    }
+
+                }
                 var query = _context.SecondHandSupplies.Where(s => s.Display == true && ((model.Id == 0 || s.Id == model.Id) ||
                                   (string.IsNullOrEmpty(model.SuppliesName) || s.SuppliesName.Contains(model.SuppliesName)) || (string.IsNullOrEmpty(model.AccountUserAccount) || s.AccountUserAccount.Contains(model.AccountUserAccount)) ||
                                   (string.IsNullOrEmpty(model.SuppliesDescription) || s.SuppliesDescription.Contains(model.SuppliesDescription))) &&
@@ -76,12 +105,13 @@ namespace BabyCiaoAPI.Controllers
                             .Where(p => p.IdSecondHandSupplies == s.Id)
                             .OrderBy(p => p.PhotoName)
                             .Select(p => p.PhotoName)
-                            .FirstOrDefault()
+                            .FirstOrDefault(),
+                    IsFavorite = userFavorites.Contains(s.Id)
 
 
                 }).ToListAsync();
 
-                return Ok(result); 
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -89,18 +119,19 @@ namespace BabyCiaoAPI.Controllers
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
-       
-        
+
+
         // GET: api/SecondHand/Exchange
         [HttpGet("Exchange")]
-        public async Task<ActionResult<IEnumerable<SecondHandExchangeDTO>>> Exchange(int id,string user)
-        {/////未完成
+        public async Task<ActionResult<IEnumerable<SecondHandExchangeDTO>>> Exchange(int id)
+        {/////傳入想換商品的ID
             var result = await (from s in _context.SecondHandSupplies
                                 join p in _context.SuppliesPhotos on s.Id equals p.IdSecondHandSupplies into pp
                                 from p in pp.OrderBy(p => p.PhotoName).Take(1).DefaultIfEmpty()
-                                where s.Display == true
+                                where s.Display == true&&s.Id==id
                                 select new SecondHandSuppliesDTO
                                 {
+
                                     Id = s.Id,
                                     AccountUserAccount = s.AccountUserAccount,
                                     SuppliesName = s.SuppliesName,
@@ -110,7 +141,7 @@ namespace BabyCiaoAPI.Controllers
                                     StockQuantity = s.StockQuantity,
                                     Type = s.Type,
                                     Photo = p.PhotoName != null ? p.PhotoName : null,
-                                }).ToListAsync();
+                                }).FirstOrDefaultAsync();
             return Ok(result);
         }
         // Post: api/SecondHand/Exchange
@@ -121,14 +152,14 @@ namespace BabyCiaoAPI.Controllers
             {
                 var exchange = new SecondHandExchangeOrder
                 {
-                    BuyerId=model.BuyerId,
-                    SellerId=model.SellerId,
-                    WantGetId=model.WantGetId,
+                    BuyerId = model.BuyerId,
+                    SellerId = model.SellerId,
+                    WantGetId = model.WantGetId,
                     GetQuantity = model.GetQuantity,
                     WantGiveId = model.WantGiveId,
                     GiveQuantity = model.GiveQuantity,
-                    ModifiedTime=DateTime.Now,
-                    Statement="申請中",
+                    ModifiedTime = DateTime.Now,
+                    Statement = "申請中",
                 };
                 _context.SecondHandExchangeOrders.Add(exchange);
                 await _context.SaveChangesAsync();
@@ -143,27 +174,65 @@ namespace BabyCiaoAPI.Controllers
         }
 
         // GET: api/SecondHand
+        //申請中
         [HttpGet("MyOrders")]
-        public async Task<ActionResult<IEnumerable<SecondHandSuppliesDTO>>> MyOrders()
-        {//////未完成!! 未加入USER篩選
-            var result = await (from s in _context.SecondHandSupplies
-                                join p in _context.SuppliesPhotos on s.Id equals p.IdSecondHandSupplies into pp
-                                from p in pp.OrderBy(p => p.PhotoName).Take(1).DefaultIfEmpty()
-                                where s.Display == true
-                                select new SecondHandSuppliesDTO
+        public async Task<ActionResult<IEnumerable<GetSecondHandExchangeDTO>>> MyOrders(string user)
+        {
+            var result = await (from ex in _context.SecondHandExchangeOrders
+                                join p in _context.SecondHandSupplies on ex.WantGetId equals p.Id
+								join p2 in _context.SecondHandSupplies on ex.WantGiveId equals p2.Id
+								where ex.BuyerId == user
+                                select new GetSecondHandExchangeDTO
                                 {
-                                    Id = s.Id,
-                                    AccountUserAccount = s.AccountUserAccount,
-                                    SuppliesName = s.SuppliesName,
-                                    ModifiedTimeView = s.ModifiedTime.ToString("yyyy-MM-dd"),
+									Id=ex.Id,
+                                    BuyerId=user,
+                                    SellerId=ex.SellerId,
+                                    WantGetId=ex.WantGetId,
+                                    WantName=p.SuppliesName,
+                                    GetQuantity=ex.GetQuantity,
+                                    WantGiveId=ex.WantGiveId,
+                                    GiveName=p2.SuppliesName,
+                                    GiveQuantity=ex.GetQuantity,
+                                    ModifiedTime=ex.ModifiedTime,
+                                    View=ex.ModifiedTime.ToString("yyyy-MM-dd"),
+                                    Statement=ex.Statement,
 
-                                    SuppliesDescription = s.SuppliesDescription,
-                                    StockQuantity = s.StockQuantity,
-                                    Type = s.Type,
-                                    Photo = p.PhotoName != null ? p.PhotoName : null,
+
+								}).ToListAsync();
+            return Ok(result); ;
+        }
+
+
+
+        // GET: api/SecondHand
+        //未確認
+        [HttpGet("UncheckedOrders")]
+        public async Task<ActionResult<IEnumerable<GetSecondHandExchangeDTO>>> UncheckedOrders(string user)
+        {
+            var result = await (from ex in _context.SecondHandExchangeOrders
+                                join p in _context.SecondHandSupplies on ex.WantGetId equals p.Id
+                                join p2 in _context.SecondHandSupplies on ex.WantGiveId equals p2.Id
+                                where ex.SellerId == user
+                                select new GetSecondHandExchangeDTO
+                                {
+                                    Id = ex.Id,
+                                    BuyerId = user,
+                                    SellerId = ex.SellerId,
+                                    WantGetId = ex.WantGetId,
+                                    WantName = p.SuppliesName,
+                                    GetQuantity = ex.GetQuantity,
+                                    WantGiveId = ex.WantGiveId,
+                                    GiveName = p2.SuppliesName,
+                                    GiveQuantity = ex.GetQuantity,
+                                    ModifiedTime = ex.ModifiedTime,
+                                    View = ex.ModifiedTime.ToString("yyyy-MM-dd"),
+                                    Statement = ex.Statement,
+
+
                                 }).ToListAsync();
             return Ok(result); ;
         }
+
         // GET: api/SecondHand
         [HttpGet("MyProducts")]
         public async Task<ActionResult<IEnumerable<SecondHandSuppliesDTO>>> MyProducts(string user)
@@ -292,7 +361,7 @@ namespace BabyCiaoAPI.Controllers
 
             return Ok(new { Id = newId });
         }
-    
+
 
         //      // PUT: api/SecondHand/5
         [HttpPut("{id}")]
@@ -403,13 +472,86 @@ namespace BabyCiaoAPI.Controllers
                 }
                 _context.SecondHandSupplies.Remove(secondHandSupply);
             }
-                    await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
 
 
             return NoContent();
         }
 
-       
+        ////加到收藏/最愛
+        [HttpPost("AddFav")]
+        public async Task<ActionResult<IEnumerable<SecondGetFavDTO>>> AddFav(int id, string user)
+        {
+            if (id == 0 || string.IsNullOrEmpty(user))
+            {
+                return BadRequest(new { message = "Invalid ID or User" });
+            }
+
+            try
+            {
+                var fav = new SecondHandFavorite
+                {
+                    Id = 0,
+                    IdSecondHandSupplies = id,
+                    AccountUserAccount = user
+                };
+                _context.SecondHandFavorites.Add(fav);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while adding favorite.");
+                return BadRequest(new { message = "An error occurred while processing your request.", error = ex.Message });
+            }
+
+            return NoContent();
+        }
+        ////刪除收藏/最愛
+        [HttpDelete("DeleteFav")]
+        public async Task<ActionResult<IEnumerable<SecondGetFavDTO>>> DeleteFav(int id, string user)
+        {
+
+            var fav = await _context.SecondHandFavorites.Where(f => f.IdSecondHandSupplies == id && f.AccountUserAccount == user).FirstOrDefaultAsync();
+            if (fav == null)
+            {
+                return NotFound();
+            }
+
+            _context.SecondHandFavorites.Remove(fav);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+
+        }
+        //我的最愛
+        [HttpGet("MyFavorite/{user}")]
+        public async Task<ActionResult<SecondGetFavDTO>> MyFavorite(string user)
+        {
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var myfavs = await (from myf in _context.SecondHandFavorites
+                                join gb in _context.SecondHandSupplies on myf.IdSecondHandSupplies equals gb.Id
+                                where myf.AccountUserAccount == user
+                                select new SecondGetFavDTO
+                                {
+                                    Id = myf.Id,
+                                    IdSecondHandSupplies = myf.IdSecondHandSupplies,
+                                    UserName = user,
+                                    ProductName = gb.SuppliesName,
+
+
+                                }).ToListAsync();
+
+            if (myfavs == null)
+            {
+                return NotFound(new { message = "尚無已加入之最愛商品" });
+            }
+
+            return Ok(myfavs);
+        }
     }
 }

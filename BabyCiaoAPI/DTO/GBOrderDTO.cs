@@ -20,6 +20,7 @@ namespace BabyCiaoAPI.DTO
         [Display(Name = "下單時間")]
         public DateTime JoinModifiedTime { get; set; }//下單時間
 
+    
 
         [Display(Name = "參加狀態")]
         public string JoinStatement { get; set; } = null!;//參加狀態

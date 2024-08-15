@@ -30,13 +30,15 @@ namespace BabyCiaoAPI.DTO
 
 		[Display(Name = "照片")]
 		public string? Photo { get; set; }
+        public bool IsFavorite { get; set; }
 
-	}
+    }
 
 	public class SecondHandFilterDTO
-	{
+    {
+        public bool IsFavorite { get; set; }
 
-		[Display(Name = "商品編號")]
+        [Display(Name = "商品編號")]
 		public int Id { get; set; }
 
 		[Display(Name = "上傳用戶")]
@@ -115,5 +117,21 @@ namespace BabyCiaoAPI.DTO
 
 		public string ModifiedTime { get; set; } = null!;
 	}
+    public class SecondGetFavDTO
+    {
 
+
+        [Display(Name = "最愛編號")]
+        public int Id { get; set; }
+        [Display(Name = "商品編號")]
+        public int IdSecondHandSupplies { get; set; }
+
+        [Display(Name = "帳號")]
+        public string UserName { get; set; } = null!;
+
+        [Display(Name = "商品")]
+        public string ProductName { get; set; } = null!;
+
+
+    }
 }

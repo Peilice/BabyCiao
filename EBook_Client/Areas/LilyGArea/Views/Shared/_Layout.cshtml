@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
     <style>
         body {
-            /* background-image: url('/images/bg.jpg'); */
+            background-image: url('/images/圖片11.png');
             font-family: '華康采風體W3', serif;
             font-size: 20px;
         }
@@ -30,6 +30,12 @@
             color:darkgrey;
             font-size: 20px;
         }
+
+        .nnn {
+            /* background-color: #8babc6; */
+            background-image: url('/images/圖片3.jpg');
+            /* opacity: .8; */
+        }
     </style>
 
     <script>
@@ -38,9 +44,9 @@
 </head>
 <body>
     <div id="app00">
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid" >
+        <header >
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 nnn">
+                <div class="container-fluid ">
                     <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/babyciao文字圖.png" width="200" /></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -58,9 +64,9 @@
                                     <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="NannyApply">加入我們</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item">
+							@*<li class="nav-item">
                                 <a class="nav-link text-dark" href="@Utility.SD.localHost_Backstage/Home/Index">管理後台</a>
-                            </li>
+                            </li> *@
                             <li class="nav-item">
                                 <a id="e_book" class="nav-link text-dark" asp-area="andy_ebook" asp-controller="Home" asp-action="Index">電子聯絡簿</a>
                             </li>
@@ -108,9 +114,12 @@
                                         <label class="form-label" for="">密碼</label>
                                         <input class="form-control" type="password" @@keyup="enable" v-model="password">
                                     </div>
-                                    <div class="mb-3 d-flex justify-content-end">
+                                  @*   <div class="mb-3 d-flex justify-content-end">
                                         <button class="btn btn-success" :disabled="disableCheck" @@click="submit">登入</button>
-                                    </div>
+                                        </div> *@  <div class="modal-footer">
+                                            <button class="btn btn-success" v-bind:disabled="disableCheck" @@click="submit">登入</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                        </div>
                                 </div>
                             </div>
                         </div>
@@ -122,8 +131,9 @@
         </nav>
     </header>
         <!-- Lily浮在頁面的按鈕 start -->
-    <a 
-           class="bg-success bg-opacity-75 text-white position-fixed bottom-0 end-0 p-2 text-decoration-none m-3 border border-1" onclick="scrollToTop()">PAGETOP</a>
+        <button class="bg-success bg-opacity-75 text-white position-fixed bottom-0 end-0 p-2 text-decoration-none m-3 border border-1" onclick="scrollToTop()">PAGETOP</button>
+        @* 後台入口 *@
+        <a v-if="loggedInUsername" class=" text-white position-fixed bottom-10 end-0 p-2 text-decoration-none m-3 border border-1" href="https://localhost:7000/Home/Index">⚙️</a>
 
         <div v-if="loggedInUsername" class="position-fixed top-10 start-0">
             <button @@click="myOrders(loggedInUsername)"
@@ -190,6 +200,7 @@
                     disableCheck: true,
                     isLoggedIn: false,
                     loggedInUsername: "",
+                    loggedAdmin:"",
                     myFavs:[],
                     baseAddress_API: "@Utility.SD.localHost_API",
                     baseAddress_client: "@Utility.SD.localHost_Client",
@@ -236,6 +247,7 @@
                     if (username) {
                         this.isLoggedIn = true;
                         this.loggedInUsername = username;
+                        
                     }
                 },
                 enable() {

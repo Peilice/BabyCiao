@@ -1,0 +1,95 @@
+﻿
+
+@section Styles{
+    <link href="/css/news.css" rel="stylesheet">
+    <style>
+        
+    </style>
+}
+
+<div id="news" class="big-backImg  position-relative">
+    <h1 class="page-title position-absolute top-50 start-50 translate-middle fw-bolder" style="font-size:64px">公告消息</h1>
+</div>
+<div class="news-contents wrapper" id="app_Announcement">
+    <aside>
+        <h3 class="sub-title">公告消息</h3>
+        <ul class="sub-menu">
+            <li class="andy_li active" style="cursor:pointer;background-color:lightgray;" id="list1">最新法規</li>
+            <li class="andy_li" style="cursor:pointer;" id="list2">網站公告</li>
+        </ul>
+    </aside>
+    <article class="" style="background-color:antiquewhite;">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="@Utility.SD.localHost_Client/Home/Announcement_Index">公告消息</a></li>
+                <li class="breadcrumb-item " aria-current="page">最新法規</li>
+                <li class="breadcrumb-item active" aria-current="page">內文</li>
+            </ol>
+        </nav>
+        <header class="post-info">
+            <h3 class="post-title">{{data.tittle}}</h3>
+            <p class="post-cat">類別：{{data.type}}</p>
+            <p class="post-date">06/07 <span>2011</span></p>
+        </header>
+        <div class="d-flex justify-content-center">
+            <img src="/images/1543246404-1330209824_n.jpg">
+        </div>
+        <div class="container">
+            <div class="row">
+                <div>
+                    <p>
+                        {{data.article}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </article>
+</div>
+
+@section Scripts {
+    <script>
+
+        var vueApp_Announcement = {
+            data() {
+                return {
+                    data: [],
+                }
+            },
+            methods: {
+                getAnnouncement: function () {
+                    let _this = this;
+                    var id= sessionStorage.getItem("Announcement");
+                    axios.get(`@Utility.SD.localHost_API/api/Announcement/${id}`).then(result => {
+                        //alert(result);
+                        _this.data = result.data;
+
+                    }).catch(err => { alert(err) });
+                }
+            },
+            mounted: function () {
+                let _this = this;
+                _this.getAnnouncement();
+
+            }
+        }
+
+        var app_Announcement = Vue.createApp(vueApp_Announcement).mount("#app_Announcement");
+
+        $(document).ready(function () {
+            $('#list1').on("click", function () {
+                $('#list2').css("background-color", '');
+                $('#list1').css("background-color", 'lightgray');
+                $('#article2').hide();
+                $('#article1').fadeIn(500);
+            });
+            $('#list2').on("click", function () {
+                $('#list1').css("background-color", '');
+                $('#list2').css("background-color", 'lightgray');
+                $('#article1').hide();
+                $('#article2').fadeIn(500);
+            })
+        })
+
+
+    </script>
+}
