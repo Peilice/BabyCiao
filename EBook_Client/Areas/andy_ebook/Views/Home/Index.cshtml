@@ -26,7 +26,7 @@
                         @* 產生聯絡簿卡片 *@
                         <div class="col-md-4 mb-3" v-for="item in ebooks">
                             <div class="card h-100 ">
-                                <img class="card-img-top w-100" src="~/images/背景2.png" v-bind:title="item.babyName" />
+                                <img class="card-img-top w-100" v-bind:src=`@Utility.SD.localHost_API/api/Ebook/GetEBooks_photo/${item.id}` v-bind:title="item.babyName" />
                                 <div class="card-body">
                                     <p class="card-text">寶寶姓名：{{item.babyName}}</p>
                                     <p class="card-text">寶寶性別：{{item.gender}}</p>
