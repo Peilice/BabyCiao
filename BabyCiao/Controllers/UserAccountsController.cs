@@ -92,7 +92,7 @@ namespace BabyCiao.Controllers
             if (ModelState.IsValid)
             {
                 // 對密碼進行加密
-                userAccount.Password = EnhancedHashPassword(userAccount.Password);
+                userAccount.Password = HashPassword(userAccount.Password);
 
                 _context.Add(userAccount);
                 await _context.SaveChangesAsync();
@@ -121,13 +121,13 @@ namespace BabyCiao.Controllers
             return View(userAccount);
         }
 
-
         // POST: UserAccounts/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int UserID, string Account, int Permissions, string? Password)
         {
-            var userAccount = await _context.UserAccounts.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == UserID);
+            // 不使用 AsNoTracking，這樣確保實體被追蹤並可更新
+            var userAccount = await _context.UserAccounts.FirstOrDefaultAsync(u => u.UserId == UserID);
 
             if (userAccount == null)
             {
@@ -141,17 +141,16 @@ namespace BabyCiao.Controllers
                     userAccount.Permissions = Permissions;
                     if (!string.IsNullOrEmpty(Password))
                     {
-                        userAccount.Password = EnhancedHashPassword(Password);
-
+                        // 加密並覆蓋原密碼
+                        userAccount.Password = HashPassword(Password);
                     }
 
+                    // 確保實體被追蹤並更新
                     _context.Update(userAccount);
                     await _context.SaveChangesAsync();
-
                 }
                 catch (DbUpdateConcurrencyException ex)
                 {
-
                     if (!UserAccountExists(userAccount.UserId))
                     {
                         return NotFound();
@@ -164,12 +163,9 @@ namespace BabyCiao.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-
             ViewBag.PermissionsDictionary = PermissionsDictionary;
             return View(userAccount);
         }
-
-
 
         // GET: UserAccounts/Delete/5
         public async Task<IActionResult> Delete(int UserID)
@@ -210,9 +206,9 @@ namespace BabyCiao.Controllers
         }
 
         // 加密密碼的函數
-        private string EnhancedHashPassword(string password)
+        private string HashPassword(string password)
         {
-            return BCrypt.Net.BCrypt.EnhancedHashPassword(password);
+            return BCrypt.Net.BCrypt.HashPassword(password);
         }
     }
 }
