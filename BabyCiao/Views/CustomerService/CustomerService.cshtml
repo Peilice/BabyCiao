@@ -130,7 +130,7 @@
                 </div>
                 <div class="modal-body">
                     <div v-for="(issue, index) in modalIssues" :key="index">
-                        <p><strong>回覆人員:</strong> {{ issue.context }}</p>
+                        <p><strong>{{ issue.userName === selectedAccount ? issue.userName : "客服人員" }}:</strong> {{ issue.context }}</p>
                         <hr>
                     </div>
                 </div>
