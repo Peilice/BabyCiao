@@ -30,6 +30,19 @@
             </div>
             <!-- 活動列表 -->
             <div class="container">
+                <div class="dropdown mb-4">
+                階段
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    不限
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="#">不限</a></li>
+                        <li><a class="dropdown-item" href="#">尚未開始</a></li>
+                        <li><a class="dropdown-item" href="#">活動中</a></li>
+                        <li><a class="dropdown-item" href="#">已結束</a></li>
+                    </ul>
+                </div>
                 <div class="row mb-4">
                     <div class="row row-cols-1 row-cols-md-3 g-4">
                         <div class="col" v-for="item in OnlineCompetitions" :key="item.id">

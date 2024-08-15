@@ -25,11 +25,14 @@
             <div>
                 <!-- 主畫面(顯示資料) -->
                 <div v-show="isArticle">
-                    <div class="d-flex justify-content-between">
-                        <h3>{{type}}</h3>
+                    <div class="d-flex justify-content-between mb-3">
+                        <div>
+                            <span>搜尋</span>
+                            <input type="text" />
+                        </div>                       
                         <button type="button" class="btn btn-outline-primary" v-on:click="showPost">發表文章</button>
                     </div>
-
+                    <h3>{{type}}</h3>
                     <table class="table">
                         <thead>
                             <tr>
