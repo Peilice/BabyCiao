@@ -112,9 +112,9 @@
                     this.permissions = parseInt(this.getCookie('permissions'), 10);
                     this.isLoggedIn = !!this.account;
 
-                    // 檢查權限值，如果小於4，則自動登出
-                    if (this.permissions < 4) {
-                        this.logout();
+                    // // 檢查權限值，如果小於4，則自動登出
+                    // if (this.permissions < 4) {
+                    //     this.logout();
                     }
                 },
                 logout() {
