@@ -29,7 +29,15 @@ namespace BabyCiaoAPI.Controllers
 			_logger = logger;
 		}
 
-
+		[HttpGet("GetAddress")]
+		public async Task<IActionResult> GetAddress(string userAccount)
+		{
+			var address = await _context.UserInformations
+										.Where(u => u.AccountUser == userAccount)
+										.Select(u => u.Address)
+										.FirstOrDefaultAsync();
+			return Ok(address);
+		}
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<GBDTO>>> GetGroupBuyings(string? userAccount)
 		{
