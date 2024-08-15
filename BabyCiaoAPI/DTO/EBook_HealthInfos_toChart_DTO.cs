@@ -1,6 +1,6 @@
 ﻿namespace BabyCiaoAPI.DTO
 {
-    public class EBook_HealthInfos_DTO
+    public class EBook_HealthInfos_toChart_DTO
     {
         public int HealthInfosId { get; set; }
 
@@ -21,8 +21,6 @@
         public string Memo { get; set; } //= null!;
 
         public string Age { get; set; } //= null!;
-        
-
-
+        public double Age_toChart { get; set; }
     }
 }

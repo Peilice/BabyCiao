@@ -13,6 +13,8 @@ using System.Reflection;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Globalization;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 
 
@@ -306,7 +308,53 @@ namespace BabyCiaoAPI.Controllers
 
             return File(fileBytes, miniType, Path.GetFileName(photoURL));
         }
-        
+        [HttpGet("getHealthInfos_toChart/{id}")]
+        public async Task<ActionResult<List<EBook_HealthInfos_toChart_DTO>>> getHealthInfos_toChart(int id)
+        {
+            var datas = _context.HealthInformations.Where(h => h.IdContactBook == id).OrderByDescending(d => d.ModifiedDate).ToList();
+
+            Dictionary<EBook_HealthInfos_toChart_DTO, double> kv_datas = new Dictionary<EBook_HealthInfos_toChart_DTO, double>();
+
+            foreach (var item in datas)
+            {
+                EBook_HealthInfos_toChart_DTO DTO = new EBook_HealthInfos_toChart_DTO();
+                DTO.HealthInfosId = item.Id;
+                DTO.IdContactBook = item.IdContactBook;
+                DTO.MedicalHistory = item.MedicalHistory;
+                DTO.AllergyHistory = item.AllergyHistory;
+                DTO.Height = item.Height;
+                DTO.Weight = item.Weight;
+                DTO.HeadCircumference = item.HeadCircumference;
+                DTO.Memo = item.Memo;
+                DTO.Age = item.Age;
+                DTO.ModifiedDate = item.ModifiedDate;
+
+                string[] age_str = item.Age.Split(new char[3] { '歲', '個', '月' });
+                int year = int.Parse(age_str[0]);
+                int months = int.Parse(age_str[1]);
+                int age_num = year * 12 + months;
+                double age_num_double = age_num/12;
+
+                DTO.Age_toChart = age_num_double;
+
+                kv_datas.Add(DTO, age_num_double);
+            }
+
+            Dictionary<EBook_HealthInfos_toChart_DTO, double> sort_kv_datas = kv_datas.OrderBy(o => o.Value).ToDictionary(kv => kv.Key, kv => kv.Value);
+            List<EBook_HealthInfos_toChart_DTO> new_datas = new List<EBook_HealthInfos_toChart_DTO>();
+            foreach (KeyValuePair<EBook_HealthInfos_toChart_DTO, double> item in sort_kv_datas)
+            {
+                EBook_HealthInfos_toChart_DTO DTO_toChart = new EBook_HealthInfos_toChart_DTO();
+                DTO_toChart.Age_toChart= item.Value;
+                DTO_toChart.Height= item.Key.Height;
+                new_datas.Add(DTO_toChart);
+            }
+
+
+
+            return new_datas;
+        }
+
 
         //餵食狀況的CRUD
         [HttpPost("CreateDietDetail")]

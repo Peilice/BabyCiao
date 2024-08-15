@@ -112,6 +112,7 @@
         let Diaper_poo_datas = [];
         let Diaper_pee_datas = [];
         let SleepDetail = [];
+        let HealthInfos_toChart = [];
         let oneWeekAgo = new Date();
         oneWeekAgo.setHours(0);
         oneWeekAgo.setMinutes(0);
@@ -141,17 +142,23 @@
                 },
                 getHealthInfos: async function () {
                     let _this = this;
-                    axios.get(`@Utility.SD.localHost_API/api/Ebook/getHealthInfos/${IdContactBook}`, {
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/getHealthInfos_toChart/${IdContactBook}`, {
                         headers
                     }).then(result => {
                         //alert(result.data);
                         if (result.data!="") {
-                            var labels = result.data.map(item => item.age);
+                            var labels = result.data.map(item => item.age_toChart);
                             var values = result.data.map(item => item.height);
-                            labels.reverse();
-                            values.reverse();
+                            
+                            var datas = [];
+                            for (var i = 0; i < result.data.length;i++){
+                                var str = {x:labels[i],y:values[i]}
+                                datas.push(str);
+                            }
+                            console.log(`成長資料:${datas}`);
+                            _this.addToChart2(datas);
                         }
-                            _this.addToChart(labels, values, "myChart4", "成長狀態");
+                            
                     }).catch(err => { alert(err) });
                 },
                 getDietDetail: async function () {
@@ -231,6 +238,120 @@
                         }
                     });
                 },
+                addToChart2: function (datas) {
+                    let _this = this;
+                    const ctx = document.getElementById(`myChart4`).getContext('2d');
+                    const myChart = new Chart(ctx, {
+                        type: _this.chart_type, // 圖表類型，例如 'bar', 'line', 'pie' 等
+                        data: {
+                            labels: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+                            datasets: [
+                                // {
+                                // label: category,
+                                // data: values,
+                                // backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                // borderColor: 'rgba(75, 192, 192, 1)',
+                                // borderWidth: 3
+                                // },
+                                {
+                                    label: "寶寶",
+                                    data: datas,
+                                    backgroundColor: 'red',
+                                    borderColor: 'red',
+                                    borderWidth: 3
+                                }, 
+                                {
+                                    label: "健康寶寶(上限)",
+                                    data: [{ x: 0, y: 53.4 },
+                                    { x: 0.5, y: 71.6 },
+                                    { x: 1, y: 80.2 },
+                                    { x: 1.5, y: 87.3 },
+                                    { x: 2, y: 93.6 },
+                                    { x: 2.5, y: 98.3 },
+                                    { x: 3, y: 103.1 },
+                                    { x: 3.5, y: 107.3 },
+                                    { x: 4, y: 111.2 },
+                                    { x: 4.5, y: 115.0 },
+                                    { x: 5, y: 118.7 },
+                                    { x: 5.5, y: 121.8 },
+                                    { x: 6, y: 124.9 },
+                                    { x: 6.5, y: 128.1 },
+                                    { x: 7, y: 131.2 },
+                                    { x: 8, y: 137.2 },
+                                    { x: 9, y: 142.5 },
+                                    { x: 10, y: 148.3 },
+                                    { x: 11, y: 156.1 },
+                                    { x: 12, y: 164.4 },
+                                    { x: 13, y: 171.0 },
+                                    { x: 14, y: 176.0 },
+                                    { x: 15, y: 179.0 },
+                                    { x: 16, y: 180.5 },
+                                    { x: 17, y: 181.5 }]
+                                    ,
+                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 3
+                                }, 
+                                {
+                                    label: "健康寶寶(下限)",
+                                    data:
+                                        [
+                                            { x: 0, y: 46.3 },
+                                            { x: 0.5, y: 63.6 },
+                                            { x: 1, y: 71.3 },
+                                            { x: 1.5, y: 77.2 },
+                                            { x: 2, y: 82.1 },
+                                            { x: 2.5, y: 85.5 },
+                                            { x: 3, y: 89.1 },
+                                            { x: 3.5, y: 92.4 },
+                                            { x: 4, y: 95.4 },
+                                            { x: 4.5, y: 98.4 },
+                                            { x: 5, y: 101.2 },
+                                            { x: 5.5, y: 103.9 },
+                                            { x: 6, y: 106.5 },
+                                            { x: 6.5, y: 109.2 },
+                                            { x: 7, y: 111.8 },
+                                            { x: 8, y: 117.0 },
+                                            { x: 9, y: 121.8 },
+                                            { x: 10, y: 126.0 },
+                                            { x: 11, y: 130.5 },
+                                            { x: 12, y: 135.6 },
+                                            { x: 13, y: 141.9 },
+                                            { x: 14, y: 149.3 },
+                                            { x: 15, y: 155.5 },
+                                            { x: 16, y: 159.3 },
+                                            { x: 17, y: 160.9 }
+                                        ]
+                                    ,
+                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 3
+                                },
+
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                },
+                                x: {
+                                    type: 'linear',
+                                    position: 'bottom',
+                                    min: 0,
+                                    max: 17,
+                                    ticks: {
+                                        stepSize: 1,
+                                        callback: function (value) {
+                                            return value + ' 歲'
+                                        },
+                                    }
+                                }
+                            }
+                        }
+                    });
+                },
                 createChartData: async function (Diaper_datas) {
                     let _this = this;
                     let datas = [];
@@ -305,7 +426,7 @@
                                     borderWidth: 1,
                                     hoverRadius: 10,
                                     hitRadius: 20,
-                                    radius: 17,
+                                    radius: 20,
                                 },
                             ],
                             
@@ -441,7 +562,7 @@
                 Diaper_poo_datas=await _this.createChartData(Diaper_poo_datas);
                 Diaper_pee_datas=await _this.createChartData(Diaper_pee_datas);
                 await _this.createChart3(Diaper_poo_datas, Diaper_pee_datas);
-                
+                //_this.addToChart2();
                 console.log("掛載完畢")
             }
         }
