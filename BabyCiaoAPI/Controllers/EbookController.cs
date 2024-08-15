@@ -76,6 +76,17 @@ namespace BabyCiaoAPI.Controllers
                 return null;
             }
         }
+        [HttpGet("GetEBooks_photo/{id}")]
+        public async Task<FileResult> GetEBooks_photo(int id)
+        {
+            var photo = _context.ContactBooks.Where(c => c.Id == id).FirstOrDefault();
+            string photoURL = photo.BabyPhoto;
+
+            var fileBytes = await System.IO.File.ReadAllBytesAsync(photoURL);
+            string miniType = GetMimeType(photoURL);
+
+            return File(fileBytes, miniType, Path.GetFileName(photoURL));
+        }
         [HttpPost("createEbook")]
         public async Task<string> createEbook([FromBody] EBook_create_DTO DTO)
         {
