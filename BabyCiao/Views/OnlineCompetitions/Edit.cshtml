@@ -3,10 +3,11 @@
 @{
     ViewData["Title"] = "Edit";
 }
+
 @section Styles {
     <style>
-        img {
-            width: 200px;
+        .form-group img {
+            width: 250px;
             height: 200px
         }
     </style>
@@ -17,7 +18,7 @@
 <h4>編輯活動資訊</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-10">
         <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
@@ -43,7 +44,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
+                <textarea asp-for="Content" class="form-control" rows="5"></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -62,7 +63,7 @@
                 <span asp-validation-for="CompetitionPhotoName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <div>
+                <div class="mb-3 mt-3">
                     <img src="~/uploads/@Html.DisplayFor(model => model.CompetitionPhotoNames)" alt="@Html.DisplayFor(model=>model.CompetitionName)" class="photos" />
                     <form asp-controller="OnlineCompetition" asp-action="DeletePhoto" method="post" onsubmit="return confirmDelete(this);">
                         <input type="hidden" asp-for="@Model.IdOnlineCompetition" name="IdOnlineCompetition" value="@Model.IdOnlineCompetition" />

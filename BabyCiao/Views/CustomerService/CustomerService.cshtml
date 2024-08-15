@@ -1,0 +1,270 @@
+﻿@{
+    ViewData["Title"] = "線上客服系統";
+    Layout = "_Layout";
+}
+
+<div id="app" class="container mt-5" v-cloak>
+    <div class="row d-flex justify-content-end">
+        <div class="col-md-3">
+            <!-- 這裡是可能的按鈕 -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb4 text-center">客服系統</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3" v-for="(stat, index) in stats" :key="index">
+            <div :class="'stat-card ' + stat.bgClass">
+                <div class="stat-value text-center">{{ stat.value }}</div>
+                <div class="text-center">{{ stat.label }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <h4>處理中問題 ({{ uniqueInProgress.length }})</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>帳號</th>
+                        <th>處理中</th>
+                        <th>工單號碼</th>
+                        <th>事件</th>
+                        <th>問題進度</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(issue, index) in uniqueInProgress" :key="index" v-on:click="selectTicket(issue)">
+                        <td>{{ issue.accountUserAccount }}</td>
+                        <td>{{ issue.title }}</td>
+                        <td>{{ issue.id }}</td>
+                        <td>
+                            {{ issue.context }}
+                            <button class="btn btn-info btn-sm" v-on:click.stop="openModal(issue.accountUserAccount)">查看回覆紀錄</button>
+                        </td>
+                        <td>
+                            <label for="agent-select">解決人員</label>
+                            <select id="agent-select" class="form-control" v-model="issue.selectedAgent">
+                                <option disabled value="">解決人員</option>
+                                <option v-for="(agent, agentIndex) in filteredAgents" :key="agentIndex" :value="agent">
+                                    {{ agent.userInfo.userFirstName }} {{ agent.userInfo.userLastName }}
+                                </option>
+                            </select>
+                            <button class="btn btn-success mt-2" v-on:click="confirmResolution(issue)">確認</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 第一步提示視窗 -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">工單解決</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    工單已解決
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" v-on:click="showRecordSavedModal">確定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第二步提示視窗 -->
+    <div class="modal fade" id="recordSavedModal" tabindex="-1" aria-labelledby="recordSavedModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recordSavedModalLabel">紀錄保存通知</h5>
+                </div>
+                <div class="modal-body">
+                    此紀錄會保存 3 個月
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6" style="margin-left: 400px;">
+        <h4>使用者工單</h4>
+        <form v-on:submit.prevent="reply">
+            <div class="form-group">
+                <label for="Worknumber">工單號碼</label>
+                <input type="text" class="form-control" id="Worknumber" readonly v-model="selectedTicket.id">
+            </div>
+            <div class="form-group">
+                <label for="name">帳號</label>
+                <input type="text" class="form-control" id="name" readonly v-model="selectedTicket.accountUserAccount">
+            </div>
+            <div class="form-group">
+                <label for="email">電子郵件</label>
+                <input type="email" class="form-control" id="email" readonly v-model="selectedTicket.email">
+            </div>
+            <div class="form-group">
+                <label for="phone">聯絡電話</label>
+                <input type="text" class="form-control" id="phone" readonly v-model="selectedTicket.phone">
+            </div>
+            <div class="form-group">
+                <label for="message">訊息內容</label>
+                <textarea class="form-control" id="message" rows="4" v-model="selectedTicket.context"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 15px;">回覆</button>
+        </form>
+    </div>
+
+    <!-- 回覆紀錄彈出視窗 -->
+    <div class="modal fade" id="replyModal" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="replyModalLabel">回覆紀錄 - {{ selectedAccount }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div v-for="(issue, index) in modalIssues" :key="index">
+                        <p><strong>{{ issue.userName === selectedAccount ? issue.userName : "客服人員" }}:</strong> {{ issue.context }}</p>
+                        <hr>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section scripts {
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    inProgress: [],
+                    agents: [],
+                    selectedTicket: {
+                        id: '',
+                        userName: '',
+                        email: '',
+                        phone: '',
+                        context: '',
+                        title: '',
+                        type: '',
+                        statement: '',
+                        accountUserAccount: ''
+                    },
+                    modalIssues: [], // 用於彈出視窗顯示的所有工單
+                    selectedAccount: '' // 當前選擇的帳號
+                };
+            },
+            computed: {
+                uniqueInProgress() {
+                    const seenAccounts = new Set();
+                    return this.inProgress.filter(issue => {
+                        if (!seenAccounts.has(issue.accountUserAccount)) {
+                            seenAccounts.add(issue.accountUserAccount);
+                            return true;
+                        }
+                        return false;
+                    });
+                },
+                filteredAgents() {
+                    return this.agents.filter(agent => agent.permissions >= 4);
+                }
+            },
+            methods: {
+                loadData() {
+                    axios.get('https://localhost:7292/api/CustomerService')
+                        .then(response => {
+                            console.log('Full Response:', response); // 檢查完整的回應結構
+                            this.inProgress = response.data || []; // 直接使用 response.data
+                            console.log('InProgress Data:', this.inProgress);
+                        })
+                        .catch(error => {
+                            console.error('Error in loadData:', error);
+                            this.inProgress = [];
+                        });
+                },
+                loadAgents() {
+                    axios.get('https://localhost:7292/api/UserAccount')
+                        .then(response => {
+                            console.log('Full Response:', response); // 檢查完整的回應結構
+                            this.agents = response.data || []; // 直接使用 response.data
+                            console.log('Agents Data:', this.agents);
+                        })
+                        .catch(error => {
+                            console.error('Error in loadAgents:', error);
+                            this.agents = [];
+                        });
+                },
+                reply() {
+                    const newTicket = {
+                        id: this.selectedTicket.id,
+                        userName: this.selectedTicket.userName,
+                        email: this.selectedTicket.email,
+                        phone: this.selectedTicket.phone,
+                        context: this.selectedTicket.context,
+                        title: this.selectedTicket.title,
+                        type: this.selectedTicket.type,
+                        statement: this.selectedTicket.statement,
+                        accountUserAccount: this.selectedTicket.accountUserAccount,
+                        createddated: this.selectedTicket.createddated,
+                        modiifiedDate: new Date()
+                    };
+
+                    axios.post('https://localhost:7292/api/CustomerService', newTicket)
+                        .then(response => {
+                            alert('已回覆');
+                            this.loadData();
+                        })
+                        .catch(error => {
+                            console.error('Error in reply:', error);
+                        });
+                },
+                selectTicket(issue) {
+                    this.selectedTicket = issue;
+                },
+                openModal(accountUserAccount) {
+                    this.selectedAccount = accountUserAccount;
+                    this.modalIssues = this.inProgress.filter(issue => issue.accountUserAccount === accountUserAccount);
+                    const modal = new bootstrap.Modal(document.getElementById('replyModal'));
+                    modal.show();
+                },
+                confirmResolution(issue) {
+                    if (!issue.selectedAgent) {
+                        alert("請選擇一名員工");
+                        return;
+                    }
+
+                    const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+                    confirmModal.show();
+                },
+                showRecordSavedModal() {
+                    const confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+                    confirmModal.hide();
+
+                    const recordSavedModal = new bootstrap.Modal(document.getElementById('recordSavedModal'));
+                    recordSavedModal.show();
+
+                    setTimeout(() => {
+                        recordSavedModal.hide();
+                    }, 3000);
+                }
+            },
+            mounted() {
+                this.loadData();
+                this.loadAgents();
+            }
+        }).mount('#app')
+    </script>
+}

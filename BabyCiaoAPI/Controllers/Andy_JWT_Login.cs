@@ -61,7 +61,7 @@ namespace BabyCiaoAPI.Controllers
         public async Task<ActionResult<string>> Register_step2(andy_register2_DTO DTO)
         {
             //將使用者密碼加密
-            string code = BCrypt.Net.BCrypt.EnhancedHashPassword(DTO.Password, 13);
+            string code = BCrypt.Net.BCrypt.HashPassword(DTO.Password, 13);//HashPassword不會因為使用者註冊密碼輸入長度 加密時超過資料庫設定值
             Console.WriteLine(code.Length);
             UserAccount userAccount = new UserAccount();
             userAccount.Account = DTO.AccountUser;
@@ -110,7 +110,13 @@ namespace BabyCiaoAPI.Controllers
             
             var accounts = _context.UserAccounts.Where(m => m.Account == my_account.name).FirstOrDefault();
 
-            bool check = BCrypt.Net.BCrypt.EnhancedVerify(my_account.password, accounts.Password);
+            Console.WriteLine($"原始密碼: {my_account.password}");
+            Console.WriteLine($"哈希值: {accounts.Password}");
+            if (accounts == null || !BCrypt.Net.BCrypt.Verify(my_account.password, accounts.Password))//Verify是HashPassword的解密方法
+            {
+                return Unauthorized(new { message = "驗證失敗" });
+                
+            }
             List<string> user_roles = getKeysByAccountName(accounts.Account);
             var varClaims = new List<Claim>
                 {

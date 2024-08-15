@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BabyCiaoAPI.Models;
 
-    public class OnlineCompetitionsDTO
-    {
+public class OnlineCompetitionsDTO
+{
         public int Id { get; set; }
         [Display(Name = "活動名稱")]
         public string CompetitionName { get; set; }
@@ -37,5 +37,5 @@ namespace BabyCiaoAPI.Models;
         public int IdOnlineCompetition { get; set; }
         public string photoUrl {  get; set; }
 
-    }
+}
 

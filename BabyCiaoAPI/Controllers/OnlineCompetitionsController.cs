@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Cors;
 using System;
 using Microsoft.JSInterop.Infrastructure;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.ComponentModel;
 
 
 namespace BabyCiaoAPI.Controllers
@@ -42,19 +43,14 @@ namespace BabyCiaoAPI.Controllers
                                          Statement = com.Statement,
                                          CompetitionPhotoNames = subcomp != null ? subcomp.PhotoName : null,
                                      }).ToListAsync();
-            List<int> ids= new List<int>();
-            foreach(var i in Competition)
-            {
-                ids.Add(i.Id);
-            }
 
             return Ok(Competition);
         }
 
-        // GET api/OnlineCompetitions/{id} (讀取單一活動及所有選手)
-        [HttpGet("{id}")]
+        // GET api/OnlineCompetitions/{id}/{account} (讀取單一活動及所有選手)
+        [HttpGet("{id}/{account}")]
         //設定回傳物件是DTO陣列(list)
-        public async Task<ActionResult<List<CompetitionDetailDTO>>> voteInfo(int id)
+        public async Task<ActionResult<List<CompetitionDetailDTO>>> voteInfo(int id, string account)
         {
             if (id == null)
             {
@@ -83,33 +79,105 @@ namespace BabyCiaoAPI.Controllers
                                CompetitorContent=comd.Content,
                            }).ToListAsync();
 
+            //找出票數
             var b = await (from comr in _context.CompetitionRecords
-                           //join comd in _context.CompetitionDetails
-                           //on comr.IdCompetitionDetail equals comd.Id
                            where comr.IdOnlineCompetition == id
                            select comr).CountAsync();
 
-            //List<int> allnum = new List<int>();
-            //allnum.Add(b);
-
             List<int> ids = new List<int>();
             List<int> nums = new List<int>();
+
             //找出選手資料的id，並將結果儲存到 List<int> ids裡面
             foreach (var c in a) {
                 ids.Add(c.CompetitionDetailId);
             }
-            //再利用ids遍歷得票數***(
-            //var num = _context.CompetitionRecords.Where(c2 => c2.IdCompetitionDetail== ???不能是var).Count();
-            //)***
+
+            //再利用ids遍歷得票數
+            //***[var num = _context.CompetitionRecords.Where(c2 => c2.IdCompetitionDetail== ???不能是var).Count();]***
             foreach (var item in ids)
             {
-                var num = _context.CompetitionRecords.Where(c2 => c2.IdCompetitionDetail == item && c2.IdOnlineCompetition == id).Count();
+                var num = await _context.CompetitionRecords.Where(c2 => c2.IdCompetitionDetail == item && c2.IdOnlineCompetition == id).CountAsync();
                 nums.Add(num);
 
             }
+
+            //確認是否有收藏
+            var like = _context.CompetitionFavorites.Any(cf => cf.IdOnlineCompetition == id && cf.AccountUserAccount == account);
+            bool isLike = false;
+            bool isDislike= false;
+            if (like == false)
+            {
+                isLike = false;
+                isDislike = true;
+
+            }
+            else
+            {
+                isLike = true;
+                isDislike = false;
+            }
+
+            //尋找個人投票紀錄
+            ////var vote = _context.CompetitionRecords.Where(c => c.IdOnlineCompetition == id && c.VoterAccount == account).SingleOrDefault();
+
+            //儲存比對結果，Dictionary<isNotVote,isVote>
+            ////Dictionary<bool,bool> bools = new Dictionary<bool,bool>();
+            ////var voteToid = vote.IdCompetitionDetail;
+
+            ////foreach (var item in a)
+            ////{
+
+            ////    if (voteToid == item.CompetitionDetailId)
+            ////    {
+            ////        bools.Add(false, true);
+
+            ////    }
+            ////    else
+            ////    {
+            ////        bools.Add(true, false);
+            ////    }
+            ////}
+
+            var vote = _context.CompetitionRecords
+                        .Where(c => c.IdOnlineCompetition == id && c.VoterAccount == account)
+                        .SingleOrDefault();
+
+            //Dictionary<bool, bool> bools = new Dictionary<bool, bool>();
+            List<string> isClass = new List<string>();
+            //bool isVote = false;
+            //bool isNotVote = false;
+
+            foreach (var item in a)
+            {
+                
+                if (vote != null)
+                {
+                    var voteToId = vote.IdCompetitionDetail;
+                    if (voteToId == item.CompetitionDetailId)
+                    {
+                        isClass.Add("btn-warning");
+                    }
+                    else
+                    {
+                        isClass.Add("btn-outline-warning");
+                    }
+
+                }
+                else
+                {
+                    isClass.Add("isNotVote");
+                }
+                   
+            }
+
+            // 更新字典值
+            //bools[false] = isNotVote;
+            //bools[true] = isVote;
+
+
             //將選手資料及得票數包進DTO list內
             for (int i = 0; i < nums.Count(); i++)
-            {
+            {  
                 CompetitionDetailDTO dto = new CompetitionDetailDTO();
                 dto.AccountUserAccount = a[i].AccountUserAccount;
                 dto.CompetitionPhotos = a[i].CompetitionPhotos;
@@ -123,6 +191,12 @@ namespace BabyCiaoAPI.Controllers
                 dto.number = nums[i];
                 dto.Id = a[i].Id;
                 dto.allnumber = b;
+                dto.IsLike = isLike;
+                dto.IsDisLike = isDislike;
+                dto.IsVoteorNot = isClass[i];
+
+                //dto.IsNotVote = bools.ElementAt(i).Key;
+                //dto.IsVote = bools.ElementAt(i).Value;
 
                 competitionDetailDTOs.Add(dto);
 
@@ -203,7 +277,7 @@ namespace BabyCiaoAPI.Controllers
 
 
         //收藏列表 (新增、刪除)
-        //Delete api/OnlineCompetitions/DeleteFavorite (刪除)
+        //Delete api/OnlineCompetitions/deleteFavorite (刪除)
         [HttpDelete("deleteFavorite/{id}/{account}")]
         public async Task<IActionResult> DeleteFavorite(int id, string account)
         {

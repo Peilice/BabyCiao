@@ -5,8 +5,8 @@
 }
 @section Styles{
     <style>
-        img{
-            width:200px;
+        #photo img {
+            width:250px;
             height:200px
         }
     </style>
@@ -64,7 +64,7 @@
                     @Html.DisplayNameFor(model => model.CompetitionPhotoName)
                 </dt>
                 <dd class="col-sm-10">
-                    <div>
+                    <div id="photo">
                         <img src="~/uploads/@Html.DisplayFor(model => model.CompetitionPhotoNames)" alt="" class="photos" />
                     </div>
                 </dd>
