@@ -11,6 +11,8 @@ using BabyCiaoAPI.DTO;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Reflection;
 using static System.Net.Mime.MediaTypeNames;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Globalization;
 
 
 
@@ -62,6 +64,7 @@ namespace BabyCiaoAPI.Controllers
                     BabyName = ebook.BabyName,
                     Gender = ebook.Gender,
                     Birthday = ebook.Birthday,
+                    BabyPhoto=ebook.BabyPhoto,
                 });
                 
                 return b;
@@ -83,13 +86,13 @@ namespace BabyCiaoAPI.Controllers
                 BloodType = DTO.BloodType,
                 EmergencyContact = DTO.EmergencyContact,
                 EmergencyContactPhone1 = DTO.EmergencyContactPhone1,
-                BabyPhoto= "/images/背景2.png",
+                BabyPhoto= "StaticFiles/images/背景2.png",
             };
             try
             {
                 _context.ContactBooks.Add(ebook);
                 await _context.SaveChangesAsync();
-                var newContactBook = _context.ContactBooks.Where(a => a.BabyName == DTO.BabyName).FirstOrDefault();
+                var newContactBook = _context.ContactBooks.Where(a => a.BabyName == DTO.BabyName && a.ParentsIdUserAccount== DTO.ParentsIdUserAccount).FirstOrDefault();
                 HealthInformation healthInfos = new HealthInformation()
                 {
                     IdContactBook = newContactBook.Id,
@@ -159,6 +162,7 @@ namespace BabyCiaoAPI.Controllers
         {
             var datas = _context.HealthInformations.Where(h => h.IdContactBook == id).OrderByDescending(d=>d.ModifiedDate).ToList();
             List<int> ages = new List<int>();
+            
             foreach (var item in datas)
             {
                 string[] age_str = item.Age.Split(new char[3] { '歲', '個', '月' });
@@ -167,9 +171,13 @@ namespace BabyCiaoAPI.Controllers
                 int age_num = year * 12 + months;
                 ages.Add(age_num);
             }
+            
+            
             int maxAge = ages.Max();
             int maxIndex = ages.IndexOf(maxAge);
             var s = datas[maxIndex];
+            
+               
 
 
             var c = _context.ContactBooks.Where(h => h.Id == id).FirstOrDefault();
@@ -335,6 +343,24 @@ namespace BabyCiaoAPI.Controllers
             });
             return DTOs;
         }
+        [HttpGet("GetDietDetail_milk_chartUse/{id}")]
+        public async Task<IEnumerable<Ebook_DietDetail_DTO>> GetDietDetail_milk_chartUse(int id)
+        {
+            var DTOs = _context.DietDetails.Where(h => h.IdContactBook == id && h.Quantity==1).OrderBy(d=>d.RecodeTime).Select(DietDetail => new Ebook_DietDetail_DTO
+            {
+                Category = "飲食",
+                Id = DietDetail.Id,
+                IdContactBook = DietDetail.IdContactBook,
+                RecodeTime = DietDetail.RecodeTime,
+                Type = DietDetail.Type,
+                Amount = DietDetail.Amount,
+                Quantity = DietDetail.Quantity,
+                ModifiedTime = DietDetail.ModifiedTime,
+                AccountUserAccount = DietDetail.AccountUserAccount,
+            });
+            return DTOs;
+        }
+
         [HttpPut("UpdateDietDetail/{id}")]
         public async Task<ActionResult<Ebook_DietDetail_DTO>> UpdateDietDetail(int id,[FromBody] Ebook_DietDetail_DTO DTO)
         {
@@ -404,6 +430,54 @@ namespace BabyCiaoAPI.Controllers
             }
             return null;
         }
+        [HttpGet("GetDiaperDetail_poo_chartUse/{id}")]
+        public async Task<IEnumerable<EBook_DiaperDetail_DTO>> GetDiaperDetail_poo_chartUse(int id)
+        {
+            bool check = _context.DiaperDetails.Where(h => h.IdContactBook == id).Any();
+
+            if (check)
+            {
+                var DTOs = _context.DiaperDetails.Where(h => h.IdContactBook == id && (h.Content==3 || h.Content == 4)).Select(dto => new EBook_DiaperDetail_DTO
+                {
+                    Category = "尿布",
+                    Id = dto.Id,
+                    IdContactBook = dto.IdContactBook,
+                    RecodeTime = dto.RecodeTime,
+                    Content = dto.Content,
+                    BowelSituation = dto.BowelSituation,
+                    ModifiedTime = dto.ModifiedTime,
+                    AccountUserAccount = dto.AccountUserAccount,
+                });
+                var DTO=DTOs.ToList();
+
+                return DTOs;
+            }
+            return null;
+        }
+        [HttpGet("GetDiaperDetail_pee_chartUse/{id}")]
+        public async Task<IEnumerable<EBook_DiaperDetail_DTO>> GetDiaperDetail_pee_chartUse(int id)
+        {
+            bool check = _context.DiaperDetails.Where(h => h.IdContactBook == id).Any();
+
+            if (check)
+            {
+                var DTOs = _context.DiaperDetails.Where(h => h.IdContactBook == id && (h.Content == 2 || h.Content == 4)).Select(dto => new EBook_DiaperDetail_DTO
+                {
+                    Category = "尿布",
+                    Id = dto.Id,
+                    IdContactBook = dto.IdContactBook,
+                    RecodeTime = dto.RecodeTime,
+                    Content = dto.Content,
+                    BowelSituation = dto.BowelSituation,
+                    ModifiedTime = dto.ModifiedTime,
+                    AccountUserAccount = dto.AccountUserAccount,
+                });
+                var DTO = DTOs.ToList();
+
+                return DTOs;
+            }
+            return null;
+        }
         [HttpPut("UpdateDiaperDetail/{id}")]
         public async Task<ActionResult<EBook_DiaperDetail_DTO>> UpdateDiaperDetail(int id, [FromBody] EBook_DiaperDetail_DTO DTO)
         {
@@ -467,6 +541,69 @@ namespace BabyCiaoAPI.Controllers
                 AccountUserAccount = dto.AccountUserAccount,
             });
             return DTOs;
+        }
+        [HttpGet("GetSleepDetail_chartUse/{id}")]
+        public async Task<ActionResult<Dictionary<string, int>>> GetSleepDetail_chartUse(int id)
+        {
+            DateTime now = DateTime.Now;
+            DateTime oneWeekAgo=now.AddDays(-7);
+            Console.WriteLine(now);
+            Dictionary <string,int> kv=new Dictionary<string,int>();
+
+            var sleepDetails = _context.SleepDetails.Where(h => h.IdContactBook == id && h.WakeUpTime> oneWeekAgo).ToList();
+            if (sleepDetails.Count() > 0)
+            {
+                for (int i = 0; i < sleepDetails.Count(); i++)
+                {
+                    DateTime sleepTime = sleepDetails[i].SleepTime;
+                    DateTime wakeUpTime = sleepDetails[i].WakeUpTime;
+                    if (sleepTime.Day == wakeUpTime.Day)
+                    {
+                        //同天的情況
+                        TimeSpan time = wakeUpTime - sleepTime;
+                        string dayOfWeek = wakeUpTime.ToString("dddd", new CultureInfo("zh-TW"));
+
+                        if (kv.ContainsKey(dayOfWeek))
+                        {
+                            kv[dayOfWeek] += (int)time.TotalMinutes;
+                        }
+                        else
+                        {
+                            kv[dayOfWeek] = (int)time.TotalMinutes;
+                        }
+                    }
+                    else
+                    {
+                        // 不同天的情況
+                        DateTime endOfDay = sleepTime.Date.AddDays(1).AddTicks(-1);
+                        TimeSpan firstPart = endOfDay - sleepTime;
+                        TimeSpan secondPart = wakeUpTime - wakeUpTime.Date;
+
+                        string dayOfWeekSleep = sleepTime.ToString("dddd", new CultureInfo("zh-TW"));
+                        string dayOfWeekWake = wakeUpTime.ToString("dddd", new CultureInfo("zh-TW"));
+
+                        if (kv.ContainsKey(dayOfWeekSleep))
+                        {
+                            kv[dayOfWeekSleep] += (int)firstPart.TotalMinutes;
+                        }
+                        else
+                        {
+                            kv[dayOfWeekSleep] = (int)firstPart.TotalMinutes;
+                        }
+
+                        if (kv.ContainsKey(dayOfWeekWake))
+                        {
+                            kv[dayOfWeekWake] += (int)secondPart.TotalMinutes;
+                        }
+                        else
+                        {
+                            kv[dayOfWeekWake] = (int)secondPart.TotalMinutes;
+                        }
+                    }
+                    
+                }
+            }
+            return kv;
         }
         [HttpPut("UpdateSleepDetail/{id}")]
         public async Task<ActionResult<EBook_SleepDetail_DTO>> UpdateSleepDetail(int id, [FromBody] EBook_SleepDetail_DTO DTO)
