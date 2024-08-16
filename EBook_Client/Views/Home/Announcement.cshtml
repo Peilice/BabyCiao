@@ -14,8 +14,8 @@
     <aside>
         <h3 class="sub-title">公告消息</h3>
         <ul class="sub-menu">
-            <li class="andy_li active" style="cursor:pointer;background-color:lightgray;" id="list1">最新法規</li>
-            <li class="andy_li" style="cursor:pointer;" id="list2">網站公告</li>
+            <li class="andy_li active"  id="list1">最新法規</li>
+            <li class="andy_li"  id="list2">網站公告</li>
         </ul>
     </aside>
     <article class="" style="background-color:antiquewhite;">
@@ -75,21 +75,7 @@
 
         var app_Announcement = Vue.createApp(vueApp_Announcement).mount("#app_Announcement");
 
-        $(document).ready(function () {
-            $('#list1').on("click", function () {
-                $('#list2').css("background-color", '');
-                $('#list1').css("background-color", 'lightgray');
-                $('#article2').hide();
-                $('#article1').fadeIn(500);
-            });
-            $('#list2').on("click", function () {
-                $('#list1').css("background-color", '');
-                $('#list2').css("background-color", 'lightgray');
-                $('#article1').hide();
-                $('#article2').fadeIn(500);
-            })
-        })
-
+       
 
     </script>
 }

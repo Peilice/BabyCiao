@@ -10,5 +10,6 @@
         public string BloodType { get; set; }
         public string EmergencyContact { get; set; }
         public string EmergencyContactPhone1 { get; set; }
+        public string BabyPhoto { get; set; }
     }
 }

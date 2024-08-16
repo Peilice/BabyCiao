@@ -42,12 +42,24 @@ namespace BabyCiao_Client.Controllers
         {
             return View();
         }
+        public IActionResult Message()
+        {
+            return View();
+        }
 
         public IActionResult sendVerificationEmail()
         {
             return View();
         }
         public IActionResult resetpassword()
+        {
+            return View();
+        }
+        public IActionResult Announcement()
+        {
+            return View();
+        }
+        public IActionResult Announcement_Index()
         {
             return View();
         }

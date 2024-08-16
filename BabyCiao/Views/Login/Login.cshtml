@@ -4,23 +4,21 @@
 }
 
 <div class="login-container">
-    <div class="login-left">
-        <h1>貝比巧遇</h1>
-        <p>最好的 · 最專業的保母等著您</p>
-    </div>
-    <div class="login-right">
+    <div class="login-box">
+        <div class="login-avatar">
+            <img src="/images/登入.png" alt="Avatar" />
+        </div>
         <form id="loginForm">
-            <h2>登入</h2>
             <div class="input-group">
                 <label for="account">帳號</label>
                 <input type="text" id="account" name="account" required autocomplete="off" />
             </div>
             <div class="input-group">
                 <label for="password">密碼</label>
-                <input type="password" id="password" name="password" required autocomplete="off" />
+                <input type="password" id="password" name="Password" required autocomplete="off" />
             </div>
-            <button type="submit" class="btn-login">登入</button>
             
+            <button type="submit" class="btn-login">登入</button>
         </form>
         <div id="message" class="message"></div>
     </div>
@@ -88,59 +86,47 @@
 <style>
     .login-container {
         display: flex;
+        justify-content: center;
+        align-items: center;
         height: 100vh;
-        background-size: cover;
+        background-image: url('/images/giftly.png');
+        /* background-size: cover;
         background-position: center;
+        background-blend-mode: overlay; */
+        /* background: linear-gradient(135deg, #ff9966, #ff5e62); */
     }
 
-    .login-left {
-        flex: 1;
-        background-color: rgba(240, 98, 146, 0.85);
-        color: white;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
+
+    .login-box {
+        width: 450px;
+        padding: 60px;
+        background: linear-gradient(135deg, #ff9966, #00AEAE);
+        backdrop-filter: blur(10px);
+        border-radius: 10px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+        text-align: center;
     }
 
-        .login-left h1 {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-
-        .login-left p {
-            font-size: 18px;
-        }
-
-    .login-right {
-        flex: 1;
-        background-color: rgba(46, 46, 46, 0.85);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
+    .login-avatar {
+        margin-bottom: 20px;
     }
 
-        .login-right form {
-            width: 80%;
-            max-width: 400px;
-        }
-
-        .login-right h2 {
-            color: white;
-            margin-bottom: 20px;
+        .login-avatar img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
         }
 
     .input-group {
-        margin-bottom: 15px;
+        margin-bottom: 20px;
+        text-align: left;
     }
 
         .input-group label {
-            color: white;
             display: block;
             margin-bottom: 5px;
+            color: black;
         }
 
         .input-group input {
@@ -148,14 +134,33 @@
             padding: 10px;
             border: none;
             border-radius: 5px;
-            background-color: #4b4b4b;
-            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            color: black;
+            font-size: 16px;
+        }
+
+            .input-group input::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+    .login-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        color: white;
+        font-size: 14px;
+    }
+
+        .login-footer a {
+            color: #ffd1d1;
+            text-decoration: none;
         }
 
     .btn-login {
         width: 100%;
         padding: 10px;
-        background-color: #f06292;
+        background: #e91e63;
         color: white;
         border: none;
         border-radius: 5px;
@@ -163,21 +168,9 @@
         font-size: 16px;
     }
 
-    .login-footer {
-        margin-top: 15px;
-        display: flex;
-        justify-content: space-between;
-        color: white;
-    }
-
-        .login-footer a {
-            color: #f06292;
-            text-decoration: none;
+        .btn-login:hover {
+            background: #d81b60;
         }
-
-            .login-footer a:hover {
-                text-decoration: underline;
-            }
 
     .message {
         margin-top: 20px;

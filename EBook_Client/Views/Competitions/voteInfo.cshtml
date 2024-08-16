@@ -1,405 +1,393 @@
 ﻿
-
-
-<div id="vuePage" class="container mb-4">
-    <!-- Breadcrumb -->
-    <div class="container d-flex justify-content-between">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">社群</a></li>
-                <li class="breadcrumb-item"><a href="https://localhost:7231/Competitions">線上投票活動</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{CompetitionName}}</li>
-            </ol>
-        </nav>
-        <button type="button" class="btn btn-outline-primary" v-on:click="mycompetition(userAccount)">管理我的活動</a></button>
-    </div>
-
-    <h1 class="text-center mb-3 mt-3 fw-bold">{{CompetitionName}}</h1>
-    <!-- 比賽內容介紹 -->
-    <div class="col-12 mb-3">
-        <h3>比賽內容介紹</h3>
-        <p> {{Content}} </p>
-        <h3>投票期間</h3>
-        <p>{{StartTime}} ~ {{EndTime}}</p>
-        <h3>比賽進行狀態</h3>
-        <p>{{Statement}}</p>
-        <div class="d-flex justify-content-between">
-            <!-- 靜態互動背景 -->
-            <button type="button" class="btn btn-primary" data-bs-target="#staticBackdrop" v-bind:disabled="isEnd" v-bind:data-bs-dismiss="isClose?'modal' : ''" v-bind:data-bs-toggle="isShow?'modal' : ''" v-on:click="check">
-                報名此比賽
-            </button>
-            <button v-bind:class="{'btn-outline-danger':isDislike, 'btn-danger':isLike}" class="btn me-2" type="submit" v-on:click="newfavorite"><i class="bi bi-bookmark-heart">收藏</i></button>
+    <div id="vuePage" class="container mb-4">
+        <!-- Breadcrumb -->
+        <div class="container d-flex justify-content-between">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">社群</a></li>
+                    <li class="breadcrumb-item"><a href="https://localhost:7231/Competitions">線上投票活動</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{CompetitionName}}</li>
+                </ol>
+            </nav>
+            <button type="button" class="btn btn-outline-primary" v-on:click="mycompetition(userAccount)">管理我的活動</a></button>
         </div>
-    </div>
-    <div class="container">
-        <div class="d-flex justify-content-between">    
-              @* <div class="dropdown">
-                    排序
-                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                        最新
-                  </button>
-                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <li><a class="dropdown-item" href="#">最新</a></li>
-                      <li><a class="dropdown-item" href="#">投票數</a></li>
-                  </ul>
-              </div> *@
-            <div>
-                <label for="" class="me-3">參賽者：<span>{{Competitor}}</span></label>
-                <label for="" class="me-3">總票數：<span>{{allvote}}</span></label>
+
+        <h1 class="text-center mb-3 mt-3 fw-bolder" id="title">{{CompetitionName}}</h1>
+        <!-- 比賽內容介紹 -->
+        <div class="col-12 mb-3">
+            <h3 class="fw-bold">比賽內容介紹</h3>
+            <p> {{Content}} </p>
+            <h3 class="fw-bold">投票期間</h3>
+            <p>{{StartTime}} ~ {{EndTime}}</p>
+            <h3 class="fw-bold">比賽進行狀態</h3>
+            <p>{{Statement}}</p>
+            <div class="d-flex justify-content-between">
+                <!-- 靜態互動背景 -->
+                <button type="button" class="btn btn-primary" data-bs-target="#staticBackdrop" v-bind:disabled="isEnd" v-bind:data-bs-dismiss="isClose?'modal' : ''" v-bind:data-bs-toggle="isShow?'modal' : ''" v-on:click="check">
+                    報名此比賽
+                </button>
+                <button v-bind:class="{'btn-outline-danger':isDislike, 'btn-danger':isLike}" class="btn me-2" type="submit" v-on:click="newfavorite"><i class="bi bi-bookmark-heart">收藏</i></button>
             </div>
         </div>
-
-        <!-- 活動列表 -->
         <div class="container">
-            <div class="row mb-4">
-                <div class="row row-cols-1 row-cols-md-3 g-4">
-                    <div class="col" v-for="item in Competitionsdetail" :key="item.competitionDetailId">
-                        <div class="card h-100">
-                            <img v-bind:src="getPhotoUrl(item.competitionPhotos)" class="card-img-top h-100" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">{{item.accountUserAccount}}</h5>
-                                <p class="me-3">得票數 <span><i class="bi bi-lightning-charge-fill">{{item.number}}</i></span></p>
-                                <p>{{item.competitorContent}}</p>
-                            </div>
-                            <button class="btn me-2 w-100 text-dark"
-                                    v-bind:class="item.isVoteorNot" type="button"
-                                    v-on:click="newVote(item.competitionDetailId,item.isVoteorNot)">
-                                <i class="bi bi-heart">投票</i>
-                            </button>
-                        </div>
-                    </div>
+            <div class="d-flex justify-content-between">
+                @* <div class="dropdown">
+                排序
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                最新
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="#">最新</a></li>
+                <li><a class="dropdown-item" href="#">投票數</a></li>
+                </ul>
+                </div> *@
+                <div>
+                    <label for="" class="me-3">參賽者：<span>{{Competitor}}</span></label>
+                    <label for="" class="me-3">總票數：<span>{{allvote}}</span></label>
                 </div>
             </div>
-        </div>
 
-        <!-- 靜態互動背景模板 -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">填寫報名資料</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form id="form" class="needs-validation" v-on:submit.prevent="create" novalidate>
-                        <div class="modal-body">
-                            @* <input type="text" class="form-control" id="IdCompetition" v-model="CompetitionId"> *@
-                            <div class="mb-3 has-validation">
-                                <label class="form-label">帳號</label>
-                                <input type="text" class="form-control" id="userAccount" v-model="userAccount" readonly>
-                            </div>
-                            <div class="mb-3 has-validation">
-                                <label class="form-label">自我介紹(100字內)</label>
-                                <textarea type="text" class="form-control" id="Content" rows="3" v-model="CompetitorContent"></textarea>
-                            </div>
-                            <div class="mb-3 has-validation">
-                                <label class="form-label">照片上傳</label>
-                                <input type="file" class="form-control" id="CompetitionPhoto" v-on:change="onFileChange">
-                                <div id="EmergencyContactHelp" class="form-text">請選擇一張照片</div>
-                                <div class="invalid-feedback">
-                                    此欄位必填!
+            <!-- 活動列表 -->
+            <div class="container">
+                <div class="row mb-4">
+                    <div class="row row-cols-1 row-cols-md-3 g-4">
+                        <div class="col" v-for="item in Competitionsdetail" :key="item.competitionDetailId">
+                            <div class="card h-100">
+                                <img v-bind:src="getPhotoUrl(item.competitionPhotos)" class="card-img-top h-100" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{item.accountUserAccount}}</h5>
+                                    <p class="me-3">得票數 <span><i class="bi bi-lightning-charge-fill">{{item.number}}</i></span></p>
+                                    <p>{{item.competitorContent}}</p>
                                 </div>
+                                <button class="btn me-2 w-100 text-dark"
+                                        v-bind:class="item.isVoteorNot" type="button"
+                                        v-on:click="newVote(item.competitionDetailId,item.isVoteorNot)">
+                                    <i class="bi bi-heart">投票</i>
+                                </button>
                             </div>
-
                         </div>
-                    </form>
-                    
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                        <button type="submit" class="btn btn-primary" v-on:click="create">確認報名</button>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <!-- 靜態互動背景模板 -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">填寫報名資料</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="form" class="needs-validation" v-on:submit.prevent="create" novalidate>
+                            <div class="modal-body">
+                                @* <input type="text" class="form-control" id="IdCompetition" v-model="CompetitionId"> *@
+                                <div class="mb-3 has-validation">
+                                    <label class="form-label">帳號</label>
+                                    <input type="text" class="form-control" id="userAccount" v-model="userAccount" readonly>
+                                </div>
+                                <div class="mb-3 has-validation">
+                                    <label class="form-label">自我介紹(100字內)</label>
+                                    <textarea type="text" class="form-control" id="Content" rows="3" v-model="CompetitorContent"></textarea>
+                                </div>
+                                <div class="mb-3 has-validation">
+                                    <label class="form-label">照片上傳</label>
+                                    <input type="file" class="form-control" id="CompetitionPhoto" v-on:change="onFileChange">
+                                    <div id="EmergencyContactHelp" class="form-text">請選擇一張照片</div>
+                                    <div class="invalid-feedback">
+                                        此欄位必填!
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="submit" class="btn btn-primary" v-on:click="create">確認報名</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
-        <!-- 分頁 -->
-       @*  <nav aria-label="Page navigation example">
+            <!-- 分頁 -->
+            @*  <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
+            <li class="page-item">
+            <a class="page-link" href="#" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+            <a class="page-link" href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            </a>
+            </li>
             </ul>
-        </nav> *@
+            </nav> *@
+        </div>
     </div>
-</div>
 
 
 
-<!-- axios -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
-        integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script>
-    var IdCompetitions = sessionStorage.getItem("IdCompetition");
-    var comStatement = sessionStorage.getItem("comStatement"); 
-    var CompetitorID = 0;
+    <!-- axios -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
+            integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        var IdCompetitions = sessionStorage.getItem("IdCompetition");
+        var comStatement = sessionStorage.getItem("comStatement");
+        var CompetitorID = 0;
 
-    var vueApp = {
-        data() {
-            return {
-                CompetitionName:"",
-                Content:"",
-                StartTime:"",
-                EndTime:"",
-                Statement:"",
-                Competitor:0,
-                votenumber:0,
-                Competitionsdetail: [],
-                RecordDetail:[],
-                allvote:0,
-                CompetitionId: 0,
-                VoteToId:0,
+        var vueApp = {
+            data() {
+                return {
+                    CompetitionName: "",
+                    Content: "",
+                    StartTime: "",
+                    EndTime: "",
+                    Statement: "",
+                    Competitor: 0,
+                    votenumber: 0,
+                    Competitionsdetail: [],
+                    RecordDetail: [],
+                    allvote: 0,
+                    CompetitionId: 0,
+                    VoteToId: 0,
 
-                isEnd:false,
-                isClose:false,
-                isShow: false,
-                isLike:false,
-                isDislike:true,
-                //isNotVote:true,
-                //isVote:false,
+                    isEnd: false,
+                    isClose: false,
+                    isShow: false,
+                    isLike: false,
+                    isDislike: true,
+                    //isNotVote:true,
+                    //isVote:false,
 
 
-                //表單
-                CompetitorContent:"",
-                CompetitorPhoto:"noimage.jpg",
+                    //表單
+                    CompetitorContent: "",
+                    CompetitorPhoto: "noimage.jpg",
 
-                //使用者帳號
-                userAccount:sessionStorage.getItem("username"),
-                //userAccount: "user5",
-            };
-        },
-        methods: {
-            fetchcompetitions: function () {
-                let _this = this;
-                try {
-                    axios.get(`https://localhost:7292/api/OnlineCompetitions/${IdCompetitions}/${_this.userAccount}`)
-                        .then(response => {
-                            _this.Competitionsdetail = response.data;
-                            _this.CompetitionName = response.data[0].competitionName;
-                            _this.Content = response.data[0].content;
-                            _this.StartTime = response.data[0].startTime;
-                            _this.EndTime = response.data[0].endTime;
-                            _this.Statement = response.data[0].statement;
-                            _this.Competitor = response.data.length;
-                            _this.allvote = response.data[0].allnumber;
-                            _this.CompetitionId = response.data[0].id;
-                            _this.isLike = response.data[0].isLike;
-                            _this.isDislike = response.data[0].isDisLike;
-                            CompetitorID = response.data.competitionDetailId;
-                        });
-                    _this.fetchApply();
-                    //_this.fetchVote();
-                }
-                catch (error) {
-                    console.log(error);
+                    //使用者帳號
+                    userAccount: sessionStorage.getItem("username"),
+                    //userAccount: "user5",
                 };
+            },
+            methods: {
+                fetchcompetitions: function () {
+                    let _this = this;
+                    try {
+                        axios.get(`https://localhost:7292/api/OnlineCompetitions/${IdCompetitions}/${_this.userAccount}`)
+                            .then(response => {
+                                _this.Competitionsdetail = response.data;
+                                _this.CompetitionName = response.data[0].competitionName;
+                                _this.Content = response.data[0].content;
+                                _this.StartTime = response.data[0].startTime;
+                                _this.EndTime = response.data[0].endTime;
+                                _this.Statement = response.data[0].statement;
+                                _this.Competitor = response.data.length;
+                                _this.allvote = response.data[0].allnumber;
+                                _this.CompetitionId = response.data[0].id;
+                                _this.isLike = response.data[0].isLike;
+                                _this.isDislike = response.data[0].isDisLike;
+                                CompetitorID = response.data.competitionDetailId;
+                            });
+                        _this.fetchApply();
+                    }
+                    catch (error) {
+                        console.log(error);
+                    };
 
-            },
-            getPhotoUrl(CompetitionPhotos) {
-                return CompetitionPhotos != null ? `https://localhost:7000/uploads/${CompetitionPhotos}` : `https://localhost:7000/image/noimage.jpg`;
-            },
-            apply:function(){
-                let _this = this;
-                let forms = document.querySelectorAll('.needs-validation');
-                Array.prototype.slice.call(forms)
-                    .forEach(function (form) {
-                        form.addEventListener('submit', function (event) {
-                            if (!form.checkValidity()) {
-                                event.preventDefault()
-                                event.stopPropagation()
-                            }
-                            else 
-                            {
-                                _this.create(event);
-                            }
+                },
+                getPhotoUrl(CompetitionPhotos) {
+                    return CompetitionPhotos != null ? `https://localhost:7000/uploads/${CompetitionPhotos}` : `https://localhost:7000/image/noimage.jpg`;
+                },
+                apply: function () {
+                    let _this = this;
+                    let forms = document.querySelectorAll('.needs-validation');
+                    Array.prototype.slice.call(forms)
+                        .forEach(function (form) {
+                            form.addEventListener('submit', function (event) {
+                                if (!form.checkValidity()) {
+                                    event.preventDefault()
+                                    event.stopPropagation()
+                                }
+                                else {
+                                    _this.create(event);
+                                }
 
-                            form.classList.add('was-validated')
-                        }, false)
-                    })
-            },
-            create: function (e) {
-                e.preventDefault();
-                let _this = this;
-                var request = {}; //收集表單資訊
-                request.CompetitionId = IdCompetitions;
-                request.AccountUserAccount = _this.userAccount;
-                request.CompetitionPhotos = _this.CompetitorPhoto.name;
-                request.Content = _this.CompetitorContent;
-                
-                axios.post(`https://localhost:7292/api/OnlineCompetitions/apply`, request)
-                .then(result => {
-                    Swal.fire({
-                        position:"center",
-                        icon:"success",
-                        title:"報名成功",
-                        showConfirmButton: false,
-                        timer:1500
-                    })
-                    .then(result => {
-                        _this.fetchcompetitions();
-                        $('#staticBackdrop').modal('hide');
-
-                    })
-                })
-                .catch(err => {
-                    alert(err);
-                })
-               
-            },
-            //處理照片上傳
-            onFileChange: function (event) {
-                this.CompetitorPhoto = event.target.files[0];
-            },
-            newfavorite: function () {
-                let _this = this;
-                var request = {};
-                request.CompetitionId = IdCompetitions;
-                request.myAccount = _this.userAccount;
-                if (_this.userAccount == null) {
-                    alert("請先登入");
-                }
-                else{
-                    if(_this.isLike==false){
-                        axios.post(`https://localhost:7292/api/OnlineCompetitions/createFavorite`, request)
-                        .then(result => {
-                        Swal.fire({
-                            position: "center",
-                            icon: "success",
-                            title: "收藏成功",
-                            showConfirmButton: false,
-                            timer: 1500
+                                form.classList.add('was-validated')
+                            }, false)
                         })
-                            .then(result => {
-                                _this.fetchcompetitions();
-                                _this.isLike = true;
-                                _this.isDislike = false;
-                            })
-                    })
-                    }
-                    else{
-                        axios.delete(`https://localhost:7292/api/OnlineCompetitions/deleteFavorite/${IdCompetitions}/${_this.userAccount}`)
-                            .then(result => {
-                                Swal.fire({
-                                    position: "center",
-                                    icon: "error",
-                                    title: "刪除收藏",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                                    .then(result => {
-                                        _this.fetchcompetitions();
-                                        _this.isLike = false;
-                                        _this.isDislike = true;
-                                    })
-                            })
-                    }
-                      
-                };
+                },
+                create: function (e) {
+                    e.preventDefault();
+                    let _this = this;
+                    var request = {}; //收集表單資訊
+                    request.CompetitionId = IdCompetitions;
+                    request.AccountUserAccount = _this.userAccount;
+                    request.CompetitionPhotos = _this.CompetitorPhoto.name;
+                    request.Content = _this.CompetitorContent;
 
-            },
-            mycompetition: function (userAccount) {
-                if (userAccount == null) {
-                    alert("請先登入");
-                    //跳轉到登入頁面
-                }
-                else {
-                    window.location.href = `https://localhost:7231/Competitions/MyCompetition/${userAccount}`;
-                }
-            },
-            newVote:function(x,y){
-                let _this = this;
-                var record = {};
-                record.voterAccount = _this.userAccount;
-                record.CompetitionId = IdCompetitions;
-                record.CompetitorId = x;
-                //console.log(record);
-                if (_this.userAccount == null){
-                    alert("請先登入");
-                }
-                else{
-                    if(y==="isNotVote"){
-                        axios.post(`https://localhost:7292/api/OnlineCompetitions/createVote`, record)
+                    axios.post(`https://localhost:7292/api/OnlineCompetitions/apply`, request)
                         .then(result => {
-                                Swal.fire({
-                                    position: "center",
-                                    icon: "success",
-                                    title: "投票成功",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                                .then(result=>{
+                            Swal.fire({
+                                position: "center",
+                                icon: "success",
+                                title: "報名成功",
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                                .then(result => {
                                     _this.fetchcompetitions();
+                                    $('#staticBackdrop').modal('hide');
+
                                 })
                         })
+                        .catch(err => {
+                            alert(err);
+                        })
+
+                },
+                //處理照片上傳
+                onFileChange: function (event) {
+                    this.CompetitorPhoto = event.target.files[0];
+                },
+                newfavorite: function () {
+                    let _this = this;
+                    var request = {};
+                    request.CompetitionId = IdCompetitions;
+                    request.myAccount = _this.userAccount;
+                    if (_this.userAccount == null) {
+                        alert("請先登入");
                     }
-                    else{
-                        axios.delete(`https://localhost:7292/api/OnlineCompetitions/deleteVote/${IdCompetitions}/${_this.userAccount}`)
-                            .then(result => {
-                                Swal.fire({
-                                    position: "center",
-                                    icon: "error",
-                                    title: "取消投票",
-                                    showConfirmButton: false,
-                                    timer: 1500
+                    else {
+                        if (_this.isLike == false) {
+                            axios.post(`https://localhost:7292/api/OnlineCompetitions/createFavorite`, request)
+                                .then(result => {
+                                    Swal.fire({
+                                        position: "center",
+                                        icon: "success",
+                                        title: "收藏成功",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                        .then(result => {
+                                            _this.fetchcompetitions();
+                                            _this.isLike = true;
+                                            _this.isDislike = false;
+                                        })
                                 })
-                                .then(result=>{
-                                        _this.fetchcompetitions();
+                        }
+                        else {
+                            axios.delete(`https://localhost:7292/api/OnlineCompetitions/deleteFavorite/${IdCompetitions}/${_this.userAccount}`)
+                                .then(result => {
+                                    Swal.fire({
+                                        position: "center",
+                                        icon: "error",
+                                        title: "刪除收藏",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                        .then(result => {
+                                            _this.fetchcompetitions();
+                                            _this.isLike = false;
+                                            _this.isDislike = true;
+                                        })
                                 })
-                            })
+                        }
+
+                    };
+
+                },
+                mycompetition: function (userAccount) {
+                    if (userAccount == null) {
+                        alert("請先登入");
+                        //跳轉到登入頁面
                     }
-                }
-                
-                
+                    else {
+                        window.location.href = `https://localhost:7231/Competitions/MyCompetition/${userAccount}`;
+                    }
+                },
+                newVote: function (x, y) {
+                    let _this = this;
+                    var record = {};
+                    record.voterAccount = _this.userAccount;
+                    record.CompetitionId = IdCompetitions;
+                    record.CompetitorId = x;
+                    //console.log(record);
+                    if (_this.userAccount == null) {
+                        alert("請先登入");
+                    }
+                    else {
+                        if (y === "btn-outline-warning") {
+                            axios.post(`https://localhost:7292/api/OnlineCompetitions/createVote`, record)
+                                .then(result => {
+                                    Swal.fire({
+                                        position: "center",
+                                        icon: "success",
+                                        title: "投票成功",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                        .then(result => {
+                                            _this.fetchcompetitions();
+                                        })
+                                })
+                        }
+                        else {
+                            axios.delete(`https://localhost:7292/api/OnlineCompetitions/deleteVote/${IdCompetitions}/${_this.userAccount}`)
+                                .then(result => {
+                                    Swal.fire({
+                                        position: "center",
+                                        icon: "error",
+                                        title: "取消投票",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                        .then(result => {
+                                            _this.fetchcompetitions();
+                                        })
+                                })
+                        }
+                    }
+
+
+                },
+                fetchApply: function () {
+                    let _this = this;
+                    if (comStatement == "已結束") {
+                        _this.isEnd = true;
+                    }
+                    else {
+                        _this.isEnd = false;
+                    }
+                },
+                check: function () {
+                    let _this = this;
+                    if (_this.userAccount == null) {
+                        alert("請先登入");
+                        _this.isClose = true;
+                        _this.isShow = false;
+                    }
+                    else {
+                        _this.isClose = false;
+                        _this.isShow = true;
+                    }
+                },
+
+
             },
-            fetchApply:function(){
+            mounted: function () {
                 let _this = this;
-                if (comStatement == "已結束") {
-                    _this.isEnd = true;
-                }
-                else {
-                    _this.isEnd = false;
-                }
+                _this.fetchcompetitions();
             },
-            check: function () {
-                let _this = this;
-                if (_this.userAccount == null) {
-                    alert("請先登入");
-                    _this.isClose = true;
-                    _this.isShow = false;
-                }
-                else{
-                    _this.isClose = false;
-                    _this.isShow = true;
-                }
-            },
-            // fetchVote:function(){
-            //     let _this = this;
-            //     if ( === _this.VoteToId) {
-            //         _this.isNotVote = false;
-            //         _this.isVote = true;
-            //     }
-            //     else{
-            //         _this.isNotVote = true;
-            //         _this.isVote = false;
-            //     }
-            // },
-            
-        },
-        mounted: function () {
-            let _this = this;
-            _this.fetchcompetitions();
-        },
-    };
-    var app = Vue.createApp(vueApp).mount('#vuePage');
-</script>
+        };
+        var app = Vue.createApp(vueApp).mount('#vuePage');
+    </script>
+
+

@@ -5,6 +5,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">社群</li>
                 <li class="breadcrumb-item"><a href="https://localhost:7231/Platform">討論區</a></li>
+                <li class="breadcrumb-item">{{type}}</li>
             </ol>
         </nav>
     </div>
@@ -26,9 +27,9 @@
                 <!-- 主畫面(顯示資料) -->
                 <div v-show="isArticle">
                     <div class="d-flex justify-content-between mb-3">
-                        <div>
+                        <div class="col-md-6 mb-3">
                             <span>搜尋</span>
-                            <input type="text" />
+                            <input type="text" class="form-control flex-grow-1" placeholder="請輸入篩選關鍵字" v-model="keyword" v-on:keyup="search"/>
                         </div>                       
                         <button type="button" class="btn btn-outline-primary" v-on:click="showPost">發表文章</button>
                     </div>
@@ -103,6 +104,7 @@
                 isArticle:true,
                 newtitle:"",
                 newContent:"",
+                keyword:"",
 
                 //使用者帳號
                 userAccount:sessionStorage.getItem("username"),
@@ -208,6 +210,24 @@
                         _this.Article = response.data;
                         _this.type = response.data[0].postType;
                     })
+                
+            },
+            search: function () {
+                let _this = this;
+                if (_this.keyword == "") {
+                    axios.get(`https://localhost:7292/api/Platform/getArticle/${_this.type}`)
+                        .then(response => {
+                            _this.Article = response.data;
+                            _this.type = response.data[0].postType;
+                        })
+                }
+                else{
+                    axios.get(`https://localhost:7292/api/Platform/Search/${_this.keyword}/${_this.type}`)
+                    .then(response=>{
+                            _this.Article = response.data;
+                            _this.type = response.data[0].postType;
+                    })
+                }
                 
             },
 

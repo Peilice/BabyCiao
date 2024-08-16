@@ -29,7 +29,15 @@ namespace BabyCiaoAPI.Controllers
 			_logger = logger;
 		}
 
-
+		[HttpGet("GetAddress")]
+		public async Task<IActionResult> GetAddress(string userAccount)
+		{
+			var address = await _context.UserInformations
+										.Where(u => u.AccountUser == userAccount)
+										.Select(u => u.Address)
+										.FirstOrDefaultAsync();
+			return Ok(address);
+		}
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<GBDTO>>> GetGroupBuyings(string? userAccount)
 		{
@@ -381,11 +389,12 @@ namespace BabyCiaoAPI.Controllers
 			}
 			else
 			{
+				
 				var singleFormat = new GroupBuyingDetailFormat
 				{
 					GroupBuyingDetailId = newId,
 					FormatId = null,
-					Quantity = model.OrderFormats[0].Quantity,
+					Quantity = model.OrderFormats[model.OrderFormats.Count - 1].Quantity,
 				};
 				_context.GroupBuyingDetailFormats.Add(singleFormat);
 				await _context.SaveChangesAsync();

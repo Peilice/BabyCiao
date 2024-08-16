@@ -165,7 +165,7 @@ namespace BabyCiaoAPI.Controllers
                 }
                 else
                 {
-                    isClass.Add("isNotVote");
+                    isClass.Add("btn-outline-warning");
                 }
                    
             }

@@ -184,6 +184,7 @@
 				},
 				mounted() {
 					this.fetchOrderDetails();
+					this.getAddress(sessionStorage.getItem("username"));
 				},
 				computed: {
 					groupedFormats() {
@@ -197,6 +198,14 @@
 					}
 				},
 				methods: {
+					async getAddress(x){
+						const response = await axios.get(`https://localhost:7292/api/GroupBuying/GetAddress?userAccount=${x}`).then(response => {
+							this.submitOrderModel.address = response.data;
+						})
+							.catch(error => {
+								console.error('Error fetching address:', error);
+							});
+					},
 					async fetchOrderDetails() {
 						try {
 							const response = await axios.get(`https://localhost:7292/api/GroupBuying/Order/${this.groupBuyingId}`);
@@ -226,12 +235,12 @@
 								f.quantity = this.orderDetails.quantity;
 							});
 						} else {
-							//console.log('ccc');
+							console.log(this.submitOrderModel.orderFormats);
 							this.submitOrderModel.orderFormats.push({
 								orderFormatId: 0, // 或者設定適當的初始值
 								groupBuyingDetailId: 0, // 或者設定適當的初始值
 								formatId: 0,
-								quantity: this.orderDetails.quantity, // 或者設定適當的數量
+								quantity: this.orderDetails.quantity == "" ? 1 : this.orderDetails.quantity, // 或者設定適當的數量
 							});
 						}
 						

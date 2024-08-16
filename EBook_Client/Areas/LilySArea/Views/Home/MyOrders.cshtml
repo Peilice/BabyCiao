@@ -36,6 +36,7 @@
 									<th>數量</th>
 									<th>下單時間</th>
 									<th>申請狀態</th>
+									<th>操作</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -48,7 +49,10 @@
 									<td>{{ order.giveQuantity }}</td>
 									<td>{{ order.view }}</td>
 									<td>{{ order.statement }}</td>
-
+									<td>
+										<button @@click="editOrder(order.id)" class="btn btn-outline-secondary btn-sm mx-2">編輯</button>
+										<button @@click="cancelOrder(order.id)" class="btn btn-outline-danger btn-sm">取消</button>
+									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -79,6 +83,10 @@
 				this.initializeDataTable();
 			},
 			methods: {
+				editOrder() { 
+				},
+				cancelOrder() { 
+				},
 				initializeDataTable() {
 					// 確保 jQuery 和 DataTables 已加載
 					if (window.$ && $.fn.dataTable) {

@@ -1,4 +1,12 @@
-﻿
+﻿@section Styles{
+    <style>
+        #response li:nth-child(2n+1) {
+            background-color: #EEE8AA
+        }
+    </style>
+}
+
+
 <div id="App">
     <!-- Breadcrumb -->
     <div class="container mb-3">
@@ -6,7 +14,8 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">社群</li>
                 <li class="breadcrumb-item"><a href="https://localhost:7231/Platform">討論區</a></li>
-                <li class="breadcrumb-item">文章標題</li>
+                <li class="breadcrumb-item">{{artiType}}</li>
+                <li class="breadcrumb-item fst-italic">{{artiTitle}}</li>
             </ol>
         </nav>
     </div>
@@ -26,7 +35,7 @@
         <!--主要內容-->
         <div class="col-md-9" >
             <div class="border-bottom mb-2">
-                <h3>{{artiType}}</h3>
+                <h3 class="fw-bolder">{{artiType}}</h3>
             </div>
             <!--發布者資訊-->
             <div class="d-flex justify-content-between align-items-center">
@@ -39,13 +48,13 @@
             
             <!--文章內容-->
             <div>
-                <h4>{{artiTitle}}</h4>
+                <h3 class="fw-bold text-center">{{artiTitle}}</h3>
                 <p>{{artiContent}}</p>
             </div>
 
             <!--新增回應-->
             <div class="mb-3 has-validation border border-light p-2">
-                <h4 class="form-label border-bottom">我要回應</h4>
+                <h4 class="form-label border-bottom fw-bold">我要回應</h4>
                 <p>300字內</p>
                 <textarea type="text" class="form-control mb-3" id="Content" rows="5" v-model="CompetitorContent"></textarea>
                 <button class="btn btn-primary" type="submit" v-on:click="newResponse(artiID)">發布回應</button>
@@ -53,7 +62,7 @@
 
             <!--回應顯示-->
             <div>
-                <ul class="list-group">
+                <ul class="list-group" id="response">
                     <li class="list-group-item" v-for="item in Information" :key="item.responseID">
                         <div>
                             <p>{{item.responseAccount}}</p>
