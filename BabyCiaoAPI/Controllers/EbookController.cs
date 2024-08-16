@@ -263,24 +263,43 @@ namespace BabyCiaoAPI.Controllers
         public async Task<ActionResult<string>> UpdateBabyInfos(int id,[FromForm] Ebook_UpdateBabyInfos_DTO DTO)
         {
             string URL = "StaticFiles/images/背景2.png";
-
+            var ebook = _context.ContactBooks.Where(h => h.Id == id).FirstOrDefault();
             //新增公告照片
-            if (DTO.BabyPhoto!=null)
+            if (DTO.BabyPhoto != null)
             {
                 URL = await CopyPictureAndGetURL(DTO.BabyPhoto);
+                ebook.BloodType = DTO.BloodType;
+                ebook.EmergencyContact = DTO.EmergencyContact;
+                ebook.EmergencyContactPhone1 = DTO.EmergencyContactPhone1;
+                ebook.EmergencyContactPhone2 = DTO.EmergencyContactPhone2;
+                ebook.BabyPhoto = URL;
+                _context.Update(ebook);
+                await _context.SaveChangesAsync();
+                return Ok("更新完成");
             }
-            
-            var ebook = _context.ContactBooks.Where(h => h.Id == id).FirstOrDefault();
-            
-            ebook.BloodType = DTO.BloodType;
-            ebook.EmergencyContact = DTO.EmergencyContact;
-            ebook.EmergencyContactPhone1 = DTO.EmergencyContactPhone1;
-            ebook.EmergencyContactPhone2 = DTO.EmergencyContactPhone2;
-            ebook.BabyPhoto = URL;
-            
-            _context.Update(ebook);
-            await _context.SaveChangesAsync();
-            return Ok("更新完成");
+            else {
+                if (ebook.BabyPhoto != null)
+                {
+                    ebook.BloodType = DTO.BloodType;
+                    ebook.EmergencyContact = DTO.EmergencyContact;
+                    ebook.EmergencyContactPhone1 = DTO.EmergencyContactPhone1;
+                    ebook.EmergencyContactPhone2 = DTO.EmergencyContactPhone2;
+                    _context.Update(ebook);
+                    await _context.SaveChangesAsync();
+                    return Ok("更新完成");
+                }
+                else
+                {
+                    ebook.BloodType = DTO.BloodType;
+                    ebook.EmergencyContact = DTO.EmergencyContact;
+                    ebook.EmergencyContactPhone1 = DTO.EmergencyContactPhone1;
+                    ebook.EmergencyContactPhone2 = DTO.EmergencyContactPhone2;
+                    ebook.BabyPhoto = URL;
+                    _context.Update(ebook);
+                    await _context.SaveChangesAsync();
+                    return Ok("更新完成");
+                }
+            }
         }
         [HttpPut("UpdateHealthInfos/{id}")]
         public async Task<ActionResult<string>> UpdateHealthInfos(int id, [FromBody] EBook_UpdateHealthInfos_DTO DTO)
