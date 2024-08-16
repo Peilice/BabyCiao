@@ -1,7 +1,5 @@
-﻿@section Styles{
+﻿@section Styles {
     <style>
-       
-
         html {
             height: 100%
         }
@@ -146,10 +144,10 @@
 
 <div class="container" id="registerForm">
     <div class="row">
-        <div class="col-12 text-center ">
+        <div class="col-12 text-center">
             <div class="px-0 pb-0 mb-3">
-                <div id="form" class="mt-0 " >
-                    <ul id="progressbar" class="mb-0  d-flex justify-content-center">
+                <div id="form" class="mt-0">
+                    <ul id="progressbar" class="mb-0 d-flex justify-content-center">
                         <li class="active" id="step1">
                             <strong>填寫帳號/密碼</strong>
                         </li>
@@ -161,105 +159,100 @@
                         <div class="container">
                             <div class="row">
                                 <form class="needs-validation" novalidate>
-                                    
-                                <div class="col-4 offset-4 " >
-                                    <h4>註冊新帳號</h4>
-                                    <hr />
-                                    <div class="form-floating mb-3">
-                                        <input class="form-control" autocomplete="username" aria-required="true" placeholder="帳號" v-model="account" v-bind:disabled="ischeck" required />
-                                        <label>帳號</label>
-                                        <span class="text-danger"></span>
+                                    <div class="col-4 offset-4">
+                                        <h4>註冊新帳號</h4>
+                                        <hr />
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" autocomplete="username" aria-required="true" placeholder="帳號" v-model="account" v-bind:disabled="ischeck" required />
+                                            <label>帳號</label>
+                                            <span class="text-danger"></span>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="password" class="form-control" aria-required="true" placeholder="password" v-model="password1" v-bind:disabled="ischeck" required />
+                                            <label>密碼</label>
+                                            <span class="text-danger"></span>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="password" class="form-control" aria-required="true" placeholder="密碼" v-model="password2" v-bind:disabled="ischeck" required />
+                                            <label>密碼確認</label>
+                                            <span class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <template v-if="ischeck==true">
+                                                <span class=" mb-3">{{statue}}</span>
+                                            </template>
+                                            <template v-else>
+                                                <span class="text-danger mb-3">{{statue}}</span>
+                                            </template>
+                                        </div>
+                                        <button class="w-100 btn btn-lg btn-primary" v-on:click="checkForm">確認</button>
                                     </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="password" class="form-control" aria-required="true" placeholder="password" v-model="password1" v-bind:disabled="ischeck" required />
-                                        <label>密碼</label>
-                                        <span class="text-danger"></span>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="password" class="form-control" aria-required="true" placeholder="密碼" v-model="password2" v-bind:disabled="ischeck" required />
-                                        <label>密碼確認</label>
-                                        <span class="text-danger"></span>
-                                    </div>
-                                    <div class="mb-3">
-                                        <template v-if="ischeck==true">
-                                            <span class=" mb-3">{{statue}}</span>
-                                        </template>
-                                        <template v-else>
-                                            <span class="text-danger mb-3">{{statue}}</span>
-                                        </template>
-                                    </div>
-                                    <button class=" w-100 btn btn-lg btn-primary" v-on:click="checkForm">確認</button>
-
-                                </div>
                                 </form>
                             </div>
                         </div>
-                        <input type="button" name="next-step"
-                               class="next-step btn" value="下一步" v-bind:disabled="step1" />
+                        <input type="button" name="next-step" class="next-step btn" value="下一步" v-bind:disabled="step1" />
                     </fieldset>
                     <fieldset id="step_2">
                         <h2>填寫基本資料</h2>
                         <div class="container">
                             <form class="needs-validation" novalidate>
-                            <div class="row">
-
+                                <div class="row">
                                     <div class="col-12 col-md-4">
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="Account_User" v-model="account" readonly>
-                                        <label for="Account_User">帳號</label>
-                                    </div>
-                                    <div class="form-floating mb-3">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="Account_User" v-model="account" readonly>
+                                            <label for="Account_User">帳號</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
                                             <input type="email" class="form-control" id="email" v-model="email" v-bind:disabled="ischeck2" required>
                                             <label for="email">Email信箱</label>
-                                    </div>
-                                    <div class="form-floating mb-3">
+                                        </div>
+                                        <div class="form-floating mb-3">
                                             <input type="text" class="form-control" id="Phone" v-model="phone" v-bind:disabled="ischeck2" required>
                                             <label for="Phone">電話</label>
+                                        </div>
                                     </div>
-                                </div>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-floating mb-3">
+                                        <div class="form-floating mb-3">
                                             <input type="text" class="form-control" id="UserFirstName" v-model="userFirstName" v-bind:disabled="ischeck2" required>
                                             <label for="UserFirstName">姓氏</label>
-                                    </div>
-                                    <div class="form-floating mb-3">
+                                        </div>
+                                        <div class="form-floating mb-3">
                                             <input type="text" class="form-control" id="UserLastName" v-model="userLastName" v-bind:disabled="ischeck2" required>
                                             <label for="UserLastName">名子</label>
-                                    </div>
-                                    <div class="form-floating mb-3">
+                                        </div>
+                                        <div class="form-floating mb-3">
                                             <input type="text" class="form-control" id="Nickname" v-model="nickname" v-bind:disabled="ischeck2" required>
                                             <label for="Nickname">暱稱</label>
+                                        </div>
                                     </div>
-                                </div>
                                     <div class="col-12 col-md-4">
-                                    <div class="form-floating mb-3">
+                                        <div class="form-floating mb-3">
                                             <input type="text" class="form-control" id="Address" v-model="address" v-bind:disabled="ischeck2" required>
                                             <label for="Address">地址</label>
-                                    </div>
-                                    <div class="form-floating mb-3">
+                                        </div>
+                                        <div class="form-floating mb-3">
                                             <input type="date" class="form-control" id="Birthday" v-model="birthday" v-bind:disabled="ischeck2" required>
                                             <label for="Birthday">生日</label>
-                                    </div>
-                                    <div class="form-floating mb-3">
+                                        </div>
+                                        <div class="form-floating mb-3">
                                             <select class="form-control" id="Gender" v-model="gender" v-bind:disabled="ischeck2" required>
-                                                <option value ="" selected disabled>請選擇</option>
+                                                <option value="" selected disabled>請選擇</option>
                                                 <option value="0">女</option>
                                                 <option value="1">男</option>
                                             </select>
-
                                             <label for="Gender">性別</label>
+                                        </div>
                                     </div>
                                 </div>
                                 <hr />
-                                    <div class="d-flex justify-content-center">
-                                        <button class=" w-25 btn btn-lg btn-primary" v-on:click="checkForm" v-bind:disabled="ischeck2">確認</button>
+                                <div class="d-flex justify-content-center">
+                                    <button class="w-25 btn btn-lg btn-primary" v-on:click="checkForm" v-bind:disabled="ischeck2">確認</button>
+                                    
                                 </div>
-                            </div>
                             </form>
                         </div>
-                        <input type="button" name="previous-step"
-                               class="previous-step  btn"
-                               value="上一步" />
+                        <button type="button" class="btn  mb-3" v-on:click="fillDefaultData" style="background-color: white; border: none; color: #2F8D46;">隱藏</button>
+                        <input type="button" name="previous-step" class="previous-step btn" value="上一步" />
                     </fieldset>
                     <fieldset>
                         <div class="finish">
@@ -275,27 +268,24 @@
     </div>
 </div>
 
-
-
-@section Scripts{
+@section Scripts {
     <script>
         var vueApp_regiser = {
             data() {
                 return {
                     u_name: "",
                     islogin: false,
-                    statue:"",
-                    ischeck:false,
-                    ischeck2:false,
-                    password1:"",
-                    password2:"",
-                    account:"",
-                    step1:true,
+                    statue: "",
+                    ischeck: false,
+                    ischeck2: false,
+                    password1: "",
+                    password2: "",
+                    account: "",
+                    step1: true,
                     step2: true,
-                    isCreate:false,
+                    isCreate: false,
                     enter: false,
                     //會員資料用
-                    
                     userFirstName: "",
                     userLastName: "",
                     phone: "",
@@ -304,7 +294,6 @@
                     email: "",
                     nickname: "",
                     birthday: "",
-                    
                 };
             },
             mounted: function () {
@@ -339,7 +328,7 @@
                             _this.step2 = false;
                             GotoFinish();
                             setTimeout(function () {
-                                window.location.href = "@Utility.SD.localHost_Client/Home/Index"; 
+                                window.location.href = "@Utility.SD.localHost_Client/Home/Index";
                             }, 3000);
                         });
                     }).catch(err => { alert(err) });
@@ -360,9 +349,7 @@
                             _this.ischeck = true;
                             _this.step1 = false;
                         }
-
-
-                    }).catch(err => {alert(err) });
+                    }).catch(err => { alert(err) });
                 },
                 checkForm: function () {
                     let _this = this;
@@ -383,11 +370,9 @@
                                         _this.isCreate = false;
                                         if (_this.ischeck != true) {
                                             _this.check(event);
-
                                         } else if (_this.ischeck2 != true) {
                                             _this.register(event);
                                         }
-                                        
                                     } else {
                                         event.preventDefault()
                                         event.stopPropagation()
@@ -398,7 +383,16 @@
                         })
 
                 },
-
+                fillDefaultData: function () {
+                    this.userFirstName = "陳";
+                    this.userLastName = "義牆";
+                    this.phone = "0982111567";
+                    this.address = "台南市麻豆區中正四路211號";
+                    this.gender = 1;
+                    this.email = "max0981078751@gmail.com";
+                    this.nickname = "強";
+                    this.birthday = "1990-01-01";
+                }
             },
         }
         var app_regiser = Vue.createApp(vueApp_regiser).mount('#registerForm')
@@ -466,10 +460,6 @@
                 $(".progress-bar")
                     .css("width", percent + "%")
             }
-
-            // $(".submit").click(function () {
-            //     return false;
-            // })
         });
 
         function GotoFinish() {
@@ -492,8 +482,6 @@
                 },
                 duration: 500
             });
-            //setProgressBar(++current);
         }
-        
     </script>
 }
