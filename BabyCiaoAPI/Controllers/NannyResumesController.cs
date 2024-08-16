@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BabyCiaoAPI.Models;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.SignalR;
-using Newtonsoft.Json;
-using BabyCiao.Models;
-using Microsoft.Extensions.Hosting;
+using System.Security.Claims;
+using Microsoft.IdentityModel.JsonWebTokens;
+using BabyCiaoAPI.DTO;
 
 namespace BabyCiaoAPI.Controllers
 {
@@ -21,51 +15,45 @@ namespace BabyCiaoAPI.Controllers
     {
         private readonly BabyciaoContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IHttpContextAccessor _contextAccessor;
 
 
-        public NannyResumesController(BabyciaoContext context, IWebHostEnvironment webHostEnvironment)
+        public NannyResumesController(BabyciaoContext context, IWebHostEnvironment webHostEnvironment, IHttpContextAccessor contextAccessor)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
-            
+            _contextAccessor = contextAccessor;
         }
 
-        // GET: api/NannyResumes
-        [HttpGet("GetNannyResumes")]
-        public async Task<ActionResult<IEnumerable<NannyResume>>> GetNannyResumes()
+
+        [HttpGet("GetUserName_NannyResumes")]
+        public async Task<ActionResult<string>> GetUserName_NannyResumes()
         {
-            return await _context.NannyResumes.Select(c => new NannyResume
+            var username = _contextAccessor.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Name);
+            if (username != null)
             {
-                City=c.City,
-                District=c.District,
-                Introduction=c.Introduction,
-                TypeOfDaycare=c.TypeOfDaycare,
-                ServiceItems=c.ServiceItems,
-                QuasiPublicChildcare=c.QuasiPublicChildcare,
-                ChildcareAvailableUnder2=c.ChildcareAvailableUnder2,
-                ChildcareAvailableOver2=c.ChildcareAvailableOver2,
-                Language=c.Language,
-                ProfessionalPortrait=c.ProfessionalPortrait,
-            }).ToListAsync();
+                return username;
+            }
+            return null;
         }
 
-        // GET: api/NannyResumes/5
-        [HttpGet("GetNannyResumeinfo")]
-        public async Task<ActionResult<IEnumerable<NannyResumeDTO>>> GetNannyResumeinfo()
+
+
+        [HttpGet("GetFullinformation")]
+        public async Task<ActionResult<IEnumerable<NannyResumeDTO_new>>> GetFullinformation()
         {
             try
             {
-                var resumes = await _context.NannyResumes.ToListAsync();
-
-                var resumeDTOs = resumes.Select(c => new NannyResumeDTO
+                var resume = await _context.NannyResumes.Select(c => new NannyResumeDTO_new
                 {
                     Id = c.Id,
-                    Nickname = c.Nickname,
                     NannyAccountUserAccount = c.NannyAccountUserAccount,
+                    Nickname = c.Nickname,
                     City = c.City,
                     District = c.District,
                     Introduction = c.Introduction,
                     TypeOfDaycare = c.TypeOfDaycare,
+                    ServiceType = c.ServiceType,
                     ServiceItems = c.ServiceItems,
                     QuasiPublicChildcare = c.QuasiPublicChildcare,
                     ChildcareAvailableUnder2 = c.ChildcareAvailableUnder2,
@@ -74,14 +62,11 @@ namespace BabyCiaoAPI.Controllers
                     ServiceCenter = c.ServiceCenter,
                     ProfessionalPortrait = c.ProfessionalPortrait,
                     DisplayControl = c.DisplayControl,
-                }).ToList();
+                }).ToListAsync();
 
-                if (resumeDTOs == null || resumeDTOs.Count == 0)
-                {
-                    return NotFound();
-                }
 
-                return Ok(resumeDTOs);
+                return Ok(resume);
+     
             }
             catch (Exception ex)
             {
@@ -111,7 +96,7 @@ namespace BabyCiaoAPI.Controllers
                 var resumeDTO = new NannyResumeDTO
                 {
                     Id = resume.Id,
-                    Nickname=resume.Nickname,
+                    Nickname = resume.Nickname,
                     NannyAccountUserAccount = resume.NannyAccountUserAccount,
                     City = resume.City,
                     District = resume.District,
@@ -119,7 +104,7 @@ namespace BabyCiaoAPI.Controllers
                     TypeOfDaycare = resume.TypeOfDaycare,
                     ServiceItems = resume.ServiceItems,
                     QuasiPublicChildcare = resume.QuasiPublicChildcare,
-                    ChildcareAvailableUnder2 = resume.ChildcareAvailableUnder2, 
+                    ChildcareAvailableUnder2 = resume.ChildcareAvailableUnder2,
                     ChildcareAvailableOver2 = resume.ChildcareAvailableOver2, // Assuming int, converting to string
                     Language = resume.Language,
                     ServiceCenter = resume.ServiceCenter,
@@ -198,7 +183,6 @@ namespace BabyCiaoAPI.Controllers
                         {
                             UserAccountresponse = i.UserAccountresponse,
                             UserAccountinquire = i.UserAccountinquire,
-                            Times = i.Times
                         }).ToList()
                 }).ToList();
 
@@ -257,7 +241,7 @@ namespace BabyCiaoAPI.Controllers
                     },
                     QuasiPublicChildcare = resume.QuasiPublicChildcare,
                     ChildcareAvailableUnder2 = resume.ChildcareAvailableUnder2,
-                    ChildcareAvailableOver2 = resume.ChildcareAvailableOver2 ,
+                    ChildcareAvailableOver2 = resume.ChildcareAvailableOver2,
                     Language = resume.Language,
                     ServiceCenter = resume.ServiceCenter,
                     ProfessionalPortrait = resume.ProfessionalPortrait,
@@ -276,7 +260,6 @@ namespace BabyCiaoAPI.Controllers
                     {
                         UserAccountresponse = i.UserAccountresponse,
                         UserAccountinquire = i.UserAccountinquire,
-                        Times = i.Times
                     }).ToList()
                 };
 
@@ -286,302 +269,275 @@ namespace BabyCiaoAPI.Controllers
             {
                 // Log the exception
                 Console.WriteLine(ex.Message);
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, "Internal server error");
             }
         }
 
-        // GET: api/Contact/5
-        [HttpGet("Contact/{id}")]
-        public async Task<ActionResult<NannyResumeDetailDTO>> Contact(int id)
+
+
+        [HttpGet("GetNannyResume")]
+//        public async Task<ActionResult<IEnumerable<NannyResumeDTO_new>>> GetNannyResume()
+//        {
+//            try
+//            {
+//                // 獲取用戶名
+//                string username = _contextAccessor.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Name);
+
+//                if (username == null)
+//                {
+//                    return Unauthorized("User not authenticated.");
+//                }
+
+//                // 從數據庫中獲取數據
+
+//                var resume = _context.NannyResumes
+//                    .Where(c => c.NannyAccountUserAccount == username).FirstOrDefault();
+
+
+
+//                var inquiries = await _context.Inquires
+//                    .Where(i => i.UserAccountresponse == nannyResume.NannyAccountUserAccount)
+//                    .Select(i => new InquireDTO
+//                    {
+//                        UserAccountresponse = i.UserAccountresponse,
+//                        UserAccountinquire = i.UserAccountinquire,
+//                    })
+//                    .ToListAsync();
+
+//                var serviceTypeText = nannyResume.ServiceType switch
+
+//                {
+//                    return NotFound("No resumes found.");
+//            }
+
+//                // 轉換數據為 DTO
+//                NannyResumeDTO_new DTO = new NannyResumeDTO_new();
+//            DTO.Id = resume.Id;
+//            DTO.NannyAccountUserAccount = resume.NannyAccountUserAccount;
+//            DTO.Nickname = resume.Nickname;
+//            DTO.City = resume.City;
+//            DTO.District = resume.District;
+//            DTO.Introduction = resume.Introduction;
+//            DTO.TypeOfDaycare = resume.TypeOfDaycare;
+//            DTO.ServiceType = resume.ServiceType;
+//            DTO.ServiceItems = resume.ServiceItems;
+//            DTO.QuasiPublicChildcare = resume.QuasiPublicChildcare;
+//            DTO.ChildcareAvailableUnder2 = resume.ChildcareAvailableUnder2;
+//            DTO.ChildcareAvailableOver2 = resume.ChildcareAvailableOver2;
+//            DTO.Language = resume.Language;
+//            DTO.ServiceCenter = resume.ServiceCenter;
+//            DTO.ProfessionalPortrait = resume.ProfessionalPortrait;
+//            DTO.DisplayControl = resume.DisplayControl;
+
+//            return Ok(DTO);
+//        }
+//            catch (Exception ex)
+//            {
+//                // 記錄異常並返回 500 錯誤
+//                // 記錄異常到日誌或控制台
+//                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+//                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+//    }
+//}
+
+
+
+[HttpGet("GetNannyResume/{id}")]
+public async Task<ActionResult<NannyResumeDTO_new>> GetNannyResume(int id)
+{
+
+    // 查找指定 Id 的 BabyResume 对象
+    var resume = await _context.NannyResumes
+        .Where(c => c.Id == id)
+        .Select(c => new NannyResumeDTO_new
         {
-            if (id == 0)
-            {
-                return BadRequest("Invalid id.");
-            }
+            Id = c.Id,
+            NannyAccountUserAccount = c.NannyAccountUserAccount,
+            Nickname = c.Nickname,
+            City = c.City,
+            District = c.District,
+            Introduction = c.Introduction,
+            TypeOfDaycare = c.TypeOfDaycare,
+            ServiceType = c.ServiceType,
+            ServiceItems = c.ServiceItems,
+            QuasiPublicChildcare = c.QuasiPublicChildcare,
+            ChildcareAvailableUnder2 = c.ChildcareAvailableUnder2,
+            ChildcareAvailableOver2 = c.ChildcareAvailableOver2,
+            Language = c.Language,
+            ServiceCenter = c.ServiceCenter,
+            ProfessionalPortrait = c.ProfessionalPortrait,
+            DisplayControl = c.DisplayControl
+        }).FirstOrDefaultAsync();
 
-            try
-            {
-                var nannyResume = await _context.NannyResumes
-                    .Where(c => c.Id == id)
-                    .Select(c => new
-                    {
-                        c.Id,
-                        c.NannyAccountUserAccount,
-                        c.Nickname,
-                        c.City,
-                        c.District,
-                        c.Introduction,
-                        c.TypeOfDaycare,
-                        c.ServiceType,
-                        c.ServiceItems,
-                        c.QuasiPublicChildcare,
-                        c.ChildcareAvailableUnder2,
-                        c.ChildcareAvailableOver2,
-                        c.Language,
-                        c.ServiceCenter,
-                        c.ProfessionalPortrait,
-                        c.DisplayControl
-                    })
-                    .FirstOrDefaultAsync();
+    return Ok(resume); // 返回找到的对象
 
-                if (nannyResume == null || !nannyResume.DisplayControl.GetValueOrDefault())
-                {
-                    return NotFound(new { message = "該委託單不存在" });
-                }
+}
 
-                var photos = await _context.NannyResumePhotos
-                    .Where(ph => ph.IdNannyResume == id)
-                    .Select(ph => new NannyResumePhotoDTO
-                    {
-                        Id = ph.Id,
-                        IdNannyResume = ph.IdNannyResume,
-                        PhotoName = ph.PhotoName,
-                        ModifiedTime = ph.ModifiedTime
-                    })
-                    .ToListAsync();
 
-                var evaluations = await _context.Evaluates
-                    .Where(e => e.AppraiseeUserAccount == nannyResume.NannyAccountUserAccount)
-                    .Select(e => new EvaluateDTO
-                    {
-                        Id = e.Id,
-                        EvaluatorUserAccount = e.EvaluatorUserAccount,
-                        AppraiseeUserAccount = e.AppraiseeUserAccount,
-                        EvaluateTime = e.EvaluateTime,
-                        Score = e.Score,
-                        Memo = e.Memo,
-                        Display = e.Display
-                    })
-                    .ToListAsync();
 
-                var inquiries = await _context.Inquires
-                    .Where(i => i.UserAccountresponse == nannyResume.NannyAccountUserAccount)
-                    .Select(i => new InquireDTO
-                    {
-                        UserAccountresponse = i.UserAccountresponse,
-                        UserAccountinquire = i.UserAccountinquire,
-                        Times = i.Times
-                    })
-                    .ToListAsync();
-
-                var serviceTypeText = nannyResume.ServiceType switch
-                {
-                    0 => "無",
-                    1 => "料理服務",
-                    2 => "接送服務",
-                    3 => "家教服務",
-                    _ => "未知"
-                };
-
-                var nannyResumeDetail = new NannyResumeDetailDTO
-                {
-                    Id = nannyResume.Id,
-                    NannyAccountUserAccount = nannyResume.NannyAccountUserAccount,
-                    Nickname = nannyResume.Nickname,
-                    City = nannyResume.City,
-                    District = nannyResume.District,
-                    Introduction = nannyResume.Introduction,
-                    TypeOfDaycare = nannyResume.TypeOfDaycare,
-                    ServiceItems = nannyResume.ServiceItems,
-                    ServiceType = serviceTypeText,
-                    QuasiPublicChildcare = nannyResume.QuasiPublicChildcare,
-                    ChildcareAvailableUnder2 = nannyResume.ChildcareAvailableUnder2,
-                    ChildcareAvailableOver2 = nannyResume.ChildcareAvailableOver2,
-                    Language = nannyResume.Language,
-                    ServiceCenter = nannyResume.ServiceCenter,
-                    ProfessionalPortrait = nannyResume.ProfessionalPortrait,
-                    DisplayControl = nannyResume.DisplayControl,
-                    Photos = photos,
-                    Evaluations = evaluations,
-                    Inquiries = inquiries
-                };
-
-                return Ok(nannyResumeDetail);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception (use a logging framework)
-                return StatusCode(500, new { message = ex.Message });
-            }
-        }
-
-        [HttpPost("SubmitResume")]
-        public async Task<ActionResult<int>> SubmitResume([FromBody] NannyResumeDTO model)
+[HttpPost("PostNannyResume")]
+public async Task<IActionResult> PostNannyResume([FromForm] NannyResumeDTO_new nannyResumeDTO, IFormFile professionalPortrait)
+{
+    try
+    {
+        if (nannyResumeDTO == null || professionalPortrait == null || professionalPortrait.Length == 0)
         {
-        
-            var nannyResume = new NannyResume
-            {
-                NannyAccountUserAccount = model.NannyAccountUserAccount,
-                Nickname = model.Nickname,
-                City = model.City,
-                District = model.District,
-                Introduction = model.Introduction,
-                TypeOfDaycare = model.TypeOfDaycare,
-                ServiceType = model.ServiceType,
-                ServiceItems = model.ServiceItems,
-                QuasiPublicChildcare = model.QuasiPublicChildcare,
-                ChildcareAvailableUnder2 = model.ChildcareAvailableUnder2,
-                ChildcareAvailableOver2 = model.ChildcareAvailableOver2,
-                Language = model.Language,
-                ServiceCenter = model.ServiceCenter,
-                ProfessionalPortrait = model.ProfessionalPortrait,
-                DisplayControl = model.DisplayControl
-            };
-            return Ok();
+            return BadRequest("Invalid data.");
         }
 
-        //private string ConvertServiceItems(int serviceItems)
-        //{
-        //    return serviceItems switch
-        //    {
-        //        0 => "無",
-        //        1 => "料理服務",
-        //        2 => "接送服務",
-        //        3 => "家教服務",
-        //        _ => "未知"
-        //    };
-        //}
-
-        //private string ConvertChildcareAvailable(int available)
-        //{
-        //    return available switch
-        //    {
-        //        1 => "一位",
-        //        2 => "二位",
-        //        3 => "三位",
-        //        4 => "四位",
-        //        _ => "未知"
-        //    };
-        //}
-    
-
-
-
-
-
-    //    private void NotifyRecipient(string recipientAccount)
-    //    {
-    //        // Implement notification logic
-    //        // Example: Send a message or trigger an event to notify the recipient
-    //    }
-
-
-    //    private string ConvertServiceItemsToString(IEnumerable<int> serviceItems)
-    //    {
-    //        // This is a placeholder function. Implement according to your service items logic.
-    //        return string.Join(", ", serviceItems.Select(item => item.ToString()));
-    //    }
-
-
-    //[HttpPut("{id}")]
-    //    public async Task<IActionResult> MarkAsRead(int id)
-    //    {
-    //        var notification = await _context.Notifications.FindAsync(id);
-    //        if (notification == null)
-    //        {
-    //            return NotFound();
-    //        }
-
-    //        notification.IsRead = true;
-    //        _context.Entry(notification).State = EntityState.Modified;
-    //        await _context.SaveChangesAsync();
-
-    //        return NoContent();
-    //    }
-
-
-
-    //[HttpPost("SubmitInquiry")]
-    //public async Task<ActionResult> SubmitInquiry([FromBody] InquiryDTO model)
-    //{
-    //    if (model == null)
-    //    {
-    //        return BadRequest("Model is null");
-    //    }
-
-    //    // Save the inquiry to the database
-    //    var inquiry = new Inquiry
-    //    {
-    //        UserAccountresponse = model.UserAccountresponse,
-    //        UserAccountinquire = model.UserAccountinquire,
-    //        Times = model.Times,
-    //    };
-
-    //    _context.Inquiries.Add(inquiry);
-    //    await _context.SaveChangesAsync();
-
-    //    // Notify the respondent
-    //    NotifyRespondent(inquiry);
-
-    //    return Ok(new { inquiryId = inquiry.Id });
-    //}
-
-
-
-
-
-
-    //PUT: api/NannyResumes/5
-    //To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
-        public async Task<IActionResult> PutNannyResume(int id, NannyResume nannyResume)
+        // 保存上傳的文件
+        var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "NannnyAndParent/nannyreume", professionalPortrait.FileName);
+        using (var stream = new FileStream(filePath, FileMode.Create))
         {
-            if (id != nannyResume.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(nannyResume).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!NannyResumeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            await professionalPortrait.CopyToAsync(stream);
         }
 
-        // POST: api/NannyResumes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<NannyResume>> PostNannyResume(NannyResume nannyResume)
+        // 轉換 DTO 為實體
+        var nannyResume = new NannyResume
         {
-            _context.NannyResumes.Add(nannyResume);
-            await _context.SaveChangesAsync();
+            NannyAccountUserAccount = nannyResumeDTO.NannyAccountUserAccount,
+            Nickname = nannyResumeDTO.Nickname,
+            City = nannyResumeDTO.City,
+            District = nannyResumeDTO.District,
+            Introduction = nannyResumeDTO.Introduction,
+            TypeOfDaycare = nannyResumeDTO.TypeOfDaycare,
+            ServiceType = nannyResumeDTO.ServiceType,
+            ServiceItems = nannyResumeDTO.ServiceItems,
+            QuasiPublicChildcare = nannyResumeDTO.QuasiPublicChildcare,
+            ChildcareAvailableUnder2 = nannyResumeDTO.ChildcareAvailableUnder2,
+            ChildcareAvailableOver2 = nannyResumeDTO.ChildcareAvailableOver2,
+            Language = nannyResumeDTO.Language,
+            ServiceCenter = nannyResumeDTO.ServiceCenter,
+            ProfessionalPortrait = professionalPortrait.FileName,
+        };
 
-            return CreatedAtAction("GetNannyResume", new { id = nannyResume.Id }, nannyResume);
-        }
+        _context.NannyResumes.Add(nannyResume);
+        await _context.SaveChangesAsync();
 
-        // DELETE: api/NannyResumes/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteNannyResume(int id)
+        return CreatedAtAction(nameof(GetNannyResume), new { id = nannyResume.Id }, nannyResume);
+    }
+    catch (Exception ex)
+    {
+        Console.Error.WriteLine($"An error occurred: {ex.Message}");
+        return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+    }
+}
+
+[HttpPost("SubmitResume")]
+public async Task<ActionResult<int>> SubmitResume([FromBody] NannyResumeDTO_new model)
+{
+    string username = _contextAccessor.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Name);
+
+
+    var nannyResume = new NannyResume
+    {
+        NannyAccountUserAccount = model.NannyAccountUserAccount,
+        Nickname = model.Nickname,
+        City = model.City,
+        District = model.District,
+        Introduction = model.Introduction,
+        TypeOfDaycare = model.TypeOfDaycare,
+        ServiceType = model.ServiceType,
+        ServiceItems = model.ServiceItems,
+        QuasiPublicChildcare = model.QuasiPublicChildcare,
+        ChildcareAvailableUnder2 = model.ChildcareAvailableUnder2,
+        ChildcareAvailableOver2 = model.ChildcareAvailableOver2,
+        Language = model.Language,
+        ServiceCenter = model.ServiceCenter,
+        ProfessionalPortrait = model.ProfessionalPortrait,
+    };
+    _context.NannyResumes.Add(nannyResume);
+    await _context.SaveChangesAsync();
+
+    return CreatedAtAction("GetNannyResume", new { id = nannyResume.Id }, nannyResume);
+}
+
+private string ConvertServiceItems(int ServiceType)
+{
+    return ServiceType switch
+    {
+        0 => "無",
+        1 => "料理服務",
+        2 => "接送服務",
+        3 => "家教服務",
+        _ => "未知"
+    };
+}
+
+private string ConvertChildcareAvailable(int available)
+{
+    return available switch
+    {
+        1 => "一位",
+        2 => "二位",
+        3 => "三位",
+        4 => "四位",
+        _ => "未知"
+    };
+
+
+}
+//PUT: api/NannyResumes/5
+//To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+[HttpPut("{id}")]
+public async Task<IActionResult> PutNannyResume(int id, NannyResume nannyResume)
+{
+    if (id != nannyResume.Id)
+    {
+        return BadRequest();
+    }
+
+    _context.Entry(nannyResume).State = EntityState.Modified;
+
+    try
+    {
+        await _context.SaveChangesAsync();
+    }
+    catch (DbUpdateConcurrencyException)
+    {
+        if (!NannyResumeExists(id))
         {
-            var nannyResume = await _context.NannyResumes.FindAsync(id);
-            if (nannyResume == null)
-            {
-                return NotFound();
-            }
-
-            _context.NannyResumes.Remove(nannyResume);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return NotFound();
         }
-
-        private bool NannyResumeExists(int id)
+        else
         {
-            return _context.NannyResumes.Any(e => e.Id == id);
+            throw;
         }
+    }
+
+    return NoContent();
+}
+
+// POST: api/NannyResumes
+// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+[HttpPost]
+public async Task<ActionResult<NannyResume>> PostNannyResume(NannyResume nannyResume)
+{
+    _context.NannyResumes.Add(nannyResume);
+    await _context.SaveChangesAsync();
+
+    return CreatedAtAction("GetNannyResume", new { id = nannyResume.Id }, nannyResume);
+}
+
+// DELETE: api/NannyResumes/5
+[HttpDelete("{id}")]
+public async Task<IActionResult> DeleteNannyResume(int id)
+{
+    var nannyResume = await _context.NannyResumes.FindAsync(id);
+    if (nannyResume == null)
+    {
+        return NotFound();
+    }
+
+    _context.NannyResumes.Remove(nannyResume);
+    await _context.SaveChangesAsync();
+
+    return NoContent();
+}
+
+private bool NannyResumeExists(int id)
+{
+    return _context.NannyResumes.Any(e => e.Id == id);
+}
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using BCrypt.Net;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -12,9 +13,6 @@ using Microsoft.AspNetCore.Hosting;
 using BabyCiaoAPI.DTO;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Humanizer;
-using NuGet.Protocol;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BabyCiaoAPI.Controllers
 {
@@ -26,7 +24,7 @@ namespace BabyCiaoAPI.Controllers
         private readonly BabyciaoContext _context;
         private readonly IWebHostEnvironment _environment;
         private readonly IHttpContextAccessor _contextAccessor;
-        
+        private string image_dir = "wwwroot/images";
 
 
         public NannyRequirmentsController(BabyciaoContext context, IWebHostEnvironment environment, IHttpContextAccessor contextAccessor)
@@ -37,7 +35,16 @@ namespace BabyCiaoAPI.Controllers
         }
 
 
-
+        [HttpGet("GetUserName_NannyRequirment")]
+        public async Task<ActionResult<string>> GetUserName_NannyRequirment()
+        {
+            var username = _contextAccessor.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Name);
+            if (username != null)
+            {
+                return username;
+            }
+            return null;
+        }
 
         [HttpGet("NannyRequirmentget")]
         public async Task<ActionResult<IEnumerable<NannyRequirmentDTO>>> NannyRequirmentget()
@@ -58,8 +65,8 @@ namespace BabyCiaoAPI.Controllers
                         NationalIdentificationCard = nny.NationalIdentificationCard,
                         AddressesOfAgencies = nny.AddressesOfAgencies,
                         ValidPeriodsOfCertificates = nny.ValidPeriodsOfCertificates
-                    })
-                    .ToList();
+                    });
+
 
                 return Ok(results); // Return the results with a 200 OK status
             }
@@ -77,6 +84,8 @@ namespace BabyCiaoAPI.Controllers
         [HttpGet("GetNannyRequirmentinfo/{id}")]
         public async Task<ActionResult<NannyRequirment>> GetNannyRequirmentinfo(int id)
         {
+            string username = _contextAccessor.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Name);
+
             var nannyRequirment = await _context.NannyRequirments.FindAsync(id);
 
             if (nannyRequirment == null)
@@ -89,22 +98,24 @@ namespace BabyCiaoAPI.Controllers
 
 
 
-        [HttpPost("apply")]
-        public async Task<string>  Apply ([FromBody]NannyRequirmentDTO dto)
+        [HttpPost("Apply")]
+        public async Task<string> Apply([FromBody] NannyRequirmentNEWDTO dto)
         {
+            string username = _contextAccessor.HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Name);
+
             var nannyRequirment = new NannyRequirment
-            {   
+            {
                 NannyAccountUserAccount = dto.NannyAccountUserAccount,
-                PoliceCriminalRecordCertificate = dto.PoliceCriminalRecordCertificates,
-                ChildCareCertificate = dto.ChildCareCertificates,
-                NationalIdentificationCard = dto.NationalIdentificationCards,
+                PoliceCriminalRecordCertificate = dto.PoliceCriminalRecordCertificate,
+                ChildCareCertificate = dto.ChildCareCertificate,
+                NationalIdentificationCard = dto.NationalIdentificationCard,
                 AddressesOfAgencies = dto.AddressesOfAgencies,
                 ValidPeriodsOfCertificates = dto.ValidPeriodsOfCertificates,
             };
             try
             {
                 _context.NannyRequirments.Add(nannyRequirment);
-                   await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -123,29 +134,29 @@ namespace BabyCiaoAPI.Controllers
         {
             //讀取參加過的比賽資訊(List)
             var myResume = await (from com in _context.NannyResumes
-                                       join comd in _context.NannyRequirments
-                                       on com.NannyAccountUserAccount equals comd.NannyAccountUserAccount
-                                       where comd.NannyAccountUserAccount == account
-                                       select new NannyRequirment_NEWDTO
-                                       {
-                                           Id = com.Id,
-                                           Nickname = com.Nickname,
-                                           NannyAccountUserAccount = comd.NannyAccountUserAccount,
-                                           PoliceCriminalRecordCertificate = comd.PoliceCriminalRecordCertificate,
-                                           ChildCareCertificate = comd.ChildCareCertificate,
-                                           NationalIdentificationCard = comd.NationalIdentificationCard,
-                                           AddressesOfAgencies = comd.AddressesOfAgencies,
-                                           ValidPeriodsOfCertificates = comd.ValidPeriodsOfCertificates,
-                                           City = com.City,
-                                           Introduction = com.Introduction,
-                                           TypeOfDaycare = com.TypeOfDaycare,
-                                           ServiceItems = com.ServiceItems,
-                                           QuasiPublicChildcare = com.QuasiPublicChildcare,
-                                           ChildcareAvailableUnder2 = com.ChildcareAvailableUnder2,
-                                           ChildcareAvailableOver2 = com.ChildcareAvailableOver2,
-                                           ServiceCenter = com.ServiceCenter,
-                                           ProfessionalPortrait = com.ProfessionalPortrait,
-                                       }).ToListAsync();
+                                  join comd in _context.NannyRequirments
+                                  on com.NannyAccountUserAccount equals comd.NannyAccountUserAccount
+                                  where comd.NannyAccountUserAccount == account
+                                  select new NannyRequirment_NEWDTO
+                                  {
+                                      Id = com.Id,
+                                      Nickname = com.Nickname,
+                                      NannyAccountUserAccount = comd.NannyAccountUserAccount,
+                                      PoliceCriminalRecordCertificate = comd.PoliceCriminalRecordCertificate,
+                                      ChildCareCertificate = comd.ChildCareCertificate,
+                                      NationalIdentificationCard = comd.NationalIdentificationCard,
+                                      AddressesOfAgencies = comd.AddressesOfAgencies,
+                                      ValidPeriodsOfCertificates = comd.ValidPeriodsOfCertificates,
+                                      City = com.City,
+                                      Introduction = com.Introduction,
+                                      TypeOfDaycare = com.TypeOfDaycare,
+                                      ServiceItems = com.ServiceItems,
+                                      QuasiPublicChildcare = com.QuasiPublicChildcare,
+                                      ChildcareAvailableUnder2 = com.ChildcareAvailableUnder2,
+                                      ChildcareAvailableOver2 = com.ChildcareAvailableOver2,
+                                      ServiceCenter = com.ServiceCenter,
+                                      ProfessionalPortrait = com.ProfessionalPortrait,
+                                  }).ToListAsync();
             return Ok(myResume);
 
         }
@@ -235,7 +246,8 @@ namespace BabyCiaoAPI.Controllers
         [HttpPost("PostNannyRequirmentinfo")]
         public async Task<string> PostNannyRequirmentinfo([FromBody] NannyRequirmentNEWDTO dto)
         {
-            try {
+            try
+            {
                 var nannyRequirment = new NannyRequirment
                 {
                     NannyAccountUserAccount = dto.NannyAccountUserAccount,
@@ -254,7 +266,7 @@ namespace BabyCiaoAPI.Controllers
             }
 
             return "Ok";
-        
+
         }
 
         //[HttpPost("PostNannyRequirmentinfo")]
