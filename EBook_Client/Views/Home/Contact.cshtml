@@ -165,8 +165,8 @@
                         });
                 },
                 submitForm() {
-                    // 從 sessionStorage 取得 token
-                    const token = sessionStorage.getItem('token');
+                    // 從 localStorage 取得 token
+                    const token = localStorage.getItem('token');
 
                     if (!token) {
                         alert('請先登錄');
