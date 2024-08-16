@@ -14,10 +14,10 @@ public class PlatformResponseDTO
     public DateOnly PostModifiedTime { get; set; }
 
     //讀取回應
-    public int ResponseID { get; set; }
-    public string ResponseAccount { get; set; }
-    public string ResponseContent { get; set; }
-    public DateTime ResponseModifiedTime { get; set; }
+    public int? ResponseID { get; set; }
+    public string? ResponseAccount { get; set; }
+    public string? ResponseContent { get; set; }
+    public DateTime? ResponseModifiedTime { get; set; }
     public string? ResponseModifiedTimeView { get; set; }
 
 }
