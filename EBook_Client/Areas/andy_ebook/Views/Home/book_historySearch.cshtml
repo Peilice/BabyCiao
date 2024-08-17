@@ -32,7 +32,7 @@
                             <button class="nav-link active " id="pills-1-tab" data-bs-toggle="pill"
                                     data-bs-target="#pills-1" type="button" role="tab" aria-controls="pills-1"
                                     aria-selected="true">
-                                飲食統計
+                                奶量統計
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
@@ -57,21 +57,21 @@
                 </div>
                 <div class="tab-content px-2 h-75 rounded" id="pills-tabContent">
                     
-                    <!-- 飲食統計 start -->
+                    <!-- 奶量統計 start -->
                     <div class="tab-pane show active h-100" id="pills-1" role="tabpanel" aria-labelledby="pills-1-tab">
                         <div class="mb-5 " width="900" height="550">
                             <canvas width="900" height="550" id="myChart1"></canvas>
                         </div>
                     </div>
-                    <!-- 飲食統計 end -->
-                    <!-- 代謝統計 start -->
+                    <!-- 奶量統計 end -->
+                    <!-- 睡眠統計 start -->
                     <div class="tab-pane fade h-100" id="pills-2" role="tabpanel" aria-labelledby="pills-2-tab">
                         <div class="mb-5 " width="900" height="550">
                             <canvas width="900" height="550" id="myChart2"></canvas>
                         </div>
                     </div>
-                    <!-- 代謝統計 end -->
-                    <!-- 睡眠統計 start -->
+                    <!-- 睡眠統計 end -->
+                    <!-- 代謝統計 start -->
                     <div class="tab-pane fade h-100" id="pills-3" role="tabpanel" aria-labelledby="pills-3-tab">
                         <div class="mb-5 " width="900" height="550">
                             <canvas width="900" height="550" id="myChart3"></canvas>
@@ -109,7 +109,10 @@
         const now = new Date();
         let Ebook_user = sessionStorage.getItem("username");
         let IdContactBook = sessionStorage.getItem("IdContactBook");
-        let Diaper_datas = [];
+        let Diaper_poo_datas = [];
+        let Diaper_pee_datas = [];
+        let SleepDetail = [];
+        let HealthInfos_toChart = [];
         let oneWeekAgo = new Date();
         oneWeekAgo.setHours(0);
         oneWeekAgo.setMinutes(0);
@@ -139,56 +142,75 @@
                 },
                 getHealthInfos: async function () {
                     let _this = this;
-                    axios.get(`@Utility.SD.localHost_API/api/Ebook/getHealthInfos/${IdContactBook}`, {
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/getHealthInfos_toChart/${IdContactBook}`, {
                         headers
                     }).then(result => {
                         //alert(result.data);
                         if (result.data!="") {
-                            var labels = result.data.map(item => item.age);
+                            var labels = result.data.map(item => item.age_toChart);
                             var values = result.data.map(item => item.height);
+                            
+                            var datas = [];
+                            for (var i = 0; i < result.data.length;i++){
+                                var str = {x:labels[i],y:values[i]}
+                                datas.push(str);
+                            }
+                            console.log(`成長資料:${datas}`);
+                            _this.addToChart2(datas);
                         }
-                            _this.addToChart(labels, values, "myChart4", "成長狀態");
+                            
                     }).catch(err => { alert(err) });
                 },
                 getDietDetail: async function () {
                     let _this = this;
-                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDietDetail/${IdContactBook}`, {
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDietDetail_milk_chartUse/${IdContactBook}`, {
                         headers
                     }).then(result => {
                         //alert(result.data);
                         if (result.data != "") {
-                            var labels = result.data.map(item => new Date(item.recodeTime).toLocaleString());
+                            var labels = result.data.map(item => `${new Date(item.recodeTime).getMonth() + 1}/${new Date(item.recodeTime).getDate()} ${new Date(item.recodeTime).getHours()}:${new Date(item.recodeTime).getMinutes()}`)
                             var values = result.data.map(item => item.amount);
+                            
                         }
-                            _this.addToChart(labels, values, "myChart1", "飲食統計");
+                            _this.addToChart(labels, values, "myChart1", "奶量統計");
                        
                     }).catch(err => { alert(err) });
                 },
                 getDiaperDetail: async function () {
                     let _this = this;
-                   await  axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDiaperDetail/${IdContactBook}`, {
+                    await axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDiaperDetail_poo_chartUse/${IdContactBook}`, {
                         headers
                     }).then(result => {
                         //alert(result.data);
-                        if (result.data != "") { 
-                            Diaper_datas = result.data.map(item => new Date(item.recodeTime)).filter(date => date >= oneWeekAgo);
+                        if (result.data != "") {
+                            Diaper_poo_datas = result.data.map(item => new Date(item.recodeTime)).filter(date => date >= oneWeekAgo);
                             //Diaper_datas = result.data.map(item => new Date(item.recodeTime));
-                            console.log(Diaper_datas);
+                            console.log(Diaper_poo_datas);
+                        }
+                    }).catch(err => { alert(err) });
+                    await axios.get(`@Utility.SD.localHost_API/api/Ebook/GetDiaperDetail_pee_chartUse/${IdContactBook}`, {
+                        headers
+                    }).then(result => {
+                        //alert(result.data);
+                        if (result.data != "") {
+                            Diaper_pee_datas = result.data.map(item => new Date(item.recodeTime)).filter(date => date >= oneWeekAgo);
+                            //Diaper_datas = result.data.map(item => new Date(item.recodeTime));
+                            console.log(Diaper_pee_datas);
                         }
                     }).catch(err => { alert(err) });
                 },
                 getSleepDetail: async function () {
                     let _this = this;
-                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetSleepDetail/${IdContactBook}`, {
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetSleepDetail_chartUse/${IdContactBook}`, {
                         headers
                     }).then(result => {
                         //alert(result.data);
-                        if (result.data != "") {
-                            var labels = result.data.map(item => new Date(item.recodeTime).toLocaleString());
-                            var values = result.data.map(item => item.content);
-                        }
-                            _this.addToChart(labels, values, "myChart3", "睡眠統計");
-                        
+                        console.log(result.data);
+                        SleepDetail = result.data;
+                        var datas = [];
+                        datas = Object.entries(SleepDetail).map(([key, value]) => ({ x: key, y: value/60 }));
+                        console.log(datas);
+                        _this.createChart2(datas);
                     }).catch(err => { alert(err) });
                 },
                 addToChart: function (labels, values, id, category) {
@@ -203,7 +225,7 @@
                                 data: values,
                                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                                 borderColor: 'rgba(75, 192, 192, 1)',
-                                borderWidth: 1
+                                borderWidth: 3
                             }]
                         },
                         options: {
@@ -211,6 +233,120 @@
                             scales: {
                                 y: {
                                     beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                },
+                addToChart2: function (datas) {
+                    let _this = this;
+                    const ctx = document.getElementById(`myChart4`).getContext('2d');
+                    const myChart = new Chart(ctx, {
+                        type: _this.chart_type, // 圖表類型，例如 'bar', 'line', 'pie' 等
+                        data: {
+                            labels: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+                            datasets: [
+                                // {
+                                // label: category,
+                                // data: values,
+                                // backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                // borderColor: 'rgba(75, 192, 192, 1)',
+                                // borderWidth: 3
+                                // },
+                                {
+                                    label: "寶寶",
+                                    data: datas,
+                                    backgroundColor: 'red',
+                                    borderColor: 'red',
+                                    borderWidth: 3
+                                }, 
+                                {
+                                    label: "健康寶寶(上限)",
+                                    data: [{ x: 0, y: 53.4 },
+                                    { x: 0.5, y: 71.6 },
+                                    { x: 1, y: 80.2 },
+                                    { x: 1.5, y: 87.3 },
+                                    { x: 2, y: 93.6 },
+                                    { x: 2.5, y: 98.3 },
+                                    { x: 3, y: 103.1 },
+                                    { x: 3.5, y: 107.3 },
+                                    { x: 4, y: 111.2 },
+                                    { x: 4.5, y: 115.0 },
+                                    { x: 5, y: 118.7 },
+                                    { x: 5.5, y: 121.8 },
+                                    { x: 6, y: 124.9 },
+                                    { x: 6.5, y: 128.1 },
+                                    { x: 7, y: 131.2 },
+                                    { x: 8, y: 137.2 },
+                                    { x: 9, y: 142.5 },
+                                    { x: 10, y: 148.3 },
+                                    { x: 11, y: 156.1 },
+                                    { x: 12, y: 164.4 },
+                                    { x: 13, y: 171.0 },
+                                    { x: 14, y: 176.0 },
+                                    { x: 15, y: 179.0 },
+                                    { x: 16, y: 180.5 },
+                                    { x: 17, y: 181.5 }]
+                                    ,
+                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 3
+                                }, 
+                                {
+                                    label: "健康寶寶(下限)",
+                                    data:
+                                        [
+                                            { x: 0, y: 46.3 },
+                                            { x: 0.5, y: 63.6 },
+                                            { x: 1, y: 71.3 },
+                                            { x: 1.5, y: 77.2 },
+                                            { x: 2, y: 82.1 },
+                                            { x: 2.5, y: 85.5 },
+                                            { x: 3, y: 89.1 },
+                                            { x: 3.5, y: 92.4 },
+                                            { x: 4, y: 95.4 },
+                                            { x: 4.5, y: 98.4 },
+                                            { x: 5, y: 101.2 },
+                                            { x: 5.5, y: 103.9 },
+                                            { x: 6, y: 106.5 },
+                                            { x: 6.5, y: 109.2 },
+                                            { x: 7, y: 111.8 },
+                                            { x: 8, y: 117.0 },
+                                            { x: 9, y: 121.8 },
+                                            { x: 10, y: 126.0 },
+                                            { x: 11, y: 130.5 },
+                                            { x: 12, y: 135.6 },
+                                            { x: 13, y: 141.9 },
+                                            { x: 14, y: 149.3 },
+                                            { x: 15, y: 155.5 },
+                                            { x: 16, y: 159.3 },
+                                            { x: 17, y: 160.9 }
+                                        ]
+                                    ,
+                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 3
+                                },
+
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                },
+                                x: {
+                                    type: 'linear',
+                                    position: 'bottom',
+                                    min: 0,
+                                    max: 17,
+                                    ticks: {
+                                        stepSize: 1,
+                                        callback: function (value) {
+                                            return value + ' 歲'
+                                        },
+                                    }
                                 }
                             }
                         }
@@ -257,9 +393,10 @@
                         //console.log('Datas:', datas); // 檢查 datas 陣列
                         //console.log('圖表產出1')
                     }
-                        await _this.createChart3(datas);
+                    return datas;
+                    
                 },
-                createChart3: function (datas) {
+                createChart3:async function (Diaper_poo_datas, Diaper_pee_datas) {
                     let _this = this;
                     const ctx = document.getElementById('myChart3');
                     let str_week_strart = _this.getDayName(oneWeekAgo);
@@ -271,14 +408,25 @@
                             datasets: [
                                 {
                                     type: 'bubble',
-                                    label: '尿布更換',
-                                    data: datas,
-                                    backgroundColor: 'yellow',
+                                    label: '尿尿',
+                                    data: Diaper_pee_datas,
+                                    backgroundColor: 'blue',
                                     borderColor: 'black',
                                     borderWidth: 1,
                                     hoverRadius: 10,
                                     hitRadius: 20,
                                     radius: 15,
+                                },
+                                {
+                                    type: 'bubble',
+                                    label: '便便',
+                                    data: Diaper_poo_datas,
+                                    backgroundColor: 'yellow',
+                                    borderColor: 'black',
+                                    borderWidth: 1,
+                                    hoverRadius: 10,
+                                    hitRadius: 20,
+                                    radius: 20,
                                 },
                             ],
                             
@@ -353,14 +501,69 @@
                             return "星期六";
                     }
                 },
+                createChart2: async function (data) {
+                    let _this = this;
+                    const ctx = document.getElementById('myChart2');
+                    let str_week_strart = _this.getDayName(oneWeekAgo);
+                    let str_week_end = _this.getDayName(new Date());
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+                            datasets: [
+                                {
+                                    type: 'bar',
+                                    label: '睡眠統計',
+                                    data: data,
+                                    backgroundColor: 'lightblue',
+                                    borderColor: 'blue',
+                                    borderWidth: 1,
+                                },
+                            ],
+
+                        },
+                        options: {
+                            //barPercentage:1,
+                            //categoryPercentage:1,
+                            //indexAxis: "y",
+                            //aspectRatio: 5,
+                            
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    stacked: true,
+                                    ticks: {
+                                        padding: 20 // 調整這個數值來增加距離
+                                    }
+                                }
+                            },
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: `${new Date(oneWeekAgo).getMonth() + 1}月${new Date(oneWeekAgo).getDate()}(${str_week_strart})~${new Date().getMonth() + 1}月${new Date().getDate()}日(${str_week_end})`
+                                }
+                            }
+
+                        }
+                    });
+                },
             },
             mounted:async function () {
                 let _this = this;
                 await _this.getBabyInfos();
                 await _this.getHealthInfos();
                 await _this.getDietDetail();
+                await _this.getSleepDetail();
                 await _this.getDiaperDetail();
-                _this.createChartData(Diaper_datas);
+                Diaper_poo_datas=await _this.createChartData(Diaper_poo_datas);
+                Diaper_pee_datas=await _this.createChartData(Diaper_pee_datas);
+                await _this.createChart3(Diaper_poo_datas, Diaper_pee_datas);
+                //_this.addToChart2();
+                console.log("掛載完畢")
             }
         }
         var app_Ebook_historySearch = Vue.createApp(vueApp).mount("#app_Ebook_historySearch");

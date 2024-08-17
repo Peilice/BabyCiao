@@ -1,7 +1,17 @@
-﻿
-<div id="vuePage">
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            background-color: white;
+        }
 
-    <!-- Breadcrumb -->
+    </style>
+</head>
+<body>
+    <div id="vuePage">
+
+        <!-- Breadcrumb -->
         <div class="container d-flex justify-content-between">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -15,82 +25,99 @@
 
 
 
-    <div class="container mb-4">
-        <h1 class="text-center mb-3 mt-3 fw-bold">線上投票活動</h1>
-    </div>
+            <div class="container mb-4">
+                <h1 class="text-center mb-3 mt-3 fw-bold">線上投票活動</h1>
+            </div>
             <!-- 活動列表 -->
-    <div class="container">
-        <div class="row mb-4">
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                <div class="col" v-for="item in OnlineCompetitions" :key="item.id">
-                    <div class="card h-100">
-                        <a v-on:click="check(item.id,item.statement)"><img v-bind:src="getPhotoUrl(item.competitionPhotoNames)" class="card-img-top w-100" alt="活動主要照片"></a>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ item.competitionName }}</h5>
-                            <p>活動期間 {{item.startTime}}~ {{item.endTime}}</p>
-                            <div class="d-flex justify-content-between">
-                                <button class="btn btn-outline-dark mb-2" type="submit" v-on:click="newfavorite(item.id)">
-                                    <i class="fa-solid fa-heart-circle-plus">收藏</i>
-                                </button>
-                                <p class="badge bg-light text-dark">{{ item.statement }}</p>
+            <div class="container">
+                <div class="dropdown mb-4">
+                階段
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    不限
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="#">不限</a></li>
+                        <li><a class="dropdown-item" href="#">尚未開始</a></li>
+                        <li><a class="dropdown-item" href="#">活動中</a></li>
+                        <li><a class="dropdown-item" href="#">已結束</a></li>
+                    </ul>
+                </div>
+                <div class="row mb-4">
+                    <div class="row row-cols-1 row-cols-md-3 g-4">
+                        <div class="col" v-for="item in OnlineCompetitions" :key="item.id">
+                            <div class="card h-100">
+                                <a v-on:click="check(item.id,item.statement)"><img v-bind:src="getPhotoUrl(item.competitionPhotoNames)" class="card-img-top w-100" alt="活動主要照片"></a>
+                                <div class="card-body">
+                                    <h4 class="card-title text-center">{{ item.competitionName }}</h4>
+                                    <p>活動期間</p>
+                                    <p>{{item.startTime}} ~ {{item.endTime}}</p>
+                                    <div class="d-flex justify-content-between">
+                                        @* <button class="btn btn-outline-dark mb-2" type="submit" v-on:click="newfavorite(item.id)">
+                                            <i class="fa-solid fa-heart-circle-plus">收藏</i>
+                                        </button> *@
+                                        <p class="badge bg-light text-dark">{{ item.statement }}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
- </div>
+    </body>
+</html>
 
 
 
-    <!-- axios -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
-            integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-        var vueApp = {
-            data() {
-                return {
-                    OnlineCompetitions: [],
-                    //userAccount:sessionStorage.getItem("username"),
-                    userAccount: "user5",
-                };
-            },
-            methods: {
-                fetchcompetitions: function () {
-                    let _this = this;
-                    try {
-                        axios.get('https://localhost:7292/api/OnlineCompetitions')
+
+<!-- axios -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
+        integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    var vueApp = {
+        data() {
+            return {
+                OnlineCompetitions: [],
+                userAccount: sessionStorage.getItem("username"),
+                //userAccount: "user5",
+            };
+        },
+        methods: {
+            fetchcompetitions: function () {
+                let _this = this;
+                try {
+                    axios.get('https://localhost:7292/api/OnlineCompetitions')
                         .then(response => {
                             _this.OnlineCompetitions = response.data;
                         })
                         .catch(err => alert(err))
-                    } 
-                    catch (error) {
-                        console.log(error);
-                    }
-                },
-                getPhotoUrl(CompetitionPhotoNames) {
-                    return CompetitionPhotoNames != null ? `https://localhost:7000/uploads/${CompetitionPhotoNames}` : `https://localhost:7000/image/noimage.jpg`;
-                },
-                check:function(ID,Stament){
+                }
+                catch (error) {
+                    console.log(error);
+                }
+            },
+            getPhotoUrl(CompetitionPhotoNames) {
+                return CompetitionPhotoNames != null ? `https://localhost:7000/uploads/${CompetitionPhotoNames}` : `https://localhost:7000/image/noimage.jpg`;
+            },
+            check: function (ID, Stament) {
                 sessionStorage.setItem("IdCompetition", ID);
                 sessionStorage.setItem("comStatement", Stament)
                 window.location.href = `https://localhost:7231/Competitions/voteInfo/${ID}`;
 
-                },
-                mycompetition: function (userAccount) {
-                if (userAccount==null){
+            },
+            mycompetition: function (userAccount) {
+                if (userAccount == null) {
                     alert("請先登入");
                     //跳轉到登入頁面
                 }
-                else{
-                window.location.href = `https://localhost:7231/Competitions/MyCompetition/${userAccount}`;
+                else {
+                    window.location.href = `https://localhost:7231/Competitions/MyCompetition/${userAccount}`;
                 }
-                },
-                newfavorite: function (id) {
-                    let _this = this;
+            },
+            newfavorite: function (id) {
+                let _this = this;
                 var request = {};
                 request.CompetitionId = id;
                 request.myAccount = _this.userAccount;
@@ -104,22 +131,22 @@
                             showConfirmButton: false,
                             timer: 1500
                         })
-                        .then(result => {
-                            _this.fetchcompetitions();
-                            this.buttonColor = this.buttonColor === 'blue' ? 'green' : 'blue';
-                        })
+                            .then(result => {
+                                _this.fetchcompetitions();
+                                this.buttonColor = this.buttonColor === 'blue' ? 'green' : 'blue';
+                            })
                     })
-                    
-                },
-                
 
             },
-            mounted: function () {
-                let _this = this;
-                _this.fetchcompetitions();
-            }
 
 
-        };
+        },
+        mounted: function () {
+            let _this = this;
+            _this.fetchcompetitions();
+        }
+
+
+    };
     var app = Vue.createApp(vueApp).mount('#vuePage');
-    </script>
+</script>

@@ -19,16 +19,61 @@
     <!-- dataTables  -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
         body {
-            /* background-image: url('/images/bg.jpg'); */
+            display: flex;
+            flex-direction: column;
             font-family: '華康采風體W3', serif;
             font-size: 20px;
+            background-image: url('/images/圖片11.png');
+        }
+
+        .container {
+            flex: 1;
+        }
+
+        footer {
+            background-color: #FFF4C1;
+            padding: 4px;
+            text-align: center;
+            position: relative;
+            z-index: 100;
+        }
+
+        a {
+            z-index: 1000;
+        }
+
+        .p1 {
+            color: azure;
         }
 
         .accordion-button, a {
             text-decoration: none;
             color: darkgrey;
             font-size: 20px;
+        }
+
+        .img6 {
+            margin: 8px auto;
+            float: left;
+            width: 70px;
+            height: auto;
+        }
+
+        .img7 {
+            margin: 8px 32px;
+            float: right;
+            width: 25px;
+            height: auto;
+        }
+
+        .nnn{
+            background-image: url('/images/圖片3.jpg');
         }
     </style>
 
@@ -38,9 +83,9 @@
 </head>
 <body>
     <div id="app00">
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid" >
+        <header >
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 nnn">
+            <div class="container-fluid " >
                     <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/babyciao文字圖.png" width="200" /></a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
@@ -51,21 +96,24 @@
                             <li class="nav-item">
                                 <a class="active nav-link" asp-area="" asp-controller="Home" asp-action="About">關於我們</a>
                             </li>
+                            <li class="nav-item li_andy">
+                                <a class="active nav-link" asp-area="" asp-controller="Home" asp-action="Announcement_Index">公告消息</a>
+                            </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">媒合平台</a>
+                                <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">媒合平台</a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="Index">一同巧育</a></li>
                                     <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="NannyApply">加入我們</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item">
+                            @* <li class="nav-item">
                                 <a class="nav-link text-dark" href="@Utility.SD.localHost_Backstage/Home/Index">管理後台</a>
-                            </li>
+                            </li> *@
                             <li class="nav-item">
                                 <a id="e_book" class="nav-link text-dark" asp-area="andy_ebook" asp-controller="Home" asp-action="Index">電子聯絡簿</a>
                             </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">社群</a>
+                                <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">社群</a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <li class="nav-item">
                                         <a class="nav-link text-dark" asp-area="LilyGArea" asp-controller="Home" asp-action="Index">團購商品</a>
@@ -108,9 +156,13 @@
                                         <label class="form-label" for="">密碼</label>
                                         <input class="form-control" type="password" @@keyup="enable" v-model="password">
                                     </div>
-                                    <div class="mb-3 d-flex justify-content-end">
+                                   @*  <div class="mb-3 d-flex justify-content-end">
                                         <button class="btn btn-success" :disabled="disableCheck" @@click="submit">登入</button>
-                                    </div>
+                                    </div> *@
+                                        <div class="modal-footer">
+                                            <button class="btn btn-success" v-bind:disabled="disableCheck" @@click="submit">登入</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                        </div>
                                 </div>
                             </div>
                         </div>
@@ -132,15 +184,44 @@
             </button>
             <button @@click="myOrders(loggedInUsername)"
                 class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
-            交易訂單
+            我的申請單
         </button>
-            <button @@click="myFav(loggedInUsername)"
+            <button @@click="myUncheckedOrders(loggedInUsername)"
+                    class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
+                待確認訂單
+            </button>
+            <button @@click="getMyFav(loggedInUsername)" href="#CartOffcanvas" data-bs-toggle="offcanvas" aria-controls="offcanvas"
                     class="bg-secondary bg-opacity-75 text-white text-decoration-none m-3 border border-1 d-block p-2">
                 我的最愛
             </button>
     </div>
 
         <!-- 浮在頁面的按鈕 end -->
+        <!-- offcanvas start -->
+
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="CartOffcanvas" aria-labelledby="CartOffcanvasLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">我的最愛</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <div>
+                    <div v-for="item in myFavs" :key="item.id">
+                        <ul class="list-unstyled">
+                            <li class="d-flex justify-content-between align-items-center">
+                                <strong>{{item.productName}}</strong>
+                                <button @@click="exchangeL(item.Id)" class="btn btn-outline-success">申請交換</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="dropdown mt-3">
+
+                    <a class="btn btn-secondary" data-bs-dismiss="offcanvas" aria-label="Close">返回</a>
+                </div>
+            </div>
+        </div>
+        <!-- offcanvas end -->
     </div>
 
 
@@ -149,12 +230,13 @@
             @RenderBody()
         </main>
     </div>
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - test2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer  >
+        <img class="img6" src="~/images/p6.png" alt="">
+        <img class="img7" src="~/images/p7.png" alt="">
+        <div class="container p1">
+            2024 - BabyCiao
         </div>
     </footer>
-    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -164,6 +246,7 @@
         var app = Vue.createApp({
             data() {
                 return {
+                    myFavs: [],
                     username: "",
                     password: "",
                     disableCheck: true,
@@ -177,6 +260,18 @@
                 this.checkLoginStatus();
             },
             methods: {
+                async getMyFav(x) {
+                    //alert("LAYOUT");
+                    const url = `https://localhost:7292/api/SecondHand/MyFavorite/${sessionStorage.getItem("username")}`;
+                    await axios.get(url)
+                        .then(response => {
+                            this.myFavs = response.data;
+                        })
+                        .catch(error => {
+                            console.error("Error fetching data:", error);
+                        });
+
+                },
                 checkLoginStatus() {
                     const username = sessionStorage.getItem("username");
                     if (username) {
@@ -251,7 +346,18 @@
                     }
                 },
 
-
+                async myUncheckedOrders(username) {
+                    //console.log('myOrders', username);
+                    try {
+                        //alert('myOrders~', username);
+                        const response = await axios.post(`/SecondHand/Home/UncheckedOrders`, { user: username });
+                        if (response.status === 200) {
+                            window.location.href = `/SecondHand/Home/UncheckedOrders/${username}`;
+                        }
+                    } catch (error) {
+                        console.error('Error get my orders:', error);
+                    }
+                },
 
                 async myOrders(username) {
                     //console.log('myOrders', username);
@@ -277,6 +383,9 @@
                         console.error('Error get my favorite:', error);
                     }
                 },
+                exchangeL(x) {
+                    alert("change",x);
+                }
 
             }
         });

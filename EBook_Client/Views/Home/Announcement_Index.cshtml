@@ -1,0 +1,174 @@
+﻿@section Styles {
+    <link href="/css/news.css" rel="stylesheet">
+    
+    <style>
+        .img5 {
+            position: absolute;
+            left: 16px;
+            top: 16px;
+            width: 16px;
+            height: auto;
+        }
+        .table_news {
+            width: 100%;
+            margin: auto;
+        }
+        .t1 {
+            width: 100%;
+            height: 100%;
+            border-collapse: collapse;
+        }
+        .th1 {
+            text-align: left;
+            height: 1.5em;
+            font-size: large;
+            background-color: #f6dec8;
+        }
+        .tr1 {
+            position: relative;
+        }
+        .td1 {
+            width: 100%;
+            height: 1.5em;
+            border: 0.1px solid #888888;
+        }
+        .span1 {
+            margin: auto 34px;
+        }
+        .time {
+            position: absolute;
+            right: 36px;
+        }
+        table tr:nth-child(2n+1) {
+            background-color: #f6dec8;
+        }
+        table tr:nth-child(2n) {
+            background-color: #fff4ef;
+        }
+        td:hover{
+            background-color:lightgray;
+        }
+        .andy_li:hover{
+            background-color: lightgray;
+        }
+        .div_newInfos{
+            display:none;
+        }
+    </style>
+}
+
+<div id="news" class="big-backImg  position-relative">
+    <h1 class="page-title position-absolute top-50 start-50 translate-middle fw-bolder" style="font-size:64px">公告消息</h1>
+</div>
+<div class="news-contents wrapper" id="app_Announcement_Index">
+    <aside>
+        <h3 class="sub-title">公告消息</h3>
+        <ul class="sub-menu">
+            <li class="andy_li active" style="cursor:pointer;background-color:lightgray;" id="list1" >最新法規</li>
+            <li class="andy_li" style="cursor:pointer;" id="list2">網站公告</li>
+        </ul>
+    </aside>
+    <article class="" id="article1">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">公告消息</li>
+                <li class="breadcrumb-item active" aria-current="page">最新法規</li>
+            </ol>
+        </nav>
+        <div class="table_news">
+            <table class="t1">
+               
+                <tr class="tr1" v-for="item in Announcements_law">
+                    <td class="td1" v-on:click="enter(item.id)" style="cursor:pointer;">
+                        <img class="img5" src="/images/p5.png" alt=""><span class="span1">{{item.tittle}}</span><span class="time">{{item.time}}</span>
+                    </td>
+                </tr>
+                
+            </table>
+        </div>
+
+    </article>
+    <article class="div_newInfos"  id="article2">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">公告消息</li>
+                <li class="breadcrumb-item active" aria-current="page">網站公告</li>
+            </ol>
+        </nav>
+        <div class="table_news">
+            <table class="t1">
+                <tr class="tr1" v-for="item in Announcements_infos">
+                    <td class="td1" v-on:click="enter(item.id)" style="cursor:pointer;">
+                        <img class="img5" src="/images/p5.png" alt=""><span class="span1">{{item.tittle}}</span><span class="time">{{item.time}}</span>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+
+    </article>
+</div>
+
+@section Scripts{
+    <script>
+        
+
+        var vueApp_Announcement_Index = {
+            data() {
+                return {
+                    Announcements_law:[],
+                    Announcements_infos:[],
+                }
+            },
+            methods: {
+                enter: function (id){
+                    if (sessionStorage.getItem("Announcement") != null) {
+                        sessionStorage.removeItem("Announcement");
+                    }
+                    
+                    sessionStorage.setItem("Announcement", `${id}`);
+                    window.location.href = "@Utility.SD.localHost_Client/Home/Announcement";
+                },
+                getAnnouncement: function () {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Announcement`).then(result => {
+                        //alert(result);
+                        
+                        for (var i = 0; i < result.data.length; i++) {
+                            result.data[i].time = new Date(result.data[i].publishTime).toLocaleString();
+                            if (result.data[i].type == '政府法規') {
+                                _this.Announcements_law.push(result.data[i]);
+                            } else if (result.data[i].type == '網站公告') {
+                                _this.Announcements_infos.push(result.data[i]);
+                            }
+                        }
+                    }).catch(err => { alert(err) });
+                }
+            },
+            mounted: function () {
+                let _this = this;
+                _this.getAnnouncement();
+
+            }
+        }
+
+        var app_Announcement_Index = Vue.createApp(vueApp_Announcement_Index).mount("#app_Announcement_Index");
+
+        $(document).ready(function () {
+            $('#list1').on("click",function () {
+                $('#list2').css("background-color", '');
+                $('#list1').css("background-color", 'lightgray');
+                $('#article2').hide();
+                $('#article1').fadeIn(500);
+            });
+            $('#list2').on("click", function () {
+                $('#list1').css("background-color", '');
+                $('#list2').css("background-color", 'lightgray');
+                $('#article1').hide();
+                $('#article2').fadeIn(500);
+            })
+        })
+
+       
+    </script>
+}

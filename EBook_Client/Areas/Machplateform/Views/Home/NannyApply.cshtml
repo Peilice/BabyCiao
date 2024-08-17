@@ -1,121 +1,225 @@
-﻿<div id="App" class="container mb-4">
-    <!-- Breadcrumb -->
-    <div class="container d-flex justify-content-between">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">保母平台</li>
-                <li class="breadcrumb-item active" aria-current="page">保母申請</li>
-            </ol>
-        </nav>
-    </div>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保母申請表</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="App">
+        <!-- Breadcrumb -->
+        <div class="container d-flex justify-content-between">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">保母平台</li>
+                    <li class="breadcrumb-item active" aria-current="page">保母申請</li>
+                </ol>
+            </nav>
+            <button type="button" class="btn btn-outline-primary" v-on:click="enter(NannyAccountUserAccount)">保母托育</button>
+        </div>
 
-    <h1 class="text-center mb-3 mt-3 fw-bold">保母申請表</h1>
-    <h5 class="modal-title" id="staticBackdropLabel">填寫資料</h5>
-    <form id="form" class="needs-validation" v-on:submit.prevent="create" novalidate>
-        <div class="modal-body">
-            <div class="mb-3 has-validation">
-                <label class="form-label">帳號</label>
-                <input type="text" class="form-control" id="NannyAccountUserAccount" v-model="NannyAccountUserAccount" required />
+        <h1 class="text-center mb-3 mt-3 fw-bold">保母申請表</h1>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-on:click="getUserName">
+            加入貝比巧育團隊
+        </button>
+
+        <template v-if="nny.length > 0">
+            <h1 class="text-center mb-3 mt-3 fw-bold">保母資料</h1>
+            <!-- 保母資料 -->
+            <div class="container mb-4" v-for="item in nny" :key="item.nannyAccountUserAccount">
+                <div class="col-12 mb-3">
+                    <span>帳號：{{ item.nannyAccountUserAccount }}</span>
+                </div>
+                <div class="col-12 mb-3">
+                    <span>服務中心： {{ item.addressesOfAgencies }}</span>
+                </div>
+                <div class="col-12 mb-3">
+                    <span>保母證到期日： {{ item.validPeriodsOfCertificates }}</span>
+                </div>
+                <div class="col-12 mb-3">
+                    <span>保母證照片：</span>
+                    <img :src="`/NannnyAndPerant/保母證/${item.childCareCertificate}`" alt="保母證照片預覽" class="img-fluid" :title="item.childCareCertificate">
+                </div>
+                <div class="col-12 mb-3">
+                    <span>良民證照片：</span>
+                    <img :src="`/NannnyAndPerant/良民證/${item.policeCriminalRecordCertificate}`" alt="良民證照片預覽" class="img-fluid" :title="item.PoliceCriminalRecordCertificate">
+                </div>
+                <div class="col-12 mb-3">
+                    <span>身分證照片：</span>
+                    <img :src="`/NannnyAndPerant/身分證/${item.nationalIdentificationCard}`" alt="身分證照片預覽" class="img-fluid" :title="item.NationalIdentificationCard">
+                </div>
             </div>
-            <div class="mb-3 has-validation">
-                <label class="form-label">服務中心</label>
-                <input type="text" class="form-control" id="AddressesOfAgencies" v-model="AddressesOfAgencies" required />
-            </div>
-            <div class="mb-3 has-validation">
-                <label class="form-label">保母證到期日</label>
-                <input type="date" class="form-control" id="ValidPeriodsOfCertificates" v-model="ValidPeriodsOfCertificates" required />
-            </div>
-            <div class="mb-3 has-validation">
-                <label class="form-label">保母證照片上傳</label>
-                <input type="file" class="form-control" id="ChildCareCertificate" v-on:change="onFileChange">
-                <div id="EmergencyContactHelp" class="form-text">請選擇一張照片</div>
-                <div class="invalid-feedback">此欄位必填!</div>
-            </div>
-            <div class="mb-3 has-validation">
-                <label class="form-label">良民證上傳</label>
-                <input type="file" class="form-control" id="PoliceCriminalRecordCertificate" v-on:change="onFileChange">
-                <div id="EmergencyContactHelp" class="form-text">請選擇一張照片</div>
-                <div class="invalid-feedback">此欄位必填!</div>
-            </div>
-            <div class="mb-3 has-validation">
-                <label class="form-label">身分證上傳</label>
-                <input type="file" class="form-control" id="NationalIdentificationCard" v-on:change="onFileChange">
-                <div id="EmergencyContactHelp" class="form-text">請選擇一張照片</div>
-                <div class="invalid-feedback">此欄位必填!</div>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="template">刪除申請</button>
+            <label id="statement">申請狀態：{{Statement}}</label>
+        </template>
+
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">填寫資料</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="form" class="needs-validation" v-on:submit.prevent="create" novalidate>
+                        <div class="modal-body">
+                            <div class="mb-3 has-validation">
+                                <label class="form-label">帳號</label>
+                                <input type="text" class="form-control" id="NannyAccountUserAccount" v-model="username" required />
+                            </div>
+                            <div class="mb-3 has-validation">
+                                <label class="form-label">服務中心</label>
+                                <input type="text" class="form-control" id="AddressesOfAgencies" v-model="AddressesOfAgencies" required />
+                            </div>
+                            <div class="mb-3 has-validation">
+                                <label class="form-label">保母證到期日</label>
+                                <input type="date" class="form-control" id="ValidPeriodsOfCertificates" v-model="ValidPeriodsOfCertificates" required />
+                            </div>
+                            <div class="mb-3 has-validation">
+                                <label class="form-label">保母證照片上傳</label>
+                                <input type="file" class="form-control" id="ChildCareCertificate" v-on:change="(event) => onFileChange('childCareCertificatePreview', 'ChildCareCertificate', event)">
+                                <div id="EmergencyContactHelp" class="form-text">請選擇一張照片</div>
+                                <div class="invalid-feedback">此欄位必填!</div>
+                            </div>
+                            <div class="mb-3 has-validation">
+                                <label class="form-label">良民證上傳</label>
+                                <input type="file" class="form-control" id="PoliceCriminalRecordCertificate" v-on:change="(event) => onFileChange('policeCriminalRecordCertificatePreview', 'PoliceCriminalRecordCertificate', event)">
+                                <div id="EmergencyContactHelp" class="form-text">請選擇一張照片</div>
+                                <div class="invalid-feedback">此欄位必填!</div>
+                            </div>
+                            <div class="mb-3 has-validation">
+                                <label class="form-label">身分證上傳</label>
+                                <input type="file" class="form-control" id="NationalIdentificationCard" v-on:change="(event) => onFileChange('nationalIdentificationCardPreview', 'NationalIdentificationCard', event)">
+                                <div id="EmergencyContactHelp" class="form-text">請選擇一張照片</div>
+                                <div class="invalid-feedback">此欄位必填!</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="submit" class="btn btn-primary">申請</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </form>
-
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-        <button type="submit" class="btn btn-primary" v-on:click="create">申請</button>
     </div>
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script>
-    var NannyAccountUserAccount = sessionStorage.getItem("NannyAccountUserAccount");
-    var Id = 0;
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        const useToken = localStorage.getItem("token");
+        const headers = {
+            'Authorization': `Bearer ${useToken}`,
+        };
 
-    var vueApp = {
-        data() {
-            return {
-                NannyAccountUserAccount: "",
-                AddressesOfAgencies: "",
-                ValidPeriodsOfCertificates: "",
-                ChildCareCertificate: null,
-                PoliceCriminalRecordCertificate: null,
-                NationalIdentificationCard: null,
-            };
-        },
-        methods: {
-            onFileChange(event) {
-                const fileId = event.target.id;
-                const file = event.target.files[0];
-
-                if (fileId === "ChildCareCertificate") {
-                    this.ChildCareCertificate = file;
-                } else if (fileId === "PoliceCriminalRecordCertificate") {
-                    this.PoliceCriminalRecordCertificate = file;
-                } else if (fileId === "NationalIdentificationCard") {
-                    this.NationalIdentificationCard = file;
-                }
+        var vueApp = {
+            data() {
+                return {
+                    username: "",
+                    nny: [],
+                    NannyAccountUserAccount: "",
+                    AddressesOfAgencies: "",
+                    ValidPeriodsOfCertificates: "",
+                    childCareCertificatePreview: null,
+                    policeCriminalRecordCertificatePreview: null,
+                    nationalIdentificationCardPreview: null,
+                    ChildCareCertificate: null,
+                    PoliceCriminalRecordCertificate: null,
+                    NationalIdentificationCard: null,
+                    isCreate: false
+                };
             },
-            create: function (e) {
-                e.preventDefault();
-                let _this = this;
-
-                // Prepare form data
-                let formData = new FormData();
-                formData.append("NannyAccountUserAccount", this.NannyAccountUserAccount);
-                formData.append("AddressesOfAgencies", this.AddressesOfAgencies);
-                formData.append("ValidPeriodsOfCertificates", this.ValidPeriodsOfCertificates);
-                formData.append("ChildCareCertificate", this.ChildCareCertificate);
-                formData.append("PoliceCriminalRecordCertificate", this.PoliceCriminalRecordCertificate);
-                formData.append("NationalIdentificationCard", this.NationalIdentificationCard);
-
-                axios.post(`https://localhost:7292/api/NannyRequirments/apply`, formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                })
-                    .then(result => {
-                        Swal.fire({
-                            position: "center",
-                            icon: "success",
-                            title: "申請成功",
-                            showConfirmButton: false,
-                            timer: 1500
-                        }).then(result => {
-                            // Fetch or reload data after success
-                            $('#staticBackdrop').modal('hide');
+            methods: {
+                getUserName() {
+                    axios.get(`@Utility.SD.localHost_API/api/NannyRequirments/GetUserName_NannyRequirment`, { headers })
+                        .then(result => {
+                            this.username = result.data;
+                        })
+                        .catch(err => {
+                            alert(err);
                         });
-                    })
-                    .catch(err => {
-                        alert(err);
-                    });
+                },
+                onFileChange(previewTarget, fileVariable, event) {
+                    const fileInput = event.target;
+                    if (fileInput.files && fileInput.files[0]) {
+                        const file = fileInput.files[0];
+                        this[fileVariable] = file;
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this[previewTarget] = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                },
+                checkForm() {
+                    let forms = document.querySelectorAll('.needs-validation');
+                    Array.prototype.slice.call(forms)
+                        .forEach(function (form) {
+                            form.addEventListener('submit', function (event) {
+                                if (!form.checkValidity()) {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                } else {
+                                    if (this.isCreate) {
+                                        this.isCreate = false;
+                                        this.create(event);
+                                    } else {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                    }
+                                }
+                                form.classList.add('was-validated');
+                            }.bind(this), false);
+                        });
+                },
+                getNannyRequirments() {
+                    axios.get(`@Utility.SD.localHost_API/api/NannyRequirments/NannyRequirmentget`, { headers })
+                        .then(result => {
+                            this.nny = result.data;
+                            console.log(this.nny); // 增加這一行
+                        })
+                        .catch(err => {
+                            alert(err);
+                        });
+                },
+                enter(NannyAccountUserAccount) {
+                    sessionStorage.setItem("NannyAccountUserAccount", NannyAccountUserAccount);
+                    window.location.href = `@Utility.SD.localHost_Client/Machplateform/Home/NannyResume/`;
+                },
+                create(e) {
+                    e.preventDefault();
+                    var request = {
+                        NannyAccountUserAccount: this.username,
+                        AddressesOfAgencies: this.AddressesOfAgencies,
+                        ValidPeriodsOfCertificates: this.ValidPeriodsOfCertificates,
+                        ChildCareCertificate: this.ChildCareCertificate.name,
+                        PoliceCriminalRecordCertificate: this.PoliceCriminalRecordCertificate.name,
+                        NationalIdentificationCard: this.NationalIdentificationCard.name
+                    };
+                    axios.post(`https://localhost:7292/api/NannyRequirments/Apply`, request)
+                        .then(result => {
+                            Swal.fire({
+                                position: "center",
+                                icon: "success",
+                                title: "送出成功",
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                this.getNannyRequirments();
+                                $('#staticBackdrop').modal('hide');
+                            });
+                        })
+                        .catch(err => {
+                            alert(err);
+                        });
+                },
+            },
+            mounted() {
+                let _this = this;
+                this.getNannyRequirments();
             }
-        }
-    };
-    var app = Vue.createApp(vueApp).mount('#App');
-</script>
+        };
+        var app = Vue.createApp(vueApp).mount('#App');
+
+    </script>
+</body>
+</html>

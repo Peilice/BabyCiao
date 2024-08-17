@@ -6,7 +6,7 @@
     
 }
 <div>
-    <nav style="bs-breadcrumb-divider" aria-label="breadcrumb">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item"><a href="@Utility.SD.localHost_Client/Home/Index">首頁</a></li>
             <li class="breadcrumb-item active" aria-current="page">電子聯絡簿</li>
@@ -19,15 +19,15 @@
     <div class="text-center">
         <h1 class="display-4">歡迎使用電子聯絡簿!</h1>
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ebook_form" v-on:click="getUserName">新增聯絡簿</button>
-        <div class="container my-3">
+        <div class="container my-3" id="ebooksOutside">
             <div class="row ">
                 <div class="col-12 ">
                     <div class="row d-flex justify-content-center">
                         @* 產生聯絡簿卡片 *@
-                        <div class="col-md-4" v-for="item in ebooks">
-                            <div class="card h-100">
-                                <img class="card-img-top" src="~/images/背景2.png" v-bind:title="item.babyName" />
-                                <div class="card-body ">
+                        <div class="col-md-4 mb-3" v-for="item in ebooks">
+                            <div class="card h-100 ">
+                                <img class="card-img-top w-100" v-bind:src=`@Utility.SD.localHost_API/api/Ebook/GetEBooks_photo/${item.id}` v-bind:title="item.babyName" />
+                                <div class="card-body">
                                     <p class="card-text">寶寶姓名：{{item.babyName}}</p>
                                     <p class="card-text">寶寶性別：{{item.gender}}</p>
                                     <p class="card-text">寶寶生日：{{item.birthday}}</p>
@@ -222,15 +222,22 @@
                         // alert(result.data)
                         _this.ebooks = result.data;
                         //var tempEbooks=_this.ebooks
-                        for (var i = 0; i < _this.ebooks.length; i++) {
-                            _this.ebooks[i].babyName = this.ebooks[i].babyName;
-                            if (this.ebooks[i].gender == 0) {
-                                _this.ebooks[i].gender = "女";
-                            } else {
-                                _this.ebooks[i].gender = "男";
+                        if (_this.ebooks.length == 0) {
+                            $("#ebooksOutside").height("350px");
+                        } else {
+                            $("#ebooksOutside").height("");
+                            for (var i = 0; i < _this.ebooks.length; i++) {
+                                _this.ebooks[i].babyName = this.ebooks[i].babyName;
+                                if (this.ebooks[i].gender == 0) {
+                                    _this.ebooks[i].gender = "女";
+                                } else {
+                                    _this.ebooks[i].gender = "男";
+                                }
+                                _this.ebooks[i].birthday = this.ebooks[i].birthday;
                             }
-                            _this.ebooks[i].birthday = this.ebooks[i].birthday;
-                         }
+                        }
+                       
+                        
                     }).catch(err => {
                         alert(err)
                     });
@@ -241,10 +248,10 @@
                 },
                 
             },
-            mounted: function () {
+            mounted:async function () {
                 let _this = this;
-                _this.getEbooks();
-               
+                await _this.getEbooks();
+                
             }
         };
         var app = Vue.createApp(vueApp).mount('#ebook_Index');
