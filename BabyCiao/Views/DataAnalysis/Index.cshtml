@@ -15,6 +15,11 @@
     <div id="competitionchart" style="width: 1500px; height: 600px;"></div>
 </div>
 
+<div id="playerVotesApp">
+    <h2 class="text-center">競賽選手投票數分析</h2>
+    <div id="playerVotesChart" style="width: 1500px; height: 800px;"></div>
+</div>
+
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
@@ -188,23 +193,27 @@
         new Vue({
             el: '#competitionapp',
             data: {
-                competitionNameCount: @Html.Raw(Json.Serialize(Model.CompetitionNameCount))
-                    },
+                competitionNameCount: @Html.Raw(Json.Serialize(Model.CompetitionNameCount)),
+                competitionRecordCount: @Html.Raw(Json.Serialize(Model.CompetitionRecordCount))
+            },
             mounted() {
                 this.drawCompetitionChart();
             },
             methods: {
                 drawCompetitionChart() {
-                    if (!Array.isArray(this.competitionNameCount)) {
-                        console.error("competitionNameCount 錯誤");
+                    if (!Array.isArray(this.competitionNameCount) || !Array.isArray(this.competitionRecordCount)) {
+                        console.error("competitionNameCount 或 competitionRecordCount 錯誤");
                         return;
                     }
 
-                    // 排序 CompetitionName，以確保 X 軸順序
-                    this.competitionNameCount.sort((a, b) => a.competitionName.localeCompare(b.competitionName));
+                    // 構建 X 軸上的 competitionName
+                    let competitionNames = this.competitionNameCount.map(item => item.competitionName);
 
-                    var competitionNames = this.competitionNameCount.map(item => item.competitionName);
-                    var counts = this.competitionNameCount.map(item => item.count);
+                    // 根據 competitionName 匹配的 IdOnlineCompetition，獲取對應的票數
+                    let counts = this.competitionNameCount.map(nameItem => {
+                        let record = this.competitionRecordCount.find(recordItem => recordItem.idOnlineCompetition == nameItem.idOnlineCompetition);
+                        return record ? record.count : 0;
+                    });
 
                     var chartDom = document.getElementById('competitionchart');
                     var myChart = echarts.init(chartDom);
@@ -216,7 +225,7 @@
                             }
                         },
                         legend: {
-                            data: ['競賽投票數量'],
+                            data: ['競賽投票總數量'],
                             textStyle: {
                                 fontSize: 18,
                                 color: 'black'
@@ -244,12 +253,12 @@
                                 fontSize: 16,
                                 color: 'black'
                             },
-                            minInterval: 5 // 設置 Y 軸的最小刻度為 5
+                            minInterval: 1 // 設置 Y 軸的最小刻度為 1
                         },
                         series: [
                             {
-                                name: '競賽投票數量',
-                                type: 'line',
+                                name: '競賽投票總數量',
+                                type: 'line', // 使用折線圖來顯示票數
                                 data: counts,
                                 itemStyle: {
                                     color: 'rgba(153, 102, 255, 0.5)'
@@ -259,6 +268,10 @@
                                     position: 'top',
                                     fontSize: 16,
                                     color: 'black'
+                                },
+                                lineStyle: {
+                                    width: 3, // 設置折線的寬度
+                                    color: 'rgba(153, 102, 255, 0.8)' // 設置折線的顏色
                                 }
                             }
                         ]
@@ -268,5 +281,90 @@
                 }
             }
         });
+
+
+
+        new Vue({
+            el: '#playerVotesApp',
+            data: {
+                competitionUserVotes: @Html.Raw(Json.Serialize(Model.CompetitionUserVotes))
+            },
+            mounted() {
+                this.drawPlayerVotesChart();
+            },
+            methods: {
+                drawPlayerVotesChart() {
+                    if (!Array.isArray(this.competitionUserVotes)) {
+                        console.error("competitionUserVotes 錯誤");
+                        return;
+                    }
+
+                    // 獲取所有競賽名稱
+                    let competitionNames = [...new Set(this.competitionUserVotes.map(item => item.competitionName))];
+                    // 獲取所有選手名稱
+                    let userAccounts = [...new Set(this.competitionUserVotes.map(item => item.accountUserAccount))];
+
+                    // 將數據轉換為堆疊柱狀圖所需的格式
+                    let seriesData = competitionNames.map(name => {
+                        return {
+                            name: name,
+                            type: 'bar',
+                            stack: '總量',  // 堆疊屬性
+                            data: userAccounts.map(account => {
+                                let voteRecord = this.competitionUserVotes.find(item => item.competitionName === name && item.accountUserAccount === account);
+                                return voteRecord ? voteRecord.voteCount : 0;
+                            })
+                        };
+                    });
+
+                    var chartDom = document.getElementById('playerVotesChart');
+                    var myChart = echarts.init(chartDom);
+                    var option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'shadow'
+                            }
+                        },
+                        legend: {
+                            data: competitionNames,
+                            textStyle: {
+                                fontSize: 18,
+                                color: 'black'
+                            }
+                        },
+                        grid: {
+                            left: '10%',
+                            right: '10%',
+                            bottom: '15%',
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'value',
+                            axisLabel: {
+                                fontSize: 16,
+                                color: 'black'
+                            },
+                            minInterval: 5, // 每5個單位顯示一個刻度
+                            interval: 5, // 設置每隔5個單位顯示標籤
+                            max: Math.max(...seriesData.map(series => Math.max(...series.data))) + 5 // 設置X軸最大值，這裡取最大值加5
+                        },
+                        yAxis: {
+                            type: 'category',
+                            data: userAccounts,
+                            axisLabel: {
+                                fontSize: 14,
+                                color: 'black'
+                            }
+                        },
+                        series: seriesData
+                    };
+
+                    option && myChart.setOption(option);
+                }
+            }
+        });
+
+
     </script>
 }

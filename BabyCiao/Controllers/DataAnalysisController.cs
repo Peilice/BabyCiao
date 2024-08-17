@@ -19,13 +19,9 @@ namespace BabyCiao.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // 抓取會員數的總筆數
             var parentTotalCount = await _context.UserAccounts.CountAsync();
-
-            // 抓取聯絡簿的總筆數
             var nannyTotalCount = await _context.ContactBooks.CountAsync();
 
-            // 定義需要顯示的縣市列表
             var cities = new List<string>
             {
                 "台北市", "新北市", "桃園市", "台中市", "台南市", "高雄市",
@@ -33,7 +29,6 @@ namespace BabyCiao.Controllers
                 "嘉義縣", "嘉義市", "屏東縣", "宜蘭縣", "花蓮縣", "台東縣"
             };
 
-            // 抓取全台各縣市會員的總筆數
             var addressTotalCount = await _context.UserInformations
                 .Where(u => cities.Any(city => u.Address.StartsWith(city)))
                 .GroupBy(u => cities.FirstOrDefault(city => u.Address.StartsWith(city)))
@@ -44,7 +39,6 @@ namespace BabyCiao.Controllers
                 })
                 .ToListAsync();
 
-            // 確保所有縣市都有數據
             var addressTotalCountFinal = cities
                 .Select(city => new AddressCountViewModel
                 {
@@ -53,23 +47,50 @@ namespace BabyCiao.Controllers
                 })
                 .ToList();
 
-            // 抓取各競賽名稱的總筆數
             var competitionNameCount = await _context.OnlineCompetitions
-                .GroupBy(c => c.CompetitionName)
-                .Select(g => new CompetitionNameCountViewModel
+                .Select(c => new CompetitionNameCountViewModel
                 {
-                    CompetitionName = g.Key,
+                    IdOnlineCompetition = c.Id,
+                    CompetitionName = c.CompetitionName
+                })
+                .ToListAsync();
+
+            var competitionRecordCount = await _context.CompetitionRecords
+                .GroupBy(cr => cr.IdOnlineCompetition)
+                .Select(g => new CompetitionRecordCountViewModel
+                {
+                    IdOnlineCompetition = g.Key,
                     Count = g.Count()
                 })
                 .ToListAsync();
 
-            // 準備數據發送到視圖
+            // 先將 CompetitionDetails 和 CompetitionRecords 的數據讀取到內存中
+            var competitionDetails = await _context.CompetitionDetails
+                .Include(d => d.IdOnlineCompetitionNavigation)
+                .ToListAsync();
+
+            var competitionRecords = await _context.CompetitionRecords.ToListAsync();
+
+            // 在內存中進行計算
+            var competitionUserVotes = competitionDetails
+                .Select(d => new CompetitionUserVotesViewModel
+                {
+                    CompetitionName = d.IdOnlineCompetitionNavigation.CompetitionName,
+                    AccountUserAccount = d.AccountUserAccount,
+                    VoteCount = competitionRecords
+                        .Where(cr => cr.IdCompetitionDetail == d.Id)
+                        .Count()
+                })
+                .ToList();
+
             var model = new DataAnalysisViewModel
             {
                 ParentTotalCount = parentTotalCount,
                 NannyTotalCount = nannyTotalCount,
                 AddressTotalCount = addressTotalCountFinal,
-                CompetitionNameCount = competitionNameCount
+                CompetitionNameCount = competitionNameCount,
+                CompetitionRecordCount = competitionRecordCount,
+                CompetitionUserVotes = competitionUserVotes
             };
 
             return View(model);
@@ -84,8 +105,21 @@ namespace BabyCiao.Controllers
 
     public class CompetitionNameCountViewModel
     {
+        public int IdOnlineCompetition { get; set; }
         public string CompetitionName { get; set; }
+    }
+
+    public class CompetitionRecordCountViewModel
+    {
+        public int IdOnlineCompetition { get; set; }
         public int Count { get; set; }
+    }
+
+    public class CompetitionUserVotesViewModel
+    {
+        public string CompetitionName { get; set; }
+        public string AccountUserAccount { get; set; }
+        public int VoteCount { get; set; }
     }
 
     public class DataAnalysisViewModel
@@ -94,5 +128,7 @@ namespace BabyCiao.Controllers
         public int NannyTotalCount { get; set; }
         public List<AddressCountViewModel> AddressTotalCount { get; set; }
         public List<CompetitionNameCountViewModel> CompetitionNameCount { get; set; }
+        public List<CompetitionRecordCountViewModel> CompetitionRecordCount { get; set; }
+        public List<CompetitionUserVotesViewModel> CompetitionUserVotes { get; set; }
     }
 }
