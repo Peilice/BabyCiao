@@ -58,6 +58,7 @@
                                     userName: ticket.userName,
                                     context: ticket.context
                                 })); // 提取 userName 和 context 字段
+                            console.log(response.data)
                         })
                         .catch(error => {
                             console.error('Error loading contexts:', error);

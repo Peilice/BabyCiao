@@ -143,7 +143,7 @@
                     const account = sessionStorage.getItem('username');
 
                     if (!account) {
-                        alert('請先登錄');
+                        
                         return;
                     }
 
@@ -155,7 +155,8 @@
                             // 將取得的資料填入表單
                             this.customerService.email = response.data.email;
                             this.customerService.phone = response.data.phone;
-                            this.customerService.userName = response.data.userName;
+                            
+                            
 
                         })
                         .catch(error => {
@@ -184,7 +185,7 @@
                         })
                         .catch(error => {
                             console.error('表單提交失敗', error);
-                            alert('表單提交失敗，請稍後再試');
+                            alert('請先登入');
                         });
                 },
                 resetForm() {

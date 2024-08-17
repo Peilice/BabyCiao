@@ -1,14 +1,18 @@
 ﻿@model BabyCiao.Controllers.DataAnalysisViewModel
 
-
 <div id="app">
-    <h2 class="text-center">數據分析</h2>
-    <div id="chart" style="width: 800px; height: 600px;"></div>
+    <h2 class="text-center">各項總數分析圖</h2>
+    <div id="chart" style="width: 600px; height: 600px;"></div>
 </div>
 
 <div id="newapp">
-    <h2 class="text-center">會員分布</h2>
-    <div id="chart" style="width: 1000px; height: 600px;"></div>
+    <h2 class="text-center">會員分布圖</h2>
+    <div id="newchart" style="width: 1500px; height: 600px;"></div>
+</div>
+
+<div id="competitionapp">
+    <h2 class="text-center">競賽投票分析圖</h2>
+    <div id="competitionchart" style="width: 1500px; height: 600px;"></div>
 </div>
 
 @section Scripts {
@@ -23,17 +27,13 @@
                 nannyTotalCount: @Model.NannyTotalCount
                     },
             mounted() {
-                console.log('帳號總數量:', this.parentTotalCount);
-                console.log('聯絡簿總數量:', this.nannyTotalCount);
                 this.drawChart();
             },
             methods: {
                 drawChart() {
                     var chartDom = document.getElementById('chart');
                     var myChart = echarts.init(chartDom);
-                    var option;
-
-                    option = {
+                    var option = {
                         tooltip: {
                             trigger: 'axis',
                             axisPointer: {
@@ -43,8 +43,8 @@
                         legend: {
                             data: ['帳號數量', '聯絡簿數量'],
                             textStyle: {
-                                fontSize: 18, // 設定圖例字體大小
-                                color: 'black' // 設定圖例字體顏色
+                                fontSize: 18,
+                                color: 'black'
                             }
                         },
                         grid: {
@@ -57,15 +57,15 @@
                             type: 'category',
                             data: ['各數據分析'],
                             axisLabel: {
-                                fontSize: 24, // 設定X軸標籤字體大小
-                                color: 'black' // 設定X軸標籤字體顏色
+                                fontSize: 24,
+                                color: 'black'
                             }
                         },
                         yAxis: {
                             type: 'value',
                             axisLabel: {
-                                fontSize: 16, // 設定Y軸標籤字體大小
-                                color: 'balck' // 設定Y軸標籤字體顏色
+                                fontSize: 16,
+                                color: 'black'
                             }
                         },
                         series: [
@@ -79,8 +79,8 @@
                                 label: {
                                     show: true,
                                     position: 'top',
-                                    fontSize: 16, // 設定柱狀圖頂部標籤字體大小
-                                    color: 'black' // 設定柱狀圖頂部標籤字體顏色
+                                    fontSize: 16,
+                                    color: 'black'
                                 }
                             },
                             {
@@ -93,8 +93,172 @@
                                 label: {
                                     show: true,
                                     position: 'top',
-                                    fontSize: 16, // 設定柱狀圖頂部標籤字體大小
-                                    color: 'black' // 設定柱狀圖頂部標籤字體顏色
+                                    fontSize: 16,
+                                    color: 'black'
+                                }
+                            }
+                        ]
+                    };
+
+                    option && myChart.setOption(option);
+                }
+            }
+        });
+
+        new Vue({
+            el: '#newapp',
+            data: {
+                addressTotalCount: @Html.Raw(Json.Serialize(Model.AddressTotalCount))
+                    },
+            mounted() {
+                this.drawNewChart();
+            },
+            methods: {
+                drawNewChart() {
+                    if (!Array.isArray(this.addressTotalCount)) {
+                        console.error("addressTotalCount 錯誤");
+                        return;
+                    }
+
+                    var addresses = this.addressTotalCount.map(item => item.address);
+                    var counts = this.addressTotalCount.map(item => item.count);
+
+                    var chartDom = document.getElementById('newchart');
+                    var myChart = echarts.init(chartDom);
+                    var option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'shadow'
+                            }
+                        },
+                        legend: {
+                            data: ['會員總數'],
+                            textStyle: {
+                                fontSize: 18,
+                                color: 'black'
+                            }
+                        },
+                        grid: {
+                            left: '10%',
+                            right: '10%',
+                            bottom: '15%',
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'category',
+                            data: addresses,
+                            axisLabel: {
+                                fontSize: 14,
+                                color: 'black',
+                                rotate: 45,
+                                interval: 0
+                            }
+                        },
+                        yAxis: {
+                            type: 'value',
+                            axisLabel: {
+                                fontSize: 16,
+                                color: 'black'
+                            }
+                        },
+                        series: [
+                            {
+                                name: '會員總數',
+                                type: 'bar',
+                                data: counts,
+                                itemStyle: {
+                                    color: 'rgba(75, 192, 192, 0.5)'
+                                },
+                                label: {
+                                    show: true,
+                                    position: 'top',
+                                    fontSize: 16,
+                                    color: 'black'
+                                }
+                            }
+                        ]
+                    };
+
+                    option && myChart.setOption(option);
+                }
+            }
+        });
+
+        new Vue({
+            el: '#competitionapp',
+            data: {
+                competitionNameCount: @Html.Raw(Json.Serialize(Model.CompetitionNameCount))
+                    },
+            mounted() {
+                this.drawCompetitionChart();
+            },
+            methods: {
+                drawCompetitionChart() {
+                    if (!Array.isArray(this.competitionNameCount)) {
+                        console.error("competitionNameCount 錯誤");
+                        return;
+                    }
+
+                    // 排序 CompetitionName，以確保 X 軸順序
+                    this.competitionNameCount.sort((a, b) => a.competitionName.localeCompare(b.competitionName));
+
+                    var competitionNames = this.competitionNameCount.map(item => item.competitionName);
+                    var counts = this.competitionNameCount.map(item => item.count);
+
+                    var chartDom = document.getElementById('competitionchart');
+                    var myChart = echarts.init(chartDom);
+                    var option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'line'
+                            }
+                        },
+                        legend: {
+                            data: ['競賽投票數量'],
+                            textStyle: {
+                                fontSize: 18,
+                                color: 'black'
+                            }
+                        },
+                        grid: {
+                            left: '10%',
+                            right: '10%',
+                            bottom: '15%',
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'category',
+                            data: competitionNames,
+                            axisLabel: {
+                                fontSize: 14,
+                                color: 'black',
+                                rotate: 45,
+                                interval: 0
+                            }
+                        },
+                        yAxis: {
+                            type: 'value',
+                            axisLabel: {
+                                fontSize: 16,
+                                color: 'black'
+                            },
+                            minInterval: 5 // 設置 Y 軸的最小刻度為 5
+                        },
+                        series: [
+                            {
+                                name: '競賽投票數量',
+                                type: 'line',
+                                data: counts,
+                                itemStyle: {
+                                    color: 'rgba(153, 102, 255, 0.5)'
+                                },
+                                label: {
+                                    show: true,
+                                    position: 'top',
+                                    fontSize: 16,
+                                    color: 'black'
                                 }
                             }
                         ]
