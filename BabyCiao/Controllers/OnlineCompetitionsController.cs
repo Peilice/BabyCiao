@@ -9,6 +9,7 @@ using BabyCiao.Models;
 using BabyCiao.Models.DTO;
 using NuGet.Protocol;
 using Microsoft.CodeAnalysis;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace BabyCiao.Controllers
 {
@@ -303,17 +304,58 @@ namespace BabyCiao.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id, [FromForm]OnlineCompetitionsDTO competitionDTO)
         {
+            //刪除收藏列表(雙主鍵)
+            //找出所有收藏此活動的資料
+            var finduser = await _context.CompetitionFavorites.Where(cf => cf.IdOnlineCompetition == id).ToListAsync();
+            //將使用者存入List
+            List<string> fevoUser = new List<string>();
+            foreach (var item in finduser)
+            {
+                fevoUser.Add(item.AccountUserAccount);
+            }
+
+            //遍歷所有使用者，刪除所有收藏資料
+            foreach(var item in fevoUser)
+            {
+                var felFavorite = await _context.CompetitionFavorites.FirstOrDefaultAsync(cf => cf.IdOnlineCompetition == id && cf.AccountUserAccount == item);
+                _context.CompetitionFavorites.Remove(felFavorite);
+                await _context.SaveChangesAsync();
+            }
+
+            //刪除投票(雙主鍵)
+            var findvoteuser = await _context.CompetitionRecords.Where(cr => cr.IdOnlineCompetition == id).ToListAsync();
+            List<string> voteuser = new List<string>();
+            foreach(var item in findvoteuser)
+            {
+                voteuser.Add(item.VoterAccount);
+            }
+
+            foreach(var item in voteuser)
+            {
+                var findvote=await _context.CompetitionRecords.FirstOrDefaultAsync(cr=>cr.IdOnlineCompetition == id && cr.VoterAccount == item);
+                _context.CompetitionRecords.Remove(findvote);
+                await _context.SaveChangesAsync();
+            }
+
+            //刪除選手
+            var delCompetor =await _context.CompetitionDetails.Where(cd=>cd.IdOnlineCompetition == id).ToListAsync();
+            foreach (var item in delCompetor)
+            {
+                _context.CompetitionDetails.Remove(item);
+                await _context.SaveChangesAsync();
+            }
+
+            //刪除照片
             var deletephoto = await _context.CompetitionPhotos.FirstOrDefaultAsync(cp => cp.IdOnlineCompetition == id);
-            //deletephoto.IdOnlineCompetition=competitionDTO.IdOnlineCompetition;
 
             if (deletephoto != null)
             {
                 _context.CompetitionPhotos.Remove(deletephoto);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
+            //刪除比賽
             var deletecompetition = await _context.OnlineCompetitions.FirstOrDefaultAsync(cop =>cop.Id == id);
-            //deletecompetition.Id=competitionDTO.Id;
 
             if (deletecompetition != null)
             {
@@ -329,11 +371,6 @@ namespace BabyCiao.Controllers
             return _context.OnlineCompetitions.Any(e => e.Id == id);
         }
 
-        //public async Task<FileResult> GetPicture(int id)
-        //{
-        //    PlatformPhoto photoname = await _context.PlatformPhotos.FindAsync(id);
-        //    byte[]? picture = photoname?.PhotoName;
-        //    return File(picture, "image/jpeg");
-        //}
+        
     }
 }
