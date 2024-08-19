@@ -18,10 +18,12 @@ namespace BabyCiaoAPI.Controllers
     public class OnlineCompetitionsController : ControllerBase
     {
         private readonly BabyciaoContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public OnlineCompetitionsController(BabyciaoContext context)
+        public OnlineCompetitionsController(BabyciaoContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         //比賽活動 (讀取所有活動、讀取單一活動及選手、報名、刪除報名)
@@ -233,13 +235,27 @@ namespace BabyCiaoAPI.Controllers
 
         // POST api/OnlineCompetitions/apply (報名比賽)
         [HttpPost("apply")]
-        public async Task<string> apply([FromBody] CompetitionDetail_createDTO Detail_createDTO)
+        public async Task<string> apply([FromForm] CompetitionDetail_createDTO Detail_createDTO)
         {
+            //處理照片上傳
+            var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+            var filepath = Path.Combine(uploadPath, Detail_createDTO.CompetitionPhotoName.FileName);
+            using (var fileStream = new FileStream(filepath, FileMode.Create))
+            {
+                await Detail_createDTO.CompetitionPhotoName.CopyToAsync(fileStream);// write file into fileStream
+            }
+            //Detail_createDTO.CompetitionPhotos = Detail_createDTO.CompetitionPhotoName.FileName;
+
+
             CompetitionDetail applyfor = new CompetitionDetail()
             {
                 IdOnlineCompetition = Detail_createDTO.CompetitionId,
                 AccountUserAccount = Detail_createDTO.AccountUserAccount,
-                CompetitionPhoto = Detail_createDTO.CompetitionPhotos,
+                CompetitionPhoto = Detail_createDTO.CompetitionPhotoName.FileName,
                 Content = Detail_createDTO.Content,
             };
             try
@@ -262,7 +278,27 @@ namespace BabyCiaoAPI.Controllers
         [HttpDelete("deleteApply/{id}/{account}")]
         public async Task<string> deleteApply(int id, string account)
         {
+            //讀出選手ID
             var delete = _context.CompetitionDetails.FirstOrDefault(c => c.IdOnlineCompetition == id && c.AccountUserAccount == account);
+            int detailID = delete.Id;
+
+            //讀出所有投票給此選手的帳號紀錄
+            var votelist=_context.CompetitionRecords.Where(c=>c.IdCompetitionDetail == detailID).ToList();
+            List<string> voteruser = new List<string>();
+            foreach (var item in votelist)
+            {
+                voteruser.Add(item.VoterAccount);
+            }
+
+            //以投票者帳號與活動ID刪除投票紀錄
+            foreach(var item in voteruser)
+            {
+                var delvote = await _context.CompetitionRecords.FirstOrDefaultAsync(c => c.IdOnlineCompetition == id && c.VoterAccount == item);
+                _context.CompetitionRecords.Remove(delvote);
+                await _context.SaveChangesAsync();
+            }
+
+
             if (delete != null)
             {
                 _context.CompetitionDetails.Remove(delete);

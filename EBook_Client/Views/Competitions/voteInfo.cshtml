@@ -46,7 +46,7 @@
 
             #btnmy:hover,
             #apply:hover {
-                color: #d37c70;
+                color: black;
             }
 
                 #btnmy:hover:before,
@@ -127,7 +127,7 @@
                     <div class="row row-cols-1 row-cols-md-3 g-4">
                         <div class="col" v-for="item in Competitionsdetail" :key="item.competitionDetailId">
                             <div class="card h-100">
-                                <img v-bind:src="getPhotoUrl(item.competitionPhotos)" class="card-img-top h-100" alt="...">
+                                <img v-bind:src="getPhotoUrl(item.competitionPhotos)" class="card-img-top w-100" alt="...">
                                 <div class="card-body">
                                     <h5 class="card-title">{{item.accountUserAccount}}</h5>
                                     <p class="me-3">得票數 <span><i class="bi bi-lightning-charge-fill">{{item.number}}</i></span></p>
@@ -144,7 +144,7 @@
                 </div>
             </div>
 
-            <!-- 靜態互動背景模板 -->
+            <!-- 報名比賽-靜態背景 -->
             <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -152,9 +152,8 @@
                             <h5 class="modal-title" id="staticBackdropLabel">填寫報名資料</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form id="form" class="needs-validation" v-on:submit.prevent="create" novalidate>
+                        <form id="form" class="needs-validation" v-on:submit.prevent="create" novalidate enctype="multipart/form-data">
                             <div class="modal-body">
-                                @* <input type="text" class="form-control" id="IdCompetition" v-model="CompetitionId"> *@
                                 <div class="mb-3 has-validation">
                                     <label class="form-label">帳號</label>
                                     <input type="text" class="form-control" id="userAccount" v-model="userAccount" readonly>
@@ -243,7 +242,7 @@
 
                     //表單
                     CompetitorContent: "",
-                    CompetitorPhoto: "noimage.jpg",
+                    CompetitorPhoto: [],
 
                     //使用者帳號
                     userAccount: sessionStorage.getItem("username"),
@@ -277,7 +276,7 @@
 
                 },
                 getPhotoUrl(CompetitionPhotos) {
-                    return CompetitionPhotos != null ? `https://localhost:7000/uploads/${CompetitionPhotos}` : `https://localhost:7000/image/noimage.jpg`;
+                    return CompetitionPhotos != null ? `https://localhost:7292/uploads/${CompetitionPhotos}` : `https://localhost:7000/image/noimage.jpg`;
                 },
                 apply: function () {
                     let _this = this;
@@ -300,13 +299,23 @@
                 create: function (e) {
                     e.preventDefault();
                     let _this = this;
-                    var request = {}; //收集表單資訊
-                    request.CompetitionId = IdCompetitions;
-                    request.AccountUserAccount = _this.userAccount;
-                    request.CompetitionPhotos = _this.CompetitorPhoto.name;
-                    request.Content = _this.CompetitorContent;
+                    // var request = {}; //收集表單資訊
+                    // request.CompetitionId = IdCompetitions;
+                    // request.AccountUserAccount = _this.userAccount;
+                    //request.CompetitionPhotos = _this.CompetitorPhoto.name;
+                    // request.Content = _this.CompetitorContent;
+                    // request.CompetitionPhotoName = _this.CompetitorPhoto;
+                    let formData = new FormData();
+                    formData.append("CompetitionId", IdCompetitions);
+                    formData.append("AccountUserAccount", _this.userAccount);
+                    formData.append("Content", _this.CompetitorContent);
+                    formData.append("CompetitionPhotoName", _this.CompetitorPhoto);
 
-                    axios.post(`https://localhost:7292/api/OnlineCompetitions/apply`, request)
+                axios.post(`https://localhost:7292/api/OnlineCompetitions/apply`, formData,{
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
                         .then(result => {
                             Swal.fire({
                                 position: "center",

@@ -101,6 +101,7 @@ namespace BabyCiao.Controllers
             _context.Add(newcompetiton);
             await _context.SaveChangesAsync();
 
+            //處理圖片上傳
             var newid= newcompetiton.Id;
             var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
             if (!Directory.Exists(uploadPath))

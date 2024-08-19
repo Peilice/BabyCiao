@@ -48,9 +48,10 @@ public class CompetitionDetailDTO
 public class CompetitionDetail_createDTO
 {
     public string AccountUserAccount { get; set; }
-    public string? CompetitionPhotos { get; set; }
+    //public string? CompetitionPhotos { get; set; }
     public int CompetitionId { get; set; }
     public string Content { get; set; }
-
+    //處理照片上傳
+    public IFormFile CompetitionPhotoName { get; set; }
 
 }
