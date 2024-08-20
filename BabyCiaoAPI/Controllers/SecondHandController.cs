@@ -216,8 +216,8 @@ namespace BabyCiaoAPI.Controllers
                                 select new GetSecondHandExchangeDTO
                                 {
                                     Id = ex.Id,
-                                    BuyerId = user,
-                                    SellerId = ex.SellerId,
+                                    BuyerId = ex.BuyerId,
+                                    SellerId = user,
                                     WantGetId = ex.WantGetId,
                                     WantName = p.SuppliesName,
                                     GetQuantity = ex.GetQuantity,
@@ -553,5 +553,52 @@ namespace BabyCiaoAPI.Controllers
 
             return Ok(myfavs);
         }
+
+        //確認訂單
+        [HttpPut("ConfirmOrder")]
+        public async Task<ActionResult<SecondHandExchangeDTO>> ConfirmOrder(int id)
+        {
+            var order = await
+                 _context.SecondHandExchangeOrders.FindAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            order.Statement = "確認成交";
+            await _context.SaveChangesAsync();
+
+            return Ok(order);
+        }
+        //取消訂單
+        [HttpPut("CancleOrder")]
+        public async Task<ActionResult<SecondHandExchangeDTO>> CancleOrder(int id)
+        {
+            var order = await
+                 _context.SecondHandExchangeOrders.FindAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            order.Statement = "取消申請";
+            await _context.SaveChangesAsync();
+
+            return Ok(order);
+        }
+        //拒絕交換
+        [HttpPut("RejectOrder")]
+        public async Task<ActionResult<SecondHandExchangeDTO>> RejectOrder(int id)
+        {
+            var order = await
+                 _context.SecondHandExchangeOrders.FindAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            order.Statement = "不成立";
+            await _context.SaveChangesAsync();
+
+            return Ok(order);
+        }
+
     }
 }

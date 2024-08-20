@@ -50,8 +50,8 @@
 									<td>{{ order.view }}</td>
 									<td>{{ order.statement }}</td>
 									<td>
-										<button @@click="editOrder(order.id)" class="btn btn-outline-secondary btn-sm mx-2">編輯</button>
-										<button @@click="cancelOrder(order.id)" class="btn btn-outline-danger btn-sm">取消</button>
+										@* <button @@click="editOrder(order.id)" class="btn btn-outline-secondary btn-sm mx-2">編輯</button> *@
+										<button :disabled="order.statement != '申請中'" @@click="confirmCancelOrder(order.id)" class="btn btn-outline-danger btn-sm">取消申請</button>
 									</td>
 								</tr>
 							</tbody>
@@ -85,7 +85,35 @@
 			methods: {
 				editOrder() { 
 				},
-				cancelOrder() { 
+				confirmCancelOrder(id) {
+					Swal.fire({
+						title: '確認取消訂單?',
+						html: "您確定要取消此訂單嗎?<br>請注意取消後則不可復原!!",
+						icon: 'warning',
+						showCancelButton: true,
+						confirmButtonColor: '#3085d6',
+						cancelButtonColor: '#d33',
+						confirmButtonText: '是的，取消訂單',
+						cancelButtonText: '不，保留訂單'
+					}).then((result) => {
+						if (result.isConfirmed) {
+							this.cancelOrder(id);
+						}
+					});
+				},
+				cancelOrder(id) {
+					axios.put(`https://localhost:7292/api/SecondHand/CancleOrder?id=${id}`)
+						.then(response => {
+							// 更新本地 orders 狀態
+							const index = this.orders.findIndex(order => order.id === id);
+							if (index !== -1) {
+								this.orders[index].statement = '取消申請';
+							}
+							alert('訂單已取消');
+						})
+						.catch(error => {
+							console.error('Error rejecting order:', error);
+						});
 				},
 				initializeDataTable() {
 					// 確保 jQuery 和 DataTables 已加載
@@ -127,6 +155,19 @@
 										"oAria": {
 											"sSortAscending": ": 開啟排序升序",
 											"sSortDescending": ": 開啟排序降序"
+										}
+									},
+
+									"createdRow": function (row, data, dataIndex) {
+										var statementCell = $('td', row).eq(7);
+										if (data[7] === '確認成交') {
+											statementCell.css('background-color', 'rgba(212, 237, 218, 0.5)'); // 綠色，50% 透明度
+										} else if (data[7] === '申請中') {
+											statementCell.css('background-color', 'rgba(255, 243, 205, 0.5)'); // 黃色，50% 透明度
+										} else if (data[7] === '不成立') {
+											statementCell.css('background-color', 'rgba(248, 215, 218, 0.5)'); // 紅色，50% 透明度
+										} else if (data[7] === '取消申請') {
+											statementCell.css('background-color', 'rgba(128, 128, 128, 0.5)'); // 灰色，50% 透明度
 										}
 									}
 								});
