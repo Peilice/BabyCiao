@@ -1,6 +1,5 @@
 ﻿@model BabyCiao.Models.DTO.NannyRequirementDTO
 
-
 <h1>審核保母資格</h1>
 
 <h4>申請資料</h4>
@@ -22,22 +21,20 @@
             </div>
             <div class="form-group">
                 <label asp-for="photoA" class="control-label">良民證</label>
-
                 <input type="file" asp-for="photoA" class="control-label" style="display:none;"></input>
-                <img src="@Url.Content("~/Nannnyandperant/良民證/"+ Model.photoA)" width="400" />
+                <img src="@Url.Content("~/Nannnyandperant/良民證/" + Model.photoA)" width="400" />
                 <span asp-validation-for="photoA" class="text-danger" style="display:none;"></span>
             </div>
             <div class="form-group">
                 <label asp-for="photoB" class="control-label">保母證</label>
                 <input type="file" asp-for="photoB" class="control-label" style="display:none;"></input>
-                <img src="@Url.Content("~/Nannnyandperant/保母證/"+ Model.photoB)" width="400" />
+                <img src="@Url.Content("~/Nannnyandperant/保母證/" + Model.photoB)" width="400" />
                 <span asp-validation-for="photoB" class="text-danger" style="display:none;"></span>
             </div>
             <div class="form-group">
                 <label asp-for="photoC" class="control-label">身分證</label>
-
                 <input type="file" asp-for="photoC" class="control-label" style="display:none;"></input>
-                <img src="@Url.Content("~/Nannnyandperant/身分證/"+ Model.photoC)" width="400" />
+                <img src="@Url.Content("~/Nannnyandperant/身分證/" + Model.photoC)" width="400" />
                 <span asp-validation-for="photoC" class="text-danger" style="display:none;"></span>
             </div>
             <div class="form-group">
@@ -50,31 +47,29 @@
                 <input asp-for="ValidPeriodsOfCertificates" class="form-control" />
                 <span asp-validation-for="ValidPeriodsOfCertificates" class="text-danger"></span>
             </div>
-            <div class="form-group" style="display:none;>
+            <div class="form-group" style="display:none;">
                 <label asp-for="ChildCareCertificate" class="control-label" style="display:none;"></label>
-                <input asp-for="ChildCareCertificate" class="form-control" input type=" hidden" />
+                <input asp-for="ChildCareCertificate" class="form-control" input type="hidden" />
                 <span asp-validation-for="ChildCareCertificate" class="text-danger" style="display:none"></span>
             </div>
-            <div class="form-group" style="display:none;>
+            <div class="form-group" style="display:none;">
                 <label asp-for="PoliceCriminalRecordCertificate" class="control-label" style="display:none;"></label>
-                <input asp-for="PoliceCriminalRecordCertificate" class="form-control" type=" hidden" />
+                <input asp-for="PoliceCriminalRecordCertificate" class="form-control" type="hidden" />
                 <span asp-validation-for="PoliceCriminalRecordCertificate" class="text-danger" style="display:none;"></span>
             </div>
-            <div class="form-group" style="display:none; >
+            <div class="form-group" style="display:none;">
                 <label asp-for="NationalIdentificationCard" class="control-label" style="display:none;"></label>
                 <input asp-for="NationalIdentificationCard" class="form-control" type="hidden" />
                 <span asp-validation-for="NationalIdentificationCard" class="text-danger" style="display:none;"></span>
             </div>
-            <td>
-                <div class="form-group">
-                    <select class="form-control" asp-for="Statement">
-                        <option value="1" >成功</option>
-                        <option value="2" >未讀</option>
-                        <option value="3" >退件</option>
-                    </select>
-                </div>
-            </td>
-
+            <div class="form-group">
+                <label asp-for="Statement" class="control-label">申請狀態</label>
+                <select id="statementSelect" class="form-control" asp-for="Statement">
+                    <option value="1">未審核</option>
+                    <option value="2">審核成功</option>
+                    <option value="3">退件</option>
+                </select>
+            </div>
             <div class="form-group">
                 <input type="submit" value="儲存" class="btn btn-primary" />
             </div>
@@ -86,8 +81,43 @@
     <a asp-action="Index">回到列表</a>
 </div>
 
+<script>
+    document.getElementById('statementSelect').addEventListener('change', function () {
+        const selectedValue = this.value;
+
+        if (selectedValue == 3) { // 選擇了退件
+            // 顯示一個輸入框讓管理員留言
+            const message = prompt("請輸入退件原因和留言給使用者：");
+
+            if (message) {
+                // 將留言和退件信息提交給後台處理
+                fetch('/YourController/HandleRejection', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '@Html.AntiForgeryToken()'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        userId: '@Model.NannyAccountUserAccount' // 使用者帳號
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('證件已退還，留言已發送給使用者。');
+                        } else {
+                            alert('處理過程中發生錯誤，請稍後再試。');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+        }
+    });
+</script>
+
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

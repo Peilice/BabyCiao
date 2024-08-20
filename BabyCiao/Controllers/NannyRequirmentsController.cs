@@ -7,6 +7,7 @@ using BabyCiao.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using BabyCiao.Models.DTO;
+using System;
 
 public class NannyRequirmentsController : Controller
 {
@@ -39,7 +40,7 @@ public class NannyRequirmentsController : Controller
          .Select(n => new NannyRequirementDTO
          {
              Id= n.Id,
-             //RequirementDate = n.RequirementDate,
+             RequirementDate = n.RequirementDate,
              NannyAccountUserAccount = n.NannyAccountUserAccount,
              PoliceCriminalRecordCertificate = n.PoliceCriminalRecordCertificate,
              ChildCareCertificate = n.ChildCareCertificate,
@@ -102,7 +103,7 @@ public class NannyRequirmentsController : Controller
         var Requirment = new NannyRequirment
         {
             Id = model.Id,
-            //RequirementDate = model.RequirementDate,
+            RequirementDate = DateTime.Now,
             NannyAccountUserAccount = model.NannyAccountUserAccount,
             PoliceCriminalRecordCertificate = model.PoliceCriminalRecordCertificate,
             ChildCareCertificate = model.ChildCareCertificate,
@@ -163,6 +164,7 @@ public class NannyRequirmentsController : Controller
 
 
     // GET: NannyRequirments/Edit/5
+    [HttpGet]
     public async Task<IActionResult> Edit(int Id)
     {
         if (Id == null)
@@ -174,7 +176,7 @@ public class NannyRequirmentsController : Controller
                           select new NannyRequirementDTO
                           {
                               Id = nn.Id,
-                              //RequirementDate = nn.RequirementDate,
+                              RequirementDate = nn.RequirementDate,
                               NannyAccountUserAccount = nn.NannyAccountUserAccount,
                               PoliceCriminalRecordCertificate = nn.PoliceCriminalRecordCertificate,
                               ChildCareCertificate = nn.ChildCareCertificate,
@@ -210,7 +212,7 @@ public class NannyRequirmentsController : Controller
         var Requirment = new NannyRequirment
         {
             Id = model.Id,
-            //RequirementDate = model.RequirementDate,
+            RequirementDate = DateTime.Now,
             NannyAccountUserAccount = model.NannyAccountUserAccount,
             PoliceCriminalRecordCertificate = model.PoliceCriminalRecordCertificate,
             ChildCareCertificate = model.ChildCareCertificate,

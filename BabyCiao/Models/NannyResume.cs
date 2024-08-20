@@ -19,9 +19,9 @@ public partial class NannyResume
 
     public string TypeOfDaycare { get; set; } = null!;
 
-    public string ServiceType { get; set; } = null!;
+    public int ServiceType { get; set; }
 
-    public int ServiceItems { get; set; }
+    public string ServiceItems { get; set; } = null!;
 
     public bool QuasiPublicChildcare { get; set; }
 
@@ -35,7 +35,7 @@ public partial class NannyResume
 
     public string ProfessionalPortrait { get; set; } = null!;
 
-    public bool? DisplayControl { get; set; }
+    public bool DisplayControl { get; set; }
 
     public virtual UserAccount NannyAccountUserAccountNavigation { get; set; } = null!;
 

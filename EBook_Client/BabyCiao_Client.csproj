@@ -24,6 +24,12 @@
 
   <ItemGroup>
     <Content Remove="Areas\LilyGArea\Views\Home\Detail.cshtml" />
+    <Content Remove="Areas\Machplateform\Views\Home\ContactNTB.cshtml" />
+    <Content Remove="Areas\Machplateform\Views\Home\Index.cshtml" />
+    <Content Remove="Areas\Machplateform\Views\Home\MatchIndex.cshtml" />
+    <Content Remove="Areas\Machplateform\Views\Home\MyIndex.cshtml" />
+    <Content Remove="Areas\Machplateform\Views\Home\SignContract.cshtml" />
+    <Content Remove="Areas\Machplateform\Views\Shared\_LoginPartial.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,10 +56,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Areas\Machplateform\Views\Home\Index.cshtml" />
     <None Include="Areas\Machplateform\Views\Shared\Error.cshtml" />
     <None Include="Areas\Machplateform\Views\Shared\_Layout.cshtml" />
-    <None Include="Areas\Machplateform\Views\Shared\_LoginPartial.cshtml" />
     <None Include="Areas\Machplateform\Views\Shared\_ValidationScriptsPartial.cshtml" />
     <None Include="wwwroot\css\.DS_Store" />
     <None Include="wwwroot\fonts\.DS_Store" />

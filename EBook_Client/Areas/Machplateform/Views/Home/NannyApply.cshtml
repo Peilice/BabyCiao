@@ -9,25 +9,26 @@
 <body>
     <div id="App">
         <!-- Breadcrumb -->
-        <div class="container d-flex justify-content-between">
+        <div class="container d-flex justify-content-between" >
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">保母平台</li>
                     <li class="breadcrumb-item active" aria-current="page">保母申請</li>
                 </ol>
             </nav>
-            <button type="button" class="btn btn-outline-primary" v-on:click="enter(NannyAccountUserAccount)">保母托育</button>
+            <div class="row" style="width:15%;margin-left:auto;margin-right:0">
+                <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-on:click="getUserName">
+                加入貝比巧育團隊
+                </button>
+                <button type="button" class="btn btn-primary mb-2" v-on:click="enter(NannyAccountUserAccount)">保母托育</button>
+              </div>
         </div>
 
-        <h1 class="text-center mb-3 mt-3 fw-bold">保母申請表</h1>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-on:click="getUserName">
-            加入貝比巧育團隊
-        </button>
-
-        <template v-if="nny.length > 0">
+        <template  v-if="nny.length > 0">
             <h1 class="text-center mb-3 mt-3 fw-bold">保母資料</h1>
             <!-- 保母資料 -->
             <div class="container mb-4" v-for="item in nny" :key="item.nannyAccountUserAccount">
+                <div v-if="isVisible">
                 <div class="col-12 mb-3">
                     <span>帳號：{{ item.nannyAccountUserAccount }}</span>
                 </div>
@@ -49,9 +50,12 @@
                     <span>身分證照片：</span>
                     <img :src="`/NannnyAndPerant/身分證/${item.nationalIdentificationCard}`" alt="身分證照片預覽" class="img-fluid" :title="item.NationalIdentificationCard">
                 </div>
+                <div class="col-12 mb-3">
+                    <span> 申請狀態：{{ getStatementText(item.statement) }}</span>
+                </div>
             </div>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="template">刪除申請</button>
-            <label id="statement">申請狀態：{{Statement}}</label>
+            </div>
+            <button type="button" class="btn btn-secondary" v-on:click="hideTemplate">刪除申請</button>
         </template>
 
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -114,6 +118,7 @@
         var vueApp = {
             data() {
                 return {
+                    isVisible: true,
                     username: "",
                     nny: [],
                     NannyAccountUserAccount: "",
@@ -125,13 +130,25 @@
                     ChildCareCertificate: null,
                     PoliceCriminalRecordCertificate: null,
                     NationalIdentificationCard: null,
-                    isCreate: false
+                    statement: 1,
+                    isCreate: false,
+                    statementMap: {
+                        1: "未審核",
+                        2: "審核成功",
+                        3: "退件"
+                    }
                 };
+            },
+            computed: {
+                statementText() {
+                    return this.item ? this.getStatementText(this.item.statement) : '';
+                }
             },
             methods: {
                 getUserName() {
                     axios.get(`@Utility.SD.localHost_API/api/NannyRequirments/GetUserName_NannyRequirment`, { headers })
                         .then(result => {
+                            console.log(result.data);  // 檢查 API 回傳的內容
                             this.username = result.data;
                         })
                         .catch(err => {
@@ -148,6 +165,18 @@
                             this[previewTarget] = e.target.result;
                         };
                         reader.readAsDataURL(file);
+                    }
+                },
+                getStatementText(statement) {
+                    switch (statement) {
+                        case 1:
+                            return "未審核";
+                        case 2:
+                            return "審核成功";
+                        case 3:
+                            return "退件";
+                        default:
+                            return "";
                     }
                 },
                 checkForm() {
@@ -174,6 +203,7 @@
                 getNannyRequirments() {
                     axios.get(`@Utility.SD.localHost_API/api/NannyRequirments/NannyRequirmentget`, { headers })
                         .then(result => {
+                         
                             this.nny = result.data;
                             console.log(this.nny); // 增加這一行
                         })
@@ -193,7 +223,7 @@
                         ValidPeriodsOfCertificates: this.ValidPeriodsOfCertificates,
                         ChildCareCertificate: this.ChildCareCertificate.name,
                         PoliceCriminalRecordCertificate: this.PoliceCriminalRecordCertificate.name,
-                        NationalIdentificationCard: this.NationalIdentificationCard.name
+                        NationalIdentificationCard: this.NationalIdentificationCard.name,
                     };
                     axios.post(`https://localhost:7292/api/NannyRequirments/Apply`, request)
                         .then(result => {
@@ -211,6 +241,9 @@
                         .catch(err => {
                             alert(err);
                         });
+                },
+                hideTemplate() {
+                    this.isVisible = false;
                 },
             },
             mounted() {

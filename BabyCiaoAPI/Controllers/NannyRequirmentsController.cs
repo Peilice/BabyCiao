@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 using BabyCiaoAPI.DTO;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BabyCiaoAPI.Controllers
 {
@@ -64,7 +65,8 @@ namespace BabyCiaoAPI.Controllers
                         ChildCareCertificate = nny.ChildCareCertificate,
                         NationalIdentificationCard = nny.NationalIdentificationCard,
                         AddressesOfAgencies = nny.AddressesOfAgencies,
-                        ValidPeriodsOfCertificates = nny.ValidPeriodsOfCertificates
+                        ValidPeriodsOfCertificates = nny.ValidPeriodsOfCertificates,
+                        Statement = nny.Statement
                     });
 
 
@@ -111,6 +113,8 @@ namespace BabyCiaoAPI.Controllers
                 NationalIdentificationCard = dto.NationalIdentificationCard,
                 AddressesOfAgencies = dto.AddressesOfAgencies,
                 ValidPeriodsOfCertificates = dto.ValidPeriodsOfCertificates,
+                Statement = dto.Statement
+
             };
             try
             {

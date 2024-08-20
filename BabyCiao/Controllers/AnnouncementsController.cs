@@ -128,8 +128,42 @@ namespace BabyCiao.Controllers
             }
             return null;
         }
-        
+
+
+        //[HttpPost]
+        //public JsonResult HandleRejection(string message, int userId)
+        //{
+        //    try
+        //    {
+        //        // 根據 userId 查找使用者並退還證件
+        //        var user = _context.Users.Find(userId);
+        //        if (user == null)
+        //        {
+        //            return Json(new { success = false, message = "使用者不存在。" });
+        //        }
+
+        //        // 執行退還證件的邏輯
+        //        // 例如: user.DocumentsReturned = true;
+
+        //        // 保存留言
+        //        user.RejectionMessage = message;
+
+        //        // 更新使用者狀態
+        //        user.Status = "退件";
+
+        //        // 保存變更
+        //        _context.SaveChanges();
+
+        //        return Json(new { success = true });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, message = ex.Message });
+        //    }
+        //}
+
         //        // GET: Announcements/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -148,9 +182,9 @@ namespace BabyCiao.Controllers
             return View(announcement);
         }
 
-        //        // POST: Announcements/Edit/5
-        //        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        //        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,AccountUserAccount,PublishTime,Tittle,Article,ReferenceName,ReferenceRoute,Type,Display")] andy_announcementViewModel my_announcement)
