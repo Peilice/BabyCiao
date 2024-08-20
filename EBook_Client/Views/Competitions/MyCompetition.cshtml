@@ -154,7 +154,7 @@
                             <span>{{item.statement}}</span>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
-                            <img v-bind:src="getPhoto(item.competitionPhoto)" style="width:200px;height:150px" />
+                                <img v-bind:src="getcomPhoto(item.competitionPhoto)" style="width:200px;height:150px" />
                             <div>
                                 
                                 <p>{{item.competitionContent}}</p>
@@ -208,7 +208,10 @@
                 }
             },
             getPhoto: function (competitionPhotos) {
-                return competitionPhotos != null ? `https://localhost:7000/uploads/${competitionPhotos}`: `https://localhost:7000/image/noimage.jpg`;
+                return competitionPhotos != null ? `https://localhost:7292/uploads/${competitionPhotos}`: `https://localhost:7000/image/noimage.jpg`;
+            },
+            getcomPhoto: function (competitionPhotos) {
+                return competitionPhotos != null ? `https://localhost:7000/uploads/${competitionPhotos}` : `https://localhost:7000/image/noimage.jpg`;
             },
             getVote:function(){
                 let _this = this;
