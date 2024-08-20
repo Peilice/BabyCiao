@@ -9,9 +9,11 @@
             width: 16px;
             height: auto;
         }
+        /* 增加整體的表格內邊距，讓內容不那麼擁擠 */
         .table_news {
             width: 100%;
             margin: auto;
+            padding: 10px; /* 增加表格內容的內邊距 */
         }
         .t1 {
             width: 100%;
@@ -24,14 +26,19 @@
             font-size: large;
             background-color: #f6dec8;
         }
+        /* 增加行之間的距離 */
         .tr1 {
             position: relative;
+            margin-bottom: 10px; /* 增加行之間的距離 */
         }
+        /* 增加行間距 */
         .td1 {
             width: 100%;
             height: 1.5em;
             border: 0.1px solid #888888;
+            padding: 10px 0; /* 增加上下內邊距 */
         }
+
         .span1 {
             margin: auto 34px;
         }
@@ -39,11 +46,15 @@
             position: absolute;
             right: 36px;
         }
+        /* 調整奇偶數行的背景色 */
         table tr:nth-child(2n+1) {
             background-color: #f6dec8;
+            padding: 10px 0; /* 增加上下內邊距 */
         }
+
         table tr:nth-child(2n) {
             background-color: #fff4ef;
+            padding: 10px 0; /* 增加上下內邊距 */
         }
         td:hover{
             background-color:lightgray;
