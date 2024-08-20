@@ -141,7 +141,7 @@ namespace BabyCiaoAPI.Controllers
             {
                 return null;
             }
-            bool check =_context.Contracts.Where(c=>c.NannyAccountUserAccount==DTO.NannyAccountUserAccount && c.AccountUserAccount== user).Any();
+            bool check =_context.Contracts.Where(c=>c.NannyAccountUserAccount==DTO.NannyAccountUserAccount && c.AccountUserAccount== user && c.ContractFile== DTO.ContactBooktId.ToString()).Any();
 
             if (check) {
                 return "已授權，無須再授權";
