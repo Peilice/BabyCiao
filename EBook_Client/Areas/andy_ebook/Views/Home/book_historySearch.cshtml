@@ -21,7 +21,7 @@
                 <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_record" class="list-group-item list-group-item-action ">生活紀錄</a>
                 <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_infos" class="list-group-item list-group-item-action">寶寶資訊</a>
                 <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_historySearch" class="list-group-item list-group-item-action active">統計圖表</a>
-                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_activityDaily" class="list-group-item list-group-item-action">活動日記</a>
+                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_activityDaily" class="list-group-item list-group-item-action">接送紀錄</a>
             </div>
         </div>
         <div class="col-12 col-md-9 rounded">
@@ -102,10 +102,10 @@
 
         
     <script>
-        const useToken = localStorage.getItem("token");
-        const headers = {
-            'Authorization': `Bearer ${useToken}`,
-        };
+        // const useToken = localStorage.getItem("token");
+        // const headers = {
+        //     'Authorization': `Bearer ${useToken}`,
+        // };
         const now = new Date();
         let Ebook_user = sessionStorage.getItem("username");
         let IdContactBook = sessionStorage.getItem("IdContactBook");

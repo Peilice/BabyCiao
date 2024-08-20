@@ -21,14 +21,31 @@
                 <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_record" class="list-group-item list-group-item-action ">生活紀錄</a>
                 <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_infos" class="list-group-item list-group-item-action">寶寶資訊</a>
                 <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_historySearch" class="list-group-item list-group-item-action">統計圖表</a>
-                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_activityDaily" class="list-group-item list-group-item-action active">活動日記</a>
+                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_activityDaily" class="list-group-item list-group-item-action active">接送紀錄</a>
             </div>
         </div>
         <!-- list end -->
         <div class="col-12 col-md-9 rounded">
             <!-- tabs start -->
-            <div class="div1" style="background-color:#fff4ef ;height:600px;">
-                <h1>日記</h1>
+            <div class="div1" style="background-color:#fff4ef ;height:500px; overflow-y:auto;overflow-x:hidden;">
+                <div class="container">
+                    <div class="row">
+                        <h1>接送紀錄</h1>
+                        <div class="col-12 d-flex flex-row rounded my-1" v-for="item in datas" style="background-color:wheat">
+                            <div class="col-2 my-2">
+                                <h5 class="fw-bolder mb-0">{{item.str_time}}</h5>
+                            </div>
+                            <div class="col-10 my-2 ">
+                                <p class="ms-5 mb-0 me-2">●接送明細:{{item.memo}}</p>
+                                
+                                <p class="ms-5 mb-0">●保母帳號: {{item.accountUserAccount}}</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                
+                
             </div>
             <!-- tabs end -->
         </div>
@@ -37,17 +54,31 @@
 <!-- list and tabs end -->
 @section Scripts {
     <script>
+        let IdContactBook = sessionStorage.getItem("IdContactBook");
+        
         var vueApp = {
             data() {
                 return {
-
+                    datas:[],
                 };
             },
             methods: {
-
+                getDatas:function(){
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Andy_NannyMatch/getPickUpDatas/${IdContactBook}`, {
+                        headers
+                    }).then(result => {
+                        _this.datas = result.data;
+                        for (var i = 0; i < _this.datas.length; i++) {
+                            _this.datas[i].str_time = new Date(_this.datas[i].modifiedTime).toLocaleString();
+                        }
+                        
+                    }).catch(err => { alert(err) });
+                },
             },
             mounted: function () {
-
+                let _this = this;
+                _this.getDatas();
             }
         }
 

@@ -23,9 +23,10 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom  header_div1">
             <div class="container-fluid" id="app00">
                 <figure class="logo">
-                    <img class="imgLogo" src="~/images/logo.png" alt="">
+                   @*  <img class="imgLogo" src="~/images/logo.png" alt=""> *@
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/babyciao文字圖.png" width="200" /></a>
                 </figure>
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BabyCiao</a>
+                @* <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BabyCiao</a> *@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -35,9 +36,18 @@
                         <li class="nav-item header_li4">
                             <a class="nav-link text-dark" asp-area="andy_ebook" asp-controller="Home" asp-action="Index">電子聯絡簿</a>
                         </li>
+                        
                         <li class="nav-item header_li4">
-                            <a class="nav-link text-dark" asp-area="andy_ebook" asp-controller="Home" asp-action="QRcode">接送QRcode</a>
+                            <a class="nav-link text-dark" asp-area="andy_ebook" asp-controller="Home" asp-action="MatchEbook">授權聯絡簿</a>
                         </li>
+                        <template v-if="isNanny==true" >
+                            <li class="nav-item header_li4" style="background-color:hotpink">
+                                <a class="nav-link text-dark" asp-area="andy_ebook" asp-controller="Home" asp-action="QRcode">接送QRcode</a>
+                            </li>
+                        <li class="nav-item header_li4" style="background-color:hotpink">
+                            <a class="nav-link text-dark" asp-area="andy_ebook" asp-controller="Home" asp-action="NannyArea">托育專區</a>
+                        </li>
+                        </template>
                     </ul>
                     <partial name="_LoginPartial_self" />
                 </div>
@@ -72,21 +82,30 @@
     <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
     <script src="https://unpkg.com/gijgo@1.9.14/js/messages/messages.zh-tw.js" type="text/javascript"></script>
     <script>
+        const useToken = localStorage.getItem("token");
+        const headers = {
+            'Authorization': `Bearer ${useToken}`,
+        };
         let username = sessionStorage.getItem("username");
         sessionStorage.removeItem('target');
         if (username == null) { 
             window.location.href = `@Utility.SD.localHost_Client/Home/Login`
         }
-        var vueApp = {
+       
+
+        var vueApp_app00 = {
             data() {
                 return {
+                    isNanny: false,
                     u_name: "",
                     islogin: false,
                 };
             },
-            mounted: function () {
+            mounted: async function () {
                 let _this = this;
                 _this.reflesh();
+                _this.checkNanny();
+                
             },
             methods: {
                 reflesh: function () {
@@ -96,10 +115,20 @@
                         _this.u_name = username;
                     }
                 },
+                checkNanny: async function () {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Andy_NannyMatch/CheckNanny`, {
+                        headers
+                    }).then(result => {
+                        //alert(result.data);
+                        _this.isNanny = result.data;
+
+                    }).catch(err => { alert(err) });
+                },
             },
-           
+
         }
-        var app = Vue.createApp(vueApp).mount('#loginApp')
+        var app_app00 = Vue.createApp(vueApp_app00).mount('#app00')
 
         $(function () {
             $('#logoutForm').on('click', function (e) {

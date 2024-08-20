@@ -82,7 +82,7 @@
                 <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_record" class="list-group-item list-group-item-action active">生活紀錄</a>
                 <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_infos" class="list-group-item list-group-item-action">寶寶資訊</a>
                 <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_historySearch" class="list-group-item list-group-item-action">統計圖表</a>
-                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_activityDaily" class="list-group-item list-group-item-action">活動日記</a>
+                <a href="@Utility.SD.localHost_Client/andy_ebook/Home/book_activityDaily" class="list-group-item list-group-item-action">接送紀錄</a>
             </div>
         </div>
         <!-- list end -->
@@ -276,6 +276,7 @@
                                         <p class="ms-5 mb-0 me-2">飲食狀況: {{item.amount}}{{item.unit}}</p>
                                         <input type="text" class="form-control w-25" style="height:24px" v-model="item.amount" />
                                     </div>
+                                        <p class="ms-5 mb-0">紀錄者: {{item.accountUserAccount}}</p>
                                 </div>
                                 <div class="col-3 d-flex justify-content-center align-items-center">
                                         <button class="m-1 btn btn-warning h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
@@ -289,6 +290,7 @@
                                 <div class="col-5 my-2">
                                     <p class="ms-5 mb-0">飲食類別: {{item.type}}</p>
                                     <p class="ms-5 mb-0">飲食狀況: {{item.amount}}{{item.unit}}</p>
+                                        <p class="ms-5 mb-0">紀錄者: {{item.accountUserAccount}}</p>
                                 </div>
                                 <div class="col-3 d-flex justify-content-center align-items-center">
                                     <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="edit(item.category,item.id)">編輯</button>
@@ -357,8 +359,9 @@
                                         <p class="ms-5 mb-0">排泄狀況: {{item.unit}} </p>
                                     <div class="d-flex flex-row">
                                         <p class="ms-5 mb-0 me-2">狀況說明: {{item.bowelSituation}}</p>
-                                        <input type="text" class="form-control w-25" style="height:24px" v-model="item.bowelSituation" />
+                                        <input type="text" class="form-control w-50" style="height:24px" v-model="item.bowelSituation" />
                                     </div>
+                                        <p class="ms-5 mb-0">紀錄者: {{item.accountUserAccount}}</p>
                                 </div>
                                 <div class="col-3 d-flex justify-content-center align-items-center">
                                         <button class="m-1 btn btn-warning h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
@@ -372,6 +375,7 @@
                                 <div class="col-5 my-2">
                                         <p class="ms-5 mb-0">排泄狀況: {{item.unit}}</p>
                                         <p class="ms-5 mb-0">狀況說明: {{item.bowelSituation}}</p>
+                                        <p class="ms-5 mb-0">紀錄者: {{item.accountUserAccount}}</p>
                                 </div>
                                 <div class="col-3 d-flex justify-content-center align-items-center">
                                     <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="edit(item.category,item.id)">編輯</button>
@@ -426,6 +430,7 @@
                                         <p class="ms-5 mb-0">睡眠狀況: {{item.sleepState}} </p>
                                         <p class="ms-5 mb-0 me-2">狀況說明: {{item.content}}</p>
                                         <input type="text" class="ms-5 form-control w-100" style="height:24px" v-model="item.content" />
+                                        <p class="ms-5 mb-0">紀錄者: {{item.accountUserAccount}}</p>
                                     
                                 </div>
                                 <div class="col-3 d-flex justify-content-center align-items-center">
@@ -441,6 +446,7 @@
                                 <div class="col-5 my-2">
                                     <p class="ms-5 mb-0">睡眠狀況: {{item.sleepState}}</p>
                                     <p class="ms-5 mb-0">狀況說明: {{item.content}}</p>
+                                        <p class="ms-5 mb-0">紀錄者: {{item.accountUserAccount}}</p>
                                 </div>
                                 <div class="col-3 d-flex justify-content-center align-items-center">
                                     <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="edit(item.category,item.id)">編輯</button>
@@ -481,6 +487,7 @@
                                     <div class="col-5 my-2 ">
                                     <p class="ms-5 mb-0 me-2">狀況說明: {{item.memo1}}</p>
                                         <textarea type="text" class="ms-5 form-control w-100 h-50" v-model="item.memo1"></textarea>
+                                        <p class="ms-5 mb-0">紀錄者: {{item.accountUserAccount}}</p>
                                 </div>
                                 <div class="col-3 d-flex justify-content-center align-items-center">
                                         <button class="m-1 btn btn-warning h-50 d-flex align-items-center" v-on:click="update(item)">更新</button>
@@ -493,6 +500,7 @@
                                 </div>
                                 <div class="col-5 my-2">
                                     <p class="ms-5 mb-0">狀況說明: {{item.memo1}}</p>
+                                        <p class="ms-5 mb-0">紀錄者: {{item.accountUserAccount}}</p>
                                 </div>
                                 <div class="col-3 d-flex justify-content-center align-items-center">
                                     <button class="m-1 btn btn-primary h-50 d-flex align-items-center" v-on:click="edit(item.category,item.id)">編輯</button>
@@ -524,10 +532,10 @@
     
     <script>
             
-        const useToken = localStorage.getItem("token");
-        const headers = {
-            'Authorization': `Bearer ${useToken}`,
-        };
+        // const useToken = localStorage.getItem("token");
+        // const headers = {
+        //     'Authorization': `Bearer ${useToken}`,
+        // };
         let Ebook_user = sessionStorage.getItem("username");
         let IdContactBook = sessionStorage.getItem("IdContactBook");
         let List_Datas = new Array();
@@ -607,12 +615,12 @@
                 //取得資料區
                 getEbookData: function (IdContactBook) {
                     let _this = this;
-                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetEBookById/${IdContactBook}`, {
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetBabyNameById/${IdContactBook}`, {
                         headers
                     }).then(result => {
                         //alert(result)
                         let _this = this;
-                        _this.babyName = result.data[0].babyName;
+                        _this.babyName = result.data;
                     }).catch(err => { alert(err) });
                 },
                 getDiaperDetailData:async function (IdContactBook) {

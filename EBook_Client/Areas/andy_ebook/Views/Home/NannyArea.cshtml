@@ -1,0 +1,59 @@
+﻿
+
+<div class="container my-3" id="ebook_NannyArea">
+    <div class="row ">
+        <div class="col-12 ">
+            <div class="row d-flex justify-content-center">
+                @* 產生聯絡簿卡片 *@
+                <div class="col-md-4 mb-3" v-for="item in ebooks">
+                    <div class="card h-100 ">
+                        <img class="card-img-top w-100" v-bind:src=`@Utility.SD.localHost_API/api/Ebook/GetEBooks_photo/${item.contactBooktId}` v-bind:title="item.babyName" />
+                        <div class="card-body">
+                            <p class="card-text">寶寶姓名：{{item.babyName}}</p>
+                            <p class="card-text">家長帳號：{{item.accountUserAccount}}</p>
+                            <p class="card-text">保母帳號：{{item.nannyAccountUserAccount}}</p>
+                            <button class="btn btn-warning" v-on:click="enter(item.contactBooktId)">進入</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var vueApp_ebook_NannyArea = {
+            data() {
+                return {
+                    ebooks: [],
+
+                };
+            },
+            methods: {
+                getEbooks: function () {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Andy_NannyMatch/getContract`, {
+                        headers
+                    }).then(result => {
+                         //alert(result.data)
+                        _this.ebooks = result.data;
+
+                    }).catch(err => {
+                        alert(err)
+                    });
+                },
+                enter: function (ebookId) {
+                    sessionStorage.setItem("IdContactBook", ebookId);
+                    window.location.href = `@Utility.SD.localHost_Client/andy_ebook/Home/book_record/${ebookId}`
+                },
+            },
+            mounted: async function () {
+                let _this = this;
+                await _this.getEbooks();
+            }
+        };
+        var app_ebook_NannyArea = Vue.createApp(vueApp_ebook_NannyArea).mount('#ebook_NannyArea');
+    </script>
+}

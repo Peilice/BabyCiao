@@ -150,6 +150,21 @@ namespace BabyCiaoAPI.Controllers
                 return null;
             }
         }
+        [HttpGet("GetBabyNameById/{id}")]
+        public async Task<ActionResult<string>> GetBabyNameById(int id)
+        {
+            bool check = _context.ContactBooks.Where(c => c.Id == id).Any();
+
+            if (check)
+            {
+                var b = _context.ContactBooks.Where(c => c.Id == id).FirstOrDefault();
+                return b.BabyName;
+            }
+            else
+            {
+                return null;
+            }
+        }
         //寶寶基本資訊的CRUD
         [HttpPost("CreateBabyInfos")]
         public async Task<ActionResult<EBook_HealthInfos_DTO>> CreateBabyInfos([FromBody] EBook_HealthInfos_DTO DTO)
@@ -624,7 +639,7 @@ namespace BabyCiaoAPI.Controllers
         public async Task<ActionResult<Dictionary<string, int>>> GetSleepDetail_chartUse(int id)
         {
             DateTime now = DateTime.Now;
-            DateTime oneWeekAgo=now.AddDays(-7);
+            DateTime oneWeekAgo=now.AddDays(-6);
             Console.WriteLine(now);
             Dictionary <string,int> kv=new Dictionary<string,int>();
 

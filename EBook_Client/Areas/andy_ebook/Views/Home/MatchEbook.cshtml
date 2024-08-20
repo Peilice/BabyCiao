@@ -1,0 +1,141 @@
+﻿
+<div class="container" id="matchApp">
+    <div class="row">
+        <h2 class="text-center bg-light rounded">授權聯絡簿</h2>
+        <div class="col-4">
+            <h5>選擇聯絡簿</h5>
+            <select class="form-control" v-model="contactBookId">
+                <option v-for="item in ebooks" :value="item.id">{{ item.babyName }}</option>
+            </select>
+            <h5>地區篩選</h5>
+            <select class="form-control" v-model="region">
+                <option value="高雄市">高雄市</option>
+            </select>
+            <button class="btn btn-primary my-2" V-on:click="search">搜尋</button>
+            <h5>已授權清單</h5>
+            <div v-for="item in contracts">
+                <div class="w-100 d-flex justify-content-between bg-info mb-3">
+                    <div class="d-flex flex-row">
+                        <div class="p-2 ">寶寶姓名:{{item.babyName}}</div>
+                        <div class="p-2 ">保母帳號:{{item.nannyAccountUserAccount}}</div>
+                    </div>
+                    
+                    <div class="btn btn-danger " v-on:click="toDelete(item.contractId)">取消授權</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-8" style="height:600px;background-color:lightpink;" >
+            <h2>搜尋結果</h2>
+            <div v-for="item in nannys" id="context">
+                <div class="w-50 ">
+                    <div class="btn btn-warning w-100" v-on:click="match(item.nannyAccountUserAccount)">
+                        <div>保母姓名: {{item.name}}</div>
+                        <div>保母帳號: {{item.nannyAccountUserAccount}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+       
+
+        var matchApp = {
+            data(){
+                return {
+                    region: "",
+                    nannys:[],
+                    contracts:[],
+                    ebooks:[],
+                    contactBookId:0,
+                };
+            },
+            methods:{
+                search: function () {
+                    let _this = this;
+                    var request = {};
+                    request.Id = 0;
+                    request.NannyAccountUserAccount = "null";
+                    request.AddressesOfAgencies = _this.region;
+                    request.name = "null";
+                    if (_this.region!="") {
+                        axios.post(`@Utility.SD.localHost_API/api/Andy_NannyMatch/GetNanny`, request, {
+                            headers
+                        }).then(result => {
+                            //alert(result.data)
+                            _this.nannys = result.data;
+
+                        }).catch(err=>(alert(err)));
+                    }
+                    _this.region
+                },
+                getContract: function () {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Andy_NannyMatch/getContractByParent`, {
+                        headers
+                    }).then(results => {
+                        //alert(result.data)
+                        _this.contracts = results.data;
+
+                    }).catch(err => {
+                        alert(err)
+                    });
+                },
+                match:function(nannyAccount){
+                    let _this = this;
+                    var request = {};
+                    request.contactBooktId = _this.contactBookId;
+                    request.NannyAccountUserAccount = nannyAccount;
+                    axios.post(`@Utility.SD.localHost_API/api/Andy_NannyMatch/MatchNanny`,request, {
+                        headers
+                    }).then(result => {
+                        alert(result.data)
+                        _this.reflesh();
+
+                    }).catch(err => {
+                        alert(err)
+                    });
+                },
+                toDelete: function (id) {
+                    let _this = this;
+                    axios.delete(`@Utility.SD.localHost_API/api/Andy_NannyMatch/deleteContractByContractID/${id}`, {
+                        headers
+                    }).then(result => {
+                        alert(result.data)
+                        _this.reflesh();
+
+                    }).catch(err => {
+                        alert(err)
+                    });
+                },
+                reflesh: function () {
+                    let _this = this;
+                    $('#context').html = "";
+                    _this.getContract();
+                },
+                getEbooks: function () {
+                    let _this = this;
+                    axios.get(`@Utility.SD.localHost_API/api/Ebook/GetEBooks`, {
+                        headers
+                    }).then(result => {
+                        // alert(result.data)
+                        _this.ebooks = result.data;
+                        //var tempEbooks=_this.ebooks
+
+                    }).catch(err => {
+                        alert(err)
+                    });
+                },
+            },
+            mounted: function () {
+                let _this = this;
+                _this.getContract();
+                _this.getEbooks();
+            }
+        }
+
+        var app_match = Vue.createApp(matchApp).mount('#matchApp');
+    </script>
+}

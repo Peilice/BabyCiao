@@ -1,15 +1,11 @@
-﻿
-
-
-
-
-
-<div class="container">
+﻿<div class="container">
     <div class="row">
-        <div>
-            <button class="btn btn-primary">接小孩</button>
-            <button class="btn btn-warning">送托</button>
+        <div class="d-flex flex-row bd-highlight mb-3 align-items-center">
+            <span class="me-2 fs-5 fw-bolder">請先選擇:</span>
+            <button class="btn btn-primary me-2" id="sendBaby">寶寶送托</button>
+            <button class="btn btn-warning me-2" id="getBaby">家長來接</button>
         </div>
+        <hr />
         <div class="col-md-6 mb-3">
             <div class="card">
                 <div class="card-header">
@@ -24,7 +20,7 @@
         <div class="col-md-6 mb-3">
             <div class="card">
                 <div class="card-header">
-                    掃描結果1
+                    紀錄結果
                 </div>
                 <div class="card-body" id="scanResult">
                 </div>
@@ -37,36 +33,73 @@
 @section Scripts{
 <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 <script>
+    let Ebook_user = sessionStorage.getItem("username");
     let cameraList;
     const cameraSelect = document.querySelector("#cameraSelect");
     const myVideo = document.querySelector("video");
     const scanResult = document.querySelector("#scanResult");
+    let lastScannedContent = null;
+    
+    function useScanner(situation){
+        let scanner = new Instascan.Scanner({ video: myVideo, mirror: false });
+        scanner.addListener('scan', function (content) {
+            console.log(content);
+            if(content !== lastScannedContent) {
+                lastScannedContent = content;
+                
+                // 將解碼後的內容轉換為UTF-8編碼
+                const utf8Content = new TextDecoder("utf-8").decode(new Uint8Array(content.split('').map(c => c.charCodeAt(0))));
+                const p = document.createElement("p");
+                var str = utf8Content.split(',');
+                var now = new Date().toLocaleString();
+                    scanResult.innerHTML = "";
+                    if (situation=="送托"){
+                        var text = `${now}=> 家長:${str[2]}，將小孩:${str[1]}，送托至${Ebook_user}`;
+                        p.innerHTML = text;
+                    } else{
+                        var text = `${now}=> 家長:${str[2]}，從${Ebook_user}那，接走小孩:${str[1]}`;
+                        p.innerHTML = text;
+                    }
+                
+                scanResult.appendChild(p);
 
-    let scanner = new Instascan.Scanner({ video: myVideo, mirror: false });
-    scanner.addListener('scan', function (content) {
-        console.log(content);
-        const p = document.createElement("p");
-        p.innerHTML = content;
-        scanResult.appendChild(p);
-    });
-
-    Instascan.Camera.getCameras().then(function (cameras) {
-        if (cameras.length > 0) {
-            cameraList = cameras;
-            for (let i = 0; i < cameraList.length; i++) {
-                const opt = document.createElement("option");
-                opt.value = i;
-                opt.text = cameraList[i].name;
-                cameraSelect.appendChild(opt);
+                var idContactBook = Number(str[0]);
+                var request = {};
+                    request.memo = text;
+                request.idContactBook = idContactBook;
+                request.modifiedTime = new Date();
+                request.accountUserAccount = Ebook_user;
+                axios.post(`@Utility.SD.localHost_API/api/Andy_NannyMatch/CreatePickUpDatas`, request, {
+                    headers
+                }).then(result => {
+                    alert(result.data)
+                    lastScannedContent = null;
+                }).catch(err => { alert(err) });
             }
-            //預設使用第一個鏡頭
-            scanner.start(cameraList[0]);
-        } else {
-            console.error('No cameras found.');
-        }
-    }).catch(function (e) {
-        console.error(e);
-    });
+        });
+
+        
+        Instascan.Camera.getCameras().then(function (cameras) {
+            if (cameras.length > 0) {
+                cameraList = cameras;
+                for (let i = 0; i < cameraList.length; i++) {
+                    const opt = document.createElement("option");
+                    opt.value = i;
+                    opt.text = cameraList[i].name;
+                    cameraSelect.appendChild(opt);
+                }
+                //預設使用第一個鏡頭
+                scanner.start(cameraList[0]);
+            } else {
+                console.error('No cameras found.');
+            }
+        }).catch(function (e) {
+            console.error(e);
+        });
+       
+    }
+
+        
 
     function cameraChange() {
         //停止掃描，重新選擇鏡頭
@@ -74,6 +107,15 @@
         scanner.stop();
         scanner.start(cameraList[selectedCamera]);
     }
+
+    $(document).ready(function () {
+        $('#sendBaby').on('click', function () {
+            useScanner("送托");
+        });
+        $('#getBaby').on('click', function () {
+            useScanner("接走");
+        })
+    })
 
 </script>
 }
