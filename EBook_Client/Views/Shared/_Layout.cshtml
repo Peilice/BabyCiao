@@ -14,6 +14,10 @@
     @await RenderSectionAsync("Styles", required: false)
 
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
         body {
             background-image: url('/images/圖片11.png');
             font-family: '華康采風體W3', serif;
@@ -46,8 +50,10 @@
 
         footer {
             background-color: #5b4a3b;
+            /* position: relative; */
+            padding: 16px;
+            text-align: center;
             position: relative;
-            margin: 0;
         }
 
         .p1 {
@@ -78,7 +84,7 @@
                         <li class="nav-item dropdown li_andy">
                             <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">媒合平台</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="Index">一同巧育</a></li>
+                                <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="NannyResume">一同巧育</a></li>
                                 <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="NannyApply">加入我們</a></li>
                             </ul>
                         </li>
@@ -154,8 +160,8 @@
             </div>
         </div>
     </div>
-
-    <footer class="border-top footer text-muted" style="position:relative">
+    
+    <footer class=" text-muted ">
         <img class="img6" src="~/images/p6.png" alt="">
         <img class="img7" src="~/images/p7.png" alt="">
         <div class="container p1">

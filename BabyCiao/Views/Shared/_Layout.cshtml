@@ -27,12 +27,8 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <!-- 會員管理 -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">會員管理</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="UserAccounts" asp-action="Index">帳戶管理</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="UserInformations" asp-action="Index">會員資料管理</a></li>
-                            </ul>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="UserAccounts" asp-action="Index">帳戶管理</a>
                         </li>
                         <!-- 媒合平台管理 -->
                         <li class="nav-item">
@@ -72,9 +68,9 @@
                         </li>
                     </ul>
                     <div>
-                        <div v-if="isLoggedIn">
-                            <a :href="'/UserInformation/UserInformation'" class="nav-link">{{ account }}</a> /
-                            <a href="#" v-on:click="logout"><i class="fas fa-user"></i>登出</a>
+                        <div v-if="isLoggedIn" class="d-flex justify-content-center">
+                            <a class="nav-link">{{ account }}</a> 
+                            <a href="#" v-on:click="logout">登出</a>
                         </div>
                         <div v-else>
                             <a href="/Login/Login">登入</a> | <a href="/Login/Register">註冊</a>
@@ -115,7 +111,7 @@
                     // // 檢查權限值，如果小於4，則自動登出
                     // if (this.permissions < 4) {
                     //     this.logout();
-                    
+                    //}
                 },
                 logout() {
                     document.cookie = 'account=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';

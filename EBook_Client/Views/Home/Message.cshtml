@@ -1,0 +1,106 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "我的問題";
+}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h2>訊息</h2>
+                </div>
+                <div class="card-body" id="myapp">
+                    <!-- 只顯示後台客服的回覆內容，並顯示回覆的帳號 -->
+                    <div v-for="(message, index) in contexts" :key="index" class="mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <p><strong>{{ message.userName  ? message.userName : "客服人員" }}:</strong> {{ message.context }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 使用者輸入訊息回應 -->
+                    <form id="userReplyForm" v-on:submit.prevent="submitReply">
+                        <div class="mb-3">
+                            <label for="userMessage" class="form-label">您的訊息</label>
+                            <textarea id="userMessage" v-model="userMessage" class="form-control" rows="4" required></textarea>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">送出回覆</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    contexts: [], // 儲存 API 返回的訊息內容和用戶名
+                    userMessage: '', // 使用者輸入的回覆訊息
+                    accountUserAccount: '' // 用戶帳號，用於識別用戶
+                };
+            },
+            methods: {
+                loadReplies() {
+                    // 從 API 取得後台回覆的內容，並過濾出與當前帳號匹配的訊息
+                    axios.get('https://localhost:7292/api/CustomerService')
+                        .then(response => {
+                            this.contexts = response.data
+                                .filter(ticket => ticket.accountUserAccount === this.accountUserAccount) // 過濾出與當前用戶帳號匹配的記錄
+                                .map(ticket => ({
+                                    userName: ticket.userName,
+                                    context: ticket.context
+                                })); // 提取 userName 和 context 字段
+                            console.log(response.data)
+                        })
+                        .catch(error => {
+                            console.error('Error loading contexts:', error);
+                            alert('載入回覆內容時發生錯誤，請稍後再試。');
+                        });
+                },
+                submitReply() {
+                    const newReply = {
+                        userName: this.accountUserAccount || '',
+                        phone: '',
+                        email: '',
+                        title: '',
+                        context: this.userMessage || '',
+                        type: '',
+                        statement: '',
+                        accountUserAccount: this.accountUserAccount || '',
+                        createddated: new Date(),
+                        modiifiedDate: new Date()
+                    };
+
+                    axios.post('https://localhost:7292/api/CustomerService', newReply)
+                        .then(response => {
+                            alert('您的回覆已送出');
+                            this.userMessage = ''; // 清空回覆欄位
+                            this.loadReplies(); // 重新載入回覆清單
+                        })
+                        .catch(error => {
+                            console.error('提交回覆時發生錯誤:', error);
+                            alert('提交回覆時發生錯誤，請稍後再試。');
+                        });
+                }
+            },
+            mounted() {
+                this.accountUserAccount = sessionStorage.getItem('username');
+
+                if (!this.accountUserAccount) {
+                    alert('用戶資料缺失，請重新登錄。');
+                    return;
+                }
+
+                this.loadReplies();
+            }
+        }).mount('#myapp');
+    </script>
+}
