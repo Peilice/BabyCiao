@@ -59,7 +59,7 @@
                 getAnnouncement: function () {
                     let _this = this;
                     var id= sessionStorage.getItem("Announcement");
-                    axios.get(`@Utility.SD.localHost_API/api/Announcement/${id}`).then(result => {
+                    axios.get(`https://localhost:7292/api/Announcement/${id}`).then(result => {
                         //alert(result);
                         _this.data = result.data;
 

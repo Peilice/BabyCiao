@@ -131,7 +131,7 @@
                 },
                 getAnnouncement: function () {
                     let _this = this;
-                    axios.get(`@Utility.SD.localHost_API/api/Announcement`).then(result => {
+                    axios.get(`https://localhost:7292/api/Announcement/getAnnouncements`).then(result => {
                         //alert(result);
                         
                         for (var i = 0; i < result.data.length; i++) {

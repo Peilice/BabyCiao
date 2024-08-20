@@ -21,66 +21,66 @@ namespace BabyCiaoAPI.Controllers
 
 
         // GET: api/Announcements
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<AnnouncementWithPhotosDTO>>> Announcements()
-        {
-            var announcements = await _context.Announcements
-                .Select(a => new AnnouncementWithPhotosDTO
-                {
-                    Id = a.Id,
-                    AccountUserAccount = a.AccountUserAccount,
-                    PublishTime = a.PublishTime,
-                    Tittle = a.Tittle,
-                    Article = a.Article,
-                    ReferenceName = a.ReferenceName,
-                    ReferenceRoute = a.ReferenceRoute,
-                    Type = a.Type,
-                    Display = a.Display,
-                    Photos = a.AnnouncementPhotos.Select(p => new AnnouncementPhotoDTO
-                    {
-                        Id = p.Id,
-                        IdAnnouncement = p.IdAnnouncement,
-                        PhotoName = p.PhotoName,
-                        BuiledTime = p.BuiledTime
-                    }).ToList()
-                }).ToListAsync();
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<AnnouncementWithPhotosDTO>>> Announcements()
+        //{
+        //    var announcements = await _context.Announcements
+        //        .Select(a => new AnnouncementWithPhotosDTO
+        //        {
+        //            Id = a.Id,
+        //            AccountUserAccount = a.AccountUserAccount,
+        //            PublishTime = a.PublishTime,
+        //            Tittle = a.Tittle,
+        //            Article = a.Article,
+        //            ReferenceName = a.ReferenceName,
+        //            ReferenceRoute = a.ReferenceRoute,
+        //            Type = a.Type,
+        //            Display = a.Display,
+        //            Photos = a.AnnouncementPhotos.Select(p => new AnnouncementPhotoDTO
+        //            {
+        //                Id = p.Id,
+        //                IdAnnouncement = p.IdAnnouncement,
+        //                PhotoName = p.PhotoName,
+        //                BuiledTime = p.BuiledTime
+        //            }).ToList()
+        //        }).ToListAsync();
 
-            return Ok(announcements);
-        }
+        //    return Ok(announcements);
+        //}
 
         // GET: api/Announcements/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<AnnouncementWithPhotosDTO>> GetAnnouncement(int id)
-        {
-            var announcement = await _context.Announcements
-                .Where(a => a.Id == id)
-                .Select(a => new AnnouncementWithPhotosDTO
-                {
-                    Id = a.Id,
-                    AccountUserAccount = a.AccountUserAccount,
-                    PublishTime = a.PublishTime,
-                    Tittle = a.Tittle,
-                    Article = a.Article,
-                    ReferenceName = a.ReferenceName,
-                    ReferenceRoute = a.ReferenceRoute,
-                    Type = a.Type,
-                    Display = a.Display,
-                    Photos = a.AnnouncementPhotos.Select(p => new AnnouncementPhotoDTO
-                    {
-                        Id = p.Id,
-                        IdAnnouncement = p.IdAnnouncement,
-                        PhotoName = p.PhotoName,
-                        BuiledTime = p.BuiledTime
-                    }).ToList()
-                }).FirstOrDefaultAsync();
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<AnnouncementWithPhotosDTO>> GetAnnouncement(int id)
+        //{
+        //    var announcement = await _context.Announcements
+        //        .Where(a => a.Id == id)
+        //        .Select(a => new AnnouncementWithPhotosDTO
+        //        {
+        //            Id = a.Id,
+        //            AccountUserAccount = a.AccountUserAccount,
+        //            PublishTime = a.PublishTime,
+        //            Tittle = a.Tittle,
+        //            Article = a.Article,
+        //            ReferenceName = a.ReferenceName,
+        //            ReferenceRoute = a.ReferenceRoute,
+        //            Type = a.Type,
+        //            Display = a.Display,
+        //            Photos = a.AnnouncementPhotos.Select(p => new AnnouncementPhotoDTO
+        //            {
+        //                Id = p.Id,
+        //                IdAnnouncement = p.IdAnnouncement,
+        //                PhotoName = p.PhotoName,
+        //                BuiledTime = p.BuiledTime
+        //            }).ToList()
+        //        }).FirstOrDefaultAsync();
 
-            if (announcement == null)
-            {
-                return NotFound();
-            }
+        //    if (announcement == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return Ok(announcement);
-        }
+        //    return Ok(announcement);
+        //}
 
         // POST: api/Announcements
         //[HttpPost]
@@ -110,79 +110,79 @@ namespace BabyCiaoAPI.Controllers
         //}
 
         // PUT: api/Announcements/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAnnouncement(int id, AnnouncementWithPhotosDTO announcementDto)
-        {
-            if (id != announcementDto.Id)
-            {
-                return BadRequest();
-            }
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> UpdateAnnouncement(int id, AnnouncementWithPhotosDTO announcementDto)
+        //{
+        //    if (id != announcementDto.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            var announcement = await _context.Announcements.Include(a => a.AnnouncementPhotos).FirstOrDefaultAsync(a => a.Id == id);
+        //    var announcement = await _context.Announcements.Include(a => a.AnnouncementPhotos).FirstOrDefaultAsync(a => a.Id == id);
 
-            if (announcement == null)
-            {
-                return NotFound();
-            }
+        //    if (announcement == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            announcement.AccountUserAccount = announcementDto.AccountUserAccount;
-            announcement.PublishTime = announcementDto.PublishTime;
-            announcement.Tittle = announcementDto.Tittle;
-            announcement.Article = announcementDto.Article;
-            announcement.ReferenceName = announcementDto.ReferenceName;
-            announcement.ReferenceRoute = announcementDto.ReferenceRoute;
-            announcement.Type = announcementDto.Type;
-            announcement.Display = announcementDto.Display;
+        //    announcement.AccountUserAccount = announcementDto.AccountUserAccount;
+        //    announcement.PublishTime = announcementDto.PublishTime;
+        //    announcement.Tittle = announcementDto.Tittle;
+        //    announcement.Article = announcementDto.Article;
+        //    announcement.ReferenceName = announcementDto.ReferenceName;
+        //    announcement.ReferenceRoute = announcementDto.ReferenceRoute;
+        //    announcement.Type = announcementDto.Type;
+        //    announcement.Display = announcementDto.Display;
 
-            // 更新照片
-            _context.AnnouncementPhotos.RemoveRange(announcement.AnnouncementPhotos);
-            announcement.AnnouncementPhotos = announcementDto.Photos.Select(p => new AnnouncementPhoto
-            {
-                IdAnnouncement = id,
-                PhotoName = p.PhotoName,
-                BuiledTime = p.BuiledTime
-            }).ToList();
+        //    // 更新照片
+        //    _context.AnnouncementPhotos.RemoveRange(announcement.AnnouncementPhotos);
+        //    announcement.AnnouncementPhotos = announcementDto.Photos.Select(p => new AnnouncementPhoto
+        //    {
+        //        IdAnnouncement = id,
+        //        PhotoName = p.PhotoName,
+        //        BuiledTime = p.BuiledTime
+        //    }).ToList();
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AnnouncementExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!AnnouncementExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        // DELETE: api/Announcements/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAnnouncement(int id)
-        {
-            var announcement = await _context.Announcements.Include(a => a.AnnouncementPhotos).FirstOrDefaultAsync(a => a.Id == id);
+        //// DELETE: api/Announcements/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteAnnouncement(int id)
+        //{
+        //    var announcement = await _context.Announcements.Include(a => a.AnnouncementPhotos).FirstOrDefaultAsync(a => a.Id == id);
 
-            if (announcement == null)
-            {
-                return NotFound();
-            }
+        //    if (announcement == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _context.Announcements.Remove(announcement);
-            await _context.SaveChangesAsync();
+        //    _context.Announcements.Remove(announcement);
+        //    await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        private bool AnnouncementExists(int id)
-        {
-            return _context.Announcements.Any(e => e.Id == id);
-        }
+        //private bool AnnouncementExists(int id)
+        //{
+        //    return _context.Announcements.Any(e => e.Id == id);
+        //}
 
 
 
