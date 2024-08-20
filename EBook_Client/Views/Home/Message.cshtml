@@ -10,11 +10,11 @@
                     <h2>訊息</h2>
                 </div>
                 <div class="card-body" id="myapp">
-                    <!-- 只顯示後台客服的回覆Context內容，並顯示回覆的帳號 -->
-                    <div v-for="(context, index) in contexts" :key="index" class="mb-3">
+                    <!-- 只顯示後台客服的回覆內容，並顯示回覆的帳號 -->
+                    <div v-for="(message, index) in contexts" :key="index" class="mb-3">
                         <div class="card">
                             <div class="card-body">
-                                <p><strong>{{ context.userName ? context.userName : "客服人員" }}:</strong> {{ context.context }}</p>
+                                <p><strong>{{ message.userName  ? message.userName : "客服人員" }}:</strong> {{ message.context }}</p>
                             </div>
                         </div>
                     </div>
@@ -42,14 +42,14 @@
         createApp({
             data() {
                 return {
-                    contexts: [], // 儲存 API 返回的 context 和 userName
+                    contexts: [], // 儲存 API 返回的訊息內容和用戶名
                     userMessage: '', // 使用者輸入的回覆訊息
                     accountUserAccount: '' // 用戶帳號，用於識別用戶
                 };
             },
             methods: {
                 loadReplies() {
-                    // 從 API 取得後台回覆的內容，並過濾出與當前帳號匹配的 context 字段
+                    // 從 API 取得後台回覆的內容，並過濾出與當前帳號匹配的訊息
                     axios.get('https://localhost:7292/api/CustomerService')
                         .then(response => {
                             this.contexts = response.data
@@ -58,6 +58,7 @@
                                     userName: ticket.userName,
                                     context: ticket.context
                                 })); // 提取 userName 和 context 字段
+                            console.log(response.data)
                         })
                         .catch(error => {
                             console.error('Error loading contexts:', error);

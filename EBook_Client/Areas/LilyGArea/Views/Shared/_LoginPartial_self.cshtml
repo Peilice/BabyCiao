@@ -1,4 +1,4 @@
-﻿<ul class="navbar-nav">
+﻿@* <ul class="navbar-nav">
     <template v-if="isLoggedIn">
         <li class="nav-item">
             <a class="nav-link text-dark" href="#">{{loggedInUsername}}, 您好!!!</a>
@@ -13,6 +13,32 @@
         </li>
         <li class="nav-item">
             <a class="nav-link text-dark" href="https://localhost:7231/Home/Register">註冊</a>
+        </li>
+    </template>
+</ul> *@
+<ul class="navbar-nav" id="loginApp">
+    <template v-if="isLoggedIn">
+        <li class="nav-item li_andy">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="UserInformation">{{loggedInUsername}},您好!!! </a>
+        </li>
+        <li class="nav-item li_andy">
+            @* <form id="logoutForm" action="/andy_login/logout" method="post" class="nav-item">
+            <div type="submit" id="signOut" class="nav-link text-dark">登出</div>
+            </form> *@
+            <a id="logoutForm" class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">登出</a>
+        </li>
+    </template>
+    <template v-else>
+        <li class="nav-item li_andy">
+            @* <a id="username" class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">登入</a> *@
+            <a class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#loginModal" style="cursor:pointer;">
+                <i class="bi bi-person-circle fs-3"></i>
+            </a>
+        </li>
+
+
+        <li class="nav-item li_andy">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Register"><i class="bi bi-person-fill-add fs-3"></i></a>
         </li>
     </template>
 </ul>

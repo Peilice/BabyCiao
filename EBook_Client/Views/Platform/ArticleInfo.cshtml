@@ -1,4 +1,70 @@
-﻿
+﻿@section Styles{
+    <style>
+        #response li:nth-child(2n+1) {
+            background-color: #F5F5F5
+        }
+
+        #side .btn,
+        #side .btn:focus {
+            position: relative;
+            min-width: 50px;
+            background: none;
+            border: none;
+            color: #5b4a3b;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: inset 0 0 0 4px #5b4a3b;
+            transition: color 0.25s 0.0833333333s;
+            padding: 10px 10px;
+        }
+
+            #side .btn:before,
+            #side .btn:after {
+                content: "";
+                position: absolute;
+                width: 0;
+                height: 0;
+                bottom: 0;
+                right: 0;
+                border: 0 solid transparent;
+                box-sizing: border-box;
+            }
+
+            #side .btn:before {
+                border-bottom-width: 4px;
+                border-left-width: 4px;
+            }
+
+            #side .btn:after {
+                border-top-width: 4px;
+                border-right-width: 4px;
+            }
+
+            #side .btn:hover {
+                color: #d37c70;
+            }
+
+                #side .btn:hover:before,
+                #side .btn:hover:after {
+                    border-color: #d37c70;
+                    transition: border-color 0s, width 0.25s, height 0.25s;
+                    width: 100%;
+                    height: 100%;
+                }
+
+                #side .btn:hover:before {
+                    transition-delay: 0s, 0s, 0.25s;
+                }
+
+                #side .btn:hover:after {
+                    transition-delay: 0s, 0.25s, 0s;
+                }
+    </style>
+}
+
+
 <div id="App">
     <!-- Breadcrumb -->
     <div class="container mb-3">
@@ -6,15 +72,16 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">社群</li>
                 <li class="breadcrumb-item"><a href="https://localhost:7231/Platform">討論區</a></li>
-                <li class="breadcrumb-item">文章標題</li>
+                <li class="breadcrumb-item">{{artiType}}</li>
+                <li class="breadcrumb-item fst-italic">{{artiTitle}}</li>
             </ol>
         </nav>
     </div>
 
     <div class="container d-flex justify-content-between">
         <!-- 側欄 -->
-        <div class="col-2">
-            <button type="button" class="btn btn-outline-primary mb-4" v-on:click="myArticle">管理我的文章</button>
+        <div class="col-2" id="side">
+            <button type="button" class="btn mb-4" v-on:click="myArticle">管理我的文章</button>
             <div class="list-group">
                 <a v-on:click="getType(1)" class="list-group-item list-group-item-action">育兒大小事</a>
                 <a v-on:click="getType(2)" class="list-group-item list-group-item-action">好物分享</a>
@@ -26,7 +93,7 @@
         <!--主要內容-->
         <div class="col-md-9" >
             <div class="border-bottom mb-2">
-                <h3>{{artiType}}</h3>
+                <h3 class="fw-bolder">{{artiType}}</h3>
             </div>
             <!--發布者資訊-->
             <div class="d-flex justify-content-between align-items-center">
@@ -34,22 +101,18 @@
                     <p>{{artiAccount}}</p>
                     <p>{{artiTime}}</p>
                 </div>
-                <a v-on:click="newfavortie()">
-                    <div class="rounded-circle border border-1 border-dark text-center" style="width:50px; height:50px">
-                    <i class="bi bi-bookmark-heart fs-2"></i>
-                    </div>
-                </a>
+                <button type="button" class="btn btn-outline-danger rounded-circle mb-4" ><i class="bi bi-bookmark-heart fs-2"></i></button>
             </div>
             
             <!--文章內容-->
             <div>
-                <h4>{{artiTitle}}</h4>
+                <h3 class="fw-bold text-center">{{artiTitle}}</h3>
                 <p>{{artiContent}}</p>
             </div>
 
             <!--新增回應-->
             <div class="mb-3 has-validation border border-light p-2">
-                <h4 class="form-label border-bottom">我要回應</h4>
+                <h4 class="form-label border-bottom fw-bold">我要回應</h4>
                 <p>300字內</p>
                 <textarea type="text" class="form-control mb-3" id="Content" rows="5" v-model="CompetitorContent"></textarea>
                 <button class="btn btn-primary" type="submit" v-on:click="newResponse(artiID)">發布回應</button>
@@ -57,7 +120,7 @@
 
             <!--回應顯示-->
             <div>
-                <ul class="list-group">
+                <ul class="list-group" id="response">
                     <li class="list-group-item" v-for="item in Information" :key="item.responseID">
                         <div>
                             <p>{{item.responseAccount}}</p>
