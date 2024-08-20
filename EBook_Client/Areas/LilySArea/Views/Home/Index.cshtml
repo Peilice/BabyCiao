@@ -342,7 +342,7 @@
                     <div class="row">
                         @* card start *@
                         <div class="col-4 mb-2" v-for="item in sortedProducts" :key="item.id">
-							<div class="card">
+							<div class="card h-100">
                                 <img :src="getPhotoUrl(item.photo)" class="card-img-top" :alt="item.suppliesName" style="height: 180px;"> 
                                 <div class="card-body">
                                     <h5 class="card-title">{{item.suppliesName}}</h5>
