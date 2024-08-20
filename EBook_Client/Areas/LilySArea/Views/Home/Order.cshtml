@@ -88,7 +88,7 @@
 				</div>
 			</div>
 
-			<div class="form-group">
+			@* <div class="form-group">
 				<label for="quantity"><strong>選擇交換物品</strong></label>
 				<div class="d-flex justify-content-center">
 					<div class="col-9">
@@ -100,6 +100,25 @@
 										<input type="radio" :value="item.id" v-model="selectedItemId" @@change="selectItem(item)" required><span class="card-title">{{ item.suppliesName }}</span>
 										
 										<input type="number" v-model="submitOrderModel.giveQuantity" class="form-control mt-2" min="1" :max="item.stockQuantity" >
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div> *@
+			<div class="form-group">
+				<label for="quantity"><strong>選擇交換物品</strong></label>
+				<div class="d-flex justify-content-center">
+					<div class="col-9">
+						<div class="row">
+							<div class="col-4 mb-2" v-for="item in myProducts" :key="item.id">
+								<div class="card">
+									<img :src="getPhotoUrl(item.photo)" class="card-img-top" :alt="item.suppliesName" style="height: 180px;">
+									<div class="card-body">
+										<input type="radio" :value="item.id" v-model="selectedItemId" @@change="selectItem(item)" required><span class="card-title">{{ item.suppliesName }}</span>
+
+										<input type="number" v-model="submitOrderModel.giveQuantity" class="form-control mt-2" min="1" :max="item.stockQuantity">
 									</div>
 								</div>
 							</div>
@@ -141,9 +160,9 @@
 							buyerId: sessionStorage.getItem("username"),
 							sellerId: '',
 							wantGetId: 0,
-							getQuantity: 0,
+							getQuantity: 1,
 							wantGiveId: 0,
-							giveQuantity: 0,
+							giveQuantity: 1,
 							modifiedTime: new Date(),
 							statement: '申請中'
 						},
@@ -161,11 +180,18 @@
 					getPhotoUrl(photoUrl) {
 						return photoUrl != null ? `https://localhost:7292/uploads/${photoUrl}` : 'https://localhost:7231/images/noimage.jpg';
 					},
-					selectItem(item) {
+							
+				selectItem(item) {
+					// 當選擇一個項目時，處理邏輯
+					this.selectedItemId = item.id;
 						this.submitOrderModel.wantGiveId = item.id;
-						this.submitOrderModel.giveQuantity = item.giveQuantity;
+						this.submitOrderModel.giveQuantity[selectedItemId] = item.giveQuantity;
+				},
+					// selectItem(item) {
+					// 	this.submitOrderModel.wantGiveId = item.id;
+					// 	this.submitOrderModel.giveQuantity = item.giveQuantity;
 						
-					},
+					// },
 					getSellerProduct() {
 
 						axios.get(`https://localhost:7292/api/SecondHand/Exchange?id=${this.productId}`)
@@ -210,15 +236,15 @@
 							const response = await axios.post('https://localhost:7292/api/SecondHand/Exchange', this.submitOrderModel);
 							Swal.fire({
 								icon: 'success',
-								title: '訂單提交成功',
-								text: '您的訂單已成功提交。',
+								title: '申請交換成功!',
+								text: '您的申請單已成功提交。',
 							}).then(() => {
 								window.location.href = 'https://localhost:7231/SecondHand';
 							});
 						} catch (error) {
 							Swal.fire({
 								icon: 'error',
-								title: '訂單提交失敗',
+								title: '申請交換失敗',
 								text: '提交訂單時出錯，請稍後再試。',
 							});
 						}

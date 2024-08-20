@@ -559,5 +559,40 @@ namespace BabyCiaoAPI.Controllers
 			return NoContent();
 			
 		}
-	}
+
+        //取消訂單
+        [HttpPut("CancleOrder")]
+        public async Task<ActionResult<GBOrderDTO>> CancleOrder(int id)
+        {
+            var order = await
+                 _context.GroupBuyingDetails.FindAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            order.Statement = "已取消";
+            await _context.SaveChangesAsync();
+
+            return Ok(order);
+        }
+        //編輯地址
+        [HttpPut("EditAddress")]
+        public async Task<ActionResult<GBOrderDTO>> EditAddress(int id, [FromForm] string address)
+        {
+            var order = await
+                 _context.GroupBuyingDetails.FindAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+			if (address != null)
+			{
+
+            order.Address = address;
+            await _context.SaveChangesAsync();
+			}
+
+            return Ok(order);
+        }
+    }
 }
