@@ -7,5 +7,7 @@ namespace BabyCiao.ViewModel
         public NannyResume NannyResume { get; set; }
         public BabyResume BabyResume { get; set; }
         public UserInformation UserInformation { get; set; }
+
+        public NannyRequirment Requirment { get; set; }
     }
 }

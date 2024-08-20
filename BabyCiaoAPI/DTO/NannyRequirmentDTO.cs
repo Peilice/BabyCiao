@@ -87,5 +87,7 @@ public partial class NannyRequirmentNEWDTO
     public string AddressesOfAgencies { get; set; }
 
     public DateOnly ValidPeriodsOfCertificates { get; set; }
+    public int Statement { get; set; }
+
 
 }

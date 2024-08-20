@@ -41,6 +41,10 @@ public partial class UserAccount
 
     public virtual ICollection<GroupBuying> GroupBuyings { get; set; } = new List<GroupBuying>();
 
+    public virtual ICollection<Inquire> InquireUserAccountinquireNavigations { get; set; } = new List<Inquire>();
+
+    public virtual ICollection<Inquire> InquireUserAccountresponseNavigations { get; set; } = new List<Inquire>();
+
     public virtual ICollection<NannyRequirment> NannyRequirments { get; set; } = new List<NannyRequirment>();
 
     public virtual ICollection<NannyResume> NannyResumes { get; set; } = new List<NannyResume>();

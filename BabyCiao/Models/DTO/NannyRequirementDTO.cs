@@ -8,7 +8,7 @@ namespace BabyCiao.Models.DTO
     {
         public int Id { get; set; }
 
-        public DateTime RequirementDate { get; set; }
+        public DateTime? RequirementDate { get; set; }
 
         public string NannyAccountUserAccount { get; set; } = null!;
 
