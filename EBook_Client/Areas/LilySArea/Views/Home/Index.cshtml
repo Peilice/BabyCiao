@@ -349,11 +349,22 @@
                                     <p>{{item.modifiedTimeView}}</p>
                                     <p class="card-text d-flex justify-content-end">{{item.accountUserAccount}}</p>
 
-                                    <div class="d-flex justify-content-around">
-
-                                    <button class="btn btn-outline-danger" @@click="addFav(item.id)"> <i class="bi bi-suit-heart"></i></button>
-                                        <button class="btn btn-outline-secondary" @@click="showDetails(item.id)">詳細資訊</button>
+                                    <div class="d-flex justify-content-around" v-if="item.isFavorite">
+                                        <button class="btn btn-danger rounded-circle fav" v-if="u_name" @@click="addFav(item.id,u_name,item.isFavorite)">
+                                            <i class="bi bi-suit-heart"></i>
+                                        </button>
+                                        <button class="btn btn-outline-success" @@click="showDetails(item.id)">詳細資訊</button>
+                                 @*    <button class="btn btn-outline-danger" @@click="addFav(item.id)"> <i class="bi bi-suit-heart"></i></button>
+                                        <button class="btn btn-outline-secondary" @@click="showDetails(item.id)">詳細資訊</button> *@
                                     </div>
+                                    <div class="d-flex justify-content-around" v-else="">
+                                        <button class="btn btn-outline-danger rounded-circle fav" v-if="u_name" @@click="addFav(item.id,u_name,item.isFavorite)">
+                                            <i class="bi bi-suit-heart"></i>
+                                        </button>
+                                        <button class="btn btn-outline-success" @@click="showDetails(item.id)">詳細資訊</button>
+                                    </div>
+
+
                                 </div>
                             </div>
                         </div>
@@ -416,12 +427,13 @@
                     sortKey: '',
                     sortOrder: '',
 					filter: "",
-					productDetails: {}
+					productDetails: {},
+                    u_name: sessionStorage.getItem("username"),
 
 				};
 			},
 			created() {
-                this.fetchSecondHand();
+                this.fetchSecondHand(sessionStorage.getItem("username"));
             }, 
             computed: {
                 sortedProducts() {
@@ -457,8 +469,8 @@
                     this.sortOption = option;
                     this.fetchSecondHand();
                 },
-                fetchSecondHand() {
-                    axios.get('https://localhost:7292/api/SecondHand')
+                fetchSecondHand(user) {
+                    axios.get(`https://localhost:7292/api/SecondHand?userAccount=${user}`)
 						.then(response => {
                             this.secondHand = response.data;
 							
@@ -473,12 +485,12 @@
                 getProductFormats(x) {
                     return x != null ? `https://localhost:7231/uploads/${photoUrl}` : 'https://localhost:7231/images/noimage.jpg';
                 },
-				filterProducts() {
+                filterProducts(user) {
 					let _this = this;
 					var request = {};
 					request.id = isNaN(Number(_this.filter)) ? -1 : Number(_this.filter);
                     request.suppliesName = request.accountUserAccount = request.suppliesDescription = _this.filter;
-                    axios.post('https://localhost:7292/api/SecondHand/Filter', request)
+                    axios.post(`https://localhost:7292/api/SecondHand/Filter?userAccount=${user}`, request)
 						.then(response => {
                             _this.secondHand = response.data;
 						})
@@ -492,7 +504,7 @@
                     var request = {};
                     request.id = isNaN(Number(_this.filter)) ? -1 : Number(_this.filter);
                     request.suppliesName = request.accountUserAccount = request.suppliesDescription = request.type = x;
-                    axios.post('https://localhost:7292/api/SecondHand/Filter', request)
+                    axios.post(`https://localhost:7292/api/SecondHand/Filter?userAccount=${sessionStorage.getItem("username")}`, request)
                         .then(response => {
                             _this.secondHand = response.data;
                         })
@@ -530,14 +542,62 @@
                             console.error("Error fetching product details:", error);
                         });
                     console.log(this.productDetails,"222");
+                }, async addFav(id, user, isFav) {
+                    try {
+
+                        if (sessionStorage.getItem("username") != null) {
+                            if (!isFav) {
+                                //加入最愛
+                                const response = await axios.post(`https://localhost:7292/api/SecondHand/AddFav?id=${id}&user=${sessionStorage.getItem("username")}`);
+
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '收藏成功',
+                                    text: '成功將商品加到最愛！',
+
+                                }).then(() => {
+                                    window.location.href = 'https://localhost:7231/SecondHand';
+
+                                });
+                            }
+                            else {
+                                const response = await axios.delete(`https://localhost:7292/api/SecondHand/DeleteFav?id=${id}&user=${sessionStorage.getItem("username")}`);
+
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '刪除成功',
+                                    text: '成功將商品自最愛移除！',
+
+                                }).then(() => {
+                                    window.location.href = 'https://localhost:7231/SecondHand';
+
+                                });
+                            }
+
+                        }
+                        else {
+                            alert("請先登入以繼續操作。");
+                        }
+
+                    } catch (error) {
+                        console.error('Error joining group buy:', error);
+                    }
                 },
                 async exchange(productId) {
                     try {
-                        const response = await axios.post(`/SecondHand/Home/Order`, {
-                            id: productId
-                        });
-                        if (response.status === 200) {
-                            window.location.href = `/SecondHand/Home/Order?id=${productId}`;
+
+                        if (sessionStorage.getItem("username") != null) {
+                            const response = await axios.post(`/SecondHand/Home/Order`, {
+                                id: productId
+                            });
+                            if (response.status === 200) {
+                                window.location.href = `/SecondHand/Home/Order?id=${productId}`;
+                            }
+                        }
+                        else {
+                            alert("請先登入以繼續操作。");
                         }
                     } catch (error) {
                         console.error('Error joining group buy:', error);

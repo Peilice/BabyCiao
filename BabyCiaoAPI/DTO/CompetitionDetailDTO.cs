@@ -22,13 +22,13 @@ public class CompetitionDetailDTO
 
     public string CompetitorContent { get; set; }
 
-    public string? CompetitionPhotos { get; set; }
+    public string CompetitionPhotos { get; set; }
 
     public IFormFile CompetitionPhoto { get; set; }
     public int CompetitionDetailId { get; set; }
 
     //個別選手得票數
-    public int number {  get; set; }
+    public int? number {  get; set; }
 
     //活動總票數
     public int allnumber {  get; set; }
@@ -48,9 +48,10 @@ public class CompetitionDetailDTO
 public class CompetitionDetail_createDTO
 {
     public string AccountUserAccount { get; set; }
-    public string? CompetitionPhotos { get; set; }
+    //public string? CompetitionPhotos { get; set; }
     public int CompetitionId { get; set; }
     public string Content { get; set; }
-
+    //處理照片上傳
+    public IFormFile CompetitionPhotoName { get; set; }
 
 }

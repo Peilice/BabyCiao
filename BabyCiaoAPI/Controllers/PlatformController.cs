@@ -304,11 +304,54 @@ namespace BabyCiaoAPI.Controllers
 
 
         //搜尋
-        //Post api/Platform/Search
-        //[HttpPost("Search")]
-        //public async Task<IActionResult<IEnumerable<PlatformDTO>>> Search()
-        //{
-            
-        //}
+        //Get api/Platform/Search/{keyword}/{type}
+        [HttpGet("Search/{keyword}/{type}")]
+        public async Task<ActionResult<IEnumerable<PlatformDTO>>> Search(string keyword,string type)
+        {
+            //讀出ID
+            var Article = await (from p in _context.Platforms
+                                 where p.Type == type && (p.Content.Contains(keyword) || p.Title.Contains(keyword) )
+                                 select new PlatformDTO
+                                 {
+                                     ArticleID = p.Id,
+                                     PostAccount = p.AccountUserAccount,
+                                     PostTitle = p.Title,
+                                     PostType = p.Type,
+                                     PostModifiedTime = p.ModifiedTime,
+                                 }).ToListAsync();
+            //將ID單獨進一個List中
+            List<int> ids = new List<int>();
+            foreach (var i in Article)
+            {
+                ids.Add(i.ArticleID);
+            }
+            //遍歷ID讀出第二個表格的筆數，並寫進List
+            List<int> count = new List<int>();
+            foreach (var n in ids)
+            {
+                var number = _context.PlatformResponses.Where(c => c.IdPlatform == n).Count();
+                count.Add(number);
+            }
+
+            //遍歷筆數List，將資料連同第一個表格欄位一起寫入DTO中
+            List<PlatformDTO> pDTOs = new List<PlatformDTO>();
+            for (int i = 0; i < count.Count(); i++)
+            {
+                PlatformDTO pDTO = new PlatformDTO()
+                {
+                    ArticleID = Article[i].ArticleID,
+                    PostAccount = Article[i].PostAccount,
+                    PostTitle = Article[i].PostTitle,
+                    PostType = Article[i].PostType,
+                    PostModifiedTime = Article[i].PostModifiedTime,
+                    ResponseCount = count[i],
+
+                };
+                pDTOs.Add(pDTO);
+
+            }
+
+            return Ok(pDTOs);
+        }
     }
 }

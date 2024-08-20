@@ -10,9 +10,11 @@ using BabyCiao.Models.DTO;
 using System.Net;
 using System.Text;
 using Microsoft.SqlServer.Server;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BabyCiao.Controllers
 {
+    //[Authorize(Roles = "公告編輯")]
     public class GroupBuyController : Controller
     {
         private readonly BabyciaoContext _context;

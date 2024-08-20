@@ -31,7 +31,10 @@ namespace BabyCiao_Client.Areas.LilySArea.Controllers
         {
             return View();
         }
-        
+         public IActionResult UncheckedOrders()
+        {
+            return View();
+        }
 
         public IActionResult MyFavorite()
         {

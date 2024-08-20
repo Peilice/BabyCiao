@@ -21,5 +21,8 @@
         public string Memo { get; set; } //= null!;
 
         public string Age { get; set; } //= null!;
+        
+
+
     }
 }

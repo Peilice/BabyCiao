@@ -1,9 +1,14 @@
-﻿@* @model BabyCiao.Controllers.DataAnalysisViewModel
+﻿@model BabyCiao.Controllers.DataAnalysisViewModel
 
 
 <div id="app">
-    <h2 class="text-center">保母和家長的委託單數量</h2>
+    <h2 class="text-center">數據分析</h2>
     <div id="chart" style="width: 800px; height: 600px;"></div>
+</div>
+
+<div id="newapp">
+    <h2 class="text-center">會員分布</h2>
+    <div id="chart" style="width: 1000px; height: 600px;"></div>
 </div>
 
 @section Scripts {
@@ -18,8 +23,8 @@
                 nannyTotalCount: @Model.NannyTotalCount
                     },
             mounted() {
-                console.log('家長總數量:', this.parentTotalCount);
-                console.log('保母總數量:', this.nannyTotalCount);
+                console.log('帳號總數量:', this.parentTotalCount);
+                console.log('聯絡簿總數量:', this.nannyTotalCount);
                 this.drawChart();
             },
             methods: {
@@ -36,21 +41,21 @@
                             }
                         },
                         legend: {
-                            data: ['保母數量', '家長數量'],
+                            data: ['帳號數量', '聯絡簿數量'],
                             textStyle: {
                                 fontSize: 18, // 設定圖例字體大小
                                 color: 'black' // 設定圖例字體顏色
                             }
                         },
                         grid: {
-                            left: '3%',
-                            right: '4%',
-                            bottom: '3%',
+                            left: '13%',
+                            right: '14%',
+                            bottom: '13%',
                             containLabel: true
                         },
                         xAxis: {
                             type: 'category',
-                            data: ['委託單'],
+                            data: ['各數據分析'],
                             axisLabel: {
                                 fontSize: 24, // 設定X軸標籤字體大小
                                 color: 'black' // 設定X軸標籤字體顏色
@@ -65,7 +70,7 @@
                         },
                         series: [
                             {
-                                name: '保母數量',
+                                name: '聯絡簿數量',
                                 type: 'bar',
                                 data: [this.nannyTotalCount],
                                 itemStyle: {
@@ -79,7 +84,7 @@
                                 }
                             },
                             {
-                                name: '家長數量',
+                                name: '帳號數量',
                                 type: 'bar',
                                 data: [this.parentTotalCount],
                                 itemStyle: {
@@ -101,4 +106,3 @@
         });
     </script>
 }
- *@

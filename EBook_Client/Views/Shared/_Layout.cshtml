@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -15,76 +14,115 @@
     @await RenderSectionAsync("Styles", required: false)
 
     <style>
-        body{
-            background-image: url('/images/圖片5.jpg');
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            background-image: url('/images/圖片11.png');
             font-family: '華康采風體W3', serif;
-            font-size:20px;
+            font-size: 20px;
+            margin-bottom: 0;
+        }
+
+        .li_andy:hover {
+            background-color: lightgray;
+            border-radius: 8px;
         }
 
         #nav {
             background-image: url('/images/圖片3.jpg');
-            /* opacity: .8; */
         }
 
+        .img6 {
+            margin: 8px auto;
+            float: left;
+            width: 70px;
+            height: auto;
+        }
+
+        .img7 {
+            margin: 8px 32px;
+            float: right;
+            width: 25px;
+            height: auto;
+        }
+
+        footer {
+            background-color: #5b4a3b;
+            /* position: relative; */
+            padding: 16px;
+            text-align: center;
+            position: relative;
+        }
+
+        .p1 {
+            color: azure;
+            padding: 16px;
+            text-align: center;
+        }
     </style>
 
 </head>
 <body>
     <header id="nav">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
-            <div class="container-fluid" id="app00">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/babyciao文字圖.png" width="150" /></a>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light  border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/babyciao文字圖.png" width="200" /></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
+                    <ul class="navbar-nav flex-grow-1" id="app00">
+                        <li class="nav-item li_andy">
                             <a class="active nav-link" asp-area="" asp-controller="Home" asp-action="About">關於我們</a>
                         </li>
-                        <li class="nav-item dropdown">
+                        <li class="nav-item li_andy">
+                            <a class="active nav-link" asp-area="" asp-controller="Home" asp-action="Announcement_Index">公告消息</a>
+                        </li>
+                        <li class="nav-item dropdown li_andy">
                             <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">媒合平台</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="Index">一同巧育</a></li>
+                                <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="NannyResume">一同巧育</a></li>
                                 <li><a class="active nav-link" asp-area="Machplateform" asp-controller="Home" asp-action="NannyApply">加入我們</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="@Utility.SD.localHost_Backstage/Home/Index">管理後台</a>
-                        </li>
-                        <li class="nav-item">
+                        <li class="nav-item li_andy">
                             <a id="e_book" class="nav-link text-dark" asp-area="andy_ebook" asp-controller="Home" asp-action="Index">電子聯絡簿</a>
                         </li>
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown li_andy">
                             <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">社群</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li class="nav-item">
+                                <li class="nav-item li_andy">
                                     <a class="nav-link text-dark" asp-area="LilyGArea" asp-controller="Home" asp-action="Index">團購商品</a>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item li_andy">
                                     <a class="nav-link text-dark" asp-area="LilySArea" asp-controller="Home" asp-action="Index">二手物品</a>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item li_andy">
                                     <a class="nav-link text-dark" asp-controller="Competitions" asp-action="Index">線上投票活動</a>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item li_andy">
                                     <a class="nav-link text-dark" asp-controller="Platform" asp-action="Index">討論區</a>
                                 </li>
                             </ul>
                         </li>
-                        
-                        <li class="nav-item">
+                        <li class="nav-item li_andy">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contact">聯絡我們</a>
                         </li>
-
+                        <template v-if="isadmin==true">
+                            <li class="nav-item li_andy">
+                                <a class="nav-link text-dark" href="@Utility.SD.localHost_Backstage/Home/Index">管理後台</a>
+                            </li>
+                        </template>
                     </ul>
                     <partial name="_LoginPartial_self" />
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container" id="main">
+    <div class="container" id="main" style="padding-bottom:84px;">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -94,7 +132,7 @@
         <div class="modal-dialog">
             <div class="modal-content" id="app">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">登入</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -109,25 +147,27 @@
                                 <input class="form-control" type="password" @@keyup="enable" v-model="password">
                             </div>
                             <div class=" mb-3">
-                                
                             </div>
                         </div>
 
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <a asp-action="sendVerificationEmail">忘記密碼？</a>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                     <button class="btn btn-primary" v-bind:disabled="disableCheck" @@click="submit">登入</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <footer class="border-top footer text-muted" style="position:relative">
-        <div class="container">
-            &copy; 2024 - test2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    
+    <footer class=" text-muted ">
+        <img class="img6" src="~/images/p6.png" alt="">
+        <img class="img7" src="~/images/p7.png" alt="">
+        <div class="container p1">
+            2024 - BabyCiao
         </div>
-    </footer> 
+    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -156,11 +196,31 @@
                     }
                     _this.u_name = username;
                 },
-                
+
             },
 
         }
         var app = Vue.createApp(vueApp).mount('#loginApp')
+
+        var vueApp = {
+            data() {
+                return {
+                    isadmin: false,
+                };
+            },
+            mounted: function () {
+                let _this = this;
+                if (username == 'admin') {
+                    _this.isadmin = true;
+                }
+            },
+            methods: {
+
+            },
+
+        }
+        var app00 = Vue.createApp(vueApp).mount('#app00')
+
         var vueApp_login = {
             data() {
                 return {
@@ -169,10 +229,12 @@
                     disableCheck: true,
                     baseAddress_API: "@Utility.SD.localHost_API",
                     baseAddress_client: "@Utility.SD.localHost_Client",
+                    isadmin: false,
                 }
             },
             mounted: function () {
                 let _this = this;
+
             },
             methods: {
                 enable: function () {
@@ -180,55 +242,74 @@
 
                 },
                 submit: function () {
-                    // alert("submit");
                     let _this = this;
-                    var request = {};
-                    request.name = _this.username;
-                    request.password = _this.password;
+                    var request = {
+                        name: _this.username,
+                        password: _this.password
+                    };
 
-                    axios.post(`${_this.baseAddress_API}/api/Andy_JWT_Login`, request).then(response => {
-                        const token = response.data;
-                        const data1 = { Token: token };
-                        localStorage.setItem("token", data1.Token);
+                    axios.post(`${_this.baseAddress_API}/api/Andy_JWT_Login`, request)
+                        .then(response => {
+                            const token = response.data;
+                            const data1 = { Token: token };
+                            localStorage.setItem("token", data1.Token);
 
-                        Swal.fire({
-                            position: "center",
-                            icon: "success",
-                            title: "登入成功",
-                            showConfirmButton: false,
-                            timer: 1500
-                        }).then(s => {
-                            const useToken = localStorage.getItem("token");
-                            const headers = {
-                                'Authorization': `Bearer ${useToken}`,
-                            };
+                            Swal.fire({
+                                position: "center",
+                                icon: "success",
+                                title: "登入成功",
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(s => {
+                                const useToken = localStorage.getItem("token");
+                                const headers = {
+                                    'Authorization': `Bearer ${useToken}`,
+                                };
 
-                            axios.get(`${_this.baseAddress_API}/api/Andy_JWT_Login`, {
-                                headers
-                            }).then(result => {
-                                // alert(result.data)
-                                const username = result.data;
-                                const data2 = { Name: username };
-                                sessionStorage.setItem("username", data2.Name);
-                                // $('#username').text(`${result.data} ,你好!`);//實驗
-                                var target = sessionStorage.getItem("target");
-                                if (target != null) {
-                                    window.location.href = `${target}`;
-                                } else {
-                                    window.location.href = `${_this.baseAddress_client}/Home/Index`;
-                                }
-                            }).catch(err => {
-                                alert(err);
-                            })
+                                axios.get(`${_this.baseAddress_API}/api/Andy_JWT_Login`, { headers })
+                                    .then(result => {
+                                        const username = result.data;
+                                        const data2 = { Name: username };
+                                        sessionStorage.setItem("username", data2.Name);
+                                        var target = sessionStorage.getItem("target");
+                                        if (target != null) {
+                                            window.location.href = `${target}`;
+                                        } else {
+                                            window.location.href = `${_this.baseAddress_client}/Home/Index`;
+                                        }
+                                    })
+                                    .catch(err => {
+                                        console.error(err);
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: '錯誤',
+                                            text: '獲取使用者資料時出錯！'
+                                        });
+                                    });
+                            });
+
+                        })
+                        .catch(err => {
+                            // 捕獲並顯示後端返回的錯誤訊息
+                            if (err.response && err.response.data && err.response.data.message) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: '登入失敗',
+                                    text: err.response.data.message
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: '錯誤',
+                                    text: '發生未知錯誤，請稍後再試。'
+                                });
+                            }
                         });
-
-                    }).catch(err => {
-                        alert(err);
-                    })
                 },
             }
         };
         var app01 = Vue.createApp(vueApp_login).mount("#app");
+
         $(function () {
             //登出動畫與操作
             $('#logoutForm').on('click', function (e) {
@@ -264,7 +345,6 @@
                 } else {
                     e.preventDefault();
                     sessionStorage.setItem("target", "@Utility.SD.localHost_Client/andy_ebook/Home/Index")
-                    //window.location.href = "@Utility.SD.localHost_Client/Home/Login";
                     $('#exampleModal').modal('show');
                 }
             })
@@ -274,5 +354,3 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
-

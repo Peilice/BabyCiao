@@ -47,6 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\CustomerService\CustomerService.cshtml" />
     <None Include="wwwroot\NannnyAndPerant\合約\合同文件1" />
     <None Include="wwwroot\NannnyAndPerant\合約\合同文件1.pdf" />
     <None Include="wwwroot\NannnyAndPerant\合約\合同文件10.pdf" />

@@ -14,7 +14,7 @@ using System.Security.Cryptography;
 
 namespace BabyCiao.Controllers
 {
-    [Authorize(Roles = "公告編輯")]
+    //[Authorize(Roles = "公告編輯")]
     public class AnnouncementsController : Controller
     {
         private readonly BabyciaoContext _context;
@@ -83,18 +83,23 @@ namespace BabyCiao.Controllers
 
                 //先取得新公告的ID
                 var newAnnouncement = _context.Announcements.Where(a => a.Tittle == my_vm.Tittle).FirstOrDefault();
-                //新增公告照片
-                string aaa= Request.Form.Files["Picture"].GetType().ToString();
 
-
-                string URL= CopyPictureAndGetURL(Request.Form.Files["Picture"]);
-                AnnouncementPhoto announcementPhoto = new AnnouncementPhoto()
+                if (Request.Form.Files["Picture"] != null)
                 {
-                    PhotoName = URL,
-                    IdAnnouncement = newAnnouncement.Id
-                };
-                _context.Add(announcementPhoto);
-                await _context.SaveChangesAsync();
+                    //新增公告照片
+                    string aaa = Request.Form.Files["Picture"].GetType().ToString();
+
+
+                    string URL = CopyPictureAndGetURL(Request.Form.Files["Picture"]);
+                    AnnouncementPhoto announcementPhoto = new AnnouncementPhoto()
+                    {
+                        PhotoName = URL,
+                        IdAnnouncement = newAnnouncement.Id
+                    };
+                    _context.Add(announcementPhoto);
+                    await _context.SaveChangesAsync();
+                }
+                
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AccountUserAccount"] = new SelectList(_context.UserAccounts, "Account", "Account", announcement);
