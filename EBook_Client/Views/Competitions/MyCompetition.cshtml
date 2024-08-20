@@ -77,7 +77,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">社群</li>
-                <li class="breadcrumb-item"><a href="https://localhost:7231/Competitions">線上投票活動</a></li>
+                <li class="breadcrumb-item"><a href="https://localhost:7231/Competitions" class="text-decoration-none text-dark">線上投票活動</a></li>
                 <li class="breadcrumb-item">管理我的活動</li>
             </ol>
         </nav>
@@ -113,7 +113,7 @@
                             <div class="mt-3">
                                 <h4 class="text-center fw-bold">參賽資訊</h4>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <img v-bind:src="getPhoto(item.competitorPhoto)" style="width:200px;height:150px" />
+                                    <img v-bind:src="getPhoto(item.competitorPhoto)" style="width:200px" />
                                     <p>{{item.competitorContent}}</p>
                                     <button class="btn btn-light" type="button" v-on:click="delCom(item.id,userAccount)">取消參賽</button>
                                 </div>
@@ -132,7 +132,7 @@
                             <span>{{item.statement}}</span>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
-                            <img v-bind:src="getPhoto(item.competitorPhoto)" style="width:200px;height:150px" />
+                            <img v-bind:src="getPhoto(item.competitorPhoto)" style="width:250px" />
                             <div>
                             <h5>{{item.competitorName}}</h5>
                             <p>{{item.content}}</p>
@@ -154,7 +154,7 @@
                             <span>{{item.statement}}</span>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
-                                <img v-bind:src="getcomPhoto(item.competitionPhoto)" style="width:200px;height:150px" />
+                                <img v-bind:src="getcomPhoto(item.competitionPhoto)" style="width:200px" />
                             <div>
                                 
                                 <p>{{item.competitionContent}}</p>

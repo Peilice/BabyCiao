@@ -172,11 +172,6 @@ namespace BabyCiaoAPI.Controllers
                    
             }
 
-            // 更新字典值
-            //bools[false] = isNotVote;
-            //bools[true] = isVote;
-
-
             //將選手資料及得票數包進DTO list內
             for (int i = 0; i < nums.Count(); i++)
             {  
