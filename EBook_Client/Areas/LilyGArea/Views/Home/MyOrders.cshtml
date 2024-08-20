@@ -151,6 +151,7 @@
 							const index = this.orders.findIndex(order => order.id === id);
 							if (index !== -1) {
 								this.orders[index].statement = '已取消';
+								window.location.reload();
 							}
 							alert('訂單已取消');
 						})

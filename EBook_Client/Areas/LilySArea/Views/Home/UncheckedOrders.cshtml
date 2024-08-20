@@ -93,6 +93,7 @@
 								this.orders[index].statement = '確認成交';
 							}
 							alert('訂單成立!!');
+							window.location.reload();
 						})
 						.catch(error => {
 							console.error('Error rejecting order:', error);
@@ -107,6 +108,7 @@
 								this.orders[index].statement = '不成立';
 							}
 							alert('訂單已拒絕');
+							window.location.reload();
 						})
 						.catch(error => {
 							console.error('Error rejecting order:', error);

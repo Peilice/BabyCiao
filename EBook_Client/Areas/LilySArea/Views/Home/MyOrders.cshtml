@@ -110,6 +110,7 @@
 								this.orders[index].statement = '取消申請';
 							}
 							alert('訂單已取消');
+							window.location.reload();
 						})
 						.catch(error => {
 							console.error('Error rejecting order:', error);
