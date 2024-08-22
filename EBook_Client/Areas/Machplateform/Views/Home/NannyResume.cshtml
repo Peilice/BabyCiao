@@ -1,260 +1,765 @@
 ﻿@section Styles {
-        <title>保母委託單</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    }
+    <title>保母委託單</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
 
-    <!-- breadcrumb start -->
-    <div id="nannyIndex">
-        <div class="px-3 py-2 mb-2">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0 bg-transparent p-2 text-dark bg-opacity-10">
-                    <li class="breadcrumb-item"><a class="text-decoration-none" href="./MatchIndex.html">首頁</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">保母平台</li>
-                </ol>
-            </nav>
-@*             <div class="row" style="width:40%;margin-left:auto;margin-left:10">
-            <input type="text" class="form-control" v-model="searchQuery" placeholder="輸入關鍵字搜尋" />
-             </div>
- *@        
-            <div class="row" style="width:15%;margin-left:auto;margin-right:0">
-                <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createmodel" v-on:click="getUserName()">
-                    新增保母委託單
-                </button>
-                <a asp-area="Machplateform" asp-controller="Home" asp-action="NannyApply" class="btn btn-primary mb-2">
-                    加入貝比巧遇
-                </a>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+        }
+
+        .main-banner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        #bg-video {
+            width: 100%;
+            height: auto;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            color: white;
+        }
+
+        .caption {
+            position: relative;
+            left: 10%;
+            max-width: 50%;
+            transform: translateY(-10px); /* 向上移动文字 */
+        }
+
+        .main-button-red .scroll-to-section a {
+            color: white;
+            background-color: red;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+            .main-button-red .scroll-to-section a:hover {
+                background-color: darkred;
+            }
+
+        .our-courses {
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Nanny Index Section */
+        #nannyIndex {
+            padding: 40px 20px;
+        }
+
+            /* Container for Row */
+            #nannyIndex .row {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+        /* Button Styling */
+        .btn-outline-primary {
+            border-color: #007bff;
+            color: #007bff;
+            transition: all 0.3s;
+        }
+
+            .btn-outline-primary:hover {
+                background-color: #007bff;
+                color: #fff;
+            }
+
+        .btn-outline-success {
+            border-color: #007bff;
+            color: #007bff;
+            transition: all 0.3s;
+        }
+
+            .btn-outline-success:hover {
+                background-color: #007bff;
+                color: #fff;
+            }
+
+        /* Card Styling */
+        .card {
+            border: none;
+            border-radius: 15px; /* 圓角邊框 */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* 輕微陰影 */
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+            .card:hover {
+                transform: scale(1.05); /* 滑鼠懸停時放大效果 */
+            }
+
+        .card-img-top {
+            object-fit: cover;
+            width: 100%;
+            height: 250px;
+        }
+
+        .card-body {
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        /* Card Title and Text */
+        .card-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        /* Flex Container Adjustments */
+        .d-flex {
+            display: flex;
+        }
+
+        .justify-content-between {
+            justify-content: space-between;
+        }
+
+        .align-items-center {
+            align-items: center;
+        }
+
+        .mb-4 {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Pagination Buttons Container */
+        .d-flex.justify-content-center {
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+        }
+
+        .apply-now {
+            background-color: #FFF9E5; /* 淺暖黃色調 */
+            padding: 60px 0;
+        }
+
+            .apply-now h3 {
+                color: #333333; /* 深灰色 */
+                font-size: 28px;
+                margin-bottom: 20px;
+            }
+
+            .apply-now p {
+                color: #555555; /* 中灰色 */
+                font-size: 16px;
+                margin-bottom: 30px;
+            }
+
+        .main-button-red button, .main-button-yellow a {
+            background-color: #FF7F50; /* 橙色 */
+            color: #FFFFFF; /* 白色字體 */
+            border: none;
+            padding: 10px 30px;
+            font-size: 16px;
+            border-radius: 50px;
+            transition: background-color 0.3s ease;
+        }
+
+            .main-button-red button:hover, .main-button-yellow a:hover {
+                background-color: #FF6347; /* 深橙色 */
+            }
+
+        .accordion-button {
+            background-color: #FFDEAD; /* 比背景稍深的黃色 */
+            color: #333333; /* 深灰色 */
+            font-weight: bold;
+            border: none;
+        }
+
+            .accordion-button:focus {
+                box-shadow: none;
+            }
+
+            .accordion-button:not(.collapsed) {
+                background-color: #FFE4B5; /* 當展開時，稍微亮一點的黃色 */
+            }
+
+        .accordion-body {
+            background-color: #FFF9E5; /* 和背景一樣的淺暖黃色調 */
+            color: #555555; /* 中灰色 */
+        }
+        .container1 {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .steps-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+            .steps-header h2 {
+                font-size: 2em;
+                margin: 0;
+                font-weight: bold;
+            }
+
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 20px;
+        }
+
+        .step {
+            background-color: #fff;
+            color: #002d73;
+            padding: 20px;
+            border-radius: 10px;
+            flex: 1;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+            .step:not(:last-child) {
+                position: relative;
+                margin-right: 20px;
+            }
+
+                .step:not(:last-child)::after {
+                    content: "\f061";
+                    font-family: 'FontAwesome';
+                    position: absolute;
+                    top: 50%;
+                    right: -40px;
+                    transform: translateY(-50%);
+                    font-size: 2em;
+                    color: #fff;
+                }
+
+        .step-number {
+            background-color: #00b1f2;
+            color: #fff;
+            font-size: 2.5em;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+        }
+
+        .step-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .step-description {
+            font-size: 1em;
+            line-height: 1.5;
+        }
+
+        .card-text {
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .reviews-section {
+            position: relative;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .reviews-carousel {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: hidden; /* 隱藏橫向滾動條 */
+            gap: 20px;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            transition: transform 0.5s ease; /* 用於平滑滾動效果 */
+        }
+
+        .review-card {
+            flex: 0 0 auto;
+            min-width: 350px;
+            max-width: 500px;
+            scroll-snap-align: start;
+            display: flex;
+            align-items: flex-start;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            word-wrap: break-word;
+            background-color: antiquewhite;
+        }
+
+            .review-card img {
+                width: auto;
+                height: 150px;
+                margin-right: 20px;
+                border-radius: 8px;
+            }
+
+        .review-header {
+            display: flex;
+            flex-direction: column;
+            max-width: 100%;
+        }
+
+            .review-header h3 {
+                margin: 0;
+                font-size: 22px;
+            }
+
+        .star-rating {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .star {
+            color: gold;
+        }
+
+        .review-card p {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+            .carousel-button.prev {
+                left: 10px;
+            }
+
+            .carousel-button.next {
+                right: 10px;
+            }
+
+    </style>
+}
+<section class="section main-banner" id="top" data-section="section1">
+    <video autoplay muted loop id="bg-video">
+        <source src="~/style/video.mp4" type="video/mp4" />
+    </video>
+
+    <div class="video-overlay header-text">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="caption">
+                        <h6>BabyCiao 與您巧遇</h6>
+                        <h2>為您的寶貝提供最棒的照顧</h2>
+                        <p>我們致力於提供家長與保母最快速且合適的配對，您可以在這裡找到許多我們為您精心挑選的保母，我們的夥伴也可以在此找到滿意的合作機會</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- breadcrumb start -->
+<div id="nannyIndex">
+    <div class="row justify-content-center">
+        <div class="col-12 d-flex align-items-center justify-content-between mb-4">
+            <!-- 左侧按钮 -->
+            <button class="btn btn-outline-primary" v-on:click="prevPage" :disabled="startIndex === 0">
+                &larr;
+            </button>
+
+            <!-- 卡片内容 -->
+            <div class="d-flex justify-content-center" style="flex-grow: 1;">
+                <div class="card mb-4 mx-2" v-for="(item, index) in paginatedResumes" :key="item.id" style="width: 18rem;">
+                    <img :src="getPhotoUrl(item.professionalPortrait)" class="card-img-top" style="height: 250px;">
+                    <div class="card-body">
+                        <h5 class="card-title">名字：{{ item.nickname }}</h5>
+                        <p class="card-text">地區：{{ item.city }}, {{ item.district }}</p>
+                        <p class="card-text">服務方式：{{ item.typeOfDaycare }}</p>
+                        <div class="d-flex justify-content-center">
+                            <button class="btn btn-outline-success" v-on:click="showDetails(item.id)">詳細資訊</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- breadcrumb end -->
+            <!-- 右侧按钮 -->
+            <button class="btn btn-outline-primary" v-on:click="nextPage" :disabled="startIndex + itemsPerPage >= resumes.length">
+                &rarr;
+            </button>
+        </div>
 
-            <h2>保母委託單</h2>
-        <div id="nannyIndex" class="container">
+        <section class="apply-now">
+            <div class="container">
                 <div class="row">
-                    <div class="col-12 mb-4">
+                    <div class="col-lg-6 align-self-center">
                         <div class="row">
-                            <div class="col-4 mb-2" v-for="item in resumes" :key="item.id">
-                                <div class="card">
-                                    <img :src="getPhotoUrl(item.professionalPortrait)" class="card-img-top" style="height: 380px;">
-                                    <div class="card-body">
-                                        <div class="down-content">
-                                            <h5>名字：{{ item.nickname }}</h5>
-                                            <h5>地區：{{ item.city }}, {{ item.district }}</h5>
-                                            <h5>服務方式：{{ item.typeOfDaycare }}</h5>
-                                            <div class="d-flex justify-content-center">
-                                                <button class="btn btn-outline-success" v-on:click="showDetails(item.id)">詳細資訊</button>
-                                            </div>
-                                        </div>
+                            <div class="col-lg-12">
+                                <div class="item">
+                                    <h3>快加入BabyCiao開始您的第一個旅程</h3>
+                                    <p>通過我們的平台，我們擁有最完善的電子聯絡簿，為您紀錄寶貝成長的每一刻，不僅如此，還有更多的活動等著您與孩子一同體驗！</p>
+                                    <div class="main-button-red">
+                                        <button class="btn btn-primary mb-2" type="button" data-bs-toggle="modal" class="scroll-to-section" data-bs-target="#createmodel" v-on:click="getUserName()">
+                                            新增保母委託單
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="item">
+                                    <h3>與BabyCiao一起找到您適合的家庭</h3>
+                                    <p>BabyCiao致力於為家長與保母找到合適的彼此，在這裡可以找到各式的工作機會，快加入貝比巧育的團隊吧！</p>
+                                    <div class="main-button-yellow">
+                                        <a asp-area="Machplateform" asp-controller="Home" asp-action="NannyApply" class="btn btn-primary mb-2">加入我們!</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="accordion" id="accordionExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        為什麼選擇貝比巧遇？
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <strong>
+                                            透過我們的簡化平台，享受無憂無慮的體驗，尋找理想的保母不再是挑戰，而是樂趣。
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        專業且快速的審核保母
+                                    </button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <strong>我們嚴謹的審核每位保母的專業證照及資格，讓職業保母可以快速地加入我們的團隊，同時也讓家長找到最合適的安心人選。</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        掌握無時刻的寶貝狀態
+                                    </button>
+                                </h2>
+                                <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <strong>我們的電子聯絡簿讓您可以隨時與保姆同步，享受安全、私密的溝通，由我們的平台為您紀錄寶貝的每時每刻。</strong> 
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <!-- 詳細資訊模態框 -->
-                <div class="modal fade" id="nannyResumesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">{{ resumes.nickname }}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="swiper-container pb-2">
-                                    <div class="swiper-wrapper">
-                                        <div class="swiper-slide" v-for="professionalPortrait in resume.professionalPortraits" :key="professionalPortrait.id">
-                                            <img :src="getPhotoUrl(professionalPortrait)" :alt="resume.nickname">
-                                        </div>
+
+        <div class="container1">
+            <div class="steps-header">
+                <h2>我們簡單的三步驟流程</h2>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">發布您的工作</div>
+                    <div class="step-description">
+                        免費發布保母工作，為您的家人找到最合適的人選。
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">審核申請人</div>
+                    <div class="step-description">
+                        審核保母資訊、專業證照，為您的寶貝做最安全的保障。
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">與保母聯繫</div>
+                    <div class="step-description">
+                        使用我們的電子聯絡簿與保母及時同步寶貝資訊。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="reviews-section">
+            <div class="reviews-carousel" id="carousel">
+                <div class="review-card" v-for="(review, index) in reviews" :key="index">
+                    <img :src="getPhotoUrl(review.userPhoto)" alt="User photo" v-if="review.userPhoto" />
+                    <div class="review-header">
+                        <h3>{{ review.nickname }}</h3>
+                        <div class="star-rating">
+                            <span v-for="n in 5" :key="n" class="star">
+                                <i v-if="n <= review.score" class="fas fa-star"></i>
+                                <i v-else class="far fa-star"></i>
+                            </span>
+                            <hr /><br />
+                        </div>
+                        <p>{{ review.memo }}</p>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-button prev" id="prev">&#10094;</button>
+            <button class="carousel-button next" id="next">&#10095;</button>
+        </div>
+
+
+            <!-- 詳細資訊模態框 -->
+            <div class="modal fade" id="nannyResumesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">{{ resumes.nickname }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="swiper-container pb-2">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide" :key="professionalPortrait.id" >
+                                    <img :src="getPhotoUrl(resume.professionalPortrait)" :alt="resume.nickname" style="height: 250px;">
                                     </div>
                                 </div>
-                                <p>名字：{{ resume.nickname }}</p>
-                                <p>服務方式：{{ resume.typeOfDaycare }}</p>
-                                <p>服務項目：{{ resume.serviceItems }}</p>
-                                <p>語言：{{ resume.language }}</p>
-                                <p>可收托2歲以上孩童數：{{ resume.childcareAvailableOver2 }}</p>
-                                <p>可收托2歲以下孩童數：{{ resume.childcareAvailableUnder2 }}</p>
-                                <p>自我介紹：{{ resume.introduction }}</p>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-                            </div>
+                            <hr /><br />
+                            <p>名字：{{ resume.nickname }}</p>
+                            <p>服務方式：{{ resume.typeOfDaycare }}</p>
+                            <p>服務項目：{{ resume.serviceItems }}</p>
+                            <p>語言：{{ resume.language }}</p>
+                            <p>可收托2歲以上孩童數：{{ resume.childcareAvailableOver2 }}</p>
+                            <p>可收托2歲以下孩童數：{{ resume.childcareAvailableUnder2 }}</p>
+                        <hr /><br />
+                            <p>自我介紹：{{ resume.introduction }}</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- 新增收託書模態框 -->
-                <div class="modal fade" data-bs-backdrop="static" id="createmodel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">新增收託書</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form class="needs-validation" v-on:submit.prevent="create" novalidate>
-                                    <div class="mb-3 has-validation">
-                                        <label for="nannyAccountUserAccount">帳號</label>
-                                        <div class="invalid-feedback">此欄位必填!</div>
-                                        <input type="text" class="form-control" id="nannyAccountUserAccount" v-model="username" readonly />
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="professionalPortrait">個人照:</label>
-                                        <input type="file" class="form-control" id="professionalPortrait" v-on:change="(event) => onFileChange('professionalPortraitPreview', 'professionalPortrait', event)">
-                                        <div class="invalid-feedback">請放上個人照片</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="nickname">暱稱:</label>
-                                        <input v-model="nickname" id="nickname" class="form-control" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="city" class="form-label">縣市</label>
-                                        <select v-model="city" class="form-select" required>
-                                            <option selected disabled value="">請選擇</option>
-                                            <option value="基隆市">基隆市</option>
-                                            <option value="臺北市">臺北市</option>
-                                            <option value="新北市">新北市</option>
-                                            <option value="桃園市">桃園市</option>
-                                            <option value="新竹縣">新竹縣</option>
-                                            <option value="新竹市">新竹市</option>
-                                            <option value="宜蘭縣">宜蘭縣</option>
-                                            <option value="臺中市">臺中市</option>
-                                            <option value="苗栗縣">苗栗縣</option>
-                                            <option value="彰化縣">彰化縣</option>
-                                            <option value="南投縣">南投縣</option>
-                                            <option value="雲林縣">雲林縣</option>
-                                            <option value="嘉義縣">嘉義縣</option>
-                                            <option value="嘉義市">嘉義市</option>
-                                            <option value="臺南市">臺南市</option>
-                                            <option value="高雄市">高雄市</option>
-                                            <option value="屏東縣">屏東縣</option>
-                                            <option value="花蓮縣">花蓮縣</option>
-                                            <option value="臺東縣">臺東縣</option>
-                                            <option value="澎湖縣">澎湖縣</option>
-                                            <option value="金門縣">金門縣</option>
-                                        </select>
-                                        <div class="invalid-feedback">此欄位必填!</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="district">區域:</label>
-                                        <input v-model="district" id="district" class="form-control" required />
-                                        <div class="invalid-feedback">此欄位必填!</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="introduction">介紹:</label>
-                                        <textarea v-model="introduction" id="introduction" class="form-control"></textarea>
-                                        <div class="invalid-feedback">此欄位必填!</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="serviceType" class="form-label">服務方式</label>
-                                        <div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" v-model="serviceType" value=0>
-                                                <label class="form-check-label">到宅托育</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" v-model="serviceType" value=1>
-                                                <label class="form-check-label">居家托育</label>
-                                            </div>
-                                        </div></><div class="invalid-feedback">此欄位必填!</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="typeOfDaycare" class="form-label">托育時段</label>
-                                        <div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" v-model="typeOfDaycare" value="半日托育">
-                                                <label class="form-check-label">半日托育</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" v-model="typeOfDaycare" value="半日托育(平日)">
-                                                <label class="form-check-label">半日托育(平日)</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" v-model="typeOfDaycare" value="全日托育">
-                                                <label class="form-check-label">全日托育</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" v-model="typeOfDaycare" value="臨時托育(平日)">
-                                                <label class="form-check-label">臨時托育(平日)</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" v-model="typeOfDaycare" value="臨時托育(假日)">
-                                                <label class="form-check-label">臨時托育(假日)</label>
-                                            </div>
+            <!-- 新增收託書模態框 -->
+            <div class="modal fade" data-bs-backdrop="static" id="createmodel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">新增收託書</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="needs-validation" v-on:submit.prevent="create" novalidate>
+                                <div class="mb-3 has-validation">
+                                    <label for="nannyAccountUserAccount">帳號</label>
+                                    <div class="invalid-feedback">此欄位必填!</div>
+                                    <input type="text" class="form-control" id="nannyAccountUserAccount" v-model="username" readonly />
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="professionalPortrait">個人照:</label>
+                                    <input type="file" class="form-control" id="professionalPortrait" v-on:change="(event) => onFileChange('professionalPortraitPreview', 'professionalPortrait', event)">
+                                    <div class="invalid-feedback">請放上個人照片</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="nickname">暱稱:</label>
+                                    <input v-model="nickname" id="nickname" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="city" class="form-label">縣市</label>
+                                    <select v-model="city" class="form-select" required>
+                                        <option selected disabled value="">請選擇</option>
+                                        <option value="基隆市">基隆市</option>
+                                        <option value="臺北市">臺北市</option>
+                                        <option value="新北市">新北市</option>
+                                        <option value="桃園市">桃園市</option>
+                                        <option value="新竹縣">新竹縣</option>
+                                        <option value="新竹市">新竹市</option>
+                                        <option value="宜蘭縣">宜蘭縣</option>
+                                        <option value="臺中市">臺中市</option>
+                                        <option value="苗栗縣">苗栗縣</option>
+                                        <option value="彰化縣">彰化縣</option>
+                                        <option value="南投縣">南投縣</option>
+                                        <option value="雲林縣">雲林縣</option>
+                                        <option value="嘉義縣">嘉義縣</option>
+                                        <option value="嘉義市">嘉義市</option>
+                                        <option value="臺南市">臺南市</option>
+                                        <option value="高雄市">高雄市</option>
+                                        <option value="屏東縣">屏東縣</option>
+                                        <option value="花蓮縣">花蓮縣</option>
+                                        <option value="臺東縣">臺東縣</option>
+                                        <option value="澎湖縣">澎湖縣</option>
+                                        <option value="金門縣">金門縣</option>
+                                    </select>
+                                    <div class="invalid-feedback">此欄位必填!</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="district">區域:</label>
+                                    <input v-model="district" id="district" class="form-control" required />
+                                    <div class="invalid-feedback">此欄位必填!</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="introduction">介紹:</label>
+                                    <textarea v-model="introduction" id="introduction" class="form-control"></textarea>
+                                    <div class="invalid-feedback">此欄位必填!</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="serviceType" class="form-label">服務方式</label>
+                                    <div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" v-model="serviceType" value=0>
+                                            <label class="form-check-label">到宅托育</label>
                                         </div>
-                                        <div class="invalid-feedback">此欄位必填!</div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="serviceItems" class="form-label">服務項目:</label>
-                                        <div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" v-model="serviceItems" value="料理服務">
-                                                <label class="form-check-label">料理服務</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" v-model="serviceItems" value="接送服務">
-                                                <label class="form-check-label">接送服務</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" v-model="serviceItems" value="家教服務">
-                                                <label class="form-check-label">家教服務</label>
-                                            </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" v-model="serviceType" value=1>
+                                            <label class="form-check-label">居家托育</label>
                                         </div>
-                                        <div class="invalid-feedback">此欄位必填!</div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="quasiPublicChildcare">可公托:</label>
-                                        <input type="checkbox" v-model="quasiPublicChildcare" id="quasiPublicChildcare" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="childcareAvailableUnder2">可收托2歲以下孩童數:</label>
-                                        <select v-model="childcareAvailableUnder2" id="childcareAvailableUnder2" class="form-control" required>
-                                            <option value=1>一位</option>
-                                            <option value=2>二位</option>
-                                            <option value=3>三位</option>
-                                            <option value=4>四位</option>
-                                        </select>
-                                        <div class="invalid-feedback">此欄位必填!</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="childcareAvailableOver2">可收托2歲以上孩童數:</label>
-                                        <select v-model="childcareAvailableOver2" id="childcareAvailableOver2" class="form-control" required>
-                                            <option value=1>一位</option>
-                                            <option value=2>二位</option>
-                                            <option value=3>三位</option>
-                                            <option value=4>四位</option>
-                                        </select>
-                                        <div class="invalid-feedback">此欄位必填!</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="language">語言:</label>
-                                        <div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" v-model="language" value="中文">
-                                                <label class="form-check-label">中文</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" v-model="language" value="英文">
-                                                <label class="form-check-label">英文</label>
-                                            </div>
-
+                                    </div></><div class="invalid-feedback">此欄位必填!</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="typeOfDaycare" class="form-label">托育時段</label>
+                                    <div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" v-model="typeOfDaycare" value="半日托育">
+                                            <label class="form-check-label">半日托育</label>
                                         </div>
-                                        <div class="invalid-feedback">請填寫語言.</div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" v-model="typeOfDaycare" value="半日托育(平日)">
+                                            <label class="form-check-label">半日托育(平日)</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" v-model="typeOfDaycare" value="全日托育">
+                                            <label class="form-check-label">全日托育</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" v-model="typeOfDaycare" value="臨時托育(平日)">
+                                            <label class="form-check-label">臨時托育(平日)</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" v-model="typeOfDaycare" value="臨時托育(假日)">
+                                            <label class="form-check-label">臨時托育(假日)</label>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="serviceCenter">服務中心:</label>
-                                        <input v-model="serviceCenter" id="serviceCenter" class="form-control" required />
-                                        <div class="invalid-feedback">請填寫此欄位</div>
+                                    <div class="invalid-feedback">此欄位必填!</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="serviceItems" class="form-label">服務項目:</label>
+                                    <div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" v-model="serviceItems" value="料理服務">
+                                            <label class="form-check-label">料理服務</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" v-model="serviceItems" value="接送服務">
+                                            <label class="form-check-label">接送服務</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" v-model="serviceItems" value="家教服務">
+                                            <label class="form-check-label">家教服務</label>
+                                        </div>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">送出</button>
-                                </form>
-                            </div>
+                                    <div class="invalid-feedback">此欄位必填!</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="quasiPublicChildcare">可公托:</label>
+                                    <input type="checkbox" v-model="quasiPublicChildcare" id="quasiPublicChildcare" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="childcareAvailableUnder2">可收托2歲以下孩童數:</label>
+                                    <select v-model="childcareAvailableUnder2" id="childcareAvailableUnder2" class="form-control" required>
+                                        <option value=1>一位</option>
+                                        <option value=2>二位</option>
+                                        <option value=3>三位</option>
+                                        <option value=4>四位</option>
+                                    </select>
+                                    <div class="invalid-feedback">此欄位必填!</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="childcareAvailableOver2">可收托2歲以上孩童數:</label>
+                                    <select v-model="childcareAvailableOver2" id="childcareAvailableOver2" class="form-control" required>
+                                        <option value=1>一位</option>
+                                        <option value=2>二位</option>
+                                        <option value=3>三位</option>
+                                        <option value=4>四位</option>
+                                    </select>
+                                    <div class="invalid-feedback">此欄位必填!</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="language">語言:</label>
+                                    <div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" v-model="language" value="中文">
+                                            <label class="form-check-label">中文</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" v-model="language" value="英文">
+                                            <label class="form-check-label">英文</label>
+                                        </div>
+
+                                    </div>
+                                    <div class="invalid-feedback">請填寫語言.</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="serviceCenter">服務中心:</label>
+                                    <input v-model="serviceCenter" id="serviceCenter" class="form-control" required />
+                                    <div class="invalid-feedback">請填寫此欄位</div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">送出</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -262,214 +767,299 @@
         </div>
     </div>
 
-        @section Scripts {
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-            <script>
-                const useToken = localStorage.getItem("token");
-                const headers = {
-                    'Authorization': `Bearer ${useToken}`,
-                };
-                const apps = Vue.createApp({
-                    data() {
-                        return {
-                            resume: {},
-                            resumes: [],
-                            username: "",
-                            nickname: "",
-                            nannyAccountUserAccount: "",
-                            city: "",
-                            district: "",
-                            introduction: "",
-                            typeOfDaycare: "",
-                            serviceType: 0,
-                            serviceItems: "",
-                            quasiPublicChildcare: false,
-                            childcareAvailableUnder2: 1,
-                            childcareAvailableOver2: 1,
-                            language: "",
-                            serviceCenter: "",
-                            professionalPortrait: "",
-                            displayControl: false,
-                            checkOtherTypeOfDaycare: false,
-                            showOtherTypeOfDaycare: "",
-                            checkOtherServiceItems: false,
-                            showOtherServiceItems: "",
-                            checkOtherLanguage: false,
-                            showOtherLanguage: "",
-                            serviceTypes: [],
-                            otherServiceType: 0,
-                            typeOfDaycare: [],
-                            typeOfDaycareOtherText: '',
-                            showOtherTypeOfDaycare: false,
-                            serviceItems: [],
-                            serviceItemsOtherText: '',
-                            showOtherServiceItems: false,
-                            language: [],
-                            languageOtherText: '',
-                            showOtherLanguage: false,
-                        }
-                    },
-                    computed: {
-                        selectedLanguageString() {
-                            // 將選中的語言陣列轉換成以逗號分隔的字串
-                            return this.language.join('、');
-                        },
 
-                        selectedserviceItemsString() {
-                            return this.serviceItems.join('、');
-                        },
-                        selectedtypeOfDaycareString() {
-                            return this.typeOfDaycare.join('、');
-                        }
+    @section Scripts {
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script>
 
-                    },
-                    methods: {
-                        getUserName: function () {
-                            axios.get('https://localhost:7292/api/NannyResumes/GetUserName_NannyResumes', { headers })
-                                .then(result => {
-                                    this.username = result.data;
-                                    $('#createModel').modal('show');
-                                })
-                                .catch(err => {
-                                    console.error(err);
-                                });
-                        },
-                        checkOtherTypeOfDaycare() {
-                            this.showOtherTypeOfDaycare = this.typeOfDaycare.includes('其他');
-                        },
-                        checkOtherServiceItems() {
-                            this.showOtherServiceItems = this.serviceItems.includes('其他');
-                        },
-                        checkOtherLanguage() {
-                            this.showOtherLanguage = this.language.includes('其他');
-                        },
-                        create: function (e) {
-                            //alert("AAA")
-                            e.preventDefault();
-                            let _this = this;
-
-
-                            var request = {
-                                // 其他表單欄位
-                                language: _this.selectedLanguageString, // 使用計算屬性來生成字串
-                                // 其他表單欄位
-                                serviceItems: _this.selectedserviceItemsString,
-                                typeOfDaycare: _this.selectedtypeOfDaycareString,
-
-                            };
-
-                            console.log(request);
-
-
-                            request.nannyAccountUserAccount = _this.username;
-                            request.nickname = _this.nickname;
-                            //request.serviceType = _this.serviceType;
-                            request.city = _this.city;
-                            request.district = _this.district;
-                            //request.typeOfDaycare = _this.typeOfDaycare;
-                            request.introduction = _this.introduction;
-                            //request.serviceItems = _this.serviceItems;
-                            // request. = _this.quasiPublicChildcare;
-                            request.childcareAvailableUnder2 = _this.childcareAvailableUnder2;
-                            request.childcareAvailableOver2 = _this.childcareAvailableOver2;
-                            //request.language = _this.language;
-                            request.serviceCenter = _this.serviceCenter;
-                            request.professionalPortrait = _this.professionalPortrait.name;
-                            request.displayControl = true;
-                            axios.post('https://localhost:7292/api/NannyResumes/SubmitResume', request, { headers })
-                                .then(result => {
-                                    Swal.fire({
-                                        position: 'center',
-                                        icon: 'success',
-                                        title: '履歷提交成功',
-                                        showConfirmButton: false,
-                                        timer: 1500,
-                                    }).then(() => {
-                                        _this.getNannyResumes();
-                                        $('#createmodel').modal('hide');
-                                    });
-                                })
-                                .catch(err => {
-                                    console.error(err);
-                                    Swal.fire({
-                                        position: 'center',
-                                        icon: 'error',
-                                        title: '發生錯誤',
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                });
-                        },
-
-                        showDetails(id) {
-                            axios.get(`https://localhost:7292/api/NannyResumes/GetNannyResume/${id}`)
-                                .then(response => {
-                                    this.resume = response.data;
-                                    $('#nannyResumesModal').modal('show'); // 打開詳細資訊視窗
-                                })
-                                .catch(error => {
-                                    console.error("Error fetching resume details:", error);
-                                });
-                        },
-
-                        checkForm: function () {
-                            let forms = document.querySelectorAll('.needs-validation');
-                            Array.prototype.slice.call(forms)
-                                .forEach(function (form) {
-                                    form.addEventListener('submit', function (event) {
-                                        if (!form.checkValidity()) {
-                                            event.preventDefault();
-                                            event.stopPropagation();
-                                        } else {
-                                            this.create(event);
-                                        }
-                                        form.classList.add('was-validated');
-                                    }, false);
-                                });
-                        },
-                        onFileChange: function (previewTarget, fileVariable, event) {
-                            const fileInput = event.target;
-                            if (fileInput.files && fileInput.files[0]) {
-                                const file = fileInput.files[0];
-                                this[fileVariable] = file;
-                                const reader = new FileReader();
-                                reader.onload = (e) => {
-                                    this[previewTarget] = e.target.result;
-                                };
-                                reader.readAsDataURL(file);
-                            }
-                        },
-                        getNannyResumes: function () {
-                            let_this = this;
-                            axios.get('@Utility.SD.localHost_API/api/NannyResumes/GetFullinformation', { headers })
-                                .then(result => {
-                                    //console.log(result.data); // 確認資料結構
-                                    let_this.resumes = result.data;
-                                })
-                                .catch(err => {
-                                    console.error(err);
-                                });
-                        },
-                        getPhotoUrl(photo) {
-                            return photo != null ? `https://localhost:7000/NannnyAndPerant/nannyreume/${photo}` : `https://localhost:7000/image/noimage.jpg`;
-                        },
-
-                        enter(nannyAccountUserAccount) {
-                            sessionStorage.setItem("nannyAccountUserAccount", nannyAccountUserAccount);
-                            window.location.href = `https://localhost:7231/Machplateform/Home/NannyApply`;
-                        },
-                    },
-
-                    mounted: function () {
-
-                        let _this = this;
-                        //this.getNannyResumes();
-                        _this.getNannyResumes();
+            const useToken = localStorage.getItem("token");
+            const headers = {
+                'Authorization': `Bearer ${useToken}`,
+            };
+            const apps = Vue.createApp({
+                data() {
+                    return {
+                        resume: {},
+                        resumes: [],
+                        username: "",
+                        nickname: "",
+                        nannyAccountUserAccount: "",
+                        city: "",
+                        district: "",
+                        introduction: "",
+                        typeOfDaycare: "",
+                        serviceType: 0,
+                        serviceItems: "",
+                        quasiPublicChildcare: false,
+                        childcareAvailableUnder2: 1,
+                        childcareAvailableOver2: 1,
+                        language: "",
+                        serviceCenter: "",
+                        professionalPortrait: "",
+                        displayControl: false,
+                        checkOtherTypeOfDaycare: false,
+                        showOtherTypeOfDaycare: "",
+                        checkOtherServiceItems: false,
+                        showOtherServiceItems: "",
+                        checkOtherLanguage: false,
+                        showOtherLanguage: "",
+                        serviceTypes: [],
+                        otherServiceType: 0,
+                        typeOfDaycare: [],
+                        typeOfDaycareOtherText: '',
+                        showOtherTypeOfDaycare: false,
+                        serviceItems: [],
+                        serviceItemsOtherText: '',
+                        showOtherServiceItems: false,
+                        language: [],
+                        languageOtherText: '',
+                        showOtherLanguage: false,
+                        reviews: [],
+                        startIndex: 0,
+                        itemsPerPage: 3
                     }
-                });
+                },
 
-                apps.mount('#nannyIndex');
-            </script>
-        }
+                computed: {
+                    selectedLanguageString() {
+                        // 將選中的語言陣列轉換成以逗號分隔的字串
+                        return this.language.join('、');
+                    },
+
+                    selectedserviceItemsString() {
+                        return this.serviceItems.join('、');
+                    },
+                    selectedtypeOfDaycareString() {
+                        return this.typeOfDaycare.join('、');
+                    },
+                    paginatedResumes() {
+                        return this.resumes.slice(this.startIndex, this.startIndex + this.itemsPerPage);
+                    }
+
+                },
+                methods: {
+                    getUserName: function () {
+                        axios.get('https://localhost:7292/api/NannyResumes/GetUserName_NannyResumes', { headers })
+                            .then(result => {
+                                this.username = result.data;
+                                $('#createModel').modal('show');
+                            })
+                            .catch(err => {
+                                console.error(err);
+                            });
+                    },
+                    prevPage() {
+                        if (this.startIndex > 0) {
+                            this.startIndex -= this.itemsPerPage;
+                        }
+                    },
+                    nextPage() {
+                        if (this.startIndex + this.itemsPerPage < this.resumes.length) {
+                            this.startIndex += this.itemsPerPage;
+                        }
+                    },
+                    checkOtherTypeOfDaycare() {
+                        this.showOtherTypeOfDaycare = this.typeOfDaycare.includes('其他');
+                    },
+                    checkOtherServiceItems() {
+                        this.showOtherServiceItems = this.serviceItems.includes('其他');
+                    },
+                    checkOtherLanguage() {
+                        this.showOtherLanguage = this.language.includes('其他');
+                    },
+                    create: function (e) {
+                        //alert("AAA")
+                        e.preventDefault();
+                        let _this = this;
+
+
+                        var request = {
+                            // 其他表單欄位
+                            language: _this.selectedLanguageString, // 使用計算屬性來生成字串
+                            // 其他表單欄位
+                            serviceItems: _this.selectedserviceItemsString,
+                            typeOfDaycare: _this.selectedtypeOfDaycareString,
+
+                        };
+
+                        console.log(request);
+
+
+                        request.nannyAccountUserAccount = _this.username;
+                        request.nickname = _this.nickname;
+                        //request.serviceType = _this.serviceType;
+                        request.city = _this.city;
+                        request.district = _this.district;
+                        //request.typeOfDaycare = _this.typeOfDaycare;
+                        request.introduction = _this.introduction;
+                        //request.serviceItems = _this.serviceItems;
+                        // request. = _this.quasiPublicChildcare;
+                        request.childcareAvailableUnder2 = _this.childcareAvailableUnder2;
+                        request.childcareAvailableOver2 = _this.childcareAvailableOver2;
+                        //request.language = _this.language;
+                        request.serviceCenter = _this.serviceCenter;
+                        request.professionalPortrait = _this.professionalPortrait.name;
+                        request.displayControl = true;
+                        axios.post('https://localhost:7292/api/NannyResumes/SubmitResume', request, { headers })
+                            .then(result => {
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'success',
+                                    title: '履歷提交成功',
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                }).then(() => {
+                                    _this.getNannyResumes();
+                                    $('#createmodel').modal('hide');
+                                });
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'error',
+                                    title: '發生錯誤',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            });
+                    },
+
+                    showDetails(id) {
+                        axios.get(`https://localhost:7292/api/NannyResumes/GetNannyResume/${id}`)
+                            .then(response => {
+                                this.resume = response.data;
+                                $('#nannyResumesModal').modal('show'); // 打開詳細資訊視窗
+                            })
+                            .catch(error => {
+                                console.error("Error fetching resume details:", error);
+                            });
+                    },
+
+                    checkForm: function () {
+                        let forms = document.querySelectorAll('.needs-validation');
+                        Array.prototype.slice.call(forms)
+                            .forEach(function (form) {
+                                form.addEventListener('submit', function (event) {
+                                    if (!form.checkValidity()) {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                    } else {
+                                        this.create(event);
+                                    }
+                                    form.classList.add('was-validated');
+                                }, false);
+                            });
+                    },
+                    onFileChange: function (previewTarget, fileVariable, event) {
+                        const fileInput = event.target;
+                        if (fileInput.files && fileInput.files[0]) {
+                            const file = fileInput.files[0];
+                            this[fileVariable] = file;
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                this[previewTarget] = e.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    },
+                    getNannyResumes: function () {
+                        let_this = this;
+                        axios.get('@Utility.SD.localHost_API/api/NannyResumes/GetFullinformation', { headers })
+                            .then(result => {
+                                //console.log(result.data); // 確認資料結構
+                                let_this.resumes = result.data;
+                            })
+                            .catch(err => {
+                                console.error(err);
+                            });
+                    },
+                    getPhotoUrl(photo) {
+                        return photo != null ? `https://localhost:7000/NannnyAndPerant/nannyreume/${photo}` : `https://localhost:7000/image/noimage.jpg`;
+                    },
+                    fetchReviews() {
+                        $.ajax({
+                            url: "https://localhost:7292/api/UserEvaluations",
+                            type: "GET",
+                            dataType: "json",
+                            success: (data) => {
+                                console.log("Fetched Reviews:", data); // Log the data
+                                this.reviews = data;
+                            },
+                            error: (xhr, status, error) => {
+                                console.error("Error fetching reviews:", error);
+                            }
+                        });
+                    },
+                    enter(nannyAccountUserAccount) {
+                        sessionStorage.setItem("nannyAccountUserAccount", nannyAccountUserAccount);
+                        window.location.href = `https://localhost:7231/Machplateform/Home/NannyApply`;
+                    },
+                },
+
+                mounted: function () {
+                    let _this = this;
+                    //this.getNannyResumes();
+                    _this.getNannyResumes();
+                    this.fetchReviews();
+                }
+            });
+
+            apps.mount('#nannyIndex');
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const carousel = document.getElementById('carousel');
+            const prevButton = document.getElementById('prev');
+            const nextButton = document.getElementById('next');
+            const scrollStep = 300; // 每次滾動的步伐大小（像素）
+            let autoScrollInterval;
+
+            // 自動輪播功能
+            function startAutoScroll() {
+                autoScrollInterval = setInterval(() => {
+                    if (carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth) {
+                        carousel.scrollLeft = 0;
+                    } else {
+                        carousel.scrollLeft += scrollStep;
+                    }
+                }, 3000); // 每3秒滾動一次
+            }
+
+            // 停止自動輪播
+            function stopAutoScroll() {
+                clearInterval(autoScrollInterval);
+            }
+
+            // 向左滾動
+            function scrollLeft() {
+                carousel.scrollLeft -= scrollStep;
+            }
+
+            // 向右滾動
+            function scrollRight() {
+                carousel.scrollLeft += scrollStep;
+            }
+
+            prevButton.addEventListener('click', () => {
+                stopAutoScroll();
+                scrollLeft();
+                startAutoScroll();
+            });
+
+            nextButton.addEventListener('click', () => {
+                stopAutoScroll();
+                scrollRight();
+                startAutoScroll();
+            });
+
+            carousel.addEventListener('mouseover', stopAutoScroll);
+            carousel.addEventListener('mouseout', startAutoScroll);
+
+            startAutoScroll(); // 開始自動輪播
+        });
+
+        </script>
+    }
